@@ -23,8 +23,8 @@ public class FadeTransition extends Transition<FadeTransition> {
         this(color, 500, 0.5f);
     }
 
-    public FadeTransition(Color color, int fadeTime) {
-        this(color, fadeTime, 0.5f);
+    public FadeTransition(Color color, int duration) {
+        this(color, duration, 0.5f);
         
     }
 
