@@ -91,6 +91,14 @@ public class PhysixManager {
     /**
      * Convert world to box2d coordinates
      */
+    public Vector2 toBox2D(float x, float y, Vector2 out) {
+        out.set(x * scaleInv, y * scaleInv);
+        return out;
+    }
+
+    /**
+     * Convert world to box2d coordinates
+     */
     public Vector2 toBox2D(Vector2 in, Vector2 out) {
         out.set(in.x * scaleInv, in.y * scaleInv);
         return out;

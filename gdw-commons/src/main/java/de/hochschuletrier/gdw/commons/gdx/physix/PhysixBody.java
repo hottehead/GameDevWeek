@@ -65,11 +65,11 @@ public final class PhysixBody {
     }
 
     public void setX(float x) {
-        body.setTransform(new Vector2(manager.toBox2D(x), body.getPosition().y), body.getAngle());
+        body.setTransform(dummyVector.set(manager.toBox2D(x), body.getPosition().y), body.getAngle());
     }
 
     public void setY(float y) {
-        body.setTransform(new Vector2(body.getPosition().x, manager.toBox2D(y)), body.getAngle());
+        body.setTransform(dummyVector.set(body.getPosition().x, manager.toBox2D(y)), body.getAngle());
     }
 
     public void setPosition(Vector2 pos) {
@@ -77,7 +77,15 @@ public final class PhysixBody {
     }
 
     public void setPosition(float x, float y) {
-        body.setTransform(new Vector2(manager.toBox2D(x), manager.toBox2D(y)), body.getAngle());
+        body.setTransform(manager.toBox2D(x, y, dummyVector), body.getAngle());
+    }
+
+    public void setTransform(float x, float y, float omega) {
+        body.setTransform(manager.toBox2D(x, y, dummyVector), omega);
+    }
+
+    public Vector2 getLocalCenter(Vector2 origin) {
+        return manager.toBox2D(body.getLocalCenter(), origin);
     }
 
     public void simpleForceApply(Vector2 force) {
@@ -89,7 +97,7 @@ public final class PhysixBody {
     }
 
     public void applyImpulse(float x, float y) {
-        body.applyLinearImpulse(new Vector2(manager.toBox2D(x), manager.toBox2D(y)), body.getWorldCenter(), true);
+        body.applyLinearImpulse(manager.toBox2D(x, y, dummyVector), body.getWorldCenter(), true);
     }
 
     public float getAngle() {
@@ -117,6 +125,11 @@ public final class PhysixBody {
 
     public void setLinearVelocityY(float y) {
         body.getLinearVelocity().y = manager.toBox2D(y);
+        body.setAwake(true);
+    }
+
+    public void setAngularVelocity(float omega) {
+        body.setAngularVelocity(omega);
         body.setAwake(true);
     }
 
@@ -184,6 +197,10 @@ public final class PhysixBody {
 
     public void setActive(boolean value) {
         body.setActive(value);
+    }
+
+    public void setAwake(boolean value) {
+        body.setAwake(value);
     }
 
     public BodyDef.BodyType getBodyType() {

@@ -32,13 +32,14 @@ public class Vase extends PhysixEntity {
 
 	public void initPhysics(PhysixManager manager) {
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-				.position(position).fixedRotation(false).create();
+				.position(position.x - region.getRegionWidth() / 2, position.y
+				- region.getRegionHeight() / 2).fixedRotation(false).create();
 		float scaling = manager.toBox2D(region.getRegionWidth());
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = 2f;
 		loader.attachFixture(body.getBody(), "test01", fixtureDef, scaling);
-		body.getBody().setTransform(position.x, position.y, MathUtils.degRad * rotation);
-		origin.set(body.getBody().getLocalCenter());
+		body.setTransform(position.x, position.y, MathUtils.degRad * rotation);
+		body.getLocalCenter(origin);
 		rotation = body.getAngle();
 		setPhysicsBody(body);
 	}
@@ -51,9 +52,10 @@ public class Vase extends PhysixEntity {
 		rotation = physicsBody.getAngle();
 	}
 	public void setPosition(Vector2 position) {
-		physicsBody.setPosition(position.x - region.getRegionWidth() / 2, position.y
-				- region.getRegionHeight() / 2);
-		physicsBody.getBody().setAwake(true);
+		physicsBody.setTransform(position.x - region.getRegionWidth() / 2, position.y
+				- region.getRegionHeight() / 2, 0);
+        physicsBody.setLinearVelocity(Vector2.Zero);
+        physicsBody.setAngularVelocity(0);
 	}
 
 	public TextureRegion getRegion() {
