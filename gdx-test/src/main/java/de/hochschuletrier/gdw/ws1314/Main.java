@@ -121,7 +121,7 @@ public class Main extends StateBasedGame {
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.GAMEPLAY.init(assetManager);
-		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
+		GameStates.GAMEPLAY.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override

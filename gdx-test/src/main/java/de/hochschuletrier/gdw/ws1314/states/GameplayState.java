@@ -49,15 +49,15 @@ public class GameplayState extends GameState implements InputProcessor {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 
 		DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-				Color.GRAY);
+				Color.BLUE);
 
-		Vase vase = game.getVase();
+		/*Vase vase = game.getVase();
 		DrawUtil.batch.draw(vase.getRegion(), vase.getPosition().x, vase.getPosition().y,
 				vase.getOrigin().x, vase.getOrigin().y,
 				vase.getRegion().getRegionWidth(), vase.getRegion().getRegionHeight(),
 				vase.getScale().x, vase.getScale().y, vase.getRotation()
 						* MathUtils.radDeg);
-
+*/
 		DrawUtil.batch.draw(crosshair, cursor.x - crosshair.getWidth() * 0.5f, cursor.y
 				- crosshair.getHeight() * 0.5f);
 		game.render();
@@ -66,6 +66,7 @@ public class GameplayState extends GameState implements InputProcessor {
 	@Override
 	public void update(float delta) {
 		game.update(delta);
+		
 		fpsCalc.addFrame();
 	}
 
