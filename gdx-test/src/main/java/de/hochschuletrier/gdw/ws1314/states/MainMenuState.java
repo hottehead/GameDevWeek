@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -17,6 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
 /**
@@ -38,8 +38,10 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
 
+    private TestHudStage testUI;
 
     public MainMenuState() {
+    	testUI = new TestHudStage();
     }
 
     @Override
@@ -70,6 +72,8 @@ public class MainMenuState extends GameState implements InputProcessor {
             }
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
+        
+        testUI.init(assetManager);
     }
 
     @Override
@@ -89,6 +93,8 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (useShader) {
             DrawUtil.batch.setShader(null);
         }
+        
+        testUI.render();
     }
 
 	float stateTime = 0f;
