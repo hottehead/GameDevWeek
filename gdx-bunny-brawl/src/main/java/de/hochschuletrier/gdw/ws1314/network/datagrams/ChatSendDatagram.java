@@ -8,15 +8,23 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 public class ChatSendDatagram extends BaseDatagram {
-	public static final byte CHAT_SEND_MESSAGE = INetDatagram.Type.FIRST_CUSTOM + 0x00;
-	private String message;
+	public static final byte CHAT_SEND_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x00;
+	
+	private String text;
 	
 	public ChatSendDatagram(byte type, short id,
 			short param1, short param2) {
-		super(INetDatagram.MessageType.NORMAL, type, id, param1, param2);
+		super(MessageType.NORMAL, type, id, param1, param2);
 	}
-	
-	
+
+	public ChatSendDatagram(String text) {
+		super(MessageType.NORMAL, CHAT_SEND_DATAGRAM, (short)0, (short)0, (short)0);
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
 
 	@Override
 	public void handle(DatagramHandler handler, NetConnection connection) {
@@ -25,14 +33,12 @@ public class ChatSendDatagram extends BaseDatagram {
 
 	@Override
 	public void writeToMessage(INetMessageOut message) {
-		// TODO Auto-generated method stub
-		
+		message.putString(text);
 	}
 
 	@Override
 	public void readFromMessage(INetMessageIn message) {
-		// TODO Auto-generated method stub
-		
+		text=message.getString();
 	}
 
 }
