@@ -231,6 +231,11 @@ public class NetMessageDelta implements INetMessageInternal {
         }
         return value;
     }
+    
+    @Override
+    public <T> T getEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[get()];
+    }
 
     @Override
     public String getString() {
@@ -367,6 +372,11 @@ public class NetMessageDelta implements INetMessageInternal {
                 changed = true;
             }
         }
+    }
+
+    @Override
+    public void putEnum(Enum value) {
+        putInt(value.ordinal());
     }
 
     @Override

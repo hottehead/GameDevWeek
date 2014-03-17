@@ -58,6 +58,11 @@ public interface INetMessageIn {
     float getFloat();
 
     /**
+     * @return one enum read from the buffer
+     */
+    <T> T getEnum(Class<T> clazz);
+
+    /**
      * @return one string read from the buffer
      */
     String getString();
