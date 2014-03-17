@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -18,11 +19,18 @@ public class TestHudStage extends Stage implements IHudStage {
 	Table uiTable;
 	Skin defaultSkin;
 	
+	public TestHudStage() {
+		uiTable = new Table();
+		
+	}
+	
 	private void initSkin(AssetManagerX assetManager) {
 		defaultSkin = new Skin();
 		BitmapFont font = assetManager.getFont("verdana", 24);
-		defaultSkin.add("default", font); // font heißt jetzt default
-		
+		defaultSkin.add("Label", font); // font heißt jetzt default
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = font;
+		defaultSkin.add("default", labelStyle);
 	}
 	
 	/* (non-Javadoc)
@@ -38,7 +46,7 @@ public class TestHudStage extends Stage implements IHudStage {
 		this.addActor(uiTable);
 		
 		uiTable.setSkin(defaultSkin);
-		uiTable.add(new Label("Hallo Welt", defaultSkin, "default", Color.RED));
+		uiTable.add(new Label("Hallo Welt", defaultSkin));
 		uiTable.add(new Label("Hallo Welt", defaultSkin, "default", Color.RED));
 		uiTable.row();
 		uiTable.add(new Label("Hallo Weltaaaaaaaaaaaa", defaultSkin, "default", Color.RED));
