@@ -50,7 +50,7 @@ public class GameplayState extends GameState implements InputProcessor {
 
 		DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				Color.GRAY);
-
+		
 		Vase vase = game.getVase();
 		DrawUtil.batch.draw(vase.getRegion(), vase.getPosition().x, vase.getPosition().y,
 				vase.getOrigin().x, vase.getOrigin().y,

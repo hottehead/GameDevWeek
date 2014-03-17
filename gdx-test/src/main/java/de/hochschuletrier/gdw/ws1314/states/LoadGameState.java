@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -10,6 +12,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 public class LoadGameState extends GameState {
 
     private boolean isDone;
+    private Stage hudTestStage;
 
     @Override
     public void init(AssetManagerX assetManager) {
