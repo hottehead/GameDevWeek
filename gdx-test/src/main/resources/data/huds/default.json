@@ -1,0 +1,67 @@
+{
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "default-font": {"file": "../fonts/default.fnt"},
+    },
+    "com.badlogic.gdx.graphics.Color": {
+        "green": {"a": 1, "b": 0, "g": 1, "r": 0},
+        "white": {"a": 1, "b": 1, "g": 1, "r": 1},
+        "red": {"a": 1, "b": 0, "g": 0, "r": 1},
+        "yellow": {"a": 1, "b": 0, "g": 0.85, "r": 1},
+        "black": {"a": 1, "b": 0, "g": 0, "r": 0}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+        "dialogDim": {"name": "bar", "color": {"r": 0, "g": 0, "b": 0, "a": 0.45}}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+        "default": {"down": "bar", "up": "bar"},
+        "toggle": {"down": "bar", "checked": "bar", "up": "bar"},
+        "buff": {"down": "buffIcon", "checked": "buffIcon", "up": "buffIcon"},
+        "healthbar": {"down": "bar", "checked": "bar", "up": "bar"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+        "default": {"down": "bar", "up": "bar", "font": "default-font", "fontColor": "white"},
+        "toggle": {"down": "bar", "up": "bar", "checked": "bar", "font": "default-font", "fontColor": "white", "downFontColor": "red"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+        "default": {"vScroll": "buffIcon", "hScrollKnob": "buffIcon", "background": "bar", "hScroll": "bar", "vScrollKnob": "bar"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle": {
+        "default": {
+            "font": "default-font", "fontColor": "white", "background": "buffIcon",
+            "scrollStyle": "default",
+            "listStyle": {"font": "default-font", "selection": "bar"}
+        }
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle": {
+        "default-vertical": {"handle": "bar"},
+        "default-horizontal": {"handle": "bar"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+        "default": {"titleFont": "default-font", "background": "bar", "titleFontColor": "white"},
+        "dialog": {"titleFont": "default-font", "background": "bar", "titleFontColor": "white", "stageBackground": "dialogDim"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+        "default-horizontal": {"background": "bar", "knob": "buffIcon"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+        "default": {"font": "default-font", "fontColor": "white"},
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+        "default": {"selection": "buffIcon", "background": "buffIcon", "font": "default-font", "fontColor": "white", "cursor": "buffIcon"},
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+        "default": {"checkboxOn": "buffIcon", "checkboxOff": "buffIcon", "font": "default-font", "fontColor": "white"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
+        "default": {"fontColorUnselected": "white", "selection": "buffIcon", "fontColorSelected": "white", "font": "default-font"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle": {
+        "default": {"background": "bar", "knob": "buffIcon"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle": {
+        "default": {"minus": "bar", "plus": "buffIcon", "selection": "buffIcon"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
+        "default-horizontal" : { "background" : "bar" }
+    }
+}

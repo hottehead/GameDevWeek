@@ -1,32 +1,28 @@
 package de.hochschuletrier.gdw.ws1314.hud;
 
-import java.io.InputStream;
-
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.elements.BuffIcon;
+import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
 
 public class TestHudStage extends AutoResizeStage {
 
-	Table uiTable;
-	Skin defaultSkin;
+	private Table uiTable;
+	private Skin defaultSkin;
 	
 	public TestHudStage() {
 		uiTable = new Table();
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
-		defaultSkin = new Skin(Gdx.files.internal("data/huds/uiskin.json"));
+		defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 	
 	/* (non-Javadoc)
@@ -36,24 +32,45 @@ public class TestHudStage extends AutoResizeStage {
 	public void init(AssetManagerX assetManager) {
 		uiTable = new Table();
 		initSkin(assetManager);
+		Main.inputMultiplexer.addProcessor(this);
 		
 		uiTable.setFillParent(true); // ganzen platz nutzen
 		
 		this.addActor(uiTable);
 		
 		uiTable.setSkin(defaultSkin);
-		uiTable.add(new Label("Hello World", defaultSkin));
-		uiTable.row();
-		uiTable.add(new Label("Hello World", defaultSkin));
-		Button tb = new Button(defaultSkin);
+		BuffIcon icons = new BuffIcon(defaultSkin);
+		
+		uiTable.add(icons.createButton("buff"));
+		uiTable.add(icons.createButton("buff"));
+		uiTable.add(icons.createButton("buff"));
+		uiTable.add(icons.createButton("buff"));
+		
+		uiTable.row().padTop(5);
+		
+		uiTable.add(new HealthBar(defaultSkin)).expand(true, false );
 		
 		
-		uiTable.add(tb);
+		
+//		uiTable.row();
+//		uiTable.add(new Label("Hello World", defaultSkin));
+//		TextButton tb = new TextButton("Press me.", defaultSkin, "toggle");
+//		uiTable.add(tb);
+//		
+//		tb.addListener(new ChangeListener() {
+//			@Override
+//			public void changed(ChangeEvent event, Actor actor) {
+//			}
+//		});
+//		
+//		Slider slider = new Slider(0, 100, 0.5f, false, defaultSkin);
+//		uiTable.add(slider);
+		
 		
 //		InputStream is = CurrentResourceLocator.read("data/json/hudstyle.json");
 		
-		uiTable.debug(Debug.all);
-		
+		uiTable.debug(Debug.cell);
+		uiTable.pack();
 	}
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#render()

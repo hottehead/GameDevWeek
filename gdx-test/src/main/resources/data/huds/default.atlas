@@ -1,0 +1,47 @@
+
+default.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bar
+  rotate: false
+  xy: 1, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+buffIcon
+  rotate: false
+  xy: 53, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+classIcon
+  rotate: false
+  xy: 105, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+scoreEnemyIcon
+  rotate: false
+  xy: 157, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+scoreTeamIcon
+  rotate: false
+  xy: 209, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+tooltip
+  rotate: false
+  xy: 261, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
