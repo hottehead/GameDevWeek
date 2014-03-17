@@ -8,10 +8,8 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 public class ChatDeliverDatagram extends BaseDatagram {
 
-	public ChatDeliverDatagram(MessageType messageType, byte type, short id,
-			short param1, short param2) {
-		super(messageType, type, id, param1, param2);
-		// TODO Auto-generated constructor stub
+	public ChatDeliverDatagram(byte type, short id, short param1, short param2) {
+		super(INetDatagram.MessageType.NORMAL, type, id, param1, param2);
 	}
 	public static final byte CHAT_DELIVER_MESSAGE = INetDatagram.Type.FIRST_CUSTOM + 0x01;
 
