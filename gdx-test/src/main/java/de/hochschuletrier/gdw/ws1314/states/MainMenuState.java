@@ -94,6 +94,7 @@ public class MainMenuState extends GameState implements InputProcessor {
             DrawUtil.batch.setShader(null);
         }
         
+        
         testUI.render();
     }
 

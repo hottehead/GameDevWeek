@@ -1,36 +1,32 @@
 package de.hochschuletrier.gdw.ws1314.hud;
 
+import java.io.InputStream;
+
+import org.lwjgl.opengl.GL11;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-import org.lwjgl.opengl.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
-public class TestHudStage extends Stage implements IHudStage {
+public class TestHudStage extends AutoResizeStage {
 
 	Table uiTable;
 	Skin defaultSkin;
 	
 	public TestHudStage() {
 		uiTable = new Table();
-		
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
-		defaultSkin = new Skin();
-		BitmapFont font = assetManager.getFont("verdana", 24);
-		defaultSkin.add("Label", font); // font heißt jetzt default
-		LabelStyle labelStyle = new LabelStyle();
-		labelStyle.font = font;
-		defaultSkin.add("default", labelStyle);
+		defaultSkin = new Skin(Gdx.files.internal("data/huds/uiskin.json"));
 	}
 	
 	/* (non-Javadoc)
@@ -46,10 +42,17 @@ public class TestHudStage extends Stage implements IHudStage {
 		this.addActor(uiTable);
 		
 		uiTable.setSkin(defaultSkin);
-		uiTable.add(new Label("Hallo Welt", defaultSkin));
-		uiTable.add(new Label("Hallo Welt", defaultSkin, "default", Color.RED));
+		uiTable.add(new Label("Hello World", defaultSkin));
 		uiTable.row();
-		uiTable.add(new Label("Hallo Weltaaaaaaaaaaaa", defaultSkin, "default", Color.RED));
+		uiTable.add(new Label("Hello World", defaultSkin));
+		Button tb = new Button(defaultSkin);
+		
+		
+		uiTable.add(tb);
+		
+//		InputStream is = CurrentResourceLocator.read("data/json/hudstyle.json");
+		
+		uiTable.debug(Debug.all);
 		
 	}
 	/* (non-Javadoc)
@@ -57,31 +60,14 @@ public class TestHudStage extends Stage implements IHudStage {
 	 */
 	@Override
 	public void render() {
-		this.setCamera(DrawUtil.getCamera());
+//		this.setCamera(DrawUtil.getCamera());
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT|GL11.GL_COLOR_BUFFER_BIT);
 		
 		this.act(Gdx.graphics.getDeltaTime());
 		
 		this.draw();
-		uiTable.debug();
 		
-//		Table.drawDebug(this);
+		Table.drawDebug(this);
 	}
-	/* (non-Javadoc)
-	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#dispose()
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-	
-	/* (non-Javadoc)
-	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#resize(int, int)
-	 */
-	@Override
-	public void resize(int width, int height) {
-		this.setViewport(width, height, true); //FIXME: fixAspectRatio nötig?
-	}
-	
-	
+
 }
