@@ -10,30 +10,27 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
  * @author Santo Pfingsten
  */
 public class SplitVerticalTransition extends Transition<SplitVerticalTransition> {
+    private final TextureRegion regionClipped = new TextureRegion();
 
-    public SplitVerticalTransition(int fadeTime) {
-        super(fadeTime);
+    public SplitVerticalTransition(int duration) {
+        super(duration);
     }
 
     @Override
     public void render(TextureRegion fromRegion, TextureRegion toRegion) {
         int fullWidth = Gdx.graphics.getWidth();
         int halfHeight = Gdx.graphics.getHeight() / 2;
-        int yOffset = Math.round(getProgress() * 0.5f * Gdx.graphics.getHeight());
+        int yOffset = Math.round(getProgress() * halfHeight);
+        int drawHeight = halfHeight - yOffset;
 
         DrawUtil.batch.draw(toRegion, 0, 0, toRegion.getRegionWidth(), toRegion.getRegionHeight());
-
-        DrawUtil.setClip(0, 0, fullWidth, halfHeight - yOffset);
-        DrawUtil.pushTransform();
-        DrawUtil.translate(0, -yOffset);
-        DrawUtil.batch.draw(fromRegion, 0, 0, fromRegion.getRegionWidth(), fromRegion.getRegionHeight());
-        DrawUtil.popTransform();
-
-        DrawUtil.setClip(0, halfHeight + yOffset, fullWidth, halfHeight);
-        DrawUtil.pushTransform();
-        DrawUtil.translate(0, yOffset);
-        DrawUtil.batch.draw(fromRegion, 0, 0, fromRegion.getRegionWidth(), fromRegion.getRegionHeight());
-        DrawUtil.popTransform();
-        DrawUtil.clearClip();
+        
+        regionClipped.setTexture(fromRegion.getTexture());
+        
+        regionClipped.setRegion(0, halfHeight, fullWidth, drawHeight);
+        DrawUtil.batch.draw(regionClipped, 0, 0, fullWidth, drawHeight);
+        
+        regionClipped.setRegion(0, yOffset, fullWidth, drawHeight);
+        DrawUtil.batch.draw(regionClipped, 0, halfHeight + yOffset, fullWidth, drawHeight);
     }
 }
