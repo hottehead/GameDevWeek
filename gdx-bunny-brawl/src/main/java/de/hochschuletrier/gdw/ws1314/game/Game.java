@@ -34,58 +34,22 @@ public class Game {
     public static final float STEP_SIZE = 1 / 30.0f;
     public static final int GRAVITY = 12;
     public static final int BOX2D_SCALE = 40;
-	private BitmapFont verdana_26;
     PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
-	private ArrayList<PhysixEntity> entities = new ArrayList<PhysixEntity>();
-	private Player player;
-	private Vase vase;
 
     public Game() {
 
 	}
 
-    // Test
 	public void init(AssetManagerX assets) {
-        PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(410, 400)
-                .fixedRotation(false).create();
-        body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(800, 20));
-
-        PhysixUtil.createHollowCircle(manager, 180, 180, 150, 30, 6);
-        player = new Player(410, 350);
-        player.initPhysics(manager);
-		entities.add(player);
-
-		vase = new Vase(0, 0);
-		vase.initGraphics(assets);
-		vase.initPhysics(manager);
-        entities.add(vase);
-
-		verdana_26 = assets.getFont("verdana", 24);
         Main.getInstance().console.register(gravity_f);
     }
     public void render() {
         manager.render();
-		verdana_26.draw(DrawUtil.batch, "Press left mouse button to spawn a ball. "
-				+ "Press right mouse button to replace the vase.", 0, 0);
+
     }
 
     public void update(float delta) {
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-		vase.update();
-    }
-
-    public void addBall(int x, int y) {
-        Ball b = new Ball(x, y, 30);
-        b.initPhysics(manager);
-        entities.add(b);
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Vase getVase() {
-        return vase;
     }
 
     public PhysixManager getManager() {
