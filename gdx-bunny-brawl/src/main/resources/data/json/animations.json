@@ -1,0 +1,10 @@
+{
+    "walking": {
+        "filename": "data/animations/walking.png",
+        "frames" : 7,
+        "frameDuration": 0.15,
+        "playType" : 2,
+        "columns": 7,
+        "rows" : 1
+    }
+}
