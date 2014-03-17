@@ -44,6 +44,7 @@ public class Game {
 
 	}
 
+    // Test
 	public void init(AssetManagerX assets) {
         PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(410, 400)
                 .fixedRotation(false).create();
