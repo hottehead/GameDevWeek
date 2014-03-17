@@ -41,7 +41,7 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
  * @author Santo Pfingsten
  */
 public class Main extends StateBasedGame {
-	// testing
+
 	public static final int WINDOW_WIDTH = 1024;
 	public static final int WINDOW_HEIGHT = 512;
 
