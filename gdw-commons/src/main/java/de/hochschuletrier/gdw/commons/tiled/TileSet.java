@@ -44,10 +44,12 @@ public class TileSet {
     private final String filename;
     /** An attachment for the game to store additional information */
     private Object attachment;
+    /** Animation data */
+    private TileSetAnimation animation;
 
     /**
      * Create a tile set based on an XML definition
-     * 
+     *
      * @param element The XML describing the tileset
      * @throws Exception Indicates a failure to parse the tileset
      */
@@ -84,11 +86,27 @@ public class TileSet {
         tilesDown = Math.max(1, ((image.getHeight() - (tileMargin * 2) - tileHeight) / (tileHeight + tileSpacing)) + 1);
 
         lastGID = (tilesAcross * tilesDown) + firstGID - 1;
+        initAnimations();
+    }
+
+    private void initAnimations() {
+        int frames = getIntProperty("animationFrames", 0);
+        if (frames > 1) {
+            animation = new TileSetAnimation(
+                    frames,
+                    getFloatProperty("animationDuration", 0),
+                    getIntProperty("animationTileOffset", 0)
+            );
+        }
+    }
+    
+    public TileSetAnimation getAnimation() {
+        return animation;
     }
 
     /**
      * Get the width of each tile in this set
-     * 
+     *
      * @return The width of each tile in this set
      */
     public int getTileWidth() {
@@ -97,7 +115,7 @@ public class TileSet {
 
     /**
      * Get the height of each tile in this set
-     * 
+     *
      * @return The height of each tile in this set
      */
     public int getTileHeight() {
@@ -106,8 +124,8 @@ public class TileSet {
 
     /**
      * Get the spacing between tiles in this set
-     * 
-     * @return The spacing between tiles in this set 
+     *
+     * @return The spacing between tiles in this set
      */
     public int getTileSpacing() {
         return tileSpacing;
@@ -115,7 +133,7 @@ public class TileSet {
 
     /**
      * Get the margin around tiles in this set
-     * 
+     *
      * @return The maring around tiles in this set
      */
     public int getTileMargin() {
@@ -131,7 +149,7 @@ public class TileSet {
 
     /**
      * Get a map property
-     * 
+     *
      * @param key the key of the property
      * @param def the default value to return if the property has not been set.
      * @return the property value or def
@@ -221,7 +239,7 @@ public class TileSet {
 
     /**
      * Get the x position of a tile on this sheet
-     * 
+     *
      * @param id The tileset specific ID (i.e. not the global one)
      * @return The index of the tile on the x-axis
      */
@@ -231,7 +249,7 @@ public class TileSet {
 
     /**
      * Get the y position of a tile on this sheet
-     * 
+     *
      * @param id The tileset specific ID (i.e. not the global one)
      * @return The index of the tile on the y-axis
      */
@@ -241,7 +259,7 @@ public class TileSet {
 
     /**
      * Set the limit of the tiles in this set
-     * 
+     *
      * @param limit The limit of the tiles in this set
      */
     void setLimit(int limit) {
@@ -250,7 +268,7 @@ public class TileSet {
 
     /**
      * Check if this tileset contains a particular tile
-     * 
+     *
      * @param gid The global id to seach for
      * @return True if the ID is contained in this tileset
      */
