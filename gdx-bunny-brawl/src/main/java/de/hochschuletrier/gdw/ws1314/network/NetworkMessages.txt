@@ -1,0 +1,65 @@
+﻿ChatSendDatagram
+Client > Server
+FIRST_CUSTOM + 0x00
+ID, Message
+NORMAL
+
+ChatDeliverDatagram
+Server > Client
+0x01
+PlayerName, Message
+NORMAL
+
+LobbyUpdateDatagram
+Server > Client
+0x10
+Map, Player [PlayerName, Class, Team, Accept]
+DELTA
+
+MatchUpdateDatagram
+Client > Server
+0x11
+Map
+DELTA
+
+PlayerUpdateDatagram PlayerInfo
+Client > Server
+0x12
+PlayerName, Class, Team, Accept
+DELTA
+
+PlayerReplicationDatagram
+Server > Client
+0x20
+ID, Art, Position, WalkDirection, FaceingDirection, Eggs, Buffs ?, Health ?, ...
+DELTA
+
+LevelObjectReplicationDatagram
+Server > Client
+0x21
+ID, Art, Position, Status
+DELTA
+
+ProjectileReplicationDatagram
+Server > Client
+0x22
+ID, Art, Position, Direction
+DELTA
+
+EventDatagram
+Server > Client
+0x30
+ID, Eventart
+NORMAL
+
+DespawnDatagram
+Server > Client
+0x31
+ID
+NORMAL
+
+ActionDatagram
+Client > Server
+0x40
+ID, PlayerEvent
+NORMAL
