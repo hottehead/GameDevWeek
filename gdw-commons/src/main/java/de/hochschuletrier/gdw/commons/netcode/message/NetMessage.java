@@ -83,6 +83,11 @@ public class NetMessage implements INetMessageInternal {
     public float getFloat() {
         return buffer.getFloat();
     }
+    
+    @Override
+    public <T> T getEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[buffer.get()];
+    }
 
     @Override
     public String getString() {
@@ -125,6 +130,11 @@ public class NetMessage implements INetMessageInternal {
     @Override
     public void putFloat(float value) {
         buffer.putFloat(value);
+    }
+
+    @Override
+    public void putEnum(Enum value) {
+        putInt(value.ordinal());
     }
 
     @Override
