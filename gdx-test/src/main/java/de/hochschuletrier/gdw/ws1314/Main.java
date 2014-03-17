@@ -162,6 +162,7 @@ public class Main extends StateBasedGame {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
+		
 	}
 
 	@Override

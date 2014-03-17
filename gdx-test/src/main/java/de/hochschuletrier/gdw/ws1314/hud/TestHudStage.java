@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import org.lwjgl.opengl.*;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
 public class TestHudStage extends Stage implements IHudStage {
 
@@ -48,6 +49,7 @@ public class TestHudStage extends Stage implements IHudStage {
 	 */
 	@Override
 	public void render() {
+		this.setCamera(DrawUtil.getCamera());
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT|GL11.GL_COLOR_BUFFER_BIT);
 		
 		this.act(Gdx.graphics.getDeltaTime());
