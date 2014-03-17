@@ -48,7 +48,7 @@ public class Game {
 
     // Test
 	public void init(AssetManagerX assets) {
-		/*PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(200, 500)
+		PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(200, 500)
                 .fixedRotation(false).create();
         body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(2000, 10));
         
