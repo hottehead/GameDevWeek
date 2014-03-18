@@ -136,7 +136,7 @@ public class NetworkManager {
 	public void sendLobbyUpdate(String map, PlayerData[] players){
 		if(!isServer())
 			return;
-		clientConnection.send(new LobbyUpdateDatagram(map, players));
+		broadcastToClients(new LobbyUpdateDatagram(map, players));
 	}
 	
 	public void sendChat(String text){
