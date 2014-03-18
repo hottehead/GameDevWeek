@@ -15,6 +15,9 @@ public enum PlayerKit
 	private final AttackType attack1;
 	private final AttackType attack2;
 	
+	public final float		accelerationImpulse = 100.0f;
+	public final float		brakeImpulse = 100.0f;
+	
 	private PlayerKit (	float 	maxVelocity, 
 						int 	maxEggCount, 
 						float 	armor, 
@@ -47,4 +50,5 @@ public enum PlayerKit
 	
 	public float getFirstAttackCooldown()		{ return firstAttackCooldown; }
 	public float getSecondAttackCooldown()		{ return secondAttackCooldown; }
+
 }
