@@ -16,6 +16,14 @@ public class PlayerReplicationDatagram extends BaseDatagram{
     }
     public static final byte PLAYER_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x20;
 
+    private long id;
+    private Enum<?> type;
+	private float xposition;
+    private float yposition;
+    private byte eggs;
+    private byte buffs;
+    private int health;
+
     @Override
     public void handle (DatagramHandler handler, NetConnection connection) {
         handler.handle (this, connection);
@@ -23,11 +31,51 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-
+    	message.putLong(id);
+    	message.putEnum(type);
+    	message.putFloat(xposition);
+    	message.putFloat(yposition);
+    	message.put(eggs);
+    	message.put(buffs);
+    	message.putInt(health);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-
+    	id = message.getInt();
+    	//type = message.getEnum();
+    	xposition = message.getFloat();
+    	yposition = message.getFloat();
+    	eggs = message.get();
+    	buffs = message.get();
+    	
     }
+    
+    public long getId() {
+		return id;
+	}
+
+	public Enum<?> getType() {
+		return type;
+	}
+
+	public float getXposition() {
+		return xposition;
+	}
+
+	public float getYposition() {
+		return yposition;
+	}
+
+	public byte getEggs() {
+		return eggs;
+	}
+
+	public byte getBuffs() {
+		return buffs;
+	}
+
+	public int getHealth() {
+		return health;
+	}
 }
