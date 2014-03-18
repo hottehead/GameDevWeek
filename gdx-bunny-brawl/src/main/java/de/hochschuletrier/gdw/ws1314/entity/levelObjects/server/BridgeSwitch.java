@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+
 /**
  * 
  * @author yannick
@@ -19,5 +21,6 @@ public class BridgeSwitch extends ServerLevelObject
 		super.initialize();
 
 		this.bridge = bridge;
+		BridgeSwitch.type = EntityType.BridgeSwitch;
 	}
 }

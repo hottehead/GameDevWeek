@@ -13,7 +13,12 @@ public enum FacingDirection
 	LEFT(-1.0f, 0.0f),
 	DOWN(0.0f, 1.0f),
 	RIGHT(1.0f, 0.0f),
-	UP(0.0f, -1.0f);
+	UP(0.0f, -1.0f),
+	
+	DOWN_LEFT(-(float)Math.sqrt(2.0f), (float)Math.sqrt(2.0f)),
+	DOWN_RIGHT((float)Math.sqrt(2.0f), (float)Math.sqrt(2.0f)),
+	UP_LEFT(-(float)Math.sqrt(2.0f), -(float)Math.sqrt(2.0f)),
+	UP_RIGHT((float)Math.sqrt(2.0f), -(float)Math.sqrt(2.0f));
 	
 	Vector2 direction;
 	

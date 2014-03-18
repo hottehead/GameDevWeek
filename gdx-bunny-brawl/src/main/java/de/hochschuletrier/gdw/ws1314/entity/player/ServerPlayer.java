@@ -1,17 +1,17 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
-public class Player extends ServerEntity 
+public class ServerPlayer extends ServerEntity 
 {
+	private PlayerInfo	playerInfo;
 	private PlayerKit 	playerKit;
 	private TeamColor	teamColor;
 	
@@ -21,30 +21,35 @@ public class Player extends ServerEntity
 	private float		firstAttackTimer;
 	private float		secondAttackTimer;
 	
+	private boolean		firstAttackFired;
+	private boolean		secondAttackFired;
+	
 	private float		currentVelocity;
 	private float		currentHealth;
 	private float		currentArmor;
 	
 	private int 		currentEggCount;
 	
-	Vector2 			direction;
+	FacingDirection 	direction;
 	
-	public Player()
+	public ServerPlayer()
 	{
 		super();
 		
-		playerKit = PlayerKit.NOOB;
+		setPlayerKit(PlayerKit.NOOB);
+		firstAttackTimer = 0.0f;
+		firstAttackFired = false;
+		secondAttackTimer = 0.0f;
+		secondAttackFired = false;
+		currentEggCount = 0;
+		
 	}
 	
 	@Override
-	public void enable() 
-	{
-	}
+	public void enable() {}
 
 	@Override
-	public void disable() 
-	{
-	}
+	public void disable() {}
 
 	@Override
 	public void dispose() 
@@ -59,6 +64,10 @@ public class Player extends ServerEntity
 	public void setPlayerKit(PlayerKit kit)
 	{
 		playerKit = kit;
+		firstAttackCooldown = kit.getFirstAttackCooldown();
+		secondAttackCooldown = kit.getSecondAttackCooldown();
+		currentHealth = kit.getBaseHealth();
+		currentArmor = kit.getBaseArmor();
 	}
 	
 	public PlayerKit getPlayerKit()
@@ -73,11 +82,14 @@ public class Player extends ServerEntity
 
 	public void moveBegin(FacingDirection dir)
 	{
+		direction = dir;
 		
+		// TODO send
 	}
 	
 	public void moveEnd(FacingDirection dir)
 	{
+		direction = dir;
 		
 	}
 	
@@ -93,13 +105,16 @@ public class Player extends ServerEntity
 	
 	public void dropEgg()
 	{
-		
+		// TODO Place egg on map
+		currentEggCount--;
+		if (currentEggCount < 0)
+			currentEggCount = 0;
 	}
 
 	@Override
 	public void beginContact(Contact contact) 
 	{
-		// TODO Auto-generated method stub
+		// TODO Handle all possible collision types: damage, death, physical, egg collected...
 	}
 
 	@Override

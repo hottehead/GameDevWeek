@@ -18,11 +18,13 @@ public class ServerLevelObject extends ServerEntity
 	@Override
 	public void enable()
 	{
+		this.isVisible = true;
 	}
 
 	@Override
 	public void disable()
 	{
+		this.isVisible = false;
 	}
 
 	@Override
