@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 
 
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,8 +37,8 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-
 import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class ServerGame {
 	private NetworkManager netManager;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
+	private ServerPlayer player = new ServerPlayer();
 
 	public ServerGame() {
 		entityManager = ServerEntityManager.getInstance();
@@ -75,6 +77,7 @@ public class ServerGame {
 
 
 	public void init(AssetManagerX assets) {
+		player.initPhysics(manager);
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		map = loadMap("data/maps/miniarena.tmx");
