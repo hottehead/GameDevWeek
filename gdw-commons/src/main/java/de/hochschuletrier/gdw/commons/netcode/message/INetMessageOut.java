@@ -63,11 +63,25 @@ public interface INetMessageOut {
     void putInt(int value);
 
     /**
+     * Write a long into the buffer
+     *
+     * @param value the value
+     */
+    void putLong(long value);
+
+    /**
      * Write a float into the buffer
      *
      * @param value the value
      */
     void putFloat(float value);
+
+    /**
+     * Write a double into the buffer
+     *
+     * @param value the value
+     */
+    void putDouble(double value);
 
     /**
      * Write an enum into the buffer
