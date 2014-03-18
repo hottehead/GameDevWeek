@@ -3,20 +3,22 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
 
 public class LevelSelectorStage extends AutoResizeStage {
 
 	Table uiTable;
 	private Skin defaultSkin;
-	List<Label> levelList; 
+//	List<LevelElement> levelList;
 	
 	public LevelSelectorStage() {
 	}
@@ -25,10 +27,10 @@ public class LevelSelectorStage extends AutoResizeStage {
 		defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 	
-	private void addLevel(String levelName) {
-//		Label button = new Label(levelName, defaultSkin);
+//	private void addLevel(String levelName) {
+//		LevelElement button = new LevelElement(levelName, defaultSkin);
 //		levelList.getItems().add(button);
-	}
+//	}
 	
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#init()
@@ -37,23 +39,27 @@ public class LevelSelectorStage extends AutoResizeStage {
 	public void init(AssetManagerX assetManager) {
 		uiTable = new Table();
 		initSkin(assetManager);
+		Main.inputMultiplexer.addProcessor(this);
 		
 		uiTable.setFillParent(true); // ganzen platz nutzen
 		
-		this.addActor(uiTable);
+		this.addActor(uiTable);	
 		
-		uiTable.setSkin(defaultSkin);
-		uiTable.add(new Label("Hello World", defaultSkin));
-		uiTable.row();
-		uiTable.add(new Label("Hello World", defaultSkin));
-		Button tb = new Button(defaultSkin);
+//		levelList = new List<LevelElement>(defaultSkin);
+//		ScrollPane sp = new ScrollPane(levelList);
+//		addLevel("new Level");
+//		addLevel("newer Level");
+//		uiTable.add(sp);
 		
-		
-		uiTable.add(tb);
+		LevelList list = new LevelList(defaultSkin);
+		list.addLevel("new Level");
+		list.addLevel("newer Level");
+		list.addLevel("another level");
+		uiTable.add(list);
 		
 //		InputStream is = CurrentResourceLocator.read("data/json/hudstyle.json");
 		
-		uiTable.debug(Debug.all);
+//		uiTable.debug(Debug.all);
 	}
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#render()
