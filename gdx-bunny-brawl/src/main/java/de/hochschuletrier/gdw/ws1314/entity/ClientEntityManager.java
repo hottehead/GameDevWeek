@@ -26,6 +26,8 @@ public class ClientEntityManager {
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
+		removalQueue = new LinkedList<ClientEntity>();
+		insertionQueue = new LinkedList<ClientEntity>();
     }
 
     public static ClientEntityManager getInstance()
