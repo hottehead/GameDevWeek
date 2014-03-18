@@ -4,7 +4,7 @@ public abstract class VisualElement {
 	protected float positionX; 
 	protected float positionY;
 	
-	public VisualElement(float positionX, float positonY) {
+	public VisualElement(float positionX, float positionY) {
 		this.positionX = positionX;
 		this.positionY = positionY;
 	}

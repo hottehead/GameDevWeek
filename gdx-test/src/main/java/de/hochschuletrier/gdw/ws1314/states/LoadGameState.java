@@ -42,6 +42,7 @@ public class LoadGameState extends GameState {
             // VSync was only disabled to speed up loading
             Gdx.graphics.setVSync(true);
 
+            
             Main.getInstance().onLoadComplete();
             
             isDone = true;

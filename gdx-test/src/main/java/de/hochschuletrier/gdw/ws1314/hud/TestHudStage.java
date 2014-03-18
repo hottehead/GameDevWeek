@@ -33,7 +33,7 @@ public class TestHudStage extends AutoResizeStage {
 		
 		
 		healthBar = new MinMaxValue(0, 100, -1);
-		VisualBar healthBarVisual =  new VisualBar(barTex, 0, 0, 300, 80, healthBar);
+		VisualBar healthBarVisual =  new VisualBar(barTex, 0, 0, 300, 40, healthBar);
 		
 		
 		BarBackgroundDecoration backgroundHealth = new BarBackgroundDecoration(healthBarVisual, backBarTex);

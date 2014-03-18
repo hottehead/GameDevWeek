@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -100,9 +99,9 @@ public class MainMenuState extends GameState implements InputProcessor {
             DrawUtil.batch.setShader(null);
         }
         
-        levelSelection.render();
+//        levelSelection.render();
         
-//        testUI.render();
+        testUI.render();
     }
 
 	float stateTime = 0f;

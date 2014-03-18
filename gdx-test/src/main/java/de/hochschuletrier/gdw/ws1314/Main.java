@@ -2,10 +2,7 @@ package de.hochschuletrier.gdw.ws1314;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -14,12 +11,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
@@ -29,7 +23,6 @@ import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
@@ -53,6 +46,7 @@ public class Main extends StateBasedGame {
 	private final DevConsoleView consoleView = new DevConsoleView(console);
 	private Skin skin;
 	public static final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	
 
 	public static Main getInstance() {
 		if (instance == null) {
@@ -122,7 +116,8 @@ public class Main extends StateBasedGame {
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.GAMEPLAY.init(assetManager);
-		GameStates.GAMEPLAY.activate(new SplitVerticalTransition(500).reverse(), null);
+		GameStates.MAINMENU.activate();
+//		GameStates.GAMEPLAY.activate(new SplitVerticalTransition(500), null);
 	}
 
 	@Override
@@ -180,6 +175,7 @@ public class Main extends StateBasedGame {
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
+		
 
 		new LwjglApplication(getInstance(), cfg);
 	}
