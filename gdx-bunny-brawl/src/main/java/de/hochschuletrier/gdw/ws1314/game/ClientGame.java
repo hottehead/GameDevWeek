@@ -20,10 +20,10 @@ public class ClientGame {
     private int Inputmask;
 
     public ClientGame() {
-        entityManager = new ClientEntityManager();
+        entityManager = ClientEntityManager.getInstance();
         netManager = NetworkManager.getInstance();
     }
-
+    
     public void init(AssetManagerX assets) {
 
     }

@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
+package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;

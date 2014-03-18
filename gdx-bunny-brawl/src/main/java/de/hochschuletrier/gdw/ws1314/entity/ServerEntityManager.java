@@ -130,8 +130,11 @@ public class ServerEntityManager {
 
     public void Clear()
     {
-    	// TestCase: Clear by new Instance
-    	instance = new ServerEntityManager();
+    	internalRemove();
+    	this.entityList.clear();
+    	this.entityListMap.clear();
+    	this.insertionQueue.clear();
+    	// classMap und identifier brauchen nicht neu erstellt zu werden!?
     }
 
 }

@@ -1,13 +1,10 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
+
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,9 +14,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Santo Pfingsten
  */
-public class ServerGame {
+public class Game {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerGame.class);
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
     public static final int POSITION_ITERATIONS = 3;
     public static final int VELOCITY_ITERATIONS = 8;
@@ -27,24 +24,21 @@ public class ServerGame {
     public static final int GRAVITY = 12;
     public static final int BOX2D_SCALE = 40;
     PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
-    private ServerEntityManager entityManager;
-    private NetworkManager netManager;
 
-    public ServerGame() {
-        entityManager = ServerEntityManager.getInstance();
-        netManager = NetworkManager.getInstance();
+    public Game() {
+
 	}
 
 	public void init(AssetManagerX assets) {
         Main.getInstance().console.register(gravity_f);
     }
     public void render() {
-        //manager.render();
+        manager.render();
 
     }
 
     public void update(float delta) {
-        entityManager.update(delta);
+    	logger.debug("Test");
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
