@@ -266,8 +266,8 @@ public class DevConsole {
     /**
      * Tries to complete a command and its arguments
      *
-     * @param    buf            The already typed in characters
-     * @return    All matching characters, or if no match was found, a buf
+     * @param buf The already typed in characters
+     * @return All matching characters, or if no match was found, a buf
      * @see IConsoleCompleter
      */
     private String completeBuffer(String buf, ConsoleEditor editor) {
@@ -362,7 +362,7 @@ public class DevConsole {
 
     /**
      * Print usage for a command
-     * 
+     *
      * @param buf The command name (if arguments exist, they will be ignored)
      */
     public void printUsage(String buf) {
@@ -428,8 +428,9 @@ public class DevConsole {
                         cvar.set(arguments.get(1), false);
                     }
                 } else {
-                    logger.info("{} is: \"{}\", default: \"{}\"",
-                            cvar.getName(), cvar.toString(), cvar.getDefaultValue());
+                    logger.info("{} ({}) is: \"{}\", default: \"{}\"",
+                            cvar.getName(), cvar.getTypeDescription(), 
+                            cvar.toString(), cvar.getDefaultValue());
                     if (!cvar.getDescription().isEmpty()) {
                         logger.info("- {}", cvar.getDescription());
                     }
@@ -442,7 +443,7 @@ public class DevConsole {
 
     /**
      * Reset flagged CVars to their default values
-     * 
+     *
      * @param flags The flags to search for
      */
     public void resetCVars(int flags) {
@@ -474,7 +475,7 @@ public class DevConsole {
             }
         }
     };
-    
+
     public IConsoleCompleter getCVarCompleter() {
         return cvarCompleter;
     }
@@ -490,7 +491,7 @@ public class DevConsole {
             }
         }
     };
-    
+
     public IConsoleCompleter getCmdCompleter() {
         return cmdCompleter;
     }
@@ -593,7 +594,8 @@ public class DevConsole {
     };
 
     private final ConsoleCmd exec_f = new ConsoleCmd("exec", CCmdFlags.SYSTEM,
-            "Execute a config.", 1 /*, new ConArgCompleteFile("", ".cfg")*/) {
+            "Execute a config.", 1 /* , new
+     * ConArgCompleteFile("", ".cfg") */) {
         @Override
         public void showUsage() {
             showUsage("<filename[.cfg]>");
@@ -629,12 +631,23 @@ public class DevConsole {
     };
 
     private final ConsoleCmd listCVars_f = new ConsoleCmd("listcvars", CCmdFlags.SYSTEM, "Lists all cvars currently available.") {
+        private final String[] options = {"-help", "-type", "-flags"};
+
         @Override
         public void showUsage() {
             showUsage("[search string]        = list cvar values");
             showUsage("-help [search string]  = list cvar descriptions");
             showUsage("-type [search string]  = list cvar types");
             showUsage("-flags [search string] = list cvar flags");
+        }
+
+        @Override
+        public void complete(String prefix, List<String> results) {
+            for (String option : options) {
+                if (option.startsWith(prefix)) {
+                    results.add(option);
+                }
+            }
         }
 
         @Override
@@ -661,7 +674,8 @@ public class DevConsole {
                             continue;
                         }
 
-                        sb.append(cvar.getTypeDescription()).append("\n");
+                        sb.append(String.format("%-32.32s ", cvar.getName()))
+                                .append(cvar.getTypeDescription()).append("\n");
                         found++;
                     }
                 } else if (arg1.equals("-flags")) {
@@ -673,9 +687,8 @@ public class DevConsole {
                         if (match && cvar.getName().indexOf(matchstr) == -1) {
                             continue;
                         }
-                        String message = String.format("%-32.32s %s",
-                                cvar.getName(), Integer.toBinaryString(cvar.getFlags()));
-                        sb.append(message).append("\n");
+                        sb.append(String.format("%-32.32s ", cvar.getName()))
+                                .append(Integer.toBinaryString(cvar.getFlags())).append("\n");
                         found++;
                     }
                 } else if (arg1.equals("-help")) {
@@ -687,8 +700,7 @@ public class DevConsole {
                         if (match && cvar.getName().indexOf(matchstr) == -1) {
                             continue;
                         }
-                        String message = String.format("%-32.32s %-32.32s", cvar.getName(), cvar.getDescription());
-                        sb.append(message).append("\n");
+                        sb.append(String.format("%-32.32s %-32.32s\n", cvar.getName(), cvar.getDescription()));
                         found++;
                     }
                 } else {
@@ -705,8 +717,7 @@ public class DevConsole {
                     if (match && cvar.getName().indexOf(matchstr) == -1) {
                         continue;
                     }
-                    String message = String.format("%-32.32s %-32.32s", cvar.getName(), cvar.toString());
-                    sb.append(message).append("\n");
+                    sb.append(String.format("%-32.32s %-32.32s\n", cvar.getName(), cvar.toString()));
                     found++;
                 }
             }

@@ -77,7 +77,7 @@ public class CVarEnum<T extends Enum> extends CVar {
     @Override
     public String getTypeDescription() {
         StringBuilder sb = new StringBuilder();
-        sb.append("enum ").append(name).append(" [");
+        sb.append("enum [");
 
         boolean first = true;
         for (T o : clazz.getEnumConstants()) {
