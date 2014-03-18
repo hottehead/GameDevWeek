@@ -15,7 +15,7 @@ public class ServerGameDatagramHandler implements DatagramHandler {
 		NetworkManager.getInstance().broadcastToClients(
 				new ChatDeliverDatagram(sender, 
 						chatDatagram.getText()));
-		NetworkManager.getInstance().receiveChat(sender, chatDatagram.getText());
+		if(!NetworkManager.getInstance().isClient()) NetworkManager.getInstance().receiveChat(sender, chatDatagram.getText());
 	}
 
 	@Override

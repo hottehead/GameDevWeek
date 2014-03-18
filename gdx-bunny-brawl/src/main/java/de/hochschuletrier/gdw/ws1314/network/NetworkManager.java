@@ -54,6 +54,7 @@ public class NetworkManager {
 		}
 		try {
 			clientConnection=new NetConnection(ip, port, datagramFactory);
+			if(clientConnection.isAccepted()) logger.info("Connected.");
 		} catch (IOException e) {
 			logger.error("Can't connect.",e);
 		}
@@ -66,6 +67,7 @@ public class NetworkManager {
 		serverConnections=new ArrayList<NetConnection>();
 		try {
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
+			if(serverReception.isRunning()) logger.info("Listening.");
 		} catch (IOException e) {
 			logger.error("Can't listen for connections.", e);
 			serverConnections=null;
@@ -117,6 +119,7 @@ public class NetworkManager {
 		}
 		else if (isServer()){
 			broadcastToClients(new ChatDeliverDatagram("SERVER",text));
+			receiveChat("SERVER", text);
 		}
 		else {
 			logger.error("Can't send chat message, when not connected.");
@@ -184,6 +187,7 @@ public class NetworkManager {
 				connection.setAccepted(true);
 				connection.setAttachment("Player "+(nextPlayerNumber++));
 				serverConnections.add(connection);
+				logger.info("Client connected.");
 				connection = serverReception.getNextNewConnection();
 			}
 		}
