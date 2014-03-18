@@ -39,4 +39,6 @@ public abstract class ClientEntity
     public abstract void update(float delta);
 	
 	public abstract void render();
+	
+	public abstract void setEntityState(EntityState state);
 }
