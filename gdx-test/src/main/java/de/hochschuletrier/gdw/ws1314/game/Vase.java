@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.MassData;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.assets.ImageX;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
@@ -24,7 +25,7 @@ public class Vase extends PhysixEntity {
 	private Vector2 origin = new Vector2(0f, 0f);
 	private float rotation = 0f;
 	private Vector2 scale = new Vector2(1f, 1f);
-	private TextureRegion region;
+	private ImageX image;
 
 	public Vase(float x, float y) {
 		position = new Vector2(x, y);
@@ -32,9 +33,9 @@ public class Vase extends PhysixEntity {
 
 	public void initPhysics(PhysixManager manager) {
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-				.position(position.x - region.getRegionWidth() / 2, position.y
-				- region.getRegionHeight() / 2).fixedRotation(false).create();
-		float scaling = manager.toBox2D(region.getRegionWidth());
+				.position(position.x - image.getWidth() / 2, position.y
+				- image.getHeight() / 2).fixedRotation(false).create();
+		float scaling = manager.toBox2D(image.getWidth());
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = 2f;
 		loader.attachFixture(body.getBody(), "test01", fixtureDef, scaling);
@@ -45,21 +46,21 @@ public class Vase extends PhysixEntity {
 	}
 
 	public void initGraphics(AssetManagerX assets) {
-		region = new TextureRegion(assets.getTexture("vase"));
+		image = assets.getImageX("vase");
 	}
 
 	public void update() {
 		rotation = physicsBody.getAngle();
 	}
 	public void setPosition(Vector2 position) {
-		physicsBody.setTransform(position.x - region.getRegionWidth() / 2, position.y
-				- region.getRegionHeight() / 2, 0);
+		physicsBody.setTransform(position.x - image.getWidth() / 2, position.y
+				- image.getHeight() / 2, 0);
         physicsBody.setLinearVelocity(Vector2.Zero);
         physicsBody.setAngularVelocity(0);
 	}
 
-	public TextureRegion getRegion() {
-		return region;
+	public ImageX getImage() {
+		return image;
 	}
 
 	public float getRotation() {

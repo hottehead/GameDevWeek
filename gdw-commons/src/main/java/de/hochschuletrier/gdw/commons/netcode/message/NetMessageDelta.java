@@ -213,6 +213,26 @@ public class NetMessageDelta implements INetMessageInternal {
     }
 
     @Override
+    public long getLong() {
+        long value;
+        if (base == null) {
+            value = message.getLong();
+            changed = true;
+        } else {
+            value = base.getLong();
+            if (deltaBits.get(deltaBitIndex++)) {
+                value = message.getLong();
+                changed = true;
+            }
+        }
+
+        if (newBase != null) {
+            newBase.putLong(value);
+        }
+        return value;
+    }
+
+    @Override
     public float getFloat() {
         float value;
         if (base == null) {
@@ -230,6 +250,31 @@ public class NetMessageDelta implements INetMessageInternal {
             newBase.putFloat(value);
         }
         return value;
+    }
+
+    @Override
+    public double getDouble() {
+        double value;
+        if (base == null) {
+            value = message.getDouble();
+            changed = true;
+        } else {
+            value = base.getDouble();
+            if (deltaBits.get(deltaBitIndex++)) {
+                value = message.getDouble();
+                changed = true;
+            }
+        }
+
+        if (newBase != null) {
+            newBase.putDouble(value);
+        }
+        return value;
+    }
+    
+    @Override
+    public <T> T getEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[get()];
     }
 
     @Override
@@ -349,6 +394,27 @@ public class NetMessageDelta implements INetMessageInternal {
     }
 
     @Override
+    public void putLong(long value) {
+        if (newBase != null) {
+            newBase.putLong(value);
+        }
+
+        if (base == null) {
+            message.putLong(value);
+            changed = true;
+        } else {
+            long baseValue = base.getLong();
+            if (baseValue == value) {
+                deltaBits.set(deltaBitIndex++, false);
+            } else {
+                deltaBits.set(deltaBitIndex++, true);
+                message.putLong(value);
+                changed = true;
+            }
+        }
+    }
+
+    @Override
     public void putFloat(float value) {
         if (newBase != null) {
             newBase.putFloat(value);
@@ -367,6 +433,32 @@ public class NetMessageDelta implements INetMessageInternal {
                 changed = true;
             }
         }
+    }
+
+    @Override
+    public void putDouble(double value) {
+        if (newBase != null) {
+            newBase.putDouble(value);
+        }
+
+        if (base == null) {
+            message.putDouble(value);
+            changed = true;
+        } else {
+            double baseValue = base.getDouble();
+            if (baseValue == value) {
+                deltaBits.set(deltaBitIndex++, false);
+            } else {
+                deltaBits.set(deltaBitIndex++, true);
+                message.putDouble(value);
+                changed = true;
+            }
+        }
+    }
+
+    @Override
+    public void putEnum(Enum value) {
+        putInt(value.ordinal());
     }
 
     @Override

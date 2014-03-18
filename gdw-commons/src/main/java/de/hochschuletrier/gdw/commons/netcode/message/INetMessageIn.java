@@ -53,9 +53,24 @@ public interface INetMessageIn {
     int getInt();
 
     /**
+     * @return one long read from the buffer
+     */
+    long getLong();
+
+    /**
      * @return one float read from the buffer
      */
     float getFloat();
+
+    /**
+     * @return one double read from the buffer
+     */
+    double getDouble();
+
+    /**
+     * @return one enum read from the buffer
+     */
+    <T> T getEnum(Class<T> clazz);
 
     /**
      * @return one string read from the buffer

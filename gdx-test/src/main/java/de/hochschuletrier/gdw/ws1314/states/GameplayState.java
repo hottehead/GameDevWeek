@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.cameras.DefaultOrthoCameraController;
+import de.hochschuletrier.gdw.commons.gdx.assets.ImageX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
@@ -27,7 +25,7 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	private Game game;
 	private Sound click;
-	private Texture crosshair;
+	private ImageX crosshair;
 	private final Vector2 cursor = new Vector2();
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
 
@@ -37,7 +35,7 @@ public class GameplayState extends GameState implements InputProcessor {
 	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		crosshair = assetManager.getTexture("crosshair");
+		crosshair = assetManager.getImageX("crosshair");
 		click = assetManager.getSound("click");
 		game = new Game();
 		game.init(assetManager);
@@ -49,23 +47,15 @@ public class GameplayState extends GameState implements InputProcessor {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 
 		DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-				Color.GRAY);
+				Color.BLUE);
 
-		Vase vase = game.getVase();
-		DrawUtil.batch.draw(vase.getRegion(), vase.getPosition().x, vase.getPosition().y,
-				vase.getOrigin().x, vase.getOrigin().y,
-				vase.getRegion().getRegionWidth(), vase.getRegion().getRegionHeight(),
-				vase.getScale().x, vase.getScale().y, vase.getRotation()
-						* MathUtils.radDeg);
-
-		DrawUtil.batch.draw(crosshair, cursor.x - crosshair.getWidth() * 0.5f, cursor.y
-				- crosshair.getHeight() * 0.5f);
 		game.render();
 	}
 
 	@Override
 	public void update(float delta) {
 		game.update(delta);
+		
 		fpsCalc.addFrame();
 	}
 

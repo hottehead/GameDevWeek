@@ -57,7 +57,7 @@ public class CVarInt extends CVar {
 
     @Override
     public String getTypeDescription() {
-        return String.format("int %s [%d, %d]", name, min, max);
+        return String.format("int [%d - %d]", min, max);
     }
 
     @Override
