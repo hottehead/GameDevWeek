@@ -44,6 +44,7 @@ public class NetworkManager {
 	
 	private LobbyUpdateCallback lobbyupdatecallback;
 	private PlayerUpdateCallback playerupdatecallback;
+	private MatchUpdateCallback matchupdatecallback;
 
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
@@ -81,6 +82,22 @@ public class NetworkManager {
 	
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
+	}
+	
+	public MatchUpdateCallback getMatchUpdateCallback(){
+		return matchupdatecallback;
+	}
+	
+	public void setLobbyUpdateCallback(LobbyUpdateCallback callback){
+		this.lobbyupdatecallback = callback;
+	}
+	
+	public void setPlayerUpdateCallback(PlayerUpdateCallback callback){
+		this.playerupdatecallback = callback;
+	}
+	
+	public void setMatchUpdateCallback(MatchUpdateCallback callback){
+		this.matchupdatecallback = callback;
 	}
 	
 	

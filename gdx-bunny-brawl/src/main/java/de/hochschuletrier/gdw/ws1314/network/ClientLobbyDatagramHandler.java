@@ -50,7 +50,7 @@ public class ClientLobbyDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle (MatchUpdateDatagram matchUpdateDatagram, NetConnection connection) {
-
+    	NetworkManager.getInstance().getMatchUpdateCallback().callback(matchUpdateDatagram.getMap());
     }
     
     @Override
