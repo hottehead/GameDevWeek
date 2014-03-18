@@ -18,7 +18,6 @@ public class LevelSelectorStage extends AutoResizeStage {
 
 	Table uiTable;
 	private Skin defaultSkin;
-//	List<LevelElement> levelList;
 	
 	public LevelSelectorStage() {
 	}
@@ -26,11 +25,6 @@ public class LevelSelectorStage extends AutoResizeStage {
 	private void initSkin(AssetManagerX assetManager) {
 		defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
-	
-//	private void addLevel(String levelName) {
-//		LevelElement button = new LevelElement(levelName, defaultSkin);
-//		levelList.getItems().add(button);
-//	}
 	
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#init()
@@ -45,21 +39,13 @@ public class LevelSelectorStage extends AutoResizeStage {
 		
 		this.addActor(uiTable);	
 		
-//		levelList = new List<LevelElement>(defaultSkin);
-//		ScrollPane sp = new ScrollPane(levelList);
-//		addLevel("new Level");
-//		addLevel("newer Level");
-//		uiTable.add(sp);
-		
 		LevelList list = new LevelList(defaultSkin);
 		list.addLevel("new Level");
 		list.addLevel("newer Level");
 		list.addLevel("another level");
 		uiTable.add(list);
-		
-//		InputStream is = CurrentResourceLocator.read("data/json/hudstyle.json");
-		
-//		uiTable.debug(Debug.all);
+
+		uiTable.debug(Debug.all);
 	}
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#render()
