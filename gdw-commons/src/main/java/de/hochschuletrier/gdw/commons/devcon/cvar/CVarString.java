@@ -38,7 +38,7 @@ public class CVarString extends CVar {
 
     @Override
     public String getTypeDescription() {
-        return "string " + name;
+        return "string";
     }
 
     @Override
