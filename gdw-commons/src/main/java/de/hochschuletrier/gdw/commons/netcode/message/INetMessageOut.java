@@ -70,6 +70,13 @@ public interface INetMessageOut {
     void putFloat(float value);
 
     /**
+     * Write an enum into the buffer
+     *
+     * @param value the value
+     */
+    void putEnum(Enum value);
+
+    /**
      * Write a string into the buffer (a number of characters terminated by a '\0')
      *
      * @param value the value
