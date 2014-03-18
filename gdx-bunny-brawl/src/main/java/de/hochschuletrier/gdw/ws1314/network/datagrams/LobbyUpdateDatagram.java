@@ -19,10 +19,11 @@ public class LobbyUpdateDatagram extends BaseDatagram{
     
     private String map;
  
-    private String playername;
-    private EntityType type;
-    private byte team;
-    private boolean accept;
+    private int playercount;
+    private String[] playername;
+    private EntityType[] type;
+    private byte[] team;
+    private boolean[] accept;
 
     @Override
     public void handle (DatagramHandler handler, NetConnection connection) {
@@ -31,37 +32,49 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-    	message.putString(playername);
-    	message.putEnum(type);
-    	message.put(team);
-    	message.putBool(accept);
+    	message.putString(map);
+    	message.putInt(playercount);
+    	for(int i = 0; i < playercount; i++){
+	    	message.putString(playername[i]);
+	    	message.putEnum(type[i]);
+	    	message.put(team[i]);
+	    	message.putBool(accept[i]);
+    	}
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-    	playername = message.getString();
-    	type = message.getEnum(EntityType.class);
-    	team = message.get();
-    	accept = message.getBool();
+    	map = message.getString();
+    	playercount = message.getInt();
+    	playername = new String[playercount];
+    	type = new EntityType[playercount];
+    	team = new byte[playercount];
+    	accept = new boolean[playercount];
+    	for(int i = 0; i < playercount; i++){
+	    	playername[i] = message.getString();
+	    	type[i] = message.getEnum(EntityType.class);
+	    	team[i] = message.get();
+	    	accept[i] = message.getBool();
+    	}
     }
 
 	public String getMap() {
 		return map;
 	}
 
-	public String getPlayername() {
+	public String[] getPlayernames() {
 		return playername;
 	}
 
-	public EntityType getEntityType() {
+	public EntityType[] getEntityTypes() {
 		return type;
 	}
 
-	public byte getTeam() {
+	public byte[] getTeams() {
 		return team;
 	}
 
-	public boolean isAccept() {
+	public boolean[] getAccepts() {
 		return accept;
 	}
     
