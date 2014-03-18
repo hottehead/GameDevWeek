@@ -22,10 +22,19 @@ public class AnimationLoader extends
 		super(resolver);
 		// TODO Auto-generated constructor stub
 	}
+    
+    public enum PlayType {
+        NORMAL,
+        REVERSED,
+        LOOP,
+        LOOP_REVERSED,
+        LOOP_PINGPONG,
+        LOOP_RANDOM;
+    }
 
 	static public class AnimationParameter extends AssetLoaderParametersX<Animation> {
 		public Float frameDuration = 100.0f;
-		public Integer playType = 0;
+		public PlayType playType = PlayType.NORMAL;
 		public Integer rows = 1;
 		public Integer columns = 1;
 		public Integer frames = 1;
@@ -72,8 +81,10 @@ public class AnimationLoader extends
 				index++;
 			}
 		}
+        
 		Animation animation = new Animation(parameter.frameDuration, frames);
-		animation.setPlayMode(parameter.playType);
+        int playMode = (parameter.playType == null) ? 0 : parameter.playType.ordinal();
+		animation.setPlayMode(playMode);
 		return animation;
 	}
 
