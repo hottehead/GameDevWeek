@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+
 public class NetworkManager {
 	private static NetworkManager instance = new NetworkManager();
 	private NetworkManager(){}
@@ -11,7 +13,7 @@ public class NetworkManager {
 		//TODO: Implement
 	}
 	
-	public void sendAction(int eventPlayerIntention){
+	public void sendAction(PlayerIntention eventPlayerIntention){
 		//TODO: Implement
 	}
 	
