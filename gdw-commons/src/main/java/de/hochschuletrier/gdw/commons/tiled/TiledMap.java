@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxDataConverter;
@@ -260,7 +261,25 @@ public class TiledMap {
     final TmxMap readMapFrom(String filename) throws FileNotFoundException {
         InputStream in = CurrentResourceLocator.read(filename);
 
-        XStream xStream = new XStream(new DomDriver());
+        XStream xStream = new XStream(new DomDriver()) {
+           @Override
+            protected MapperWrapper wrapMapper(MapperWrapper next) {
+                return new MapperWrapper(next) {
+                    @Override
+                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                     if (definedIn == Object.class) {
+                     try {
+                     return this.realClass(fieldName) != null;
+                     } catch(Exception e) {
+                     return false;
+                     }
+                     } else {
+                            return super.shouldSerializeMember(definedIn, fieldName);
+                        }
+                    }
+                };
+            }
+        };
 
         xStream.processAnnotations(TmxLayer.class);
         xStream.processAnnotations(TmxObjectGroup.class);
