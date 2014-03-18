@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
