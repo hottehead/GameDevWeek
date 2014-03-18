@@ -1,18 +1,20 @@
 package de.hochschuletrier.gdw.ws1314.basic;
 
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+
 public class PlayerInfo {
 	protected String name;
 	protected boolean isReady;
-	protected Team team;
+	protected TeamColor teamColor;
 	//protected CharacterClass charClass;
 	
 	public PlayerInfo(String name) {
-		this(name, Team.WHITE);
+		this(name, TeamColor.WHITE);
 	}
 	
-	public PlayerInfo(String name, Team team) {
+	public PlayerInfo(String name, TeamColor team) {
 		this.name = name;
-		this.team = team;
+		this.teamColor = team;
 		this.isReady = false;
 	}
 	
@@ -23,19 +25,19 @@ public class PlayerInfo {
 		this.name = name;
 	}
 	
-	public Team getTeam() {
-		return this.team;
+	public TeamColor getTeam() {
+		return this.teamColor;
 	}
-	public void setTeam(Team team) {
-		this.team = team;
+	public void setTeam(TeamColor teamColor) {
+		this.teamColor = teamColor;
 	}
 	
 	public void changeTeam()
 	{
-		if (this.team == Team.WHITE)
-			this.team = Team.BLACK;
+		if (this.teamColor == TeamColor.WHITE)
+			this.teamColor = TeamColor.BLACK;
 		else
-			this.team = Team.WHITE;
+			this.teamColor = TeamColor.WHITE;
 	}
 	
 	public boolean isReady() {

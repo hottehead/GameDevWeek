@@ -8,5 +8,8 @@ public enum EntityType {
     Hunter,
     Tank,
     Ei,
-    Projectil
+    Projectil,
+    Bridge,
+    BridgeSwitch,
+    Bush
 }
