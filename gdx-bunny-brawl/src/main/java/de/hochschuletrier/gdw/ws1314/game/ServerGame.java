@@ -7,6 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -28,7 +30,6 @@ import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-
 /**
  * 
  * @author Santo Pfingsten
@@ -53,7 +54,7 @@ public class ServerGame {
 		netManager = NetworkManager.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
 		loadSolids();
-	}
+    }
 
 	public void init(AssetManagerX assets) {
 		Main.getInstance().console.register(gravity_f);

@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+package de.hochschuletrier.gdw.ws1314.network;
+
+public interface ChatListener {
+	void chatMessage(String sender, String text);
+}
+=======
+package de.hochschuletrier.gdw.ws1314.network;
+
+public interface ChatListener {
+	void chatMessage(String sender, String text);
+}
+>>>>>>> 1916dfe58ab9db52e3c0fe43ac6d27ef2c69a78c
