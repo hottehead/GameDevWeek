@@ -1,0 +1,107 @@
+Bunny Brawl
+
+- Top-down-Action-Ressourcensammelspiel mit zwei Teams (ähnlich CTF) 
+
+- Der Spieler hat folgende Auswahlmöglichkeiten:
+	-- Hasentyp (z.B. Knight, Tank, Hunter etc.) mit unterschiedlichen Statuswerten (siehe Tabelle in der PDF für Beispiele), für den Anfang mal 3 Klassen.
+	-- Team (SCHWARZ oder WEISS)
+	
+- Der Level (die Map) wird zufällig ausgewählt.
+
+- Hasen können in alle Richtungen laufen.
+- Hasen können Eier aufnehmen, indem sie darüberlaufen. Nur so viele, wie sie tragen können (siehe Tabelle).
+- Ein Hase kann ein Ei durch Tastendruck wieder fallen lassen. Hält er mehrere, legt er eins pro Tastendruck ab. Das Ei landet direkt unter dem Hasen. Das Ei bleibt dort liegen und kann nun von allen wieder aufgenommen werden. Möchte der Hase, der es fallengelassen hat, es wieder aufnehmen, so muss er sich erst von dem Ei herunterbewegen und dann erneut darüber laufen.
+- Wird ein Ei in den farblich gekennzeichneten Home-Bereich eines Teams gebracht, wird dem entsprechenden Team ein Punkt gutgeschrieben und es verschwindet nach 20 Sekunden (Beispielzeit) aus dem Level. Bevor es verschwindet, kann es noch aufgenommen und aus dem Home-Bereich entfernt werden. Der Punkt wird dann wieder abgezogen.
+
+- Hasen können andere Hasen schlagen oder auf sie schießen. Für Beispiele für Statuswerte, Reichweiten etc. siehe Tabelle.
+- Wird ein Hase getroffen, wird er ein kleines Stück zurückgestoßen. (Genaueres siehe "Schadensberechnung")
+- Es wird so lange Lebenspunkte_Verteidiger - Angriff_Angreifer gerechnet, bis die Lebenspunkte auf 0 (oder darunter) sinken. Der besiegte Hase kann sich für 2 Sekunden (Beispielzeit) nicht bewegen, aber auch nicht angegriffen werden. Hält er ein Ei, lässt er es dann neben sich fallen (zufällig in 1-Tile Radius um den Hasen). Das Ei bleibt dort liegen und kann nun von allen wieder aufgenommen werden. Landet ein verlorenes Ei zufällig auf einem anderen Hasen, nimmt dieser es sofort auf, wenn er es noch tragen kann.
+- Hat der Hase sich nach den 2 Sekunden wieder erholt, sind auch seine Lebenspunkte wieder voll aufgefüllt.
+- Ein besiegter Hase lässt immer nur ein Ei fallen, auch, wenn er mehrere trägt. Weitere Eier behält der Hase (verläufig, das Opfer).
+- Hasen können nicht durch Hiebe oder Schüsse getötet werden.
+
+- Hasen können sterben, wenn sie in einen Abgrund, Lava etc. fallen. Dann
+	-- respawnt der Hase sofort am Startpunkt des Levels. Er kann für 10 Sekunden (Beispielzeit) keine Eier aufnehmen.
+	-- respawnen die Eier, die er bei sich trug, an ihren jeweiligen Startpunkten.
+- Fällt ein Ei in Lava, einen Abgrund etc. respawt es sofort an seinem Startpunkt. (Die Anzahl der Eier im Level kann also nicht durch Zerstörung eines Eis verringert werden.)
+
+- Schwerere Hasen können leichtere Hasen schieben (Physik, bitte?). Für Wertbeispiele siehe Tabelle.
+- Hasen können Gegenstände (z.B. Eisblöcke in Lava) schieben, indem sie sich auf sie zubewegen (soll heißen ohne Tastendruck oder so, einfach beim Gehen), werden dann aber langsamer (so mit Physik wär geil).
+- Hasen können durch eine Attacke (auch von fern) Schalter umlegen (um z.B. Brücken erscheinen- oder wieder verschwindenzulassen).
+- Eisblöcke, die in Lava geschoben werden, erzeugen für 5 Sekunden (Beispielzeit) begehbare Plattformen (1 Tile groß). Ist die Plattform geschmolzen, respawnt der Eisblock sofort an seiner Startposition und kann erneut verwendet werden.
+
+- Geschwindigkeit bezeichnet die Fortbewegungsgeschwindigkeit eines Hasen auf der Map, also seine Laufgeschwindigkeit. Die Werte der Tabelle sind nur im Verhältnis zueinander zu sehen und stellen keine absoluten Werte dar. ;)
+- Ebenso die Reichweite der Angriffe.
+
+- Die Runde ist vorbei, wenn alle Eier eingesammelt und in die Home-Bereiche gebracht sind. Das Team mit mehr Eiern gewinnt.
+- Die Anzahl der Eier pro Level ist immer ungerade; Gleichstand ist nicht möglich.
+
+- Durch unterschiedliche Teamkonstellationen können dann unterschiedliche Taktiken gefahren werden. 
+
+- Hilfsgegenstände
+	-- Möhrchen (Geschwindigkeit x 1,5 für 10 Sekunden)
+	-- Spinat (Angriff x 1,5 für 10 Sekunden)
+	-- Klee (Lebenspunkte x 1,5 für 10 Sekunden, danach min(LP_normal, LP_verbleibend), z.B. Tank (LP_normal = 1000): 1250 verbleibende LP => 1000, Tank: 750 verbleibende LP => 750)
+	...
+
+- Hindernisse
+	-- Büsche (mit einem Schlag zerzörbar, man denke an Zelda)
+	-- Brücken (Schalter umlegen zum Auftauchen und Verschwindenlassen, Hasen darauf fallen in den Abgrund)
+	-- Tretminen (nachdem man drüber geht beginnt ein Countdown von 5 Sekunden, dann explodiert die Mine und verursacht schaden von 100 Punkten im Radius von 1 Tile und 50 LP im Radius von 2 Tiles)
+	..
+
+
+Aufgaben für die Designer:
+
+- Character-Konzepte
+- Character-Illustrationen für den Auswahlbildschirm
+	-- Knight
+	-- Tank
+	-- Hunter
+	-- Healer
+	-- Thief
+- Character-Animationen (Sprites)
+	-- Idle
+	-- Laufen (8 Richtungen, 3 davon nur gespiegelt)
+	-- getroffen
+	-- verbrennen
+	-- in Abgrund fallen
+- Attacken-Animationen
+	-- Schwertschlag (Knight)	
+	-- Schlag (Tank)
+	-- Pfeil (Hunter)
+	-- heilendes Licht (Healer)
+	-- Dolchstoß (Thief)
+- Tilesets
+	-- Boden
+	-- Wände
+	-- Lava
+	-- Abgrund
+	-- Home-Bereiche
+	...
+- Objekte (Sprites)
+	-- goldene Eier
+	-- Schalter
+	-- Brücken
+	-- Eisblöcke / erhärtete Lavaplattformen
+	-- Möhren
+	-- Spinat
+	...
+- Interface
+	-- Logo und Startmenü (Hasenwahl, Teamwahl, Hilfe etc.)
+	-- HUD (Icon für Team und Klasse, Lebensanzeige etc.)
+	-- Game-Over- bzw. Siegesbildschirm
+	...
+
+
+Denkbare Erweiterungen:
+
+- Mehr Klassen: Healer und Thief, weitere denkbar
+- Jeder Hasentyp erhält eine Spezialfähigkeit:
+	-- Knight: Blocken mit dem Schild (~120°). Dann kann er sich allerdings nicht von der Stelle bewegen, erhält dafür aber keinen Schaden.
+	-- Thief: Kann als Spezialangriff ein Ei klauen (ohne Schaden zuzufügen). Geht nur, wenn er kein Ei bei sich trägt!
+	...?
+- Mehr Arten von Tiles, z.B. Wasser, hohes Gras etc.
+- Animierte Tiles, z.B. animierte Lava, ähnlich wie die Autotiles im RPG-Maker früher. ;)
+- Mehr Arten von Objekten, z.B. Steinblöcke, die mit Bomben gesprengt werden müssen (eine Bombe verhält sich wie ein Ei, wird beim Fallenlassen oder Ablegen aber gezündet und verhält sich dann wie eine Tretmine).
+- Minimap, auf der Hasen und Eier im Level zu sehen sind.
