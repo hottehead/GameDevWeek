@@ -31,7 +31,7 @@ public class ServerGame {
     private NetworkManager netManager;
 
     public ServerGame() {
-        entityManager = new ServerEntityManager();
+        entityManager = ServerEntityManager.getInstance();
         netManager = NetworkManager.getInstance();
 	}
 
