@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -121,6 +122,7 @@ public class ServerPlayer extends ServerEntity
 	public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
 	public PlayerKit		getPlayerKit()			{ return playerKit; }
 	public TeamColor		getTeamColor()			{ return teamColor; }
+	public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
 	
 	public void setPlayerKit(PlayerKit kit)
 	{

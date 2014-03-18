@@ -41,6 +41,8 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
     public abstract void initialize();
 
 	public abstract void update(float deltaTime);
+	
+	public abstract EntityType getEntityType();
 
     public void setProperties(SafeProperties properties){
         this.properties = properties;
