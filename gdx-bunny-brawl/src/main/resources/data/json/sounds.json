@@ -14,5 +14,22 @@
 	"speech-general-pain_6"	:	"data/sounds/Pain6.ogg",
 	"speech-general-yeay_1"	:	"data/sounds/Yeay1.ogg",
 	"speech-general-yeay_2"	:	"data/sounds/Yeay2.ogg",
-	"speech-general-yeay_3"	:	"data/sounds/Yeay3.ogg"
+	"speech-general-yeay_3"	:	"data/sounds/Yeay3.ogg",
+	"speech-tank-fall_1"	:	"data/sounds/TankFall1.ogg",
+	"speech-tank-fall_2"	:	"data/sounds/TankFall2.ogg",
+	"speech-tank-ko_1"		:	"data/sounds/TankKo1.ogg",
+	"speech-tank-ko_2"		:	"data/sounds/TankKo2.ogg",
+	"speech-tank-nom_1"		:	"data/sounds/TankNom1.ogg",
+	"speech-tank-nom_2"		:	"data/sounds/TankNom2.ogg",
+	"speech-tank-pain_1"	:	"data/sounds/TankPain1.ogg",
+	"speech-tank-pain_2"  	:	"data/sounds/TankPain2.ogg",
+	"speech-tank-pain_3"  	:	"data/sounds/TankPain3.ogg",
+	"speech-tank-pain_4"  	:	"data/sounds/TankPain4.ogg",
+	"speech-tank-pain_5"  	:	"data/sounds/TankPain5.ogg",
+	"speech-tank-pain_6"  	:	"data/sounds/TankPain6.ogg",
+	"speech-tank-yeay_1"	:	"data/sounds/TankYeay1.ogg",
+	"speech-tank-yeay_2"	:	"data/sounds/TankYeay2.ogg",
+	"speech-tank-yeay_3"	:	"data/sounds/TankYeay3.ogg"
+
+
 }
