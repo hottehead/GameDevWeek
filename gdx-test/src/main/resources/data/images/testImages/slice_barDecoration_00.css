@@ -1,0 +1,5 @@
+.barDecoration {
+	border-style: solid;
+	border-width: 1px 2px 2px 1px;
+	border-image: url(slice_barDecoration_00.png) 1 2 2 1 fill stretch;
+}

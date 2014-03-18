@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -11,9 +12,13 @@ public class LoadGameState extends GameState {
 
     private boolean isDone;
 
+    public LoadGameState() {
+	}
+    
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+        
     }
 
     @Override
@@ -37,7 +42,9 @@ public class LoadGameState extends GameState {
             // VSync was only disabled to speed up loading
             Gdx.graphics.setVSync(true);
 
+            
             Main.getInstance().onLoadComplete();
+            
             isDone = true;
         }
     }
