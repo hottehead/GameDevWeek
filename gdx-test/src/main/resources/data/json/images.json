@@ -13,5 +13,6 @@
     "debugClass": "data/images/testImages/classIcon.png",
     "debugScoreEnemy": "data/images/testImages/scoreTeamIcon.png",
     "debugScoreTeam": "data/images/testImages/scoreEnemyIcon.png",
-    "debugTooltip": "data/images/testImages/tooltip.png"
+    "debugTooltip": "data/images/testImages/tooltip.png",
+    "debugAttackIcon": "data/images/testImages/attackIcon.png"
 }

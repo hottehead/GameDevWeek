@@ -2,7 +2,7 @@ package de.hochschuletrier.gdw.ws1314.hud.elements;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class VisualBar extends StaticVisualBar {
+public class VisualBar extends VisualBox {
 
 	final MinMaxValue watchedValue;
 
@@ -13,7 +13,7 @@ public class VisualBar extends StaticVisualBar {
 	}
 
 	public void draw() {
-		HudRendering.drawElement(tex, positionX, positionY,
+		HudRendering.drawElement(texture, positionX, positionY,
 				this.watchedValue.getValueFactor() * width, height);
 	}
 }

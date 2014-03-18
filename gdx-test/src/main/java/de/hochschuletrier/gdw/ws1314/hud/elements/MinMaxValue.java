@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 
 
 public class MinMaxValue {
-
 	protected float stepSize;
 	protected float minValue;
 	protected float maxValue;

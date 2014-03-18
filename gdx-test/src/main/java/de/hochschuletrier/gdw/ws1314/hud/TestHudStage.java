@@ -9,16 +9,20 @@ import com.badlogic.gdx.math.MathUtils;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BarBackgroundDecoration;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BarFrontDecorator;
-import de.hochschuletrier.gdw.ws1314.hud.elements.BarTextDecorator;
+import de.hochschuletrier.gdw.ws1314.hud.elements.BoxOffsetDecorator;
+import de.hochschuletrier.gdw.ws1314.hud.elements.DynamicTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.NinePatchSettings;
-import de.hochschuletrier.gdw.ws1314.hud.elements.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
+import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBox;
 
-public class TestHudStage extends AutoResizeStage {
+public class TestHudStage {
 
-	VisualBar visualBar;
+	VisualBox visualBar;
 	MinMaxValue healthBar;
+	
+	VisualBox attackIcon;
+	VisualBox eiAblegenIcon;
 
 	public TestHudStage() {
 	}
@@ -28,7 +32,6 @@ public class TestHudStage extends AutoResizeStage {
 	 * 
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#init()
 	 */
-	@Override
 	public void init(AssetManagerX assetManager) {
 		Texture barTex = assetManager.getTexture("debugBar");
 		Texture backBarTex = assetManager.getTexture("debugTooltip");
@@ -42,14 +45,18 @@ public class TestHudStage extends AutoResizeStage {
 				healthBarVisual, backBarTex);
 		// BarFrontDecorator frontBar = new BarFrontDecorator(test,
 		// frontBarTex);
-		visualBar = new BarTextDecorator(backgroundHealth,
-				new StaticTextElement(assetManager.getFont("verdana", 14),
-						"100", backgroundHealth.getWidth() * 0.5f,
-						backgroundHealth.getHeight() + 2));
+		visualBar = new BoxOffsetDecorator(backgroundHealth,
+				new DynamicTextElement(assetManager.getFont("verdana", 14),
+						"HP: ", backgroundHealth.getWidth() * 0.5f,
+						backgroundHealth.getHeight() + 2, healthBar));
 		visualBar = new BarFrontDecorator(visualBar, frontBarTex,
 				new NinePatchSettings(1, 2, 2, 1));
-
+		
 		healthBar.setValue(100);
+		
+		this.attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 500, 300, 64, 64);
+		
+		
 	}
 
 	/*
@@ -57,14 +64,12 @@ public class TestHudStage extends AutoResizeStage {
 	 * 
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#render()
 	 */
-	@Override
 	public void render() {
 		// this.setCamera(DrawUtil.getCamera());
-		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
-
-		this.act(Gdx.graphics.getDeltaTime());
+		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
 		visualBar.draw();
+		attackIcon.draw();
 	}
 
 	float accum = 0;
