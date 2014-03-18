@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -10,6 +11,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 
 /**
  * 
@@ -74,7 +76,52 @@ public class ServerPlayer extends ServerEntity
     	
     	// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
     }
-    
+
+    Vector2 dir = new Vector2(0,0);
+    public void doAction(PlayerIntention intent)
+    {
+        switch (intent){
+            case MOVE_TOGGLE_UP:
+                if(dir.y > 0){
+                    dir.y = 0;
+                }
+                else {
+                    dir.y = 1;
+                }
+                break;
+            case MOVE_TOGGLE_DOWN:
+                if(dir.y > 0){
+                    dir.y = 0;
+                }
+                else{
+                    dir.y = -1;
+                }
+                break;
+            case MOVE_TOGGLE_RIGHT:
+                if(dir.x > 0){
+                    dir.x = 0;
+                }
+                else{
+                    dir.x = 1;
+                }
+                break;
+            case MOVE_TOGGLE_LEFT:
+                if(dir.x > 0){
+                    dir.x = 0;
+                }
+                else{
+                    dir.x = -1;
+                }
+                break;
+            case ATTACK_1:
+                doFirstAttack();
+                break;
+            case  ATTACK_2:
+                doSecondAttack();
+                break;
+        }
+    }
+
     public void moveBegin(FacingDirection dir)
     {
     	direction = dir;
