@@ -12,15 +12,45 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class LobbyUpdateDatagram extends BaseDatagram {
     public static final byte LOBBY_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x10;
+    
+    public class PlayerData {
+    	private String playername;
+    	private EntityType type;
+    	private byte team;
+    	private boolean accept;
+    	
+    	public PlayerData(String playername, EntityType type, byte team, boolean accept){
+    		this.playername = playername;
+    		this.type = type;
+    		this.team = team;
+    		this.accept = accept;
+    	}
+    	
+		public String getPlayername() {
+			return playername;
+		}
+		public EntityType getType() {
+			return type;
+		}
+		public byte getTeam() {
+			return team;
+		}
+		public boolean isAccept() {
+			return accept;
+		}   	
+    }
     private String map;
     private int playercount;
-    private String[] playername;
-    private EntityType[] type;
-    private byte[] team;
-    private boolean[] accept;
+    private PlayerData[] players;
 
     public LobbyUpdateDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.DELTA, type, id, param1, param2);
+    }
+    public LobbyUpdateDatagram(String map, PlayerData[] players){
+    	super (MessageType.DELTA, LOBBY_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+    	this.map = map;
+    	this.playercount = players.length;
+    	this.players = players;
     }
 
     @Override
@@ -33,10 +63,10 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         message.putString (map);
         message.putInt (playercount);
         for (int i = 0; i < playercount; i++) {
-            message.putString (playername[i]);
-            message.putEnum (type[i]);
-            message.put (team[i]);
-            message.putBool (accept[i]);
+            message.putString (players[i].getPlayername());
+            message.putEnum (players[i].getType());
+            message.put (players[i].getTeam());
+            message.putBool (players[i].isAccept());
         }
     }
 
@@ -44,15 +74,9 @@ public class LobbyUpdateDatagram extends BaseDatagram {
     public void readFromMessage (INetMessageIn message) {
         map = message.getString ();
         playercount = message.getInt ();
-        playername = new String[playercount];
-        type = new EntityType[playercount];
-        team = new byte[playercount];
-        accept = new boolean[playercount];
+        players = new PlayerData[playercount];
         for (int i = 0; i < playercount; i++) {
-            playername[i] = message.getString ();
-            type[i] = message.getEnum (EntityType.class);
-            team[i] = message.get ();
-            accept[i] = message.getBool ();
+        	players[i] = new PlayerData(message.getString(),message.getEnum(EntityType.class),message.get(),message.getBool());
         }
     }
 
@@ -60,19 +84,7 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         return map;
     }
 
-    public String[] getPlayernames () {
-        return playername;
-    }
-
-    public EntityType[] getEntityTypes () {
-        return type;
-    }
-
-    public byte[] getTeams () {
-        return team;
-    }
-
-    public boolean[] getAccepts () {
-        return accept;
+    public PlayerData[] getPlayers(){
+    	return players;
     }
 }
