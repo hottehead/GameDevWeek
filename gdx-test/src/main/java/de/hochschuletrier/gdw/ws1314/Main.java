@@ -11,9 +11,13 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
@@ -97,6 +101,11 @@ public class Main extends StateBasedGame {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
+	boolean fboEnabled = true;
+	FrameBuffer sceneToTexture;
+	TextureRegion fboTexture;
+	ShaderProgram edgeProgram;
+	
 	@Override
 	public void create() {
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
@@ -111,6 +120,14 @@ public class Main extends StateBasedGame {
 
 		GameStates.LOADING.init(assetManager);
 		GameStates.LOADING.activate();
+		
+		sceneToTexture = new FrameBuffer(Format.RGB888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		fboTexture = new TextureRegion(sceneToTexture.getColorBufferTexture());
+		fboTexture.flip(false, false);
+		
+		 edgeProgram = new ShaderProgram(Gdx.files.internal("data/shaders/edgeDetection.vert"),
+	        		Gdx.files.internal("data/shaders/edgeDetection.frag"));
+	        System.out.println(edgeProgram.getLog());
 	}
 
 	public void onLoadComplete() {
@@ -130,6 +147,9 @@ public class Main extends StateBasedGame {
 
 	@Override
 	protected void preRender() {
+		if(fboEnabled) {
+			sceneToTexture.begin();
+		}
 		DrawUtil.clearColor(Color.BLACK);
 		DrawUtil.clear();
 		DrawUtil.resetColor();
@@ -141,6 +161,17 @@ public class Main extends StateBasedGame {
 	@Override
 	protected void postRender() {
 		DrawUtil.batch.end();
+		
+		if(fboEnabled) {
+			sceneToTexture.end();
+			
+			DrawUtil.batch.setShader(edgeProgram);
+			DrawUtil.batch.begin();
+			DrawUtil.batch.draw(fboTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			DrawUtil.batch.end();
+			DrawUtil.batch.setShader(null);
+		}
+		
 		if (consoleView.isVisible()) {
 			consoleView.render();
 		}

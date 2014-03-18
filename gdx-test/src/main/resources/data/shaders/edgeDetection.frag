@@ -61,7 +61,7 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 
 	float kernelFactor = 1.0f/159.0f;
 	vec4 endResult = vec4(0);
-	for(int i=0;i<9;++i) {
+	for(int i=0;i<25;++i) {
 		vec4 pixelValue = texture2D(u_texture, texCoord + offsetFetch[i]);
 		endResult.xyz += pixelValue.xyz * (kernel[i]);
 	}
@@ -73,5 +73,5 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 
 
 void main() {
-	gl_FragColor = (gaussianBlur3x3(vTexCoord)) * vColor;
+	gl_FragColor = (gaussianBlur5x5(vTexCoord)) * vColor;
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
@@ -45,7 +44,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     	testUI = new TestHudStage();
     }
 
-    ShaderProgram edgeProgram;
+    
     
     @Override
     public void init(AssetManagerX assetManager) {
@@ -60,9 +59,7 @@ public class MainMenuState extends GameState implements InputProcessor {
         demoShader = new DemoShader(Gdx.files.internal("data/shaders/demo.vertex.glsl"),
                 Gdx.files.internal("data/shaders/demo.fragment.glsl"));
         
-        edgeProgram = new ShaderProgram(Gdx.files.internal("data/shaders/edgeDetection.vert"),
-        		Gdx.files.internal("data/shaders/edgeDetection.frag"));
-        System.out.println(edgeProgram.getLog());
+       
 
         inputProcessor = new InputInterceptor(this) {
             @Override
@@ -88,7 +85,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     
     @Override
     public void render() {    	
-        DrawUtil.batch.setShader(edgeProgram);
+        
     	DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Color.GRAY);
 
 		DrawUtil.batch.draw(logo, 0, 0, logo.getWidth(), logo.getHeight(), 0, 0,
@@ -111,7 +108,6 @@ public class MainMenuState extends GameState implements InputProcessor {
 //        levelSelection.render();
         
         testUI.render();
-        DrawUtil.batch.setShader(null);
     }
 
 	float stateTime = 0f;
