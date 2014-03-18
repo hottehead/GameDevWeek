@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="dummyTilesHalb" tilewidth="32" tileheight="32">
-  <image source="../../Tiles/dummyTilesHalb.png" trans="ffffff" width="512" height="512"/>
+  <image source="dummyTilesHalb.png" trans="ffffff" width="512" height="512"/>
   <terraintypes>
    <terrain name="Gras" tile="-1">
     <properties>
