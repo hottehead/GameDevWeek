@@ -41,6 +41,9 @@ public class NetworkManager {
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
 	private int nextPlayerNumber = 1;
+	
+	private LobbyUpdateCallback lobbyupdatecallback;
+	private PlayerUpdateCallback playerupdatecallback;
 
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
@@ -71,6 +74,15 @@ public class NetworkManager {
 			serverReception=null;
 		}
 	}
+	
+	public LobbyUpdateCallback getLobbyUpdateCallback(){
+		return lobbyupdatecallback;
+	}
+	
+	public PlayerUpdateCallback getPlayerUpdateCallback(){
+		return playerupdatecallback;
+	}
+	
 	
 	public boolean isServer() {
 		return serverConnections!=null && serverReception!=null && serverReception.isRunning();

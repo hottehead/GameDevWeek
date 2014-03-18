@@ -24,11 +24,6 @@ public class ClientLobbyDatagramHandler implements DatagramHandler {
     }
 
     @Override
-    public void handle (PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection) {
-
-    }
-
-    @Override
     public void handle (LevelObjectReplicationDatagram levelObjectReplicationDatagram, NetConnection connection) {
 
     }
@@ -50,12 +45,17 @@ public class ClientLobbyDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle (LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection) {
-
+    	NetworkManager.getInstance().getLobbyUpdateCallback().callback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
     }
 
     @Override
     public void handle (MatchUpdateDatagram matchUpdateDatagram, NetConnection connection) {
 
+    }
+    
+    @Override
+    public void handle (PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection) {
+    	NetworkManager.getInstance().getPlayerUpdateCallback().callback(playerUpdateDatagram.getPlayerName(),playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept());
     }
 
     @Override
