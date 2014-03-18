@@ -28,6 +28,8 @@ public class ServerEntityManager {
         entityListMap = new HashMap<Long, ServerEntity>();
         factory = new ServerEntityFactory();
         entityIDs = new Identifier(20);
+		removalQueue = new LinkedList<ServerEntity>();
+		insertionQueue = new LinkedList<ServerEntity>();
 
         try {
             for (Class c : ClassUtils
