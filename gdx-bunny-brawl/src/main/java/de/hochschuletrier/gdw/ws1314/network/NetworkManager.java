@@ -35,6 +35,8 @@ public class NetworkManager {
 	
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
+	private int nextPlayerNumber = 1;
+	
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
 		return instance;
@@ -156,6 +158,7 @@ public class NetworkManager {
 			NetConnection connection = serverReception.getNextNewConnection();
 			while (connection != null) {
 				connection.setAccepted(true);
+				connection.setAttachment("Player "+(nextPlayerNumber++));
 				serverConnections.add(connection);
 				connection = serverReception.getNextNewConnection();
 			}
