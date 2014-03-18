@@ -64,4 +64,8 @@ public class ClientDatagramHandler implements DatagramHandler {
         //TODO
     }
 
+    @Override
+    public void handle (GameStateDatagram gameStateDatagram, NetConnection connection) {
+        //TODO
+    }
 }

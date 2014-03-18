@@ -68,4 +68,8 @@ public class ServerDatagramHandler implements DatagramHandler {
         logger.warn("Server received a DespawnDatagram, which is only intended to be sent to a client, something is wrong here...");
     }
 
+    @Override
+    public void handle (GameStateDatagram gameStateDatagram, NetConnection connection) {
+        logger.warn("Server received a GameStateDatagram, which is only intended to be sent to a client, something is wrong here...");
+    }
 }

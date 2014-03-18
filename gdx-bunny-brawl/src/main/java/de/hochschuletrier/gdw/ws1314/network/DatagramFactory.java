@@ -34,6 +34,8 @@ public class DatagramFactory implements INetDatagramFactory {
                 return new PlayerUpdateDatagram (type, id, param1, param2);
             case ProjectileReplicationDatagram.PROJETILE_REPLICATION_DATAGRAM:
                 return new ProjectileReplicationDatagram (type, id, param1, param2);
+            case GameStateDatagram.GAME_STATE_DATAGRAM:
+                return new GameStateDatagram (type, id, param1, param2);
             default:
                 logger.warn ("Received datagram with unknown type {}", type);
                 throw new IllegalArgumentException ("Received datagram with unknown type: " + type);

@@ -56,7 +56,6 @@ Buffs byte
 Health int
 //OK
 
-
 LevelObjectReplicationDatagram
 Server > Client
 FIRST_CUSTOM + 0x21
@@ -85,15 +84,25 @@ FIRST_CUSTOM + 0x30
 MessageType.NORMAL
 ID long
 Eventart int
+//ok
 
 DespawnDatagram
 Server > Client
 FIRST_CUSTOM + 0x31
 MessageType.NORMAL
 ID long
+//ok
+
+GameStateDatagram
+Server > Client
+FIRST_CUSTOM + 0x32
+MessageType.NORMAL
+Status Enum
+//need enum
 
 ActionDatagram
 Client > Server
 FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 PlayerEvent int
+//ok
