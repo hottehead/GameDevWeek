@@ -24,10 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.assets.ImageX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.ImageXLoader.ImageXParameter;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -76,10 +74,10 @@ public class Main extends StateBasedGame {
 	}
 
 	private void loadAssetLists() {
-		ImageXParameter param = new ImageXParameter();
+		TextureParameter param = new TextureParameter();
 		param.minFilter = param.magFilter = Texture.TextureFilter.Linear;
 
-		assetManager.loadAssetList("data/json/images.json", ImageX.class, param);
+		assetManager.loadAssetList("data/json/images.json", Texture.class, param);
 		assetManager.loadAssetList("data/json/sounds.json", Sound.class, null);
 		assetManager.loadAssetList("data/json/music.json", Music.class, null);
 		assetManager.loadAssetListWithParam("data/json/animations.json", Animation.class,
