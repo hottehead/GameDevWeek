@@ -34,6 +34,7 @@ import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
@@ -116,6 +117,8 @@ public class Main extends StateBasedGame {
 
 		GameStates.LOADING.init(assetManager);
 		GameStates.LOADING.activate();
+        
+		NetworkManager.getInstance().init();
 	}
 
 	public void onLoadComplete() {
@@ -156,6 +159,8 @@ public class Main extends StateBasedGame {
 			consoleView.update(delta);
 		}
 		console.executeCmdQueue();
+        
+    	NetworkManager.getInstance().update();
 	}
 
 	@Override

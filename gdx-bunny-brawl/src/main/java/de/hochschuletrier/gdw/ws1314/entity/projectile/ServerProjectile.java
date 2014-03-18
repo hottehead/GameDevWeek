@@ -94,6 +94,7 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initialize() {
+
 	}
 
 	@Override
