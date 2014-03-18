@@ -5,11 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * @author Santo Pfingsten
  */
-public abstract class PhysixEntity {
+public class PhysixEntity {
 
     protected PhysixBody physicsBody;
-    
-    public abstract void initPhysics(PhysixManager manager);
 
     protected void setPhysicsBody(PhysixBody physicsObject) {
         physicsObject.setOwner(this);
