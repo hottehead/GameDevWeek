@@ -1,3 +1,18 @@
 {
-    "click": "data/sounds/click.ogg"
+	"speech-general-fall_1"	:	"data/sounds/Fall1.ogg",
+	"speech-general-ko_1"	:	"data/sounds/Ko1.ogg",
+	"speech-general-ko_2"	:	"data/sounds/Ko2.ogg",
+	"speech-general-ko_3"	:	"data/sounds/Ko3.ogg",
+	"speech-general-nom_1"	:	"data/sounds/Nom1.ogg",
+	"speech-general-nom_2"	:	"data/sounds/Nom2.ogg",
+	"speech-general-nom_3"	:	"data/sounds/Nom3.ogg",
+	"speech-general-pain_1"	:	"data/sounds/Pain1.ogg",
+	"speech-general-pain_2" :	"data/sounds/Pain2.ogg",
+	"speech-general-pain_3"	:	"data/sounds/Pain3.ogg",
+	"speech-general-pain_4"	:	"data/sounds/Pain4.ogg",
+	"speech-general-pain_5"	:	"data/sounds/Pain5.ogg",
+	"speech-general-pain_6"	:	"data/sounds/Pain6.ogg",
+	"speech-general-yeay_1"	:	"data/sounds/Yay1.ogg",
+	"speech-general-yeay_2"	:	"data/sounds/Yay2.ogg",
+	"speech-general-yeay_3"	:	"data/sounds/Yay3.ogg"
 }
