@@ -11,31 +11,31 @@ import java.util.Stack;
 
 public class Identifier 
 {
-	private Stack<Integer> 					freeIDs;
-	private HashSet<Integer> 				takenIDs;
-	private HashSet<Integer>				allIDs;
+	private Stack<Long> 					freeIDs;
+	private HashSet<Long> 				takenIDs;
+	private HashSet<Long>				allIDs;
 	
-	private Integer 						idCount;
+	private long 						idCount;
 	
-	public Identifier(int initialIDCount)
+	public Identifier(long initialIDCount)
 	{
 		idCount = initialIDCount;
 		
-		for (int i = 1; i <= idCount; i++)
+		for (long i = 1; i <= idCount; i++)
 			freeIDs.push(i);
 	}
 	
-	public Integer requestID()
+	public Long requestID()
 	{
 		if (freeIDs.isEmpty())
 			freeIDs.push(++idCount);
 		
-		Integer id = freeIDs.pop();
+		Long id = freeIDs.pop();
 		takenIDs.add(id);
 		return id;
 	}
 	
-	public void returnID(Integer id)
+	public void returnID(Long id)
 	{
 		if (doesExist(id) && isTaken(id))
 		{
@@ -44,12 +44,12 @@ public class Identifier
 		}
 	}
 	
-	public boolean doesExist(Integer id)
+	public boolean doesExist(Long id)
 	{
 		return allIDs.contains(id);
 	}
 	
-	public boolean isTaken(Integer id)
+	public boolean isTaken(Long id)
 	{
 		return takenIDs.contains(id);
 	}
