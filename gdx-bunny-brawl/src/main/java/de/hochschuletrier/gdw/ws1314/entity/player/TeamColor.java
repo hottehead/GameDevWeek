@@ -7,6 +7,6 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
  */
 public enum TeamColor 
 {
-	WHITE,
-	BLACK
+    WHITE,
+    BLACK
 }
