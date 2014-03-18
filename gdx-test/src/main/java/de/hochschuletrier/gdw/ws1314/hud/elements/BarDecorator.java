@@ -10,10 +10,9 @@ public abstract class BarDecorator extends VisualBar {
 	Texture decoration;
 
 	public BarDecorator(VisualBar decoratedBarBar, Texture decoration) {
-		super(decoratedBarBar.tex, decoratedBarBar.posX, decoratedBarBar.posY,
-				decoratedBarBar.width, decoratedBarBar.height,
-				decoratedBarBar.minValue, decoratedBarBar.maxValue,
-				decoratedBarBar.stepSize);
+		super(decoratedBarBar.tex, decoratedBarBar.positionX,
+				decoratedBarBar.positionY, decoratedBarBar.width,
+				decoratedBarBar.height, decoratedBarBar.watchedValue);
 		this.decoratedBar = decoratedBarBar;
 		this.decoration = decoration;
 	}
@@ -23,8 +22,8 @@ public abstract class BarDecorator extends VisualBar {
 	}
 
 	protected void drawDecoration() {
-		DrawUtil.batch.draw(this.decoration, this.posX, this.posY, this.width,
-				this.height);
+		DrawUtil.batch.draw(this.decoration, this.positionX, this.positionY
+				+ this.height, this.width, -this.height);
 	}
 
 	public abstract void draw();

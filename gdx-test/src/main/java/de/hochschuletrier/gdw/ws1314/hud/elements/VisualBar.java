@@ -4,35 +4,28 @@ import com.badlogic.gdx.graphics.Texture;
 
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
-public class VisualBar extends MinMaxValue {
+public class VisualBar extends VisualElement {
 
-	float posX, posY;
-	Texture tex;
+	protected Texture tex;
 	float width, height;
-	
-	
-	
-	public VisualBar(Texture tex, float positionX, float positionY, float width, float height, float minValue,
-			float maxValue, float stepSize) {
-		super(minValue, maxValue, stepSize);
-		
-		this.tex 	= tex;
-		this.posX 	= positionX;
-		this.posY 	= positionY;
+	final MinMaxValue watchedValue;
+
+	public VisualBar(Texture tex, float positionX, float positionY,
+			float width, float height, MinMaxValue watchedValue) {
+		this.watchedValue = watchedValue;
+		this.tex = tex;
+		super.positionX = positionX;
+		super.positionY = positionY;
 		this.height = height;
-		this.width	= width;
+		this.width = width;
 	}
-	
+
 	public void setHeight(float height) {
 		this.height = height;
 	}
-	
-	public void draw() {
-		DrawUtil.batch.draw(tex, this.posX, this.posY, 0 + this.getValueFactor()*width, this.height);
-	}
 
-	public void step(float dt) {
-		this.stepValue();
+	public void draw() {
+		DrawUtil.batch.draw(tex, this.positionX, this.positionY + this.height,
+				this.watchedValue.getValueFactor() * width, -this.height);
 	}
-	
 }
