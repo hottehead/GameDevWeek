@@ -32,6 +32,7 @@ public class NetworkManager {
 	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
 	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
 	
+	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
@@ -84,19 +85,35 @@ public class NetworkManager {
 	}
 	
 	public void sendChat(String text){
-		//TODO: Implement		
+		if(isClient()){
+			clientConnection.send(new ChatSendDatagram(text));
+		}
+		else if (isServer()){
+			broadcastToClients(new ChatDeliverDatagram("SERVER",text));
+		}
+		else {
+			logger.error("Can't send chat message, when not connected.");
+		}
 	}
 	
 	public void addChatListener(ChatListener listener){
-		//TODO: Implement
+		chatListeners.add(listener);
 	}
 	
 	public void removeChatListener(ChatListener listener){
-		//TODO: Implement
+		chatListeners.remove(listener);
 	}
-
+	
+	/**
+	 * Wird von der Verarbeitungslogik für Chat-Datagramme verwendet, um Chat-Nachrichten an den Listener zuzustellen.
+	 * Aufruf von anderer Stelle ist eher nicht sinnvoll. 
+	 * @param sender
+	 * @param text
+	 */
 	void receiveChat(String sender,String text){
-		//TODO Implement
+		for(ChatListener l : chatListeners){
+			l.chatMessage(sender,text);
+		}
 	}
 	
 	/**
@@ -123,6 +140,8 @@ public class NetworkManager {
 	public void init(){
 		Main.getInstance().console.register(connectCmd);
 		Main.getInstance().console.register(listenCmd);
+		Main.getInstance().console.register(sayCmd);
+		addChatListener(new ConsoleChatListener());
 	}
 	
 	public void update(){
@@ -218,6 +237,17 @@ public class NetworkManager {
 			} catch (NumberFormatException e) {
 				showUsage();
 			}
+		}
+	};
+	private ConsoleCmd sayCmd = new ConsoleCmd("say",0,"Post a message in chat.",1) {
+		@Override
+		public void showUsage() {
+			showUsage("<message-text>");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			sendChat(args.get(1));
 		}
 	};
 }

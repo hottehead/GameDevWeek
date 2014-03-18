@@ -13,6 +13,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class Game {
 	}
 
 	public void init(AssetManagerX assets) {
+		NetworkManager.getInstance().init();
         Main.getInstance().console.register(gravity_f);
     }
     public void render() {
@@ -49,6 +51,8 @@ public class Game {
     }
 
     public void update(float delta) {
+    	logger.debug("Test");
+    	NetworkManager.getInstance().update();
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 

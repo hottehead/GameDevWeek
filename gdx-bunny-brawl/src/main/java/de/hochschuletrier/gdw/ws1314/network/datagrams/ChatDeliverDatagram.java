@@ -39,4 +39,12 @@ public class ChatDeliverDatagram extends BaseDatagram {
 		handler.handle(this,connection);
 	}
 
+	public String getSender() {
+		return sender;
+	}
+
+	public String getText() {
+		return text;
+	}
+
 }
