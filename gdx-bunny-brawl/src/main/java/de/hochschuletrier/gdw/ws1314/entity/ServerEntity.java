@@ -1,21 +1,32 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
-import de.hochschuletrier.gdw.commons.gdx.physix.*;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
+import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 
 /**
  * 
  * @author ElFapo
  *
  */
-public abstract class ServerEntity extends PhysixEntity
+public abstract class ServerEntity extends PhysixEntity implements ContactListener
 {
-	private long 	id;
+	private long 	id = -1;
+    private SafeProperties properties;
 	
-	public ServerEntity(long id)
+	public ServerEntity()
 	{
 		super();
-		this.id = id;
 	}
+
+    protected void setId(long id)
+    {
+        if(this.id == -1)
+        {
+            this.id = id;
+        }
+    }
 	
 	public long getID()
 	{
@@ -24,5 +35,14 @@ public abstract class ServerEntity extends PhysixEntity
 	
 	public abstract void enable();
 	public abstract void disable();
+    public abstract void dispose();
+    public abstract void initialize();
+
 	public abstract void update(float deltaTime);
+	
+	public abstract EntityType getEntityType();
+
+    public void setProperties(SafeProperties properties){
+        this.properties = properties;
+    }
 }

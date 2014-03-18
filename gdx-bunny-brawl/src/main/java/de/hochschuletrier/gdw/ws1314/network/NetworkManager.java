@@ -1,24 +1,32 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
+import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram.PlayerData;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class NetworkManager {
+
     private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
 	private static NetworkManager instance = new NetworkManager();
 
@@ -31,9 +39,10 @@ public class NetworkManager {
 	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
 	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
 	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
-	
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
+	private int nextPlayerNumber = 1;
+
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
 		return instance;
@@ -45,6 +54,7 @@ public class NetworkManager {
 		}
 		try {
 			clientConnection=new NetConnection(ip, port, datagramFactory);
+			if(clientConnection.isAccepted()) logger.info("Connected.");
 		} catch (IOException e) {
 			logger.error("Can't connect.",e);
 		}
@@ -57,6 +67,7 @@ public class NetworkManager {
 		serverConnections=new ArrayList<NetConnection>();
 		try {
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
+			if(serverReception.isRunning()) logger.info("Listening.");
 		} catch (IOException e) {
 			logger.error("Can't listen for connections.", e);
 			serverConnections=null;
@@ -76,12 +87,30 @@ public class NetworkManager {
 		//TODO: Implement
 	}
 	
-	public void sendAction(int eventPlayerIntention){
+	public void sendAction(PlayerIntention eventPlayerIntention){
+		//TODO: Implement
+	}
+
+	public void despawnEntity(long id){
 		//TODO: Implement
 	}
 	
-	public void despawnEntity(long id){
-		//TODO: Implement
+	public void sendMatchUpdate(String map){
+		if(!isClient())
+			return;
+		clientConnection.send(new MatchUpdateDatagram(map));
+	}
+	
+	public void sendPlayerUpdate(String playerName, EntityType type, byte team, boolean accept){
+		if(!isClient())
+			return;
+		clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
+	}
+	
+	public void sendLobbyUpdate(String map, PlayerData[] players){
+		if(!isServer())
+			return;
+		clientConnection.send(new LobbyUpdateDatagram(map, players));
 	}
 	
 	public void sendChat(String text){
@@ -90,6 +119,7 @@ public class NetworkManager {
 		}
 		else if (isServer()){
 			broadcastToClients(new ChatDeliverDatagram("SERVER",text));
+			receiveChat("SERVER", text);
 		}
 		else {
 			logger.error("Can't send chat message, when not connected.");
@@ -155,7 +185,9 @@ public class NetworkManager {
 			NetConnection connection = serverReception.getNextNewConnection();
 			while (connection != null) {
 				connection.setAccepted(true);
+				connection.setAttachment("Player "+(nextPlayerNumber++));
 				serverConnections.add(connection);
+				logger.info("Client connected.");
 				connection = serverReception.getNextNewConnection();
 			}
 		}
@@ -247,7 +279,8 @@ public class NetworkManager {
 
 		@Override
 		public void execute(List<String> args) {
-			sendChat(args.get(1));
+			sendChat(StringUtils.untokenize(args, 1, -1, false));
 		}
 	};
 }
+

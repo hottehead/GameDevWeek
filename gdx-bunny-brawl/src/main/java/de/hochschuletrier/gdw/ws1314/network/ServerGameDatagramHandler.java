@@ -15,7 +15,7 @@ public class ServerGameDatagramHandler implements DatagramHandler {
 		NetworkManager.getInstance().broadcastToClients(
 				new ChatDeliverDatagram(sender, 
 						chatDatagram.getText()));
-		NetworkManager.getInstance().receiveChat(sender, chatDatagram.getText());
+		if(!NetworkManager.getInstance().isClient()) NetworkManager.getInstance().receiveChat(sender, chatDatagram.getText());
 	}
 
 	@Override
@@ -60,6 +60,11 @@ public class ServerGameDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle (MatchUpdateDatagram matchUpdateDatagram, NetConnection connection) {
+
+    }
+
+    @Override
+    public void handle (DespawnDatagram despawnDatagram, NetConnection connection) {
 
     }
 

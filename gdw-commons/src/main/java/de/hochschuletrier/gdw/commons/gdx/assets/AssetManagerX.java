@@ -129,12 +129,13 @@ public class AssetManagerX extends AssetManager {
 	}
 
 	private BitmapFont generateFont(String name, int size) {
-		BitmapFont font = null;
 		TrueTypeFont ttf = getByName(name, TrueTypeFont.class);
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(ttf.handle);
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = size;
-		font = fontGenerator.generateFont(parameter);
+        parameter.flip = true;
+		BitmapFont font = fontGenerator.generateFont(parameter);
+        fontGenerator.dispose();
 		return font;
 	}
 

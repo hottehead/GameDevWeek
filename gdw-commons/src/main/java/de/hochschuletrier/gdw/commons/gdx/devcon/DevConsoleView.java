@@ -25,6 +25,7 @@ import de.hochschuletrier.gdw.commons.devcon.CVarFlags;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.devcon.cvar.CVar;
+import de.hochschuletrier.gdw.commons.devcon.cvar.CVarFloat;
 import de.hochschuletrier.gdw.commons.devcon.cvar.CVarString;
 import de.hochschuletrier.gdw.commons.devcon.cvar.ICVarListener;
 import java.util.HashSet;
@@ -39,7 +40,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DevConsoleView implements ScreenListener, EventListener, ICVarListener {
 
-    private static final float HEIGHT_PCT = 1.0f / 3.0f;
     private Stage stage;
     private final LinkedList<LogLabel> logLabels = new LinkedList<LogLabel>();
     private Table table;
@@ -49,6 +49,7 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
     private ScrollPane scrollPane;
     private static int sheduleScrollToEnd;
     private final CVarString log_filter = new CVarString("log_filter", "DEBUG", CVarFlags.SYSTEM, "log levels to filter from the console");
+    private final CVarFloat log_height = new CVarFloat("log_height", 0.33f, 0.1f, 1.0f, CVarFlags.SYSTEM, "log height in percent");
     private final HashSet<Level> visibleLevels = new HashSet<Level>(7);
     private final Level[] logLevels = {
         Level.OFF,
@@ -70,6 +71,8 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
         console.register(log_filter);
         log_filter.addListener(this);
         modified(log_filter); // update visible filters
+        console.register(log_height);
+        log_height.addListener(this);
     }
 
     public void init(AssetManagerX assetManager, Skin skin) {
@@ -123,7 +126,7 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
 
     private void adjustHeight() {
         float height = Gdx.graphics.getHeight();
-        table.padBottom(height - (height * HEIGHT_PCT));
+        table.padBottom(height - (height * log_height.get()));
     }
 
     public void render() {
@@ -248,6 +251,8 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
                 log.setVisible(visibleLevels.contains(log.getLevel()));
             }
             logList.invalidateHierarchy();
+        } else if(cvar == log_height) {
+            adjustHeight();
         }
     }
 

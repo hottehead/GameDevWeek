@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Objekte" tilewidth="32" tileheight="32">
+  <image source="dummyObjekteHalb.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="Terrrain" tilewidth="32" tileheight="32">
+  <image source="dummyTilesHalb.png" width="512" height="512"/>
+  <terraintypes>
+   <terrain name="Wiese" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="0,0,0,0"/>
+  <tile id="1" terrain="0,0,0,0"/>
+  <tile id="2" terrain="0,0,0,0"/>
+  <tile id="3" terrain="0,0,0,0"/>
+  <tile id="21" terrain="0,0,0,"/>
+  <tile id="22" terrain="0,0,,"/>
+  <tile id="23" terrain="0,0,,0"/>
+  <tile id="37" terrain="0,,0,"/>
+  <tile id="38" terrain="0,0,0,0"/>
+  <tile id="39" terrain=",0,,0"/>
+  <tile id="53" terrain="0,,0,0"/>
+  <tile id="54" terrain=",,0,0"/>
+  <tile id="55" terrain=",0,0,0"/>
+ </tileset>
+ <tileset firstgid="513" source="Tiles/dummyTilesHalb.tsx"/>
+ <layer name="Hintergrund" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2sFuwzAIBuCmL9nn2PYEU6+7bHvh5dBKnRVsDD82OBxQpWp2gI8kSrq37XJ5z3ARH3t87rEx4kYEZ21vSI9D5SjJs7aXJrYrHXelh4XFyh7b06M83uM7jcdIi9Ee7N725F+eDwE8pD3Q9hC9T3MN4eLJo+ucF64dZdrs17X4nOABvw4r9kXPA6dmTx5Ii5mhmcHDv0mP03vM7qFbj4N7+tPDKr+RtSMjqkctx6gWtfzVHtSzOdDjKM/oFlQd6vWVZ0GkBypm958141rP0qTi0bv/2Tx6cqzW+GpCeGiPcxYP7dz+Oy+I+wcix56eRveo5cqaO+KeLvWQzg1y/WwP2LVA+PtHK89Ze0T1OIr0SI9VPCz80kPmITVMD7yHxrG1T3r05aitr7WP5HmQOk566PvU+75EYp4e/PXo94mWs5MedibIc2wJj+J9CdJj1Pm1hEfxjjc9gDPeWEd65O9RKg9OntL60gPfW019lv/P0JtrNA+LXtWez63mOZLJ6GtA632JVd8imFhYaD2ovEbU69lC64j0iDCDlmFZV3rgLdLDn4e0Ns8eyOOg+nVGD2sHTf80+3HWePOYZcF1SQ9fJumRHpzcrGqe7YDML5IHYv7SA9M71P1yFY8vkIdFzDaY4fEa6eHP43uPnwwX8bvHH/ph+5I=
+  </data>
+ </layer>
+ <layer name="Botanik" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmktPVDEUx+8ILOUhuBRIhCVqgi4VE2DJIwFWPL4A6lJNAJdiomyBBPiu/AlOpim3M+25p+3pnfNL/plHOm2n5/b0tKdVpUjje6eqfhj62Ynf5nO0MQ5NQJP/5cM+yh10eq+HgX21f0+thwN7DLr8xvtzQ38S9O0V2piF5qB5z/aOUO4Y+mK8fu08fk/9PaUeLlxjkMMeS2jjDfQWeufZ3jdHOdf3oeV86+HCNQaD7LEMvbf0oWFfPqKNT9AK9NlzHH45yrm+Dy3nWw8XrjG4xPsrQ9dWv1ahNUvrDfuygTY2oS1oO4PvlgB1DHagXUt7NeVc6xM3I9AoNJa5DulQ1mgK09AM9DJxHSHPm+3jm/p3CpQ1mkIue4Q8b7aPp/r3JvOYskZTyGWPkOfN9vF1/j1WP7ukWqNfQwvQYuI6Uj1vJhzPXlvJEROqPWSh9pAFh29WFEVR2sUwnNmUhMZOsuCyB0c+JEZOpTS47MGRD4mRU0nJw/b8WZ/PPnDZwzcfEruOnExBL6qeHbqfQ9C9Hj8UOyhKG5CQ41N6cOX4pFD6/pMrxyeF0Hgu1f2UYSXUHvZ9AUpMr7gJtYd9X0BjSV5C7dHvvoBEX1ba+hi6/+x3XyDVXbsQYp7PSvfVqe7ahRDTHvZ5jDRy3H0aRIr8hdQ1VOJ9eOp5YGnrTtvRvKAsqPbQHN5TOOJuqj1Kz+HFgCPuptqj9BxeDDji7kFxQI69b6m+MEXcnWPvW6ovTBF359j7ttkXNp375hyUeG5Xh+S++cz9E/T/1NCZ8X/MOSjx3K40fOb+X4ztP0MXjrGWeG6Xmjp/wx1v+NpD4rldaur8DXe84WsPied2dcTsW52/4Y43btD/W0N3gsd6mLkHVqt/Pw==
+  </data>
+ </layer>
+ <layer name="Hohes_Gras" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt18sNwjAQRdHQAV3QDv1Xw5ZFPnY8kZ4050jsnEGaKzmwbQAAAAD7Pq/jz9m50Xl3ZnR11uJql3v7rJjR1VWLkV3+n6mY0VlVj6oZ6JFIjyx65HBf5ajc5eqM7mb3OPPcbA9qVPSglh5Z3Fc1Vt8Do7NGz3dX8Vvpat7s93d2t0f3vT1FjywrPTR51ntnv6u9NH6GHnn0yKJHHj3yaJFHizxaAAAA5Pr6rwUANPADGr5eSw==
+  </data>
+ </layer>
+ <objectgroup name="Schalter" width="100" height="50">
+  <object gid="54" x="2239" y="674"/>
+  <object gid="54" x="1723" y="352"/>
+  <object gid="54" x="1123" y="510"/>
+ </objectgroup>
+ <objectgroup name="Karotte" width="100" height="50">
+  <object gid="23" x="2011" y="128"/>
+ </objectgroup>
+ <objectgroup name="Spinat" width="100" height="50">
+  <object gid="22" x="1472" y="128"/>
+ </objectgroup>
+ <objectgroup name="Eier" width="100" height="50">
+  <object gid="6" x="1245" y="1049"/>
+  <object gid="6" x="1314" y="1095"/>
+  <object gid="6" x="96" y="1249"/>
+  <object gid="6" x="2587" y="231"/>
+ </objectgroup>
+</map>

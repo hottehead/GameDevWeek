@@ -48,7 +48,7 @@ public class CVarBool extends CVar {
 
     @Override
     public String getTypeDescription() {
-        return "boolean " + name + " [true, false]";
+        return "boolean [true, false]";
     }
 
     @Override

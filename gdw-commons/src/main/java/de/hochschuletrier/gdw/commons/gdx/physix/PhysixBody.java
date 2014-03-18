@@ -6,9 +6,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.MassData;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
+
 import java.util.HashSet;
 
 /**
@@ -40,7 +43,7 @@ public final class PhysixBody {
         return body;
     }
 
-    protected Array getFixtureList() {
+    protected Array<Fixture> getFixtureList() {
         return body.getFixtureList();
     }
 
@@ -205,5 +208,22 @@ public final class PhysixBody {
 
     public BodyDef.BodyType getBodyType() {
         return body.getType();
+    }
+    
+    public float getLinearDamping(){
+    	return body.getLinearDamping();
+    }
+    
+    public void setLinearDamping(float linearDamping){
+    	body.setLinearDamping(linearDamping);
+    }
+    
+    public void scale(float scale){
+    	for (Fixture f : getFixtureList()) {
+			Shape shape = f.getShape();
+			float s = shape.getRadius();
+			shape.setRadius(s * scale);
+			
+    	}
     }
 }

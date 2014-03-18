@@ -80,8 +80,18 @@ public class NetMessage implements INetMessageInternal {
     }
 
     @Override
+    public long getLong() {
+        return buffer.getLong();
+    }
+
+    @Override
     public float getFloat() {
         return buffer.getFloat();
+    }
+
+    @Override
+    public double getDouble() {
+        return buffer.getDouble();
     }
     
     @Override
@@ -128,8 +138,18 @@ public class NetMessage implements INetMessageInternal {
     }
 
     @Override
+    public void putLong(long value) {
+        buffer.putLong(value);
+    }
+
+    @Override
     public void putFloat(float value) {
         buffer.putFloat(value);
+    }
+
+    @Override
+    public void putDouble(double value) {
+        buffer.putDouble(value);
     }
 
     @Override

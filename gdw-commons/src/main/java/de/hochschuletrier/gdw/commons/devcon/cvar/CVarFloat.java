@@ -1,6 +1,7 @@
 package de.hochschuletrier.gdw.commons.devcon.cvar;
 
 import de.hochschuletrier.gdw.commons.utils.QuietUtils;
+import java.util.Locale;
 
 /**
  *
@@ -57,7 +58,7 @@ public class CVarFloat extends CVar {
 
     @Override
     public String getTypeDescription() {
-        return String.format("float %s [%.2f, %.2f]", name, min, max);
+        return String.format(Locale.ENGLISH, "float [%.2f - %.2f]", min, max);
     }
 
     @Override
