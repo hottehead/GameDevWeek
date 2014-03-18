@@ -7,6 +7,9 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 
 public class DatagramFactory implements INetDatagramFactory {
     private static final Logger logger = LoggerFactory.getLogger(DatagramFactory.class);
@@ -18,7 +21,12 @@ public class DatagramFactory implements INetDatagramFactory {
 			return new ChatSendDatagram(type, id, param1, param2);
 		case ChatDeliverDatagram.CHAT_DELIVER_DATAGRAM:
 			return new ChatDeliverDatagram(type, id, param1, param2);
-		//TODO: Handle other types.
+		case LobbyUpdateDatagram.LOBBY_UPDATE_DATAGRAM:
+			return new LobbyUpdateDatagram(type, id, param1, param2);
+		case MatchUpdateDatagram.MATCH_UPDATE_DATAGRAM:
+			return new MatchUpdateDatagram(type, id, param1, param2);
+		case PlayerUpdateDatagram.PLAYER_UPDATE_DATAGRAM:
+			return new PlayerUpdateDatagram(type, id, param1, param2);
 		default:
 			logger.warn("Received datagram with unknown type {}", type);
 			throw new IllegalArgumentException("Received datagram with unknown type: " + type);

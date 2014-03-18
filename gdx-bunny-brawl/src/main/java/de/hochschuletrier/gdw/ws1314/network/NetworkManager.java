@@ -14,7 +14,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram.PlayerData;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

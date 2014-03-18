@@ -12,33 +12,6 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class LobbyUpdateDatagram extends BaseDatagram {
     public static final byte LOBBY_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x10;
-    
-    public class PlayerData {
-    	private String playername;
-    	private EntityType type;
-    	private byte team;
-    	private boolean accept;
-    	
-    	public PlayerData(String playername, EntityType type, byte team, boolean accept){
-    		this.playername = playername;
-    		this.type = type;
-    		this.team = team;
-    		this.accept = accept;
-    	}
-    	
-		public String getPlayername() {
-			return playername;
-		}
-		public EntityType getType() {
-			return type;
-		}
-		public byte getTeam() {
-			return team;
-		}
-		public boolean isAccept() {
-			return accept;
-		}   	
-    }
     private String map;
     private int playercount;
     private PlayerData[] players;
