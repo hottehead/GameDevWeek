@@ -2,6 +2,11 @@ package de.hochschuletrier.gdw.ws1314.entity;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
 public abstract class ClientEntity 
 {
 	private Vector2 	position;
@@ -32,4 +37,6 @@ public abstract class ClientEntity
 	public abstract void disable();
 	
 	public abstract void render();
+	
+	public abstract void setEntityState(EntityState state);
 }

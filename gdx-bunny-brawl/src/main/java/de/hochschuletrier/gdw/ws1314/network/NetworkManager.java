@@ -1,9 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
 public class NetworkManager {
-	private NetworkManager instance = new NetworkManager();
+	private static NetworkManager instance = new NetworkManager();
 	private NetworkManager(){}
-	public NetworkManager getInstance(){
+	public static NetworkManager getInstance(){
 		return instance;
 	}
 	
