@@ -19,12 +19,12 @@ public class ServerEntityManager {
     protected Queue<ServerEntity> removalQueue;
     protected Queue<ServerEntity> insertionQueue;
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
-
-
+    protected ServerEntityFactory factory;
 
     public ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
+        factory = new ServerEntityFactory();
 
         try {
             for (Class c : ClassUtils
@@ -42,8 +42,19 @@ public class ServerEntityManager {
         return entityListMap.get(new Long(id));
     }
 
+    public int getListSize() {
+        return entityList.size();
+    }
+
+    public ServerEntity getListEntity(int index) {
+        return entityList.get(index);
+    }
+
 
     public void update(int delta) {
+        internalRemove();
+        internalInsert();
+
         for (ServerEntity e : entityList)
             e.update( delta);
 
@@ -87,7 +98,7 @@ public class ServerEntityManager {
     }
 
     public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass) {
-        T e = createEntityUnsave(entityClass);
+        T e = factory.createEntity(entityClass);
         assert (e != null);
         addEntity(e);
         return e;
@@ -100,29 +111,11 @@ public class ServerEntityManager {
             throw new RuntimeException("Could not find entity class for: "
                     + className);
         }
-        ServerEntity e = createEntityUnsave(entityClass);
+        ServerEntity e = factory.createEntity(entityClass);
         e.setProperties(properties);
         addEntity(e);
         return e;
     }
 
-    private ServerEntity internalCreate(Class<? extends ServerEntity> entityClass) {
-        ServerEntity e = null;
-        try {
-            assert (entityClass.getConstructor() != null);
-            e = entityClass.newInstance();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return e;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends ServerEntity> T createEntityUnsave(Class<? extends ServerEntity> entityClass) {
-        ServerEntity e;
-        e = internalCreate(entityClass);
-        return (T) e;
-    }
 
 }

@@ -1,0 +1,97 @@
+﻿ChatSendDatagram
+Client > Server
+FIRST_CUSTOM + 0x00
+MessageType.NORMAL
+Message String
+//OK
+
+ChatDeliverDatagram
+Server > Client
+FIRST_CUSTOM + 0x01
+MessageType.NORMAL
+PlayerName String
+Message String 
+//OK
+
+LobbyUpdateDatagram
+Server > Client
+FIRST_CUSTOM + 0x10
+MessageType.DELTA
+Map String?
+Player [
+PlayerName String
+Class Enum
+Team byte
+Accept boolean
+]
+//OK bis auf Playerclass da kein Enum vorhanden
+
+MatchUpdateDatagram
+Client > Server
+FIRST_CUSTOM + 0x11
+MessageType.DELTA
+Map String?
+//OK
+
+PlayerUpdateDatagram PlayerInfo
+Client > Server
+FIRST_CUSTOM + 0x12
+MessageType.DELTA
+PlayerName String
+Class Enum
+Team byte
+Accept boolean
+//OK bis auf Playerclass da kein Enum vorhanden
+
+PlayerReplicationDatagram
+Server > Client
+FIRST_CUSTOM + 0x20
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+Eggs byte
+Buffs byte
+Health int
+//OK bis auf Playerclass da kein Enum vorhanden
+
+
+LevelObjectReplicationDatagram
+Server > Client
+FIRST_CUSTOM + 0x21
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+Status boolean
+
+ProjectileReplicationDatagram
+Server > Client
+FIRST_CUSTOM + 0x22
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+Direction Enum
+
+EventDatagram
+Server > Client
+FIRST_CUSTOM + 0x30
+MessageType.NORMAL
+ID long
+Eventart int
+
+DespawnDatagram
+Server > Client
+FIRST_CUSTOM + 0x31
+MessageType.NORMAL
+ID long
+
+ActionDatagram
+Client > Server
+FIRST_CUSTOM + 0x40
+MessageType.NORMAL
+PlayerEvent int
