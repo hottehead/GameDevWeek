@@ -3,19 +3,23 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.elements.BarBackgroundDecoration;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BuffIcon;
-import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
+import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
 
 public class TestHudStage extends AutoResizeStage {
 
 	private Table uiTable;
 	private Skin defaultSkin;
+	
+	VisualBar visualBar;
+	VisualBar healthBar;
 	
 	public TestHudStage() {
 		uiTable = new Table();
@@ -48,29 +52,16 @@ public class TestHudStage extends AutoResizeStage {
 		
 		uiTable.row().padTop(5);
 		
-		uiTable.add(new HealthBar(defaultSkin)).expand(true, false );
+		Texture barTex = assetManager.getTexture("debugBar");
+		Texture backBarTex = assetManager.getTexture("debugBuff");
+		Texture frontBarTex = assetManager.getTexture("debugBarDecor");
+		
+		healthBar =  new VisualBar(barTex, 0, 0, 100, 30, 0, 200, 1);
+		BarBackgroundDecoration test = new BarBackgroundDecoration(healthBar, backBarTex);
+		BarFrontDecorator frontBar = new BarFrontDecorator(test, frontBarTex);
+		visualBar = new BarFrontDecorator(frontBar, assetManager.getTexture("debugBarDecor2"));
 		
 		
-		
-//		uiTable.row();
-//		uiTable.add(new Label("Hello World", defaultSkin));
-//		TextButton tb = new TextButton("Press me.", defaultSkin, "toggle");
-//		uiTable.add(tb);
-//		
-//		tb.addListener(new ChangeListener() {
-//			@Override
-//			public void changed(ChangeEvent event, Actor actor) {
-//			}
-//		});
-//		
-//		Slider slider = new Slider(0, 100, 0.5f, false, defaultSkin);
-//		uiTable.add(slider);
-		
-		
-//		InputStream is = CurrentResourceLocator.read("data/json/hudstyle.json");
-		
-		uiTable.debug(Debug.cell);
-		uiTable.pack();
 	}
 	/* (non-Javadoc)
 	 * @see de.hochschuletrier.gdw.ws1314.hud.IHudStage#render()
@@ -82,9 +73,18 @@ public class TestHudStage extends AutoResizeStage {
 		
 		this.act(Gdx.graphics.getDeltaTime());
 		
-		this.draw();
 		
-		Table.drawDebug(this);
+		visualBar.draw();
+		
+//		Table.drawDebug(this);
+		
+		
+		
+	}
+	
+	public void step(float dt) {
+		healthBar.step(dt);
+		
 	}
 
 }

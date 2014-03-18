@@ -106,6 +106,8 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (x > 1024) {
 			x = -walking.getKeyFrame(stateTime).getRegionWidth();
         }
+        
+        testUI.step(delta);
     }
 
     @Override
