@@ -20,6 +20,9 @@ public class Identifier
 	public Identifier(long initialIDCount)
 	{
 		idCount = initialIDCount;
+		freeIDs = new Stack<Long>();
+		takenIDs = new HashSet<Long>();
+		allIDs = new HashSet<Long>();
 		
 		for (long i = 1; i <= idCount; i++)
 			freeIDs.push(i);

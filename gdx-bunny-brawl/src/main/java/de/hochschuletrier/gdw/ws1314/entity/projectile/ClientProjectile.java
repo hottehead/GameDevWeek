@@ -40,7 +40,7 @@ public class ClientProjectile extends ClientEntity {
 	}
 
 	@Override
-	public void update(int delta) {
+	public void update(float delta) {
 	}
 
 	@Override
@@ -49,7 +49,6 @@ public class ClientProjectile extends ClientEntity {
 
 	@Override
 	public void setEntityState(EntityState state) {
-		// TODO Auto-generated method stub
 		
 	}
 
