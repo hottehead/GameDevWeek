@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.ImageXLoader;
 
 import de.hochschuletrier.gdw.commons.jackson.JacksonReader;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
@@ -49,6 +50,7 @@ public class AssetManagerX extends AssetManager {
 		setLoader(Animation.class, new AnimationLoader(resolver));
 		setLoader(TiledMap.class, new TiledMapLoader(resolver));
 		setLoader(TrueTypeFont.class, new TrueTypeFontLoader(resolver));
+		setLoader(ImageX.class, new ImageXLoader(resolver));
 	}
 
 	public <T> T getByName(String name, Class<T> type) {
@@ -120,8 +122,8 @@ public class AssetManagerX extends AssetManager {
 		return getByName(name, TextureAtlas.class);
 	}
 
-	public Texture getTexture(String name) {
-		return getByName(name, Texture.class);
+	public ImageX getImageX(String name) {
+		return getByName(name, ImageX.class);
 	}
 
 	public ParticleEffect getParticleEffect(String name) {
