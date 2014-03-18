@@ -18,12 +18,13 @@ Server > Client
 FIRST_CUSTOM + 0x10
 MessageType.DELTA
 Map String?
+Playercount int
 Player [
 PlayerName Stzring
 Class Enum
 Team byte
 Accept boolean
-]
+] 
 //OK 
 
 MatchUpdateDatagram
