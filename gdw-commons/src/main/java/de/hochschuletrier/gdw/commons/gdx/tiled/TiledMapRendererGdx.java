@@ -11,6 +11,7 @@ import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileInfo;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
+import de.hochschuletrier.gdw.commons.tiled.TileSetAnimation;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.utils.Point;
 
@@ -30,6 +31,7 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 	final Color layerFilter = Color.WHITE.cpy();
 	final ShapeRenderer shapeRenderer = new ShapeRenderer();
 	boolean drawLines;
+    float stateTime = 0;
 
 	public TiledMapRendererGdx(TiledMap map, Map<TileSet, Texture> tilesetImages) {
 		this.map = map;
@@ -40,10 +42,14 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 			tileset.setAttachment(tilesetImages.get(tileset));
 		}
 	}
-
+    
 	public void setDrawLines(boolean drawLines) {
 		this.drawLines = drawLines;
 	}
+
+    public void update(float delta) {
+        stateTime += delta;
+    }
 
 	/**
 	 * Render the whole tile map at a given location
@@ -121,12 +127,21 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 			return;
 		}
 
+        boolean test = true;
 		layerFilter.a = opacity;
 		DrawUtil.setColor(layerFilter);
 
 		TileInfo[][] tiles = layer.getTiles();
 		for (TileSet tileset : map.getTileSets()) {
 			int id = tileset.getIndex();
+            
+            int animationOffset = 0;
+            TileSetAnimation anim = tileset.getAnimation();
+            if(anim != null) {
+                int frameNumber = (int)(stateTime / anim.frameDuration);
+                frameNumber = frameNumber % anim.numFrames;
+                animationOffset = anim.tileOffset * frameNumber;
+            }
 
 			Texture image = null;
 			for (int tx = 0; tx < width; tx++) {
@@ -143,17 +158,20 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 						image = (Texture) tileset.getAttachment();
 					}
 
-					int sheetX = tileset.getTileX(tiles[sx + tx][sy + ty].localId);
+					int sheetX = tileset.getTileX(tiles[sx + tx][sy + ty].localId) + animationOffset;
+                    
 					int sheetY = tileset.getTileY(tiles[sx + tx][sy + ty].localId);
-
+                    
 					int tileOffsetY = tileset.getTileHeight() - mapTileHeight;
 
 					float px = x + (tx * mapTileWidth);
 					float py = y + (ty * mapTileHeight) - tileOffsetY;
 
-					DrawUtil.batch.draw(image, px, py, tileset.getTileWidth(),
-							tileset.getTileHeight(), sheetX * tileset.getTileWidth(),
-							sheetY * tileset.getTileHeight());
+					DrawUtil.batch.draw(image, px, py,
+                            tileset.getTileWidth(), tileset.getTileHeight(),
+                            (int)(sheetX * tileset.getTileWidth()), ((int)sheetY * tileset.getTileHeight()),
+                            tileset.getTileWidth(), tileset.getTileHeight(),
+                            false, true);
 				}
 			}
 		}
