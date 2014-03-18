@@ -10,7 +10,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityState;
  * @author yannick
  * 
  */
-public class ClientLevelObject extends ClientEntity
+public abstract class ClientLevelObject extends ClientEntity
 {
 	protected boolean isVisible;
 	
