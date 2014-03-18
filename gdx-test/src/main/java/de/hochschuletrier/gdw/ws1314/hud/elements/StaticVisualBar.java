@@ -2,15 +2,12 @@ package de.hochschuletrier.gdw.ws1314.hud.elements;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class VisualBar extends VisualElement {
-
+public class StaticVisualBar extends VisualElement {
 	protected Texture tex;
 	float width, height;
-	final MinMaxValue watchedValue;
 
-	public VisualBar(Texture tex, float positionX, float positionY,
-			float width, float height, MinMaxValue watchedValue) {
-		this.watchedValue = watchedValue;
+	public StaticVisualBar(Texture tex, float positionX, float positionY,
+			float width, float height) {
 		this.tex = tex;
 		super.positionX = positionX;
 		super.positionY = positionY;
@@ -23,7 +20,6 @@ public class VisualBar extends VisualElement {
 	}
 
 	public void draw() {
-		HudRendering.drawElement(tex, positionX, positionY,
-				this.watchedValue.getValueFactor() * width, height);
+		HudRendering.drawElement(tex, positionX, positionY, width, height);
 	}
 }

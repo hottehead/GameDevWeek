@@ -1,15 +1,12 @@
 package de.hochschuletrier.gdw.ws1314.hud.elements;
 
-import com.badlogic.gdx.graphics.Texture;
-
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
 public abstract class BarDecorator extends VisualBar {
 
 	VisualBar decoratedBar;
-	Texture decoration;
+	VisualElement decoration;
 
-	public BarDecorator(VisualBar decoratedBarBar, Texture decoration) {
+	public BarDecorator(VisualBar decoratedBarBar, VisualElement decoration) {
 		super(decoratedBarBar.tex, decoratedBarBar.positionX,
 				decoratedBarBar.positionY, decoratedBarBar.width,
 				decoratedBarBar.height, decoratedBarBar.watchedValue);
@@ -22,8 +19,7 @@ public abstract class BarDecorator extends VisualBar {
 	}
 
 	protected void drawDecoration() {
-		DrawUtil.batch.draw(this.decoration, this.positionX, this.positionY
-				+ this.height, this.width, -this.height);
+		decoration.draw();
 	}
 
 	public abstract void draw();

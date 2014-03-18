@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BarBackgroundDecoration;
+import de.hochschuletrier.gdw.ws1314.hud.elements.BarFrontDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
 
@@ -30,6 +31,8 @@ public class TestHudStage extends AutoResizeStage {
 		
 		healthBar = new MinMaxValue(0, 100, -1);
 		VisualBar healthBarVisual =  new VisualBar(barTex, 0, 0, 100, 30, healthBar);
+		
+		
 		BarBackgroundDecoration test = new BarBackgroundDecoration(healthBarVisual, backBarTex);
 		BarFrontDecorator frontBar = new BarFrontDecorator(test, frontBarTex);
 		visualBar = new BarFrontDecorator(frontBar, assetManager.getTexture("debugBarDecor2"));
@@ -53,7 +56,7 @@ public class TestHudStage extends AutoResizeStage {
 	float accum = 0;
 	public void step(float dt) {
 		accum = accum +dt;
-		if(accum > 1.0) {
+		if(accum > .50f) {
 			accum -= 1.0;
 			healthBar.setValue(MathUtils.random()*100);
 		}

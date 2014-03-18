@@ -1,14 +1,13 @@
-package de.hochschuletrier.gdw.ws1314.hud;
+package de.hochschuletrier.gdw.ws1314.hud.elements;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import de.hochschuletrier.gdw.ws1314.hud.elements.BarDecorator;
-import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
 
 public class BarFrontDecorator extends BarDecorator {
 
 	public BarFrontDecorator(VisualBar valueBar, Texture decoration) {
-		super(valueBar, decoration);
+		super(valueBar, new StaticVisualBar(decoration, valueBar.positionX,
+				valueBar.positionY, valueBar.width, valueBar.height));
 	}
 
 	@Override
