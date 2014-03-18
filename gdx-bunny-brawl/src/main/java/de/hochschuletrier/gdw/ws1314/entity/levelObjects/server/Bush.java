@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+
 
 /**
  * 
@@ -8,4 +10,10 @@ package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
  */
 public class Bush extends ServerLevelObject
 {
+	@Override
+	public void initialize()
+	{
+		super.initialize();
+		Bush.type = EntityType.Bush;
+	}
 }
