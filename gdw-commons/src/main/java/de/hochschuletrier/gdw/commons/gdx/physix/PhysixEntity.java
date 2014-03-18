@@ -1,3 +1,4 @@
+
 package de.hochschuletrier.gdw.commons.gdx.physix;
 
 import com.badlogic.gdx.math.Vector2;
@@ -39,5 +40,4 @@ public abstract class PhysixEntity {
     public void setVelocityY(float y) {
         physicsBody.setLinearVelocityY(y);
     }
-
 }
