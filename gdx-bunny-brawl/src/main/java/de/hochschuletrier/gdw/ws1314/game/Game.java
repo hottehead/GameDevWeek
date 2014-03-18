@@ -104,21 +104,27 @@ public class Game {
 					PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
 	                .position(origin).fixedRotation(true).create();
 					List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-					points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					for(int j = 0; j < points.size(); j++){
+						points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					}
 					body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
 							.friction(0.5f).restitution(0.4f).shapePolygon(points));
 				}else if(p == Primitive.POLYGON){
 					PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
 	                .position(origin).fixedRotation(true).create();
 					List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-					points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					for(int j = 0; j < points.size(); j++){
+						points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					}
 					body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
 							.friction(0.5f).restitution(0.4f).shapePolygon(points));
 				}else if(p == Primitive.POLYLINE){
 					PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
 	                .position(origin).fixedRotation(true).create();
 					List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-					points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					for(int j = 0; j < points.size(); j++){
+						points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,y));
+					}
 					body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
 							.friction(0.5f).restitution(0.4f).shapePolygon(points));
 				}
