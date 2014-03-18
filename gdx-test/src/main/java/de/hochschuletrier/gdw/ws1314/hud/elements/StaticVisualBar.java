@@ -14,8 +14,12 @@ public class StaticVisualBar extends VisualElement {
 		this.width = width;
 	}
 
-	public void setHeight(float height) {
-		this.height = height;
+	public float getWidth() {
+		return width;
+	}
+	
+	public float getHeight() {
+		return height;
 	}
 
 	public void draw() {
