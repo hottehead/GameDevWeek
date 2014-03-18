@@ -39,7 +39,7 @@ public class ServerGame {
         Main.getInstance().console.register(gravity_f);
     }
     public void render() {
-        manager.render();
+        //manager.render();
 
     }
 
