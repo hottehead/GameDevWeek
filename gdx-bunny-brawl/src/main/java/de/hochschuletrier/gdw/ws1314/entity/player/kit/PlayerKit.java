@@ -1,6 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player.kit;
 
-import de.hochschuletrier.gdw.ws1314.entity.player.Player;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
 public enum PlayerKit 
 {
@@ -42,6 +42,9 @@ public enum PlayerKit
 	public float getBaseHealth()			{ return baseHealth;  }
 	public float getBaseArmor()				{ return baseArmor;   }
 	
-	public void doFirstAttack(Player player)	{  attack1.fire(player); }
-	public void doSecondAttack(Player player)	{  attack2.fire(player); }
+	public void doFirstAttack(ServerPlayer player)	{  attack1.fire(player); }
+	public void doSecondAttack(ServerPlayer player)	{  attack2.fire(player); }
+	
+	public float getFirstAttackCooldown()		{ return firstAttackCooldown; }
+	public float getSecondAttackCooldown()		{ return secondAttackCooldown; }
 }
