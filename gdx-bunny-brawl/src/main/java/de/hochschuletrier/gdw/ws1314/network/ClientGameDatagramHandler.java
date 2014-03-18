@@ -1,21 +1,22 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 
 public class ClientGameDatagramHandler implements DatagramHandler {
+    private static final Logger logger = LoggerFactory.getLogger(ClientGameDatagramHandler.class);
 
 	@Override
 	public void handle(ChatSendDatagram chatDatagram, NetConnection connection) {
-		// TODO Auto-generated method stub
-		
+		logger.warn("Client received a ChatSendDatagram, which is only intended to be sent to a server, something is wrong here...");
 	}
 
 	@Override
-	public void handle(ChatDeliverDatagram chatDeliverDatagram,
-			NetConnection connection) {
-		// TODO Auto-generated method stub
-		
+	public void handle(ChatDeliverDatagram chatDeliverDatagram,	NetConnection connection) {
+		NetworkManager.getInstance().receiveChat(chatDeliverDatagram.getSender(), chatDeliverDatagram.getText());
 	}
 
     @Override

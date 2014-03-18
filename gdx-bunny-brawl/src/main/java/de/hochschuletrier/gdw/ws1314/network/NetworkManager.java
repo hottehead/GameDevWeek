@@ -1,22 +1,22 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
+import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class NetworkManager {
 
@@ -32,6 +32,12 @@ public class NetworkManager {
 	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
 	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
 	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
+
+	
+	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
+	
+	private int nextPlayerNumber = 1;
+	
 
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
@@ -84,19 +90,35 @@ public class NetworkManager {
 	}
 	
 	public void sendChat(String text){
-		//TODO: Implement		
+		if(isClient()){
+			clientConnection.send(new ChatSendDatagram(text));
+		}
+		else if (isServer()){
+			broadcastToClients(new ChatDeliverDatagram("SERVER",text));
+		}
+		else {
+			logger.error("Can't send chat message, when not connected.");
+		}
 	}
 	
 	public void addChatListener(ChatListener listener){
-		//TODO: Implement
+		chatListeners.add(listener);
 	}
 	
 	public void removeChatListener(ChatListener listener){
-		//TODO: Implement
+		chatListeners.remove(listener);
 	}
-
+	
+	/**
+	 * Wird von der Verarbeitungslogik für Chat-Datagramme verwendet, um Chat-Nachrichten an den Listener zuzustellen.
+	 * Aufruf von anderer Stelle ist eher nicht sinnvoll. 
+	 * @param sender
+	 * @param text
+	 */
 	void receiveChat(String sender,String text){
-		//TODO Implement
+		for(ChatListener l : chatListeners){
+			l.chatMessage(sender,text);
+		}
 	}
 	
 	/**
@@ -123,6 +145,8 @@ public class NetworkManager {
 	public void init(){
 		Main.getInstance().console.register(connectCmd);
 		Main.getInstance().console.register(listenCmd);
+		Main.getInstance().console.register(sayCmd);
+		addChatListener(new ConsoleChatListener());
 	}
 	
 	public void update(){
@@ -136,6 +160,7 @@ public class NetworkManager {
 			NetConnection connection = serverReception.getNextNewConnection();
 			while (connection != null) {
 				connection.setAccepted(true);
+				connection.setAttachment("Player "+(nextPlayerNumber++));
 				serverConnections.add(connection);
 				connection = serverReception.getNextNewConnection();
 			}
@@ -218,6 +243,17 @@ public class NetworkManager {
 			} catch (NumberFormatException e) {
 				showUsage();
 			}
+		}
+	};
+	private ConsoleCmd sayCmd = new ConsoleCmd("say",0,"Post a message in chat.",1) {
+		@Override
+		public void showUsage() {
+			showUsage("<message-text>");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			sendChat(StringUtils.untokenize(args, 1, -1, false));
 		}
 	};
 }
