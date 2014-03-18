@@ -65,7 +65,6 @@ public class Layer {
         Float o = element.getOpacity();
         opacity = o == null ? 1.0f : o.floatValue();
         originalOpacity = opacity;
-
         // now read the layer properties
         properties = element.getProperties();
 
