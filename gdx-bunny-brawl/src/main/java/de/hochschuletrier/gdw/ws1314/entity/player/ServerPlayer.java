@@ -19,6 +19,8 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -28,6 +30,9 @@ import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 
 public class ServerPlayer extends ServerEntity 
 {
+    private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
+
+
     private PlayerInfo	playerInfo;
     private PlayerKit 	playerKit;
     private TeamColor	teamColor;
@@ -86,9 +91,12 @@ public class ServerPlayer extends ServerEntity
     	// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
     }
 
+    //NOT FINAL! CHANGE AS NEEDED
     Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent)
     {
+        logger.info("Hey I got a Intention: {}",intent.name());
+
         switch (intent){
             case MOVE_TOGGLE_UP:
                 if(dir.y > 0){
@@ -139,8 +147,8 @@ public class ServerPlayer extends ServerEntity
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
     	moveEnd();
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
     	moveEnd();
     	
     }
