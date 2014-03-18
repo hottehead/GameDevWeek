@@ -174,7 +174,7 @@ public class Main extends StateBasedGame {
 		cfg.title = "LibGDX Test";
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
-		cfg.useGL30 = false;
+		cfg.useGL30 = true;
 		
 
 		new LwjglApplication(getInstance(), cfg);

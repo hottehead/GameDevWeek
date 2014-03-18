@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
@@ -44,6 +45,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     	testUI = new TestHudStage();
     }
 
+    ShaderProgram edgeProgram;
+    
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
@@ -56,6 +59,10 @@ public class MainMenuState extends GameState implements InputProcessor {
 //        music.play();
         demoShader = new DemoShader(Gdx.files.internal("data/shaders/demo.vertex.glsl"),
                 Gdx.files.internal("data/shaders/demo.fragment.glsl"));
+        
+        edgeProgram = new ShaderProgram(Gdx.files.internal("data/shaders/edgeDetection.vert"),
+        		Gdx.files.internal("data/shaders/edgeDetection.frag"));
+        System.out.println(edgeProgram.getLog());
 
         inputProcessor = new InputInterceptor(this) {
             @Override
@@ -77,9 +84,12 @@ public class MainMenuState extends GameState implements InputProcessor {
         testUI.init(assetManager);        
     }
 
+    
+    
     @Override
-    public void render() {
-        DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Color.GRAY);
+    public void render() {    	
+        DrawUtil.batch.setShader(edgeProgram);
+    	DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Color.GRAY);
 
 		DrawUtil.batch.draw(logo, 0, 0, logo.getWidth(), logo.getHeight(), 0, 0,
 				logo.getWidth(), logo.getHeight(), false, true);
@@ -87,6 +97,9 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (useShader) {
             DrawUtil.batch.setShader(demoShader);
         }
+        
+        
+        
 		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
 		DrawUtil.batch.draw(keyFrame, x,
 				Gdx.graphics.getHeight() - keyFrame.getRegionHeight());
@@ -98,6 +111,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 //        levelSelection.render();
         
         testUI.render();
+        DrawUtil.batch.setShader(null);
     }
 
 	float stateTime = 0f;
