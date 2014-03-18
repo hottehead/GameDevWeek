@@ -1,21 +1,13 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,9 +17,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Santo Pfingsten
  */
-public class Game {
+public class ServerGame {
 
-    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServerGame.class);
 
     public static final int POSITION_ITERATIONS = 3;
     public static final int VELOCITY_ITERATIONS = 8;
@@ -35,20 +27,24 @@ public class Game {
     public static final int GRAVITY = 12;
     public static final int BOX2D_SCALE = 40;
     PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
+    private ServerEntityManager entityManager;
+    private NetworkManager netManager;
 
-    public Game() {
-
+    public ServerGame() {
+        entityManager = new ServerEntityManager();
+        netManager = NetworkManager.getInstance();
 	}
 
 	public void init(AssetManagerX assets) {
         Main.getInstance().console.register(gravity_f);
     }
     public void render() {
-        manager.render();
+        //manager.render();
 
     }
 
     public void update(float delta) {
+        entityManager.update(delta);
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
