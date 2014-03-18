@@ -9,6 +9,11 @@ public class BarFrontDecorator extends BarDecorator {
 		super(valueBar, new StaticVisualBar(decoration, valueBar.positionX,
 				valueBar.positionY, valueBar.width, valueBar.height));
 	}
+	
+	public BarFrontDecorator(VisualBar valueBar, Texture decoration, NinePatchSettings ninePatchSettings) {
+		super(valueBar, new NinePatchStaticBar(decoration, valueBar.positionX,
+				valueBar.positionY, valueBar.width, valueBar.height, ninePatchSettings));
+	}
 
 	@Override
 	public void draw() {

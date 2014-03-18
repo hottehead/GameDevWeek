@@ -7,6 +7,7 @@
 
     "debugBar": "data/images/testImages/bar.png",
     "debugBarDecor": "data/images/testImages/barDecoration.png",
+    "debugBarDecorNine": "data/images/testImages/barDecorationNine.png",
     "debugBarDecor2": "data/images/testImages/barDecor2.png",
     "debugBuff": "data/images/testImages/buffIcon.png",
     "debugClass": "data/images/testImages/classIcon.png",

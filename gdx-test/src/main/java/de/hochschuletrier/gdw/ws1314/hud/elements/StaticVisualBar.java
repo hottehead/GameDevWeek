@@ -8,9 +8,8 @@ public class StaticVisualBar extends VisualElement {
 
 	public StaticVisualBar(Texture tex, float positionX, float positionY,
 			float width, float height) {
+		super(positionX, positionY);
 		this.tex = tex;
-		super.positionX = positionX;
-		super.positionY = positionY;
 		this.height = height;
 		this.width = width;
 	}
