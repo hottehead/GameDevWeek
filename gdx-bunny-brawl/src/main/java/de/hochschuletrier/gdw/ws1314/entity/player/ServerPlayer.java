@@ -9,6 +9,12 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
+
 public class ServerPlayer extends ServerEntity 
 {
 	private PlayerInfo	playerInfo;
@@ -24,7 +30,6 @@ public class ServerPlayer extends ServerEntity
 	private boolean		firstAttackFired;
 	private boolean		secondAttackFired;
 	
-	private float		currentVelocity;
 	private float		currentHealth;
 	private float		currentArmor;
 	
@@ -42,55 +47,46 @@ public class ServerPlayer extends ServerEntity
 		secondAttackTimer = 0.0f;
 		secondAttackFired = false;
 		currentEggCount = 0;
-		
 	}
 	
-	@Override
 	public void enable() {}
-
-	@Override
 	public void disable() {}
-
-	@Override
-	public void dispose() 
-	{
-	}
-
-	@Override
-	public void initialize() 
-	{
-	}
+	public void dispose() {}
+	public void initialize() {}
 	
-	public void setPlayerKit(PlayerKit kit)
-	{
-		playerKit = kit;
-		firstAttackCooldown = kit.getFirstAttackCooldown();
-		secondAttackCooldown = kit.getSecondAttackCooldown();
-		currentHealth = kit.getBaseHealth();
-		currentArmor = kit.getBaseArmor();
-	}
-	
-	public PlayerKit getPlayerKit()
-	{
-		return playerKit;
-	}
-
 	@Override
 	public void update(float deltaTime) 
 	{
+		if (firstAttackFired)
+		{
+			firstAttackTimer += deltaTime;
+			if (firstAttackTimer >= firstAttackCooldown)
+				firstAttackFired = false;
+		}
+		else if (secondAttackFired)
+		{
+			secondAttackTimer += deltaTime;
+			if (secondAttackTimer >= secondAttackCooldown)
+				secondAttackFired = false;
+		}
+		
+		// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
 	}
 
 	public void moveBegin(FacingDirection dir)
 	{
 		direction = dir;
 		
-		// TODO send
+		// TODO acceleration impulse to physics body
+		// Use direction vector and impulse constant to create the impulse vector
+		// Check PlayerKit for impulse constant
 	}
 	
-	public void moveEnd(FacingDirection dir)
+	public void moveEnd()
 	{
-		direction = dir;
-		
+		// TODO brake impulse to physics body
+		// Use direction vector and impulse constant to create the impulse vector
+		// Check PlayerKit for impulse constant
 	}
 	
 	public void doFirstAttack()
@@ -106,35 +102,42 @@ public class ServerPlayer extends ServerEntity
 	public void dropEgg()
 	{
 		// TODO Place egg on map
+		
 		currentEggCount--;
 		if (currentEggCount < 0)
 			currentEggCount = 0;
 	}
 
-	@Override
-	public void beginContact(Contact contact) 
+	// TODO Handle all possible collision types: damage, death, physical, egg collected...
+	public void beginContact(Contact contact) 	{}
+	public void endContact(Contact contact) 	{}
+	public void preSolve(Contact contact, Manifold oldManifold) {}
+	public void postSolve(Contact contact, ContactImpulse impulse) {}
+	
+	public FacingDirection  getFacingDirection()	{ return direction; }
+	public float			getCurrentEggCount()	{ return currentEggCount; }
+	public float			getCurrentHealth()		{ return currentHealth; }
+	public float			getCurrentArmor()		{ return currentArmor; }
+	public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
+	public PlayerKit		getPlayerKit()			{ return playerKit; }
+	public TeamColor		getTeamColor()			{ return teamColor; }
+	
+	public void setPlayerKit(PlayerKit kit)
 	{
-		// TODO Handle all possible collision types: damage, death, physical, egg collected...
+		playerKit = kit;
+		firstAttackCooldown = kit.getFirstAttackCooldown();
+		secondAttackCooldown = kit.getSecondAttackCooldown();
+		currentHealth = kit.getBaseHealth();
+		currentArmor = kit.getBaseArmor();
 	}
-
-	@Override
-	public void endContact(Contact contact) 
+	
+	public void setPlayerInfo(PlayerInfo info)
 	{
-		// TODO Auto-generated method stub
-		
+		playerInfo = info;
 	}
-
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) 
+	
+	public void setTeamColor(TeamColor color)
 	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) 
-	{
-		// TODO Auto-generated method stub
-		
+		teamColor = color;
 	}
 }
