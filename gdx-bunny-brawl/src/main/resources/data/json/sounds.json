@@ -12,7 +12,7 @@
 	"speech-general-pain_4"	:	"data/sounds/Pain4.ogg",
 	"speech-general-pain_5"	:	"data/sounds/Pain5.ogg",
 	"speech-general-pain_6"	:	"data/sounds/Pain6.ogg",
-	"speech-general-yeay_1"	:	"data/sounds/Yeay1.ogg",
-	"speech-general-yeay_2"	:	"data/sounds/Yeay2.ogg",
-	"speech-general-yeay_3"	:	"data/sounds/Yeay3.ogg"
+	"speech-general-yeay_1"	:	"data/sounds/Yay1.ogg",
+	"speech-general-yeay_2"	:	"data/sounds/Yay2.ogg",
+	"speech-general-yeay_3"	:	"data/sounds/Yay3.ogg"
 }
