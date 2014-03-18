@@ -1,65 +1,94 @@
 ﻿ChatSendDatagram
 Client > Server
 FIRST_CUSTOM + 0x00
-ID, Message
-NORMAL
+MessageType.NORMAL
+ID long
+Message String
 
 ChatDeliverDatagram
 Server > Client
-0x01
-PlayerName, Message
-NORMAL
+FIRST_CUSTOM + 0x01
+MessageType.NORMAL
+PlayerName String
+Message String
 
 LobbyUpdateDatagram
 Server > Client
-0x10
-Map, Player [PlayerName, Class, Team, Accept]
-DELTA
+FIRST_CUSTOM + 0x10
+MessageType.DELTA
+Map String?
+Player [
+PlayerName String
+Class Enum
+Team byte
+Accept boolean
+]
 
 MatchUpdateDatagram
 Client > Server
-0x11
-Map
-DELTA
+FIRST_CUSTOM + 0x11
+MessageType.DELTA
+Map String?
 
 PlayerUpdateDatagram PlayerInfo
 Client > Server
-0x12
-PlayerName, Class, Team, Accept
-DELTA
+FIRST_CUSTOM + 0x12
+MessageType.DELTA
+PlayerName String
+Class Enum
+Team byte
+Accept boolean
 
 PlayerReplicationDatagram
 Server > Client
-0x20
-ID, Art, Position, WalkDirection, FaceingDirection, Eggs, Buffs ?, Health ?, ...
-DELTA
+FIRST_CUSTOM + 0x20
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+WalkDirection Enum
+FaceingDirection Enum
+Eggs byte
+Buffs byte
+Health int
 
 LevelObjectReplicationDatagram
 Server > Client
-0x21
-ID, Art, Position, Status
-DELTA
+FIRST_CUSTOM + 0x21
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+Status boolean
 
 ProjectileReplicationDatagram
 Server > Client
-0x22
-ID, Art, Position, Direction
-DELTA
+FIRST_CUSTOM + 0x22
+MessageType.DELTA
+ID long
+Type Enum
+XPosition float
+YPosition float
+Direction Enum
 
 EventDatagram
 Server > Client
-0x30
-ID, Eventart
-NORMAL
+FIRST_CUSTOM + 0x30
+MessageType.NORMAL
+ID long
+Eventart Enum
 
 DespawnDatagram
 Server > Client
-0x31
-ID
-NORMAL
+FIRST_CUSTOM + 0x31
+MessageType.NORMAL
+ID long
 
 ActionDatagram
 Client > Server
-0x40
-ID, PlayerEvent
-NORMAL
+FIRST_CUSTOM + 0x40
+MessageType.NORMAL
+ID long
+PlayerEvent Enum
