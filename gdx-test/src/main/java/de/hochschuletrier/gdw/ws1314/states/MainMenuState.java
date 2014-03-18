@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -17,6 +16,8 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.LevelSelectorStage;
+import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
 /**
@@ -38,8 +39,12 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
 
+    private TestHudStage testUI;
+    private LevelSelectorStage levelSelection;
 
     public MainMenuState() {
+    	testUI = new TestHudStage();
+    	levelSelection = new LevelSelectorStage();
     }
 
     @Override
@@ -69,7 +74,11 @@ public class MainMenuState extends GameState implements InputProcessor {
                 return isActive && mainProcessor.keyUp(keycode);
             }
         };
+        levelSelection.init(assetManager);
+
+        
         Main.inputMultiplexer.addProcessor(inputProcessor);
+        testUI.init(assetManager);        
     }
 
     @Override
@@ -89,6 +98,10 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (useShader) {
             DrawUtil.batch.setShader(null);
         }
+        
+//        levelSelection.render();
+        
+        testUI.render();
     }
 
 	float stateTime = 0f;
@@ -99,6 +112,8 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (x > 1024) {
 			x = -walking.getKeyFrame(stateTime).getRegionWidth();
         }
+        
+        testUI.step(delta);
     }
 
     @Override
@@ -132,7 +147,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return true;
+        return false;
     }
 
     @Override
