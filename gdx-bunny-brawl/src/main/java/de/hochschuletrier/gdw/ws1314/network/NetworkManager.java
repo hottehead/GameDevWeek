@@ -13,6 +13,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
+import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
@@ -251,7 +252,7 @@ public class NetworkManager {
 
 		@Override
 		public void execute(List<String> args) {
-			sendChat(args.get(1));
+			sendChat(StringUtils.untokenize(args, 1, -1, false));
 		}
 	};
 }
