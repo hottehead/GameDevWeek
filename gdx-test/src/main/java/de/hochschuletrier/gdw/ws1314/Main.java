@@ -2,25 +2,30 @@ package de.hochschuletrier.gdw.ws1314;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.assets.ImageX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.ImageXLoader.ImageXParameter;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
@@ -70,10 +75,10 @@ public class Main extends StateBasedGame {
 	}
 
 	private void loadAssetLists() {
-		ImageXParameter param = new ImageXParameter();
+		TextureParameter param = new TextureParameter();
 		param.minFilter = param.magFilter = Texture.TextureFilter.Linear;
 
-		assetManager.loadAssetList("data/json/images.json", ImageX.class, param);
+		assetManager.loadAssetList("data/json/images.json", Texture.class, param);
 		assetManager.loadAssetList("data/json/sounds.json", Sound.class, null);
 		assetManager.loadAssetList("data/json/music.json", Music.class, null);
 		assetManager.loadAssetListWithParam("data/json/animations.json", Animation.class,
@@ -117,7 +122,7 @@ public class Main extends StateBasedGame {
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.GAMEPLAY.init(assetManager);
-		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
+		GameStates.GAMEPLAY.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override

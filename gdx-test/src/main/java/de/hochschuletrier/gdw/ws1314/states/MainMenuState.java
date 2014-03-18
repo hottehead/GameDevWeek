@@ -6,11 +6,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.assets.ImageX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
@@ -31,7 +32,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 	private Music music;
     private Sound click;
-	private ImageX logo;
+	private Texture logo;
 	private Animation walking;
     private float x = 0;
     private boolean useShader;
@@ -51,7 +52,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
 
-		logo = assetManager.getImageX("logo");
+		logo = assetManager.getTexture("logo");
 		walking = assetManager.getAnimation("walking");
         music = assetManager.getMusic("menu");
         click = assetManager.getSound("click");
@@ -85,7 +86,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void render() {
         DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Color.GRAY);
 
-		logo.draw((Gdx.graphics.getWidth() - logo.getWidth())/2, 0);
+		DrawUtil.batch.draw(logo, 0, 0, logo.getWidth(), logo.getHeight(), 0, 0,
+				logo.getWidth(), logo.getHeight(), false, true);
 
         if (useShader) {
             DrawUtil.batch.setShader(demoShader);
