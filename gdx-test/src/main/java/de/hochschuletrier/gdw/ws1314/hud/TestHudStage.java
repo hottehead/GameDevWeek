@@ -23,7 +23,7 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBox;
 
-public class TestHudStage {
+public class TestHudStage extends AutoResizeStage {
 
 	VisualBox visualBar;
 	MinMaxValue healthBar;
@@ -32,9 +32,9 @@ public class TestHudStage {
 	VisualBox eiAblegenIcon;
 	
 	Skin defaultSkin;
-	Stage stage; 
 
 	public TestHudStage() {
+		super();
 	}
 
 	/*
@@ -45,11 +45,10 @@ public class TestHudStage {
 	public void init(AssetManagerX assetManager) {
 		//init generic stuff
 		initSkin(assetManager);
-		stage = new Stage();
-		Main.inputMultiplexer.addProcessor(stage);
+		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
-		stage.addActor(uiTable);
+		this.addActor(uiTable);
 		
 		Texture barTex = assetManager.getTexture("debugBar");
 		Texture backBarTex = assetManager.getTexture("debugTooltip");
@@ -99,13 +98,13 @@ public class TestHudStage {
 	public void render() {
 		// this.setCamera(DrawUtil.getCamera());
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		stage.act(Gdx.graphics.getDeltaTime());
+		this.act(Gdx.graphics.getDeltaTime());
 
 		visualBar.draw();
 		attackIcon.draw();
 		
-		stage.draw();
-		Table.drawDebug(stage);
+		this.draw();
+		Table.drawDebug(this);
 	}
 
 	float accum = 0;
