@@ -12,14 +12,16 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 public class EventDatagram extends BaseDatagram {
     public static final byte EVENT_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x30;
     private long id;
+    private int eventType;
 
     public EventDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public EventDatagram (long id) {
+    public EventDatagram (long id, int eventType) {
         super (MessageType.NORMAL, EVENT_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.id = id;
+        this.eventType = eventType;
     }
 
     @Override
@@ -30,14 +32,20 @@ public class EventDatagram extends BaseDatagram {
     @Override
     public void writeToMessage (INetMessageOut message) {
         message.putLong (id);
+        message.putInt(eventType);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
         id = message.getLong ();
+        eventType = message.getInt();
     }
 
     public long getId () {
         return id;
+    }
+
+    public int getEventType() {
+        return eventType;
     }
 }
