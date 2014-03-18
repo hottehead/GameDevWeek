@@ -62,7 +62,7 @@ public class Game {
 	public void init(AssetManagerX assets) {
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		map = loadMap("data/maps/testmap.tmx");
+		map = loadMap("data/maps/miniarena.tmx");
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
 			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
@@ -70,6 +70,8 @@ public class Game {
 			tilesetImages.put(tileset, new Texture(filename));
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
+		mapRenderer.setDrawLines(false);
+
     }
     public void render() {
 		for (Layer layer : map.getLayers()) {
@@ -82,6 +84,7 @@ public class Game {
     public void update(float delta) {
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 		mapRenderer.update(delta);
+
 
     }
 
