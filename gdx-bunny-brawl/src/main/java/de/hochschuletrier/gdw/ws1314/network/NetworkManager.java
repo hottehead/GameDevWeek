@@ -35,13 +35,15 @@ public class NetworkManager {
 	private NetReception serverReception=null;
 	private INetDatagramFactory datagramFactory=new DatagramFactory();
 	
-	private ServerGameDatagramHandler serverGameDgramHandler = new ServerGameDatagramHandler();
-	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
-	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
-	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
+	private ServerDatagramHandler serverDgramHandler = new ServerDatagramHandler ();
+	private ClientDatagramHandler clientDgramHandler = new ClientDatagramHandler ();
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
 	private int nextPlayerNumber = 1;
+	
+	private LobbyUpdateCallback lobbyupdatecallback;
+	private PlayerUpdateCallback playerupdatecallback;
+	private MatchUpdateCallback matchupdatecallback;
 
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
@@ -74,6 +76,31 @@ public class NetworkManager {
 			serverReception=null;
 		}
 	}
+	
+	public LobbyUpdateCallback getLobbyUpdateCallback(){
+		return lobbyupdatecallback;
+	}
+	
+	public PlayerUpdateCallback getPlayerUpdateCallback(){
+		return playerupdatecallback;
+	}
+	
+	public MatchUpdateCallback getMatchUpdateCallback(){
+		return matchupdatecallback;
+	}
+	
+	public void setLobbyUpdateCallback(LobbyUpdateCallback callback){
+		this.lobbyupdatecallback = callback;
+	}
+	
+	public void setPlayerUpdateCallback(PlayerUpdateCallback callback){
+		this.playerupdatecallback = callback;
+	}
+	
+	public void setMatchUpdateCallback(MatchUpdateCallback callback){
+		this.matchupdatecallback = callback;
+	}
+	
 	
 	public boolean isServer() {
 		return serverConnections!=null && serverReception!=null && serverReception.isRunning();
@@ -110,7 +137,7 @@ public class NetworkManager {
 	public void sendLobbyUpdate(String map, PlayerData[] players){
 		if(!isServer())
 			return;
-		clientConnection.send(new LobbyUpdateDatagram(map, players));
+		broadcastToClients(new LobbyUpdateDatagram(map, players));
 	}
 	
 	public void sendChat(String text){
@@ -196,7 +223,7 @@ public class NetworkManager {
 	private void handleDatagramsClient(){
 		if(!isClient()) return;
 		
-		DatagramHandler handler=clientGameDgramHandler;
+		DatagramHandler handler= clientDgramHandler;
 		
 		clientConnection.sendPendingDatagrams();
 		while(clientConnection.hasIncoming()){
@@ -210,7 +237,7 @@ public class NetworkManager {
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
 		
-		DatagramHandler handler=serverGameDgramHandler;
+		DatagramHandler handler= serverDgramHandler;
 		
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while (it.hasNext()) {

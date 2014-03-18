@@ -19,7 +19,7 @@ FIRST_CUSTOM + 0x10
 MessageType.DELTA
 Map String?
 Player [
-PlayerName Stzring
+PlayerName String
 Class Enum
 Team byte
 Accept boolean
