@@ -37,4 +37,6 @@ public abstract class ClientEntity
 	public abstract void disable();
 	
 	public abstract void render();
+	
+	public abstract void setEntityState(EntityState state);
 }
