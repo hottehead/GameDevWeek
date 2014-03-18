@@ -51,7 +51,7 @@ public class ServerEntityManager {
     }
 
 
-    public void update(int delta) {
+    public void update(float delta) {
         internalRemove();
         internalInsert();
 

@@ -91,7 +91,7 @@ public class ClientEntityManager {
         return null;
     }
 
-    public void update(int delta) {
+    public void update(float delta) {
         internalRemove();
         internalInsert();
 
