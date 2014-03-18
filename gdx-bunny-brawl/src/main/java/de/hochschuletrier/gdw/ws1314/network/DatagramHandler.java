@@ -24,4 +24,6 @@ public interface DatagramHandler {
     void handle (LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection);
 
     void handle (MatchUpdateDatagram matchUpdateDatagram, NetConnection connection);
+
+    void handle (DespawnDatagram despawnDatagram, NetConnection connection);
 }

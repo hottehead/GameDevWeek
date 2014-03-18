@@ -59,4 +59,9 @@ public class ClientGameDatagramHandler implements DatagramHandler {
 
     }
 
+    @Override
+    public void handle (DespawnDatagram despawnDatagram, NetConnection connection) {
+
+    }
+
 }
