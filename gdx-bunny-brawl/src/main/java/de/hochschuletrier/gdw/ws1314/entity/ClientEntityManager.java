@@ -52,6 +52,14 @@ public class ClientEntityManager {
         removalQueue.add(e);
     }
 
+    public int getListSize() {
+        return entityList.size();
+    }
+
+    public ClientEntity getListEntity(int index) {
+        return entityList.get(index);
+    }
+
     private boolean internalRemove() {
         boolean listChanged = false;
         while (!removalQueue.isEmpty()) {

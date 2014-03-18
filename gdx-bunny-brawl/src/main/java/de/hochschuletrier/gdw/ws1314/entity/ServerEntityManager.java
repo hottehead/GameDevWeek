@@ -21,7 +21,6 @@ public class ServerEntityManager {
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
     protected ServerEntityFactory factory;
 
-
     public ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
@@ -41,6 +40,14 @@ public class ServerEntityManager {
 
     public ServerEntity getEntityById(long id) {
         return entityListMap.get(new Long(id));
+    }
+
+    public int getListSize() {
+        return entityList.size();
+    }
+
+    public ServerEntity getListEntity(int index) {
+        return entityList.get(index);
     }
 
 
