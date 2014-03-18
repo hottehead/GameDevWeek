@@ -47,8 +47,6 @@ ID long
 Type Enum
 XPosition float
 YPosition float
-WalkDirection Enum
-FaceingDirection Enum
 Eggs byte
 Buffs byte
 Health int
@@ -78,7 +76,7 @@ Server > Client
 FIRST_CUSTOM + 0x30
 MessageType.NORMAL
 ID long
-Eventart Enum
+Eventart int
 
 DespawnDatagram
 Server > Client
@@ -91,4 +89,4 @@ Client > Server
 FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 ID long
-PlayerEvent Enum
+PlayerEvent int
