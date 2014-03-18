@@ -3,4 +3,7 @@
 .settings
 nbactions.xml
 *.iml
+<<<<<<< HEAD
 /.idea
+=======
+>>>>>>> refs/remotes/origin/master
