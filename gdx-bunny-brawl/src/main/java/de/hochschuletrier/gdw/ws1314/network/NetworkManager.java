@@ -227,7 +227,7 @@ public class NetworkManager {
 			INetDatagram dgram = clientConnection.receive();
 			if(dgram instanceof BaseDatagram){
 				((BaseDatagram) dgram).handle(handler, clientConnection);
-			}
+			} 
 		}
 	}
 	

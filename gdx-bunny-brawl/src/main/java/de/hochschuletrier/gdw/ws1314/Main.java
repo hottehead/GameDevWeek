@@ -117,14 +117,14 @@ public class Main extends StateBasedGame {
 	}
 	public String s_map = "";
 	public PlayerData[] c_players;
-	public PlayerData[] s_players = new PlayerData[1];
+	public PlayerData[] s_players = new PlayerData[5];
 	
 	public int playercount = 0;
 	
 
 	@Override
 	public void create() {
-		s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
+		//s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
 		setupDummyLoader();
