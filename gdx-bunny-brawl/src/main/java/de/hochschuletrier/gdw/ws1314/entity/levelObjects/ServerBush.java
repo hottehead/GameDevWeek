@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 
 
@@ -49,5 +50,12 @@ public class ServerBush extends ServerLevelObject
 	public EntityType getEntityType()
 	{
 		return EntityType.Bush;
+	}
+
+	@Override
+	public void initPhysics(PhysixManager manager)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
