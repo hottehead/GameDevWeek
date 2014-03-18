@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by Jerry on 18.03.14.
  */
@@ -20,6 +26,8 @@ public class ClientEntityManager {
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
+		removalQueue = new LinkedList<ClientEntity>();
+		insertionQueue = new LinkedList<ClientEntity>();
     }
 
     public static ClientEntityManager getInstance()
@@ -117,5 +125,5 @@ public class ClientEntityManager {
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
     }
-
 }
+
