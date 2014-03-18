@@ -15,6 +15,13 @@ public class LobbyUpdateDatagram extends BaseDatagram{
         super(MessageType.DELTA, type, id, param1, param2);
     }
     public static final byte LOBBY_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x10;
+    
+    private String map;
+ 
+    private String playername;
+    private Enum<?> playerclass;
+    private byte team;
+    private boolean accept;
 
     @Override
     public void handle (DatagramHandler handler, NetConnection connection) {
@@ -23,11 +30,39 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-
+    	message.putString(playername);
+    	message.putEnum(playerclass);
+    	message.put(team);
+    	message.putBool(accept);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-
+    	playername = message.getString();
+    	//playerclass = message.getEnum(Enum<?> e);
+    	team = message.get();
+    	accept = message.getBool();
     }
+
+	public String getMap() {
+		return map;
+	}
+
+	public String getPlayername() {
+		return playername;
+	}
+
+	public Enum<?> getPlayerclass() {
+		return playerclass;
+	}
+
+	public byte getTeam() {
+		return team;
+	}
+
+	public boolean isAccept() {
+		return accept;
+	}
+    
+
 }
