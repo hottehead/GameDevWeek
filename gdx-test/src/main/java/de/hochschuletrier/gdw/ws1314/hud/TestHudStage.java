@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -13,6 +14,7 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.DynamicTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.NinePatchSettings;
+import de.hochschuletrier.gdw.ws1314.hud.elements.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.VisualBox;
 
@@ -20,7 +22,7 @@ public class TestHudStage {
 
 	VisualBox visualBar;
 	MinMaxValue healthBar;
-	
+
 	VisualBox attackIcon;
 	VisualBox eiAblegenIcon;
 
@@ -45,18 +47,22 @@ public class TestHudStage {
 				healthBarVisual, backBarTex);
 		// BarFrontDecorator frontBar = new BarFrontDecorator(test,
 		// frontBarTex);
+		BitmapFont hudFont = assetManager.getFont("verdana", 14);
+
 		visualBar = new BoxOffsetDecorator(backgroundHealth,
-				new DynamicTextElement(assetManager.getFont("verdana", 14),
-						"HP: ", backgroundHealth.getWidth() * 0.5f,
+				new DynamicTextElement(hudFont, "HP: ",
+						backgroundHealth.getWidth() * 0.5f,
 						backgroundHealth.getHeight() + 2, healthBar));
 		visualBar = new BarFrontDecorator(visualBar, frontBarTex,
 				new NinePatchSettings(1, 2, 2, 1));
-		
+
 		healthBar.setValue(100);
-		
-		this.attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 500, 300, 64, 64);
-		
-		
+
+		this.attackIcon = new VisualBox(
+				assetManager.getTexture("debugAttackIcon"), 500, 300, 64, 64);
+		this.attackIcon = new BoxOffsetDecorator(this.attackIcon,
+				new StaticTextElement(hudFont, "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
+
 	}
 
 	/*
