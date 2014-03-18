@@ -8,6 +8,9 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
@@ -16,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram.PlayerData;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,8 +207,20 @@ public class NetworkManager {
 	
 	public void update(){
 		handleNewConnections();
+		replicateServerEntities();
 		handleDatagramsClient();
 		handleDatagramsServer();
+	}
+	
+	private void replicateServerEntities() {
+		if(!isServer()) return;
+		for(int i=0;i<ServerEntityManager.getInstance().getListSize();++i){
+			ServerEntity entity = ServerEntityManager.getInstance().getListEntity(i);
+			if(entity instanceof ServerProjectile){
+				broadcastToClients(new ProjectileReplicationDatagram((ServerProjectile) entity));
+			}
+			//TODO Handle other entity-types.
+		}
 	}
 	
 	private void handleNewConnections(){
