@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
+package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -6,26 +6,23 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 
+
 /**
  * 
  * @author yannick
- * 
+ *
  */
-public class BridgeSwitch extends ServerLevelObject
+public class ServerBush extends ServerLevelObject
 {
-	private Bridge bridge;
-
-	public void pushSwitch()
+	public ServerBush()
 	{
-		bridge.setVisibility(!bridge.getVisibility());
+		super();
 	}
-
-	public void initialize(Bridge bridge)
+	
+	@Override
+	public void initialize()
 	{
 		super.initialize();
-
-		this.bridge = bridge;
-		BridgeSwitch.type = EntityType.BridgeSwitch;
 	}
 
 	@Override
@@ -46,5 +43,11 @@ public class BridgeSwitch extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bush;
 	}
 }

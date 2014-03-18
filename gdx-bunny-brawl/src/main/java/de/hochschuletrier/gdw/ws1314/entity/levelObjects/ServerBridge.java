@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.entity.levelObjects.server;
+package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -11,13 +11,17 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  * @author yannick
  * 
  */
-public class Bridge extends ServerLevelObject
+public class ServerBridge extends ServerLevelObject
 {
+	public ServerBridge()
+	{
+		
+	}
+	
 	@Override
 	public void initialize()
 	{
 		super.initialize();
-		Bridge.type = EntityType.Bridge;
 	}
 
 	@Override
@@ -38,5 +42,11 @@ public class Bridge extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bridge;
 	}
 }
