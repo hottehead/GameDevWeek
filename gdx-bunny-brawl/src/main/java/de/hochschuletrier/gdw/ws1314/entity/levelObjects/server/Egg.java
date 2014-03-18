@@ -13,6 +13,6 @@ public class Egg extends ServerLevelObject
 	public void initialize()
 	{
 		super.initialize();
-		Egg.type = EntityType.Egg;
+		Egg.type = EntityType.Ei;
 	}
 }
