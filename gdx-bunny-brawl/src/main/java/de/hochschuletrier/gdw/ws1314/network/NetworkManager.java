@@ -8,6 +8,7 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
@@ -113,10 +114,10 @@ public class NetworkManager {
 		//TODO: Implement
 	}
 	
-	public void sendAction(int eventPlayerIntention){
+	public void sendAction(PlayerIntention eventPlayerIntention){
 		//TODO: Implement
 	}
-	
+
 	public void despawnEntity(long id){
 		//TODO: Implement
 	}
@@ -307,3 +308,4 @@ public class NetworkManager {
 		}
 	};
 }
+

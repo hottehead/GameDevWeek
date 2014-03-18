@@ -14,8 +14,6 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
 {
 	private long 	id = -1;
     private SafeProperties properties;
-
-    public static EntityType type;
 	
 	public ServerEntity()
 	{
@@ -41,6 +39,8 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
     public abstract void initialize();
 
 	public abstract void update(float deltaTime);
+	
+	public abstract EntityType getEntityType();
 
     public void setProperties(SafeProperties properties){
         this.properties = properties;

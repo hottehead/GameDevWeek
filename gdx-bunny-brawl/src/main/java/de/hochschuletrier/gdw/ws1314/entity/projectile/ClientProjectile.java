@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityState;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 /**
  * 
@@ -12,10 +14,18 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityState;
  */
 
 public class ClientProjectile extends ClientEntity {
+	protected FacingDirection facingDirection;
+	
+	public ClientProjectile() {
+		super();
+		this.facingDirection = FacingDirection.UP;
+	}
 
-	public ClientProjectile(Vector2 position, long id) {
-		super(position, id);
-		// TODO Auto-generated constructor stub
+	public FacingDirection getFacingDirection() {
+		return facingDirection;
+	}
+	public void setFacingDirection(FacingDirection facingDirection) {
+		this.facingDirection = facingDirection;
 	}
 
 	@Override
@@ -31,7 +41,7 @@ public class ClientProjectile extends ClientEntity {
 	}
 
 	@Override
-	public void update(int delta) {
+	public void update(float delta) {
 	}
 
 	@Override
@@ -39,9 +49,9 @@ public class ClientProjectile extends ClientEntity {
 	}
 
 	@Override
-	public void setEntityState(EntityState state) {
-		// TODO Auto-generated method stub
-		
+	public EntityType getEntityType()
+	{
+	    return EntityType.Projectil;
 	}
 
 }

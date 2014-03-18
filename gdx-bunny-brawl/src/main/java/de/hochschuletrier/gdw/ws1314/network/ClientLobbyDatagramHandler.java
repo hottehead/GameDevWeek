@@ -46,6 +46,7 @@ public class ClientLobbyDatagramHandler implements DatagramHandler {
     @Override
     public void handle (LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection) {
     	NetworkManager.getInstance().getLobbyUpdateCallback().callback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
+
     }
 
     @Override

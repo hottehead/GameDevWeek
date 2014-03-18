@@ -13,18 +13,21 @@ import java.util.Queue;
  * Created by jerry on 17.03.14.
  */
 public class ServerEntityManager {
-    private Identifier entityIDs = new Identifier(20);
+    private static ServerEntityManager instance = null;
+	
+	private Identifier entityIDs;
     private LinkedList<ServerEntity> entityList;
     private HashMap<Long,ServerEntity> entityListMap;
     protected Queue<ServerEntity> removalQueue;
     protected Queue<ServerEntity> insertionQueue;
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
     protected ServerEntityFactory factory;
-
-    public ServerEntityManager(){
+    
+    protected ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
         factory = new ServerEntityFactory();
+        entityIDs = new Identifier(20);
 
         try {
             for (Class c : ClassUtils
@@ -36,6 +39,14 @@ public class ServerEntityManager {
             throw new RuntimeException("Can't find entity classes", e);
         }
 
+    }
+    
+    public static ServerEntityManager getInstance()
+    {
+    	if (instance == null)
+    		instance = new ServerEntityManager();
+    	
+    	return instance;
     }
 
     public ServerEntity getEntityById(long id) {
@@ -51,7 +62,7 @@ public class ServerEntityManager {
     }
 
 
-    public void update(int delta) {
+    public void update(float delta) {
         internalRemove();
         internalInsert();
 
@@ -117,5 +128,13 @@ public class ServerEntityManager {
         return e;
     }
 
+    public void Clear()
+    {
+    	internalRemove();
+    	this.entityList.clear();
+    	this.entityListMap.clear();
+    	this.insertionQueue.clear();
+    	// classMap und identifier brauchen nicht neu erstellt zu werden!?
+    }
 
 }
