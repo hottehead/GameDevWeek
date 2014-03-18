@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="20" tileheight="20">
+ <properties>
+  <property name="border" value="10"/>
+  <property name="displayHeight" value="30"/>
+ </properties>
+ <tileset firstgid="1" name="animationtest" tilewidth="20" tileheight="20">
+  <image source="Grs2Watr.png" width="300" height="100"/>
+   <properties>
+    <property name="animationDuration" value="0.15"/>
+    <property name="animationFrames" value="5"/>
+    <property name="animationTileOffset" value="3"/>
+   </properties>
+ </tileset>
+ <layer name="base" width="20" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NkYGBgAmJmBuoAASAWBGIhKpknD8QKQKxIJfNGwSgYBaNgFFAHAABE/OAaQAYAAA==
+  </data>
+ </layer>
+</map>
