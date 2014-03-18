@@ -35,10 +35,8 @@ public class NetworkManager {
 	private NetReception serverReception=null;
 	private INetDatagramFactory datagramFactory=new DatagramFactory();
 	
-	private ServerGameDatagramHandler serverGameDgramHandler = new ServerGameDatagramHandler();
-	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
-	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
-	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
+	private ServerDatagramHandler serverDgramHandler = new ServerDatagramHandler ();
+	private ClientDatagramHandler clientDgramHandler = new ClientDatagramHandler ();
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
 	private int nextPlayerNumber = 1;
@@ -221,7 +219,7 @@ public class NetworkManager {
 	private void handleDatagramsClient(){
 		if(!isClient()) return;
 		
-		DatagramHandler handler=clientGameDgramHandler;
+		DatagramHandler handler= clientDgramHandler;
 		
 		clientConnection.sendPendingDatagrams();
 		while(clientConnection.hasIncoming()){
@@ -235,7 +233,7 @@ public class NetworkManager {
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
 		
-		DatagramHandler handler=serverGameDgramHandler;
+		DatagramHandler handler= serverDgramHandler;
 		
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while (it.hasNext()) {
