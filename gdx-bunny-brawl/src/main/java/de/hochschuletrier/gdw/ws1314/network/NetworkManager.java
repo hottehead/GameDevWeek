@@ -33,7 +33,6 @@ public class NetworkManager {
 	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
 	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
 	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
-	
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
 	
 	private int nextPlayerNumber = 1;

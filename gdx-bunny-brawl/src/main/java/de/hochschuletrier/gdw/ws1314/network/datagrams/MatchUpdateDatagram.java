@@ -15,7 +15,9 @@ public class MatchUpdateDatagram extends BaseDatagram{
         super(MessageType.DELTA, type, id, param1, param2);
     }
     public static final byte MATCH_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x11;
-
+    
+    private String map;
+    
     @Override
     public void handle (DatagramHandler handler, NetConnection connection) {
         handler.handle (this, connection);
@@ -23,11 +25,11 @@ public class MatchUpdateDatagram extends BaseDatagram{
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-
+    	message.putString(map);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-
+    	map = message.getString();
     }
 }

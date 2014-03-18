@@ -15,7 +15,12 @@ public class PlayerUpdateDatagram extends BaseDatagram{
         super(MessageType.DELTA, type, id, param1, param2);
     }
     public static final byte PLAYER_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x12;
-
+    
+    private String playername;
+    private Enum<?> playerclass;
+    private byte team;
+    private boolean accept;
+    
     @Override
     public void handle (DatagramHandler handler, NetConnection connection) {
         handler.handle (this, connection);
@@ -23,11 +28,34 @@ public class PlayerUpdateDatagram extends BaseDatagram{
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-
+    	message.putString(playername);
+    	message.putEnum(playerclass);
+    	message.put(team);
+    	message.putBool(accept);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-
+    	playername = message.getString();
+    	//playerclass = message.getEnum();
+    	team = message.get();
+    	accept = message.getBool();
     }
+
+	public String getPlayername() {
+		return playername;
+	}
+
+	public Enum<?> getPlayerclass() {
+		return playerclass;
+	}
+
+	public byte getTeam() {
+		return team;
+	}
+
+	public boolean isAccept() {
+		return accept;
+	}
+  
 }
