@@ -1,13 +1,30 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
+import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
+import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
+import de.hochschuletrier.gdw.commons.tiled.Layer;
+import de.hochschuletrier.gdw.commons.tiled.LayerObject;
+import de.hochschuletrier.gdw.commons.tiled.TileSet;
+import de.hochschuletrier.gdw.commons.tiled.TiledMap;
+import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
+import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,19 +50,43 @@ public class ServerGame {
     public ServerGame() {
         entityManager = ServerEntityManager.getInstance();
         netManager = NetworkManager.getInstance();
+    }
+    private TiledMap map;
+	private TiledMapRendererGdx mapRenderer;
+
+	public TiledMap loadMap(String filename) {
+		try {
+			return new TiledMap(filename, LayerObject.PolyMode.ABSOLUTE);
+		} catch (Exception ex) {
+			throw new IllegalArgumentException("Map konnte nicht geladen werden: "
+					+ filename);
+		}
 	}
 
 	public void init(AssetManagerX assets) {
         Main.getInstance().console.register(gravity_f);
+		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
+		map = loadMap("data/maps/testmap.tmx");
+		for (TileSet tileset : map.getTileSets()) {
+			TmxImage img = tileset.getImage();
+			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
+					img.getSource());
+			tilesetImages.put(tileset, new Texture(filename));
+		}
+		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
     }
     public void render() {
-        //manager.render();
-
+		for (Layer layer : map.getLayers()) {
+			mapRenderer.render(0, 0, layer);
+		}
+        manager.render();
     }
 
     public void update(float delta) {
         entityManager.update(delta);
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		mapRenderer.update(delta);
+
     }
 
     public PhysixManager getManager() {
