@@ -27,9 +27,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 public class Ball extends PhysixEntity implements ContactListener {
 
 	private final Vector2 origin = new Vector2();
-	private final float radius;
+	private float radius;
 	private final float maxVelocity;
-	private static int damper = 10;
 
 	public Ball(float x, float y, float radius) {
 		origin.set(x, y);
@@ -42,7 +41,7 @@ public class Ball extends PhysixEntity implements ContactListener {
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(origin).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-				.friction(0.5f).restitution(0.4f).shapeBox(100, 100));
+				.friction(0.5f).restitution(0.4f).shapeCircle(100));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
@@ -51,14 +50,15 @@ public class Ball extends PhysixEntity implements ContactListener {
 
 	public void update() {
 
-		if (physicsBody.getPosition().x >= Gdx.graphics.getWidth()) {
-
-			physicsBody.setPosition(0, physicsBody.getPosition().y);
-
+		if (physicsBody.getPosition().x + 50 >= Gdx.graphics.getWidth()) {
+			physicsBody.setLinearDamping(10);
+			//System.out.println(physicsBody.getLinearVelocity().len());
+			if(physicsBody.getLinearVelocity().len() == 0){
+				physicsBody.applyImpulse(-10, 0);;
+			}
 		} else if (physicsBody.getPosition().x <= 0) {
 
-			physicsBody.setPosition(Gdx.graphics.getWidth(),
-					physicsBody.getPosition().y);
+			physicsBody.setPosition(Gdx.graphics.getWidth(),physicsBody.getPosition().y);
 
 		} else if (physicsBody.getPosition().y >= Gdx.graphics.getHeight()) {
 
@@ -70,6 +70,7 @@ public class Ball extends PhysixEntity implements ContactListener {
 					Gdx.graphics.getHeight());
 
 		} else {
+			physicsBody.setLinearDamping(1);
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 				physicsBody.applyImpulse(-10, 0);
 			} else if (Gdx.input.isKeyPressed(Keys.UP)) {
@@ -79,21 +80,18 @@ public class Ball extends PhysixEntity implements ContactListener {
 			} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 				physicsBody.applyImpulse(10, 0);
 			} else {
-				physicsBody.applyImpulse(0, 0);
+				physicsBody.setLinearDamping(1);
 			}
-
 		}
 
 		Vector2 linearVelocity = physicsBody.getLinearVelocity();
 
 		if (linearVelocity.len() > maxVelocity) {
-				physicsBody.setLinearVelocity(linearVelocity.cpy().scl(
-						damper / linearVelocity.len()));
-		
-				physicsBody.setLinearVelocity(linearVelocity.cpy().scl(
-						damper / linearVelocity.len()));
-				damper--;
-			
+			physicsBody.setLinearVelocity(linearVelocity.cpy().scl(
+					maxVelocity / linearVelocity.len()));
+
+			physicsBody.setLinearVelocity(linearVelocity.cpy().scl(
+					maxVelocity / linearVelocity.len()));
 		}
 		/*
 		 * if(physicsBody.getPosition().x >= Gdx.graphics.getWidth()/2){
@@ -102,16 +100,25 @@ public class Ball extends PhysixEntity implements ContactListener {
 		 */
 	}
 
+
 	@Override
 	public void beginContact(Contact contact) {
 		// TODO Auto-generated method stub
-
+		PhysixBody bodyA = (PhysixBody)contact.getFixtureA().getBody().getUserData();
+		PhysixBody bodyB = (PhysixBody)contact.getFixtureB().getBody().getUserData();
+		if(bodyB.getOwner() instanceof Ball){
+			bodyA.scale(0.5f);
+		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
 		// TODO Auto-generated method stub
-
+		PhysixBody bodyA = (PhysixBody)contact.getFixtureA().getBody().getUserData();
+		PhysixBody bodyB = (PhysixBody)contact.getFixtureB().getBody().getUserData();
+		if(bodyB.getOwner() instanceof Ball){
+			bodyA.scale(2f);
+		}
 	}
 
 	@Override

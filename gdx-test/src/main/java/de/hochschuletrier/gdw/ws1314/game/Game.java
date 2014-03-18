@@ -55,10 +55,10 @@ public class Game {
         /*body = new PhysixBodyDef(BodyType.StaticBody, manager).position(0, 0)
                 .fixedRotation(false).create();
         body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(10, 1000));
-
+*/
        // PhysixUtil.createHollowCircle(manager, 180, 180, 150, 30, 6);
-       // player = new Player(410, 350);
-       // player.initPhysics(manager);
+      	player = new Player(410, 350);
+        player.initPhysics(manager);
 		//entities.add(player);
 
 		/*vase = new Vase(0, 0);
