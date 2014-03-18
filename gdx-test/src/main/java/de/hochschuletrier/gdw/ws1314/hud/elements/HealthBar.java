@@ -27,7 +27,7 @@ public class HealthBar {
 		Texture barTex = assetManager.getTexture("debugBar");
 		Texture backBarTex = assetManager.getTexture("debugTooltip");
 		Texture frontBarTex = assetManager.getTexture("debugBarDecorNine");
-		BitmapFont hudFont = assetManager.getFont("verdana", 14);
+		BitmapFont hudFont = assetManager.getFont("verdana", 24);
 		
 		VisualBar healthBarVisual = new VisualBar(barTex, 30, 30, 300, 40,
 				logicRepresentation);

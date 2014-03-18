@@ -34,7 +34,7 @@ public class TestHudStage {
 		this.attackIcon = new VisualBox(
 				assetManager.getTexture("debugAttackIcon"), 500, 300, 64, 64);
 		this.attackIcon = new BoxOffsetDecorator(this.attackIcon,
-				new StaticTextElement(assetManager.getFont("verdana", 14), "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
+				new StaticTextElement(assetManager.getFont("verdana", 24), "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
 
 	}
 
