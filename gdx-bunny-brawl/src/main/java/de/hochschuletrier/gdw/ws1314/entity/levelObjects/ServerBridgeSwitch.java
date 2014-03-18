@@ -11,21 +11,25 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  * @author yannick
  * 
  */
+
 public class ServerBridgeSwitch extends ServerLevelObject
 {
-	private ServerBridge bridge;
+	private long targetID;
 
-	public void pushSwitch()
+	public ServerBridgeSwitch()
 	{
-		bridge.setVisibility(!bridge.getVisibility());
+		super();
 	}
+	
+	// Note: Switch pushing must be solved by collision reaction
+//	public void pushSwitch()
+//	{
+//		//bridge.setVisibility(!bridge.getVisibility());
+//	}
 
-	public void initialize(ServerBridge bridge)
+	public void initialize()
 	{
 		super.initialize();
-
-		this.bridge = bridge;
-		ServerBridgeSwitch.type = EntityType.BridgeSwitch;
 	}
 
 	@Override
@@ -46,5 +50,21 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.BridgeSwitch;
+	}
+	
+	public long getTargetID()
+	{
+		return targetID;
+	}
+	
+	public void setTargetID(long targetID)
+	{
+		this.targetID = targetID;
 	}
 }

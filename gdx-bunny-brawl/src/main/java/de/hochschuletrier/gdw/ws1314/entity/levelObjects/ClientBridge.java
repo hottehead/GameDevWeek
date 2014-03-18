@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+
 /**
  * 
  * @author yannick
@@ -9,8 +11,14 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class ClientBridge extends ClientLevelObject
 {
-	public ClientBridge(Vector2 position, long id)
+	public ClientBridge()
 	{
-		super(position, id);
+		super();
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bridge;
 	}
 }

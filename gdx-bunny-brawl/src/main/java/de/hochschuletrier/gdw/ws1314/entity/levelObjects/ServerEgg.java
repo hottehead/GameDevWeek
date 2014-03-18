@@ -13,11 +13,15 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerEgg extends ServerLevelObject
 {
+	public ServerEgg()
+	{
+		super();
+	}
+	
 	@Override
 	public void initialize()
 	{
 		super.initialize();
-		ServerEgg.type = EntityType.Ei;
 	}
 
 	@Override
@@ -38,5 +42,11 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Ei;
 	}
 }

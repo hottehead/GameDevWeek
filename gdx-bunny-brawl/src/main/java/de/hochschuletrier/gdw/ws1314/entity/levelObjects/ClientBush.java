@@ -12,9 +12,14 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ClientBush extends ClientLevelObject
 {
-	public ClientBush(Vector2 position, long id)
+	public ClientBush()
 	{
-		super(position, id);
-		ClientBush.type = EntityType.Bush;
+		super();
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bush;
 	}
 }

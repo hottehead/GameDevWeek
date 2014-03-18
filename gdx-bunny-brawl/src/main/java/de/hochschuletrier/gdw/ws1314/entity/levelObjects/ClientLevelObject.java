@@ -14,9 +14,9 @@ public abstract class ClientLevelObject extends ClientEntity
 {
 	protected boolean isVisible;
 	
-	public ClientLevelObject(Vector2 position, long id)
+	public ClientLevelObject()
 	{
-		super(position, id);
+		super();
 	}
 
 	@Override
@@ -46,8 +46,4 @@ public abstract class ClientLevelObject extends ClientEntity
 	{
 	}
 
-	@Override
-	public void setEntityState(EntityState state)
-	{
-	}
 }

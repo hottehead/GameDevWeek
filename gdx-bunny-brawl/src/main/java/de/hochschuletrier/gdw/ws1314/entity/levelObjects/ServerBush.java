@@ -14,11 +14,15 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerBush extends ServerLevelObject
 {
+	public ServerBush()
+	{
+		super();
+	}
+	
 	@Override
 	public void initialize()
 	{
 		super.initialize();
-		ServerBush.type = EntityType.Bush;
 	}
 
 	@Override
@@ -39,5 +43,11 @@ public class ServerBush extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bush;
 	}
 }

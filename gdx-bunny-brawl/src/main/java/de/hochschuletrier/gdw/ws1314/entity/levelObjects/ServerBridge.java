@@ -13,11 +13,15 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerBridge extends ServerLevelObject
 {
+	public ServerBridge()
+	{
+		
+	}
+	
 	@Override
 	public void initialize()
 	{
 		super.initialize();
-		ServerBridge.type = EntityType.Bridge;
 	}
 
 	@Override
@@ -38,5 +42,11 @@ public class ServerBridge extends ServerLevelObject
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Bridge;
 	}
 }

@@ -93,13 +93,18 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initialize() {
-		this.type = EntityType.Projectil;
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Projectil;
 	}
 	
 }
