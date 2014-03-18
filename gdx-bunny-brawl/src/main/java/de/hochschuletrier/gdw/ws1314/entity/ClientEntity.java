@@ -35,6 +35,8 @@ public abstract class ClientEntity
 	
 	public abstract void enable();
 	public abstract void disable();
+    public abstract void dispose();
+    public abstract void update(int delta);
 	
 	public abstract void render();
 	
