@@ -4,7 +4,6 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * 
@@ -58,12 +57,6 @@ public class ImageX {
 		DrawUtil.batch.draw(texture, x, y, width, height, srcX, srcY, srcWidth,
 				srcHeight, false, true);
 	}
-    
-	public void draw (float x, float y, int srcX, int srcY, float width, float height,
-		float scaleX, float scaleY, float rotation) {
-        DrawUtil.batch.draw (texture, x, y, 0, 0, width, height, scaleX,
-		scaleY, rotation, srcX, srcY, (int)width, (int)height, false, true);
-    }
 
 	public int getWidth() {
 		return texture.getWidth();
