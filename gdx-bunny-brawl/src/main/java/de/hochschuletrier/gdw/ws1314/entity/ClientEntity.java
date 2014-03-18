@@ -12,6 +12,8 @@ public abstract class ClientEntity
 	private Vector2 	position;
 	private long 		id;
 	
+	public static EntityType type;
+	
 	public ClientEntity(Vector2 position, long id)
 	{
 		this.position = position;
