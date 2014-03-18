@@ -2,7 +2,6 @@
 Client > Server
 FIRST_CUSTOM + 0x00
 MessageType.NORMAL
-ID long
 Message String
 
 ChatDeliverDatagram
@@ -88,5 +87,4 @@ ActionDatagram
 Client > Server
 FIRST_CUSTOM + 0x40
 MessageType.NORMAL
-ID long
 PlayerEvent int
