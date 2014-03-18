@@ -13,18 +13,23 @@ import java.util.Queue;
  * Created by jerry on 17.03.14.
  */
 public class ServerEntityManager {
-    private Identifier entityIDs = new Identifier(20);
+    private static ServerEntityManager instance = null;
+	
+	private Identifier entityIDs;
     private LinkedList<ServerEntity> entityList;
     private HashMap<Long,ServerEntity> entityListMap;
     protected Queue<ServerEntity> removalQueue;
     protected Queue<ServerEntity> insertionQueue;
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
-
-
-
-    public ServerEntityManager(){
+    protected ServerEntityFactory factory;
+    
+    protected ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
+        factory = new ServerEntityFactory();
+        entityIDs = new Identifier(20);
+		removalQueue = new LinkedList<ServerEntity>();
+		insertionQueue = new LinkedList<ServerEntity>();
 
         try {
             for (Class c : ClassUtils
@@ -37,13 +42,32 @@ public class ServerEntityManager {
         }
 
     }
+    
+    public static ServerEntityManager getInstance()
+    {
+    	if (instance == null)
+    		instance = new ServerEntityManager();
+    	
+    	return instance;
+    }
 
     public ServerEntity getEntityById(long id) {
         return entityListMap.get(new Long(id));
     }
 
+    public int getListSize() {
+        return entityList.size();
+    }
 
-    public void update(int delta) {
+    public ServerEntity getListEntity(int index) {
+        return entityList.get(index);
+    }
+
+
+    public void update(float delta) {
+        internalRemove();
+        internalInsert();
+
         for (ServerEntity e : entityList)
             e.update( delta);
 
@@ -87,7 +111,7 @@ public class ServerEntityManager {
     }
 
     public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass) {
-        T e = createEntityUnsave(entityClass);
+        T e = factory.createEntity(entityClass);
         assert (e != null);
         addEntity(e);
         return e;
@@ -100,29 +124,19 @@ public class ServerEntityManager {
             throw new RuntimeException("Could not find entity class for: "
                     + className);
         }
-        ServerEntity e = createEntityUnsave(entityClass);
+        ServerEntity e = factory.createEntity(entityClass);
         e.setProperties(properties);
         addEntity(e);
         return e;
     }
 
-    private ServerEntity internalCreate(Class<? extends ServerEntity> entityClass) {
-        ServerEntity e = null;
-        try {
-            assert (entityClass.getConstructor() != null);
-            e = entityClass.newInstance();
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return e;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends ServerEntity> T createEntityUnsave(Class<? extends ServerEntity> entityClass) {
-        ServerEntity e;
-        e = internalCreate(entityClass);
-        return (T) e;
+    public void Clear()
+    {
+    	internalRemove();
+    	this.entityList.clear();
+    	this.entityListMap.clear();
+    	this.insertionQueue.clear();
+    	// classMap und identifier brauchen nicht neu erstellt zu werden!?
     }
 
 }

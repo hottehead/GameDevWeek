@@ -216,11 +216,15 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 				drawTile(object);
 				break;
 			case RECT:
-				DrawUtil.drawRect(object.getX(), object.getY(), object.getWidth(),
-						object.getHeight());
+				if (drawLines) {
+					DrawUtil.drawRect(object.getX(), object.getY(), object.getWidth(),
+							object.getHeight());
+				}
 				break;
 			case POINT:
-				DrawUtil.drawRect(object.getX() - 1, object.getY() - 1, 2, 2);
+				if (drawLines) {
+					DrawUtil.drawRect(object.getX() - 1, object.getY() - 1, 2, 2);
+				}
 				break;
 			default:
 				throw new AssertionError(object.getPrimitive().name());
