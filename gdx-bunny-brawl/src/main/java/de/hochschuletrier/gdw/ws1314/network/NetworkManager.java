@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
 
 public class NetworkManager {
+
     private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
 	private static NetworkManager instance = new NetworkManager();
 
@@ -31,8 +32,7 @@ public class NetworkManager {
 	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
 	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
 	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
-	
-	
+
 	private NetworkManager(){}
 	public static NetworkManager getInstance(){
 		return instance;
