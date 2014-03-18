@@ -5,6 +5,7 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 
 /**
  * Created by albsi on 17.03.14.
@@ -19,7 +20,7 @@ public class LobbyUpdateDatagram extends BaseDatagram{
     private String map;
  
     private String playername;
-    private Enum<?> playerclass;
+    private EntityType type;
     private byte team;
     private boolean accept;
 
@@ -31,7 +32,7 @@ public class LobbyUpdateDatagram extends BaseDatagram{
     @Override
     public void writeToMessage (INetMessageOut message) {
     	message.putString(playername);
-    	message.putEnum(playerclass);
+    	message.putEnum(type);
     	message.put(team);
     	message.putBool(accept);
     }
@@ -39,7 +40,7 @@ public class LobbyUpdateDatagram extends BaseDatagram{
     @Override
     public void readFromMessage (INetMessageIn message) {
     	playername = message.getString();
-    	//playerclass = message.getEnum(Enum<?> e);
+    	type = message.getEnum(EntityType.class);
     	team = message.get();
     	accept = message.getBool();
     }
@@ -52,8 +53,8 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 		return playername;
 	}
 
-	public Enum<?> getPlayerclass() {
-		return playerclass;
+	public EntityType getEntityType() {
+		return type;
 	}
 
 	public byte getTeam() {

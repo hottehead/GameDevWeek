@@ -19,12 +19,12 @@ FIRST_CUSTOM + 0x10
 MessageType.DELTA
 Map String?
 Player [
-PlayerName String
+PlayerName Stzring
 Class Enum
 Team byte
 Accept boolean
 ]
-//OK bis auf Playerclass da kein Enum vorhanden
+//OK 
 
 MatchUpdateDatagram
 Client > Server
@@ -41,7 +41,7 @@ PlayerName String
 Class Enum
 Team byte
 Accept boolean
-//OK bis auf Playerclass da kein Enum vorhanden
+//OK
 
 PlayerReplicationDatagram
 Server > Client
@@ -54,7 +54,7 @@ YPosition float
 Eggs byte
 Buffs byte
 Health int
-//OK bis auf Playerclass da kein Enum vorhanden
+//OK
 
 
 LevelObjectReplicationDatagram
@@ -66,6 +66,7 @@ Type Enum
 XPosition float
 YPosition float
 Status boolean
+//OK
 
 ProjectileReplicationDatagram
 Server > Client
@@ -76,6 +77,7 @@ Type Enum
 XPosition float
 YPosition float
 Direction Enum
+//OK
 
 EventDatagram
 Server > Client
