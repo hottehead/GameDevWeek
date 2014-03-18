@@ -11,11 +11,18 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  * Created by albsi on 17.03.14.
  */
 public class ProjectileReplicationDatagram extends BaseDatagram {
-
+	public static final byte PROJETILE_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x22;
+	 
     public ProjectileReplicationDatagram(byte type, short id, short param1, short param2) {
         super(MessageType.DELTA, type, id, param1, param2);
     }
-    public static final byte PROJETILE_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x22;
+    public ProjectileReplicationDatagram(long id, float xposition, float yposition, FacingDirection direction) {
+    	super(MessageType.DELTA, PROJETILE_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0); 
+    	this.id = id;
+    	this.xposition = xposition;
+    	this.yposition = yposition;
+    	this.direction = direction;
+    }
 
     private long id;
     private float xposition;
