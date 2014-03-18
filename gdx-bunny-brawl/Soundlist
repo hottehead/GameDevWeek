@@ -1,0 +1,84 @@
++++Soundliste+++
+
+<Beschreibung> <Dateiname>
+
+[Laufgeräusche]
+
+Gras		Gras
+Brücke		Bridge
+Hohes Gras	HighGras
+Basis		Base
+Weg			Dust
+
+
+[Stimme]
+//für alle außer den Tank
+Damage		Pain1
+			Pain2
+			Pain3
+			Pain4
+KO			Ko1
+			Ko2
+//Für den Tank
+TankDamage	TankPain1
+			TankPain2
+			TankPain3
+			Tankpain4
+TankKo  	TankKo1
+			TankKo2
+Essen		Nom1
+			Nom2
+			Nom3
+			TankNom
+//Ei eingesammelt
+Scored		Yay1
+			Yay2
+			Yay3
+			TankYay
+Fallen		Fall1
+			Fall2
+			TankFall
+Ertrinken	Drown1
+			Drown2
+			TankDrown
+[Waffen]
+
+Ritter		Sword1
+			Sword2
+			Sword3
+Tank		Fist1
+			Fist2
+			Fist3
+Jäger		Bow1
+			Bow2
+			Bow3
+			Impact1
+			Impact2
+//Hier bitte etwas neutrales, alle Klassen können Büsche zerstören
+Busch		BushWack
+
+[Umgebung]
+
+Brücke
+-ausfahren	BridgeOut
+-einfahren	BridgeIn
+
+Schalter 	
+-umlegen 	Switch
+Heuballen
+-schieben	Hay
+-insWasser 	WetHay
+
+[UserInterface]
+
+Bestätigen	Confirm
+Abbrechen	Abort
+Spielstartet Start
+
+[Ambient]
+
+Ei
+-ablegen	EggDown
+-aufheben	EggUp
+
+Ende		Win
