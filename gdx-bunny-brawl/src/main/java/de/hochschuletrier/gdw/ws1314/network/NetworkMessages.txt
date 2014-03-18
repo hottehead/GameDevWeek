@@ -24,7 +24,7 @@ Class Enum
 Team byte
 Accept boolean
 ]
-//OK 
+//player as array !
 
 MatchUpdateDatagram
 Client > Server
@@ -56,7 +56,6 @@ Buffs byte
 Health int
 //OK
 
-
 LevelObjectReplicationDatagram
 Server > Client
 FIRST_CUSTOM + 0x21
@@ -85,15 +84,18 @@ FIRST_CUSTOM + 0x30
 MessageType.NORMAL
 ID long
 Eventart int
+//ok
 
 DespawnDatagram
 Server > Client
 FIRST_CUSTOM + 0x31
 MessageType.NORMAL
 ID long
+//ok
 
 ActionDatagram
 Client > Server
 FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 PlayerEvent int
+//ok

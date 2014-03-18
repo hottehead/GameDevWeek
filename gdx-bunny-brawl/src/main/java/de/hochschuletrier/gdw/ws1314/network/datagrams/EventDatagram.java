@@ -10,8 +10,8 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  * Created by albsi on 17.03.14.
  */
 public class EventDatagram extends BaseDatagram {
-    private long id;
     public static final byte EVENT_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x30;
+    private long id;
 
     public EventDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.NORMAL, type, id, param1, param2);

@@ -13,12 +13,12 @@ public class DespawnDatagram extends BaseDatagram {
     public static final byte DESPAWN_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x31;
     private long id;
 
-    public DespawnDatagram(byte type, short id, short param1, short param2) {
-        super(MessageType.NORMAL, type, id, param1, param2);
+    public DespawnDatagram (byte type, short id, short param1, short param2) {
+        super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public DespawnDatagram(long id){
-        super(MessageType.NORMAL, DESPAWN_DATAGRAM, (short)0, (short)0, (short)0);
+    public DespawnDatagram (long id) {
+        super (MessageType.NORMAL, DESPAWN_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.id = id;
     }
 

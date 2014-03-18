@@ -8,7 +8,6 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 public class ChatDeliverDatagram extends BaseDatagram {
     public static final byte CHAT_DELIVER_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x01;
-
     private String sender;
     private String text;
 
@@ -46,5 +45,4 @@ public class ChatDeliverDatagram extends BaseDatagram {
     public String getText () {
         return text;
     }
-
 }
