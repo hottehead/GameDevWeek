@@ -17,7 +17,10 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 
@@ -190,7 +193,44 @@ public class ServerPlayer extends ServerEntity
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	{
-    	
+    	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+         
+         switch(otherEntity.getEntityType()) {
+             case Tank:
+             case Hunter:
+             case Knight:
+             case Noob:
+                 ServerPlayer player = (ServerPlayer)otherEntity;
+                 if(this.firstAttackFired){
+                	 
+                 }else if(this.secondAttackFired){
+                	 
+                 }
+                 break;
+             case Ei:			
+            	 ServerEgg egg = (ServerEgg) otherEntity;
+            	 this.currentEggCount++;
+            	 break;
+             case Projectil: 
+            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+            	 
+            	/*  FIXME: Ich brauche als ID kein Long sondern eine Entity deren Angriff ich von den Lebenspunkten abziehen kann
+            	 * this.currentHealth -= projectile.getID().angriff;
+            	 * if(this.currentHealth <= 0){
+            	 * 		 ServerEntityManager.getInstance().removeEntity(this);
+            	 * }
+            	 */
+            	 break;
+             case Bridge: 		
+            	 break;
+             case BridgeSwitch:	
+            	 break;
+             case Bush:			
+            	 break;
+             default:
+            	 break;
+                 
+         }
     }
     public void endContact(Contact contact) 	{}
     public void preSolve(Contact contact, Manifold oldManifold) {}
