@@ -12,7 +12,7 @@
     "debugBarDecorNine": "data/images/testImages/barDecorationNine.png",
     "debugBuff": "data/images/testImages/buffIcon.png",
     "debugClass": "data/images/testImages/classIcon.png",
-    "debugScoreEnemy": "data/images/testImages/scoreTeamIcon.png",
-    "debugScoreTeam": "data/images/testImages/scoreEnemyIcon.png",
+    "debugScoreEnemy": "data/images/testImages/scoreEnemyIcon.png",
+    "debugScoreTeam": "data/images/testImages/scoreTeamIcon.png",
     "debugTooltip": "data/images/testImages/tooltip.png"
 }

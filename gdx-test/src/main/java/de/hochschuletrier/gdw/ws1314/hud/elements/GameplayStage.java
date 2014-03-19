@@ -71,6 +71,7 @@ public class GameplayStage extends AutoResizeStage {
 		decor = new StaticTextElement(font, "Ei ablegen", layEggIcon.getWidth()*.5f,  -14);
 		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, decor);
 		
+
 		//score icons
 		DynamicTextElement textScore;
 		
@@ -89,7 +90,6 @@ public class GameplayStage extends AutoResizeStage {
 		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, textScore);
 		decor = new StaticTextElement(font, "Team 2", this.scoreEnemyIcon.getWidth()*.5f, -14);
 		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, decor);
-		
 	}
 
 	public void render() {
@@ -105,6 +105,7 @@ public class GameplayStage extends AutoResizeStage {
 		layEggIcon.draw();
 		scoreEnemyIcon.draw();
 		scoreTeamIcon.draw();
+		advanceScoreOwnTeam();
 		
 		DrawUtil.batch.flush();
 		this.draw();
