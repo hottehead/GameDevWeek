@@ -188,18 +188,11 @@ public class ServerPlayer extends ServerEntity
     	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
-<<<<<<< HEAD
-    	//moveEnd();
-=======
-    	
->>>>>>> refs/remotes/origin/master
+
     	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-<<<<<<< HEAD
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
     	moveEnd();
-=======
-				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
->>>>>>> refs/remotes/origin/master
+
     	
     }
     
