@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -169,6 +171,27 @@ public class Main extends StateBasedGame {
 				for(int i = 0; i < players.length; i++)
 					logger.info("Player" + i + ": " + players[i].getPlayername());
 				c_players = players;
+			}
+		});
+		
+		NetworkManager.getInstance().setPlayerDisconnectCallback(new PlayerDisconnectCallback() {
+			
+			@Override
+			public void callback(Integer[] playerid) {
+				// TODO Auto-generated method stub
+				List<PlayerData> players = new ArrayList<PlayerData>();
+				for(int i = 0; i < s_players.length; i++){
+					boolean inlist = true;
+					for(int j = 0; j < playerid.length; j++){
+						if(playerid[j] == s_players[i].getId()){
+							inlist = false;
+							break;
+						}
+					}
+					if(inlist)
+						players.add(s_players[i]);
+				}
+				s_players = players.toArray(new PlayerData[players.size()]);
 			}
 		});
     	
