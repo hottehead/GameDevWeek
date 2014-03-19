@@ -61,19 +61,6 @@ public class Main extends StateBasedGame {
 		return instance;
 	}
 
-
-	private void setupDummyLoader() {
-		// Just adding some sleep dummies for a progress bar test
-		InternalFileHandleResolver fileHandleResolver = new InternalFileHandleResolver();
-		assetManager.setLoader(SleepDummyLoader.SleepDummy.class, new SleepDummyLoader(
-				fileHandleResolver));
-		SleepDummyLoader.SleepDummyParameter dummyParam = new SleepDummyLoader.SleepDummyParameter(
-				100);
-		for (int i = 0; i < 50; i++) {
-			assetManager.load("dummy" + i, SleepDummyLoader.SleepDummy.class, dummyParam);
-		}
-	}
-
 	private void loadAssetLists() {
 		TextureParameter param = new TextureParameter();
 		param.minFilter = param.magFilter = Texture.TextureFilter.Linear;
@@ -107,7 +94,6 @@ public class Main extends StateBasedGame {
 	public void create() {
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
-		setupDummyLoader();
 		loadAssetLists();
 		setupGdx();
 		skin = new Skin(Gdx.files.internal("data/skins/basic.json"));
