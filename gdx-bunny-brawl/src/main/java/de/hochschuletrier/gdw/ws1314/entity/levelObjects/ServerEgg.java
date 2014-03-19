@@ -15,6 +15,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 
 /**
  * 
@@ -50,7 +51,7 @@ public class ServerEgg extends ServerLevelObject
                 case Hunter:
                 case Knight:
                 case Noob:
-//                    ServerEntityManager.getInstance().removeEntity(this);
+                    ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;

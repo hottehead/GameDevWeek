@@ -39,8 +39,14 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 
 	@Override
 	public void onEntityRemove(ClientEntity entity) {
-		// not yet implemented
 		// find object in renderObj -> remove and provide to pool, without O(n)
+		for(RenderObject obj : renderList) {
+			if(obj.entity.getID() == entity.getID()) {
+				providePoolObject(obj);
+				renderList.remove(obj);
+				return;
+			}
+		}
 	}
 
 
