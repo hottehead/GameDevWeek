@@ -8,7 +8,6 @@ public class AttackSwingSword extends AttackType
     public static final int DAMAGE = 50;
     
     public void fire(ServerPlayer player){
-        new ServerSwordAttack(player.getID());
     }
 
 }
