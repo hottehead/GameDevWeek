@@ -1,14 +1,17 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
@@ -48,13 +51,15 @@ public class ServerEgg extends ServerLevelObject
 	{
 
         ServerEntity otherEntity = this.identifyContactFixtures(contact);
+            System.out.println(otherEntity.getEntityType());
         
         switch(otherEntity.getEntityType()) {
             case Tank:
             case Hunter:
             case Knight:
             case Noob:
-                ServerEntityManager.getInstance().removeEntity(this);
+            	System.out.println("hallo");
+            	ServerEntityManager.getInstance().removeEntity(this);
                 break;
             default:
                 break;
@@ -92,9 +97,11 @@ public class ServerEgg extends ServerLevelObject
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
             					.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
             					.fixedRotation(false).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(16));
 
-            body.setGravityScale(0);
+            body.createFixture(new PhysixFixtureDef(manager).sensor(true).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(16));
+
+
+            body.setGravityScale(12);
             body.addContactListener(this);
             setPhysicsBody(body);
 	}

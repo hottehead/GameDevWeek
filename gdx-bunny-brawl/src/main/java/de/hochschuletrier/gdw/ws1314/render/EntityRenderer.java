@@ -21,6 +21,7 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 	
 	
 	public void draw() {
+		
 		for(RenderObject obj : this.renderList) {
 			Vector2 pos = obj.entity.getPosition();
 			DrawUtil.batch.draw(obj.material.texture, pos.x, pos.y+obj.material.height, obj.material.width, -obj.material.height); 
@@ -29,7 +30,6 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 	
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
-		System.out.println("create renderobj");
 		RenderObject renderObj = this.fetch();
 		renderObj.material = materials.fetch(entity.getClass());
 		renderObj.entity = entity;
@@ -38,8 +38,14 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 
 	@Override
 	public void onEntityRemove(ClientEntity entity) {
-		// not yet implemented
 		// find object in renderObj -> remove and provide to pool, without O(n)
+		for(RenderObject obj : renderList) {
+			if(obj.entity.getID() == entity.getID()) {
+				providePoolObject(obj);
+				renderList.remove(obj);
+				return;
+			}
+		}
 	}
 
 
