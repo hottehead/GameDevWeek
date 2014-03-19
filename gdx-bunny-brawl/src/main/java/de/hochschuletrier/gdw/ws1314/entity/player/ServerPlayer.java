@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -16,11 +17,17 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -31,6 +38,12 @@ import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 public class ServerPlayer extends ServerEntity implements IStateListener
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
+
+
+	private final float FRICTION = 0;
+
+
+	private final float RESTITUTION = 0;
 
 
     private PlayerInfo	playerInfo;
@@ -123,6 +136,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	{
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
+            		doFirstAttack();
             	}
                 break;
             case ATTACK_2:
@@ -131,6 +145,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	{
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
+            		doSecondAttack();
             	}
                 break;
             case DROP_EGG:
@@ -192,9 +207,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
-    	
-    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
+
+    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	moveEnd();
+
     	
     }
     
@@ -226,7 +243,47 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
-    public void beginContact(Contact contact) 	{}
+    public void beginContact(Contact contact) 	{
+    	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+         
+         switch(otherEntity.getEntityType()) {
+             case Tank:
+             case Hunter:
+             case Knight:
+             case Noob:
+                 // Comment by ElFapo:
+            	 // Hier nur physikalische Kontakte berücksichtigen. Waffenkontakte werden wie bei Projektilen behandelt.
+            	 //
+                 break;
+             case Ei:			
+            	 // Comment by ElFapo:
+            	 // Ei muss von nach dem Einsammeln gelöscht werden.
+            	 ServerEgg egg = (ServerEgg) otherEntity;
+            	 this.currentEggCount++;
+            	 break;
+             case Projectil: 
+            	
+            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
+            	  * this.currentHealth -= hunter.angriff;
+            	  */
+            	 if(this.currentHealth <= 0){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }
+            	 
+            	 break;
+             case Bridge: 		
+            	 break;
+             case BridgeSwitch:	
+            	 break;
+             case Bush:			
+            	 break;
+             default:
+            	 break;
+                 
+         }
+    }
     public void endContact(Contact contact) 	{}
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -266,8 +323,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(new Vector2()).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-				.friction(0.5f).restitution(0.4f).shapeBox(100,100));
+		body.createFixture(new PhysixFixtureDef(manager).density(0)
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);

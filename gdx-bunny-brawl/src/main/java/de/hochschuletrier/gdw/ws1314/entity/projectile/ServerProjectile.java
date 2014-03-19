@@ -25,54 +25,75 @@ import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
  */
 
 public class ServerProjectile extends ServerEntity {
-	protected float speed;
-	protected FacingDirection facingDirection;
-	protected float flightDistance;
-	protected TeamColor teamColor;
-	protected long sourceID;
+    
+    //==================================================
+    // CONSTANTS
+    private static final float speed = 2.0f;
+    private static final float flightDistance = 50.0f;
+
+    //==================================================
+    // VARIABLES
+    private final long sourceID;
+
+    private final FacingDirection facingDirection;
+    private final TeamColor teamColor;
+    private final Vector2 originPosition;
+
+    //==================================================
+    public ServerProjectile(long sourceID) {
+            super();
+
+            this.sourceID = sourceID;
+
+            ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
+
+            this.teamColor = player.getTeamColor();
+            this.facingDirection = player.getFacingDirection();
+            this.originPosition = player.getPosition();
+    }
 	
-	public ServerProjectile() {
-		super();
-	}
-	
-	public float getSpeed() {
-		return speed;
-	}
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
+//	public float getSpeed() {
+//		return speed;
+//	}
+//	public void setSpeed(float speed) {
+//		this.speed = speed;
+//	}
 
 	public FacingDirection getFacingDirection() {
 		return this.facingDirection;
 	}
-	public void setFacingDirection(FacingDirection direction) {
-		this.facingDirection = direction;
-	}
+//	public void setFacingDirection(FacingDirection direction) {
+//		this.facingDirection = direction;
+//	}
 
 	public TeamColor getTeamColor() {
 		return teamColor;
 	}
-	public void setTeamColor(TeamColor teamColor) {
-		this.teamColor = teamColor;
-	}
+//	public void setTeamColor(TeamColor teamColor) {
+//		this.teamColor = teamColor;
+//	}
 
-	public float getFlightDistance() {
-		return flightDistance;
-	}
-	public void setFlightDistance(float flightDistance) {
-		this.flightDistance = flightDistance;
-	}
+//	public float getFlightDistance() {
+//		return flightDistance;
+//	}
+//	public void setFlightDistance(float flightDistance) {
+//		this.flightDistance = flightDistance;
+//	}
 
 	public long getSourceID() {
 		return sourceID;
 	}
-	public void setSourceID(long sourceID) {
-		this.sourceID = sourceID;
-	}
+//	public void setSourceID(long sourceID) {
+//		this.sourceID = sourceID;
+//	}
 
 	@Override
 	public void beginContact(Contact contact) {
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
+            
+            if(otherEntity == null) {
+                return;
+            }
             
             switch(otherEntity.getEntityType()) {
                 case Tank:
@@ -83,6 +104,8 @@ public class ServerProjectile extends ServerEntity {
                     if(player.getTeamColor() != this.teamColor) {
                         ServerEntityManager.getInstance().removeEntity(this);
                     }
+                    break;
+                default:
                     break;
             }
 	}
@@ -118,23 +141,30 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void update(float deltaTime) {
-		// TODO Auto-generated method stub
-		
+            Vector2 position = this.physicsBody.getPosition();
+            float distance = this.originPosition.sub(position).len();
+            if(distance > this.flightDistance) {
+                ServerEntityManager.getInstance().removeEntity(this);
+            }
 	}
 
 	@Override
-	public EntityType getEntityType()
-	{
+	public EntityType getEntityType(){
 		return EntityType.Projectil;
 	}
 
 	@Override
-	public void initPhysics(PhysixManager manager)
-	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(new Vector2()).fixedRotation(false).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.4f).shapeCircle(30));
+	public void initPhysics(PhysixManager manager){
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
+            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
             body.setGravityScale(0);
             body.addContactListener(this);
+            
+
+            Vector2 impulse = this.facingDirection.getDirectionVector().cpy().scl(this.speed);
+
+            body.applyImpulse(impulse);
+            
             setPhysicsBody(body);
 	}
 	
