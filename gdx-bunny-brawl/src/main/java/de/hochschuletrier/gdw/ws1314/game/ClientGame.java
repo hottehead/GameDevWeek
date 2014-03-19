@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
@@ -25,6 +24,7 @@ import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
+import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -42,7 +42,7 @@ public class ClientGame {
 	
 	private FrameBuffer sceneToTexture;
 	private TextureRegion sceneToTextureBuffer;
-	private ShaderProgram postProcessing;
+	private TextureAdvection postProcessing;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
@@ -82,7 +82,7 @@ public class ClientGame {
 		sceneToTextureBuffer = new TextureRegion(sceneToTexture.getColorBufferTexture());
 		sceneToTextureBuffer.flip(false, false);
 		
-		postProcessing = new ShaderProgram(Gdx.files.internal("data/shaders/edgeDetection.vert"), Gdx.files.internal("data/shaders/edgeDetection.frag"));
+		postProcessing = new TextureAdvection("data/shaders/edgeDetection.vert", "data/shaders/edgeDetection.frag");
 		
 	}
 
