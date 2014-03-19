@@ -276,6 +276,7 @@ public class NetworkManager {
 		Main.getInstance().console.register(stopCmd);
 		Main.getInstance().console.register(disconnectCmd);
 		Main.getInstance().console.register(devConnectCmd);
+		Main.getInstance().console.register(sendDevPlayerUpdateCmd);
 		addChatListener(new ConsoleChatListener());
 	}
 
@@ -492,7 +493,7 @@ public class NetworkManager {
 
 		@Override
 		public void showUsage() {
-			showUsage("<flag> [l = localhost, t = test server]");
+			showUsage("<flag> [l = localhost, t = test server, j = jerry]");
 		}
 
 		@Override
@@ -503,6 +504,32 @@ public class NetworkManager {
 					connect("localhost", defaultPort);
 				} else if (args.get(1).equals("t")) {
 					connect("143.93.55.135", defaultPort);
+				}else if (args.get(1).equals("j")) {
+					connect("143.93.55.141", defaultPort);
+				}
+			} catch (Exception e) {
+				logger.error("can't connect to server", e);
+			}
+		}
+	};
+
+	private ConsoleCmd sendDevPlayerUpdateCmd = new ConsoleCmd("spu", 0, "[DEV CMD] only for network tests, sendPlayerUpdate", 1) {
+
+		@Override
+		public void showUsage() {
+			showUsage("<flag> [1 = player 1, 2 = player 2, 3 = player 3]");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			try {
+				logger.warn("[spu] is only for network development tests !");
+				if (args.get(1).equals("1")) {
+					NetworkManager.getInstance().sendPlayerUpdate("player1", EntityType.Knight, TeamColor.BLACK, false);
+				} else if (args.get(1).equals("2")) {
+					NetworkManager.getInstance().sendPlayerUpdate("player2",EntityType.Hunter,TeamColor.WHITE,false);
+				}else if (args.get(1).equals("3")) {
+					NetworkManager.getInstance().sendPlayerUpdate("player3", EntityType.Tank, TeamColor.BOTH, false);
 				}
 			} catch (Exception e) {
 				logger.error("can't connect to server", e);
@@ -514,7 +541,7 @@ public class NetworkManager {
 		try {
 			if (isServer()) {
 				serverReception.shutdown();
-				logger.info("Server stopped.");
+				logger.info("[SERVER] stopped");
 			} else {
 				logger.warn("Can't stop, i'm not a Server.");
 			}
