@@ -143,4 +143,12 @@ public class GameplayStage extends AutoResizeStage {
 	public void advanceScoreEnemeyTeam() {
 		scoreEnemy.stepValue();
 	}
+	
+	public void advanceHealthbar() {
+		healthBar.get().stepValue();
+	}
+	
+	public void resetHealthbar() {
+		healthBar.reset();
+	}
 }
