@@ -55,14 +55,11 @@ public class ClientPlayer extends ClientEntity
     	
     }
     
-    public void update(float delta) 
-    {
-        logger.info("Meine Position x:{} y:{}",getPosition().x,getPosition().y);
+    public void update(float delta) {
     }
     
     @Override
-    public void render() 
-    {
+    public void render() {
     }
 
 }
