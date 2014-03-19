@@ -4,23 +4,23 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
-import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
- * Created by albsi on 17.03.14.
+ * Created by albsi on 18.03.14.
  */
-public class ActionDatagram extends BaseDatagram {
-    public static final byte ACTION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x40;
-    private PlayerIntention playerAction;
+public class GameStateDatagram extends BaseDatagram {
+    public static final byte GAME_STATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x32;
+    private GameStates gameStates;
 
-    public ActionDatagram (byte type, short id, short param1, short param2) {
+    public GameStateDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public ActionDatagram (PlayerIntention playerAction) {
-        super (MessageType.NORMAL, ACTION_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.playerAction = playerAction;
+    public GameStateDatagram (GameStates gameStates) {
+        super (MessageType.NORMAL, GAME_STATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+        this.gameStates = gameStates;
     }
 
     @Override
@@ -30,15 +30,15 @@ public class ActionDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-        message.putEnum(playerAction);
+        message.putEnum (gameStates);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-        playerAction = message.getEnum(PlayerIntention.class);
+        this.gameStates = message.getEnum (GameStates.class);
     }
 
-    public PlayerIntention getPlayerAction () {
-        return playerAction;
+    public GameStates getGameStates () {
+        return gameStates;
     }
 }
