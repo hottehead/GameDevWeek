@@ -23,7 +23,6 @@ public class GameplayState extends GameState implements InputProcessor {
 
 
 	public GameplayState() {
-
 	}
 
 	@Override
@@ -35,6 +34,7 @@ public class GameplayState extends GameState implements InputProcessor {
 		tmpGame.init(assetManager);
 
 		Main.inputMultiplexer.addProcessor(this);
+		
 	}
 
 	@Override
