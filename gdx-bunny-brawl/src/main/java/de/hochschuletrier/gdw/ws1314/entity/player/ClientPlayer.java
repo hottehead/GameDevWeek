@@ -5,6 +5,8 @@ import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -14,6 +16,8 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class ClientPlayer extends ClientEntity
 {
+    private static final Logger logger = LoggerFactory.getLogger(ClientPlayer.class);
+
     private int 			eggCount;
     private float 			currentHealth;
     private float			currentArmor;
@@ -42,6 +46,7 @@ public class ClientPlayer extends ClientEntity
     
     public void update(float delta) 
     {
+        logger.info("Meine Position x:{} y:{}",getPosition().x,getPosition().y);
     }
     
     @Override
