@@ -8,5 +8,8 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 public enum TeamColor 
 {
     WHITE,
-    BLACK
+    BLACK,
+    
+    // projectiles with color 'BOTH' hit both 'WHITE' and 'BLACK' characters
+    BOTH
 }
