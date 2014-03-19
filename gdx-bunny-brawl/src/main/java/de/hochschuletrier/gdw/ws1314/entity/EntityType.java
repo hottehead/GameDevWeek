@@ -18,5 +18,10 @@ public enum EntityType {
     ContactMine,
     Carrot,
     Spinach,
-    Clover
+    Clover,
+    WaterZone,
+    AbyssZone,
+    GrassZone,
+    PathZone,
+    StartZone
 }
