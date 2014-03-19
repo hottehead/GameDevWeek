@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public enum FacingDirection 
 {
+	NONE(0.0f, 0.0f),
+	
 	LEFT(-1.0f, 0.0f),
 	DOWN(0.0f, 1.0f),
 	RIGHT(1.0f, 0.0f),
