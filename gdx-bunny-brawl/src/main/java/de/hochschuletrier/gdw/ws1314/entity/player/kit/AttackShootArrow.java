@@ -9,7 +9,6 @@ public class AttackShootArrow extends AttackType
 	
     public void fire(ServerPlayer player) 
     {
-        new ServerProjectile(player.getID());
     }
 
 }
