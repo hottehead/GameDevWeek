@@ -47,16 +47,18 @@ public class ServerEntityManager {
 
     }
     
-    public static ServerEntityManager getInstance(PhysixManager physManager)
+    public static ServerEntityManager getInstance()
     {
 
     	if (instance == null)
     		instance = new ServerEntityManager();
 
-        if (physManager != null)
-        ServerEntityManager.physManager = physManager;
 
     	return instance;
+    }
+
+    public void setPhysixManager(PhysixManager physManager){
+        ServerEntityManager.physManager = physManager;
     }
 
     public ServerEntity getEntityById(long id) {

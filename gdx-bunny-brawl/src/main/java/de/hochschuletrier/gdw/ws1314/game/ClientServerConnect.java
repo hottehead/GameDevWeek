@@ -26,7 +26,7 @@ public class ClientServerConnect {
     private ClientServerConnect(){
         logger.warn("Replace ClientServerConnect");
 
-        sem = ServerEntityManager.getInstance(null);
+        sem = ServerEntityManager.getInstance();
         cem = ClientEntityManager.getInstance();
     }
 

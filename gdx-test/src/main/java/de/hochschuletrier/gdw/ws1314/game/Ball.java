@@ -70,7 +70,7 @@ public class Ball extends PhysixEntity implements ContactListener {
 					Gdx.graphics.getHeight());
 
 		} else {
-			physicsBody.setLinearDamping(1);
+			//physicsBody.setLinearDamping(1);
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 				physicsBody.applyImpulse(-10, 0);
 			} else if (Gdx.input.isKeyPressed(Keys.UP)) {
