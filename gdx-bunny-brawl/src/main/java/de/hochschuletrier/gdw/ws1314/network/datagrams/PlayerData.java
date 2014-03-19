@@ -27,5 +27,9 @@ public class PlayerData {
 	}
 	public boolean isAccept() {
 		return accept;
-	}   	
+	}
+	
+	public String toString() {
+		return playername + " " + type.toString() + " " + team.toString() + " " + accept;
+	}
 }

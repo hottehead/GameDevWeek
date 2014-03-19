@@ -25,7 +25,7 @@ public class ClientDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection) {
-        logger.warn("Client received a PlayerUpdateDatagram, which is only intended to be sent to a server, something is wrong here...");
+    	logger.warn("Client received a PlayerUpdateDatagram, which is only intended to be sent to a server, something is wrong here...");
     }
 
     @Override
