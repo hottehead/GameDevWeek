@@ -44,6 +44,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
 
 	private final float FRICTION = 0;
+	private final float	BRAKING = 5.0f;
 
 
 	private final float RESTITUTION = 0;
@@ -204,28 +205,30 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
     protected void moveBegin(FacingDirection dir)
     {
+    	logger.info("Move begin: " + facingDirection);
     	facingDirection = desiredDirection;
-    	
     	// TODO 
     	// Damp old impulse
     	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
 
+    	moveEnd();
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
+    	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
-    	
     }
     
     protected void moveEnd()
     {
+    	logger.info("Move end: " + facingDirection);
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
-    	physicsBody.setLinearDamping(1);
+    	//physicsBody.setLinearVelocity(FacingDirection.NONE.getDirectionVector());
+    	physicsBody.setLinearDamping(BRAKING);
     }
     
     private void doFirstAttack()
@@ -333,10 +336,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(32,32));
+
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
+    	walkingState.setPhysixBody(physicsBody);
 	}
 
 	@Override

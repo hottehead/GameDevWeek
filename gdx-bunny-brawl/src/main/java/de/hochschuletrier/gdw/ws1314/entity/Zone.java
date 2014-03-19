@@ -51,11 +51,6 @@ public class Zone extends ServerEntity
 	}
 
 	@Override
-	public void dispose()
-	{
-	}
-
-	@Override
 	public void initialize()
 	{
 	}
