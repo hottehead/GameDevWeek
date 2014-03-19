@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
@@ -41,6 +42,7 @@ public class ClientGame {
 	
 	private FrameBuffer sceneToTexture;
 	private TextureRegion sceneToTextureBuffer;
+	private ShaderProgram postProcessing;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
@@ -78,7 +80,10 @@ public class ClientGame {
 		
 		sceneToTexture = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		sceneToTextureBuffer = new TextureRegion(sceneToTexture.getColorBufferTexture());
-		sceneToTextureBuffer.flip(false, true);
+		sceneToTextureBuffer.flip(false, false);
+		
+		postProcessing = new ShaderProgram(Gdx.files.internal("data/shaders/edgeDetection.vert"), Gdx.files.internal("data/shaders/edgeDetection.frag"));
+		
 	}
 
 
@@ -93,9 +98,9 @@ public class ClientGame {
 		DrawUtil.batch.flush();
 		sceneToTexture.end();
 		
-		
+		DrawUtil.batch.setShader(postProcessing);
 		DrawUtil.batch.draw(sceneToTextureBuffer, 0, 0);
-		
+		DrawUtil.batch.setShader(null);
 	}
 
 	public void update(float delta) {
