@@ -1,3 +1,4 @@
+
 package de.hochschuletrier.gdw.ws1314.hud.elements;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,5 +13,4 @@ public class LevelListElement extends TextButton {
 	public String toString() {
 		return super.getText().toString();
 	}
-
 }
