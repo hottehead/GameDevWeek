@@ -13,7 +13,11 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 
@@ -22,10 +26,16 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
  */
 public class ServerEgg extends ServerLevelObject
 {
+    private static final Logger logger = LoggerFactory.getLogger(ServerEgg.class);
+
 	public ServerEgg()
 	{
 		super();
 	}
+
+    public void update(float delta)
+    {
+    }
 	
 	@Override
 	public void initialize()
@@ -36,17 +46,18 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact)
 	{
-            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-            
-            switch(otherEntity.getEntityType()) {
-                case Tank:
-                case Hunter:
-                case Knight:
-                case Noob:
-                    ServerEntityManager.getInstance().removeEntity(this);
-                    break;
-                default:
-                    break;
+
+        ServerEntity otherEntity = this.identifyContactFixtures(contact);
+        
+        switch(otherEntity.getEntityType()) {
+            case Tank:
+            case Hunter:
+            case Knight:
+            case Noob:
+                ServerEntityManager.getInstance().removeEntity(this);
+                break;
+            default:
+                break;
             }
 	}
 
@@ -58,6 +69,9 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
+		
+		 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		
 	}
 
 	@Override
@@ -74,8 +88,12 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(new Vector2()).fixedRotation(false).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
+  					
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+            					.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+            					.fixedRotation(false).create();
+            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(5));
+
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);

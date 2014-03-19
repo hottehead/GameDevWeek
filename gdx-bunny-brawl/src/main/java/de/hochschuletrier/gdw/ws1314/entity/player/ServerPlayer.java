@@ -1,8 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,11 +18,15 @@ import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.state.State;
+import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +35,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author ElFapo
  * ASK BEFORE MODIFYING, OR I'LL MOST CERTAINLY TAKE A SHIT ON YOUR HEAD!
+ * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity 
+public class ServerPlayer extends ServerEntity implements IStateListener
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
@@ -42,6 +47,7 @@ public class ServerPlayer extends ServerEntity
 
 
 	private final float RESTITUTION = 0;
+	private final float	KNOCKBACK_TIME = 0.8f;
 
 
     private PlayerInfo	playerInfo;
@@ -51,18 +57,20 @@ public class ServerPlayer extends ServerEntity
     private float 		firstAttackCooldown;
     private float 		secondAttackCooldown;
     
-    private float		firstAttackTimer;
-    private float		secondAttackTimer;
-    
-    private boolean		firstAttackFired;
-    private boolean		secondAttackFired;
-    
     private float		currentHealth;
     private float		currentArmor;
     
     private int 		currentEggCount;
     
-    FacingDirection 	direction;
+    private StatePlayerWaiting 	 attackState;
+    private StatePlayerIdle		 idleState;
+    private StatePlayerWaiting 	 knockbackState;
+    private StatePlayerWalking	 walkingState;
+    
+    private State				 currentState;
+    
+    FacingDirection 	facingDirection;
+    FacingDirection		desiredDirection;
     boolean				movingUp;
     boolean				movingDown;
     boolean				movingLeft;
@@ -73,11 +81,13 @@ public class ServerPlayer extends ServerEntity
     	super();
     	
     	setPlayerKit(PlayerKit.NOOB);
-    	firstAttackTimer = 0.0f;
-    	firstAttackFired = false;
-    	secondAttackTimer = 0.0f;
-    	secondAttackFired = false;
     	currentEggCount = 0;
+    	
+    	attackState = new StatePlayerWaiting(this);
+    	idleState = new StatePlayerIdle(this);
+    	knockbackState = new StatePlayerWaiting(this);
+    	walkingState = new StatePlayerWalking(this);
+    	currentState = idleState;
     }
     
     public void enable() {}
@@ -88,18 +98,7 @@ public class ServerPlayer extends ServerEntity
     @Override
     public void update(float deltaTime) 
     {
-    	if (firstAttackFired)
-    	{
-    		firstAttackTimer += deltaTime;
-    		if (firstAttackTimer >= firstAttackCooldown)
-    			firstAttackFired = false;
-    	}
-    	else if (secondAttackFired)
-    	{
-    		secondAttackTimer += deltaTime;
-    		if (secondAttackTimer >= secondAttackCooldown)
-    			secondAttackFired = false;
-    	}
+    	currentState.update(deltaTime);
     	
     	// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
     }
@@ -136,52 +135,76 @@ public class ServerPlayer extends ServerEntity
                 movingRight = false;
                 break;
             case ATTACK_1:
-            	if (!firstAttackFired && !secondAttackFired)
+        		attackState.setWaitTime(firstAttackCooldown);
+            	if (currentState == idleState || currentState == walkingState)
             	{
+            		attackState.setWaitFinishedState(currentState);
+            		switchToState(attackState);
             		doFirstAttack();
-            		firstAttackTimer = 0.0f;
             	}
                 break;
             case ATTACK_2:
-            	if (!firstAttackFired && !secondAttackFired)
+        		attackState.setWaitTime(secondAttackCooldown);
+        		if (currentState == idleState || currentState == walkingState)
             	{
+            		attackState.setWaitFinishedState(currentState);
+            		switchToState(attackState);
             		doSecondAttack();
-            		secondAttackTimer = 0.0f;
             	}
                 break;
             case DROP_EGG:
-            	dropEgg();
+        		if (currentState == idleState || currentState == walkingState)
+        			dropEgg();
         }
         
+        desiredDirection = FacingDirection.NONE;
         if (movingUp)
         {
         	if (movingLeft)
-        		moveBegin(FacingDirection.UP_LEFT);
+        		desiredDirection = FacingDirection.UP_LEFT;
         	else if (movingRight)
-        		moveBegin(FacingDirection.UP_RIGHT);
+        		desiredDirection = FacingDirection.UP_RIGHT;
         	else
-        		moveBegin(FacingDirection.UP);
+        		desiredDirection = FacingDirection.UP;
         }
         else if (movingDown)
         {
         	if (movingLeft)
-        		moveBegin(FacingDirection.DOWN_LEFT);
+        		desiredDirection = FacingDirection.DOWN_LEFT;
         	else if (movingRight)
-        		moveBegin(FacingDirection.DOWN_RIGHT);
+        		desiredDirection = FacingDirection.DOWN_RIGHT;
         	else
-        		moveBegin(FacingDirection.DOWN);
+        		desiredDirection = FacingDirection.DOWN;
         }
         else if (movingLeft)
-        	moveBegin(FacingDirection.LEFT);
+        	desiredDirection = FacingDirection.LEFT;
         else if (movingRight)
-        	moveBegin(FacingDirection.RIGHT);
+        	desiredDirection = FacingDirection.RIGHT;    	
+        
+        // Player intended movement
+        if (desiredDirection != FacingDirection.NONE)
+        {
+        	walkingState.setMovingDirection(desiredDirection);
+            if (currentState == idleState || currentState == walkingState)
+            	switchToState(walkingState);
+
+        	attackState.setWaitFinishedState(walkingState);
+        	knockbackState.setWaitFinishedState(walkingState);
+        }
+        // Not intended movement
         else
-        	moveEnd();
+        {
+        	if (currentState == walkingState)
+        		switchToState(idleState);
+
+        	attackState.setWaitFinishedState(idleState);
+        	knockbackState.setWaitFinishedState(idleState);
+        }
     }
 
-    private void moveBegin(FacingDirection dir)
+    protected void moveBegin(FacingDirection dir)
     {
-    	direction = dir;
+    	facingDirection = desiredDirection;
     	
     	// TODO 
     	// Damp old impulse
@@ -191,12 +214,13 @@ public class ServerPlayer extends ServerEntity
 
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
     	
     }
     
-    private void moveEnd()
+    protected void moveEnd()
     {
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
@@ -232,14 +256,13 @@ public class ServerPlayer extends ServerEntity
              case Hunter:
              case Knight:
              case Noob:
-                 ServerPlayer player = (ServerPlayer)otherEntity;
-                 if(this.firstAttackFired){
-                	 
-                 }else if(this.secondAttackFired){
-                	 
-                 }
+                 // Comment by ElFapo:
+            	 // Hier nur physikalische Kontakte berücksichtigen. Waffenkontakte werden wie bei Projektilen behandelt.
+            	 //
                  break;
              case Ei:			
+            	 // Comment by ElFapo:
+            	 // Ei muss von nach dem Einsammeln gelöscht werden.
             	 ServerEgg egg = (ServerEgg) otherEntity;
             	 this.currentEggCount++;
             	 break;
@@ -247,15 +270,19 @@ public class ServerPlayer extends ServerEntity
             	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
             	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
-            	  * this.currentHealth -= hunter.angriff;
-            	  */
+            	 this.currentHealth -= AttackShootArrow.DAMAGE;
+            	  
             	 if(this.currentHealth <= 0){
             	  	 ServerEntityManager.getInstance().removeEntity(this);
             	  }
-            	 
             	 break;
-             case Bridge: 		
+             case Bridge:
+            	 ServerBridge bridge = (ServerBridge) otherEntity;
+            	 //ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 
+            	/* if(){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }*/
             	 break;
              case BridgeSwitch:	
             	 break;
@@ -270,8 +297,8 @@ public class ServerPlayer extends ServerEntity
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-    public FacingDirection  getFacingDirection()	{ return direction; }
-    public float			getCurrentEggCount()	{ return currentEggCount; }
+    public FacingDirection  getFacingDirection()	{ return facingDirection; }
+    public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
     public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
@@ -304,11 +331,26 @@ public class ServerPlayer extends ServerEntity
 		// TODO Auto-generated method stub
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(new Vector2()).fixedRotation(false).create();
+							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
 				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
+	}
+
+	@Override
+	public void switchToState(State state)
+	{
+		currentState.exit();
+		currentState = state;
+		currentState.init();
+	}
+	
+	protected void applyKnockback()
+	{
+		switchToState(knockbackState);
+		
+		// TODO Calculate KnockbackImpulse
 	}
 }

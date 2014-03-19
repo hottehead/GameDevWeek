@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author ElFapo
  *
  */
-public abstract class ClientEntity 
+public abstract class ClientEntity
 {
 	private Vector2 	position;
 	private long 		id;

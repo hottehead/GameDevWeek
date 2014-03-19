@@ -1,10 +1,14 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -14,12 +18,15 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class ClientPlayer extends ClientEntity
 {
+    private static final Logger logger = LoggerFactory.getLogger(ClientPlayer.class);
+
     private int 			eggCount;
     private float 			currentHealth;
     private float			currentArmor;
     private FacingDirection facingDirection;
     private PlayerKit		playerKit;
     private PlayerInfo		playerInfo;
+    private TeamColor		teamColor;
     
     public int 				getEggCount() 		{ return eggCount; }
     public float 			getCurrentHealth() 	{ return currentHealth; }
@@ -28,6 +35,9 @@ public class ClientPlayer extends ClientEntity
     public PlayerKit 		getPlayerKit() 		{ return playerKit; }
     public PlayerInfo 		getPlayerInfo() 	{ return playerInfo; }
     public EntityType getEntityType() 			{ return playerKit.getEntityType(); }
+    public TeamColor		getTeamColor()		{ return teamColor; }
+    
+    Texture testTexture;
     
     public void setCurrentHealth(float currentHealth) 				{ this.currentHealth = currentHealth; }
     public void setEggCount(int eggCount) 							{ this.eggCount = eggCount; }
@@ -35,18 +45,21 @@ public class ClientPlayer extends ClientEntity
     public void setFacingDirection(FacingDirection facingDirection) { this.facingDirection = facingDirection; }
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
     public void setPlayerInfo(PlayerInfo playerInfo)				{ this.playerInfo = playerInfo; }
+    public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
     
     public void enable() {}
     public void disable() {}
     public void dispose() {}
     
-    public void update(float delta) 
-    {
+    public ClientPlayer() {
+    	
+    }
+    
+    public void update(float delta) {
     }
     
     @Override
-    public void render() 
-    {
+    public void render() {
     }
 
 }
