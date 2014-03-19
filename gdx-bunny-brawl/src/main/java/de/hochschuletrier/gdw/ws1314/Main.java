@@ -42,6 +42,7 @@ import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -151,7 +152,7 @@ public class Main extends StateBasedGame {
 		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
 			
 			@Override
-			public void callback(String playerName, EntityType type, byte team,
+			public void callback(String playerName, EntityType type, TeamColor team,
 					boolean accept) {
 				if(playercount >= 5)
 					return;
@@ -199,7 +200,7 @@ public class Main extends StateBasedGame {
 			
 			@Override
 			public void execute(List<String> args) {
-				NetworkManager.getInstance().sendPlayerUpdate(StringUtils.untokenize(args, 1, -1, false),EntityType.Hunter,(byte) 0,false);
+				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,(byte) 0,false);
 			}
 		});
 	}

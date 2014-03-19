@@ -1,14 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 public class PlayerData {
 	private String playername;
 	private EntityType type;
-	private byte team;
+	private TeamColor team;
 	private boolean accept;
 	
-	public PlayerData(String playername, EntityType type, byte team, boolean accept){
+	public PlayerData(String playername, EntityType type, TeamColor team, boolean accept){
 		this.playername = playername;
 		this.type = type;
 		this.team = team;
@@ -21,7 +22,7 @@ public class PlayerData {
 	public EntityType getType() {
 		return type;
 	}
-	public byte getTeam() {
+	public TeamColor getTeam() {
 		return team;
 	}
 	public boolean isAccept() {
