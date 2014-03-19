@@ -120,7 +120,7 @@ public class Main extends StateBasedGame {
 	}
 	public String s_map = "";
 	public PlayerData[] c_players;
-	public PlayerData[] s_players = new PlayerData[3];
+	public PlayerData[] s_players = new PlayerData[2];
 	
 	public int playercount = 0;
 	
@@ -158,9 +158,9 @@ public class Main extends StateBasedGame {
 					boolean accept) {
 				if(playercount >= 5)
 					return;
-				PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
-				logger.info("New Player: " + tmp.toString());
-				s_players[playercount++] = tmp;
+				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
+				logger.info("New Player: " + playerid + " " + playerName);
+				s_players[playercount++] = new PlayerData(playerid, playerName, type, team, accept);;
 			}
 		});
 		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
