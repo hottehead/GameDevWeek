@@ -9,8 +9,8 @@
 	"debugTeam": "data/images/dbg/playerTeam.png",
 	"debugBridge": "data/images/dbg/bridge.png",
 	"debugEgg": "data/images/dbg/egg.png",
-	"debugArrow": "data/images/dbg/arrow.png"
-	"fallback": "data/images/dbg/fallback.png"
+	"debugArrow": "data/images/dbg/arrow.png",
+	"fallback": "data/images/dbg/fallback.png",
 	
 	"debugBar": "data/images/dbg/bar.png",
     "debugBarDecor": "data/images/dbg/barDecoration.png",
