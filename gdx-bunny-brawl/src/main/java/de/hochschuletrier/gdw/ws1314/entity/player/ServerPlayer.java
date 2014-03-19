@@ -148,7 +148,7 @@ public class ServerPlayer extends ServerEntity
     	// Check PlayerKit for impulse constant
     	moveEnd();
     	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
     	moveEnd();
     	
     }
