@@ -30,7 +30,6 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 	
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
-		System.out.println("create renderobj");
 		RenderObject renderObj = this.fetch();
 		renderObj.material = materials.fetch(entity.getClass());
 		renderObj.entity = entity;
