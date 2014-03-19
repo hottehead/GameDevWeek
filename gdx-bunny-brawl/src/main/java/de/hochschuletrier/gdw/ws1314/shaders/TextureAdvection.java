@@ -1,15 +1,16 @@
 package de.hochschuletrier.gdw.ws1314.shaders;
 
-public class TextureAdvection extends PostProcessing {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-	public TextureAdvection(String vertexShaderPath, String fragmentShaderPath) {
-		super(vertexShaderPath, fragmentShaderPath);
-	}
+public class TextureAdvection extends ShaderProgram {
 
-	@Override
-	protected void setupUniforms() {
-		// TODO Auto-generated method stub
-
+	
+	
+	public TextureAdvection(String vertexShader, String fragmentShader) {
+		super(Gdx.files.internal(vertexShader), Gdx.files.internal(fragmentShader));
+		
+		
 	}
 
 }

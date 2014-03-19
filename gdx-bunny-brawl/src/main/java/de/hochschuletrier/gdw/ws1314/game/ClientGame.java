@@ -2,10 +2,15 @@ package de.hochschuletrier.gdw.ws1314.game;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
+import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
@@ -19,7 +24,6 @@ import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
-import de.hochschuletrier.gdw.ws1314.shaders.PostProcessing;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -35,7 +39,8 @@ public class ClientGame {
 	private EntityRenderer entityRenderer; 
 	
 	
-	private PostProcessing postProcessingEffect;
+	private FrameBuffer sceneToTexture;
+	private TextureRegion sceneToTextureBuffer;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
@@ -70,15 +75,27 @@ public class ClientGame {
 		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
+		
+		sceneToTexture = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		sceneToTextureBuffer = new TextureRegion(sceneToTexture.getColorBufferTexture());
+		sceneToTextureBuffer.flip(false, true);
 	}
 
 
 
 	public void render() {
+		sceneToTexture.begin();
+		
 		for (Layer layer : map.getLayers()) {
 			mapRenderer.render(0, 0, layer);
 		}
 		entityRenderer.draw();
+		DrawUtil.batch.flush();
+		sceneToTexture.end();
+		
+		
+		DrawUtil.batch.draw(sceneToTextureBuffer, 0, 0);
+		
 	}
 
 	public void update(float delta) {
