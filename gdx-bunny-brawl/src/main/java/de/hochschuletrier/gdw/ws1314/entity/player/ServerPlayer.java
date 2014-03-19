@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -16,21 +17,31 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 
  * @author ElFapo
- *
+ * ASK BEFORE MODIFYING, OR I'LL MOST CERTAINLY TAKE A SHIT ON YOUR HEAD!
  */
 
 public class ServerPlayer extends ServerEntity 
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
+
+
+	private final float FRICTION = 0;
+
+
+	private final float RESTITUTION = 0;
 
 
     private PlayerInfo	playerInfo;
@@ -52,6 +63,10 @@ public class ServerPlayer extends ServerEntity
     private int 		currentEggCount;
     
     FacingDirection 	direction;
+    boolean				movingUp;
+    boolean				movingDown;
+    boolean				movingLeft;
+    boolean				movingRight;
     
     public ServerPlayer()
     {
@@ -73,8 +88,6 @@ public class ServerPlayer extends ServerEntity
     @Override
     public void update(float deltaTime) 
     {
-    	moveBegin(direction);
-    	
     	if (firstAttackFired)
     	{
     		firstAttackTimer += deltaTime;
@@ -98,62 +111,92 @@ public class ServerPlayer extends ServerEntity
         logger.info("Hey I got a Intention: {}",intent.name());
 
         switch (intent){
-            case MOVE_TOGGLE_UP:
-                if(dir.y > 0){
-                    dir.y = 0;
-                }
-                else {
-                    dir.y = 1;
-                }
+            case MOVE_UP_ON:
+                movingUp = true;
                 break;
-            case MOVE_TOGGLE_DOWN:
-                if(dir.y > 0){
-                    dir.y = 0;
-                }
-                else{
-                    dir.y = -1;
-                }
+            case MOVE_DOWN_ON:
+                movingDown = true;
                 break;
-            case MOVE_TOGGLE_RIGHT:
-                if(dir.x > 0){
-                    dir.x = 0;
-                }
-                else{
-                    dir.x = 1;
-                }
+            case MOVE_LEFT_ON:
+                movingLeft = true;
                 break;
-            case MOVE_TOGGLE_LEFT:
-                if(dir.x > 0){
-                    dir.x = 0;
-                }
-                else{
-                    dir.x = -1;
-                }
+            case MOVE_RIGHT_ON:
+                movingRight = true;
+                break;
+            case MOVE_UP_OFF:
+                movingUp = false;
+                break;
+            case MOVE_DOWN_OFF:
+                movingDown = false;
+                break;
+            case MOVE_LEFT_OFF:
+                movingLeft = false;
+                break;
+            case MOVE_RIGHT_OFF:
+                movingRight = false;
                 break;
             case ATTACK_1:
-                doFirstAttack();
+            	if (!firstAttackFired && !secondAttackFired)
+            	{
+            		doFirstAttack();
+            		firstAttackTimer = 0.0f;
+            	}
                 break;
-            case  ATTACK_2:
-                doSecondAttack();
+            case ATTACK_2:
+            	if (!firstAttackFired && !secondAttackFired)
+            	{
+            		doSecondAttack();
+            		secondAttackTimer = 0.0f;
+            	}
                 break;
+            case DROP_EGG:
+            	dropEgg();
         }
+        
+        if (movingUp)
+        {
+        	if (movingLeft)
+        		moveBegin(FacingDirection.UP_LEFT);
+        	else if (movingRight)
+        		moveBegin(FacingDirection.UP_RIGHT);
+        	else
+        		moveBegin(FacingDirection.UP);
+        }
+        else if (movingDown)
+        {
+        	if (movingLeft)
+        		moveBegin(FacingDirection.DOWN_LEFT);
+        	else if (movingRight)
+        		moveBegin(FacingDirection.DOWN_RIGHT);
+        	else
+        		moveBegin(FacingDirection.DOWN);
+        }
+        else if (movingLeft)
+        	moveBegin(FacingDirection.LEFT);
+        else if (movingRight)
+        	moveBegin(FacingDirection.RIGHT);
+        else
+        	moveEnd();
     }
 
-    public void moveBegin(FacingDirection dir)
+    private void moveBegin(FacingDirection dir)
     {
     	direction = dir;
     	
-    	// TODO acceleration impulse to physics body
+    	// TODO 
+    	// Damp old impulse
+    	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
+
+    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
     	moveEnd();
-    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
-    	moveEnd();
+
     	
     }
     
-    public void moveEnd()
+    private void moveEnd()
     {
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
@@ -161,12 +204,12 @@ public class ServerPlayer extends ServerEntity
     	physicsBody.setLinearDamping(1);
     }
     
-    public void doFirstAttack()
+    private void doFirstAttack()
     {
     	playerKit.doFirstAttack(this);
     }
     
-    public void doSecondAttack()
+    private void doSecondAttack()
     {
     	playerKit.doSecondAttack(this);
     }
@@ -181,7 +224,48 @@ public class ServerPlayer extends ServerEntity
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
-    public void beginContact(Contact contact) 	{}
+    public void beginContact(Contact contact) 	{
+    	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+         
+         switch(otherEntity.getEntityType()) {
+             case Tank:
+             case Hunter:
+             case Knight:
+             case Noob:
+                 ServerPlayer player = (ServerPlayer)otherEntity;
+                 if(this.firstAttackFired){
+                	 
+                 }else if(this.secondAttackFired){
+                	 
+                 }
+                 break;
+             case Ei:			
+            	 ServerEgg egg = (ServerEgg) otherEntity;
+            	 this.currentEggCount++;
+            	 break;
+             case Projectil: 
+            	
+            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
+            	  * this.currentHealth -= hunter.angriff;
+            	  */
+            	 if(this.currentHealth <= 0){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }
+            	 
+            	 break;
+             case Bridge: 		
+            	 break;
+             case BridgeSwitch:	
+            	 break;
+             case Bush:			
+            	 break;
+             default:
+            	 break;
+                 
+         }
+    }
     public void endContact(Contact contact) 	{}
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -221,8 +305,8 @@ public class ServerPlayer extends ServerEntity
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(new Vector2()).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-				.friction(0.5f).restitution(0.4f).shapeBox(100,100));
+		body.createFixture(new PhysixFixtureDef(manager).density(0)
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
