@@ -214,10 +214,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
+    	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
-
-    	
     }
     
     protected void moveEnd()
