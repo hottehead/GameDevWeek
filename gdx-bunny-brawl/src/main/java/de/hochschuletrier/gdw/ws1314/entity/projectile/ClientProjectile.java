@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityState;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 /**
@@ -15,6 +16,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class ClientProjectile extends ClientEntity {
 	protected FacingDirection facingDirection;
+	protected TeamColor teamColor;
 	
 	public ClientProjectile() {
 		super();
@@ -26,6 +28,13 @@ public class ClientProjectile extends ClientEntity {
 	}
 	public void setFacingDirection(FacingDirection facingDirection) {
 		this.facingDirection = facingDirection;
+	}
+
+	public TeamColor getTeamColor() {
+		return teamColor;
+	}
+	public void setTeamColor(TeamColor teamColor) {
+		this.teamColor = teamColor;
 	}
 
 	@Override
