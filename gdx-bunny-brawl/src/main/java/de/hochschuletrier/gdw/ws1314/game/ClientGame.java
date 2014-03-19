@@ -14,8 +14,11 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
+import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
+import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -31,7 +34,6 @@ public class ClientGame {
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
-		entityRenderer = new EntityRenderer();
 	}
 
 	public void init(AssetManagerX assets) {
@@ -46,7 +48,19 @@ public class ClientGame {
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
+		
+		initMaterials(assets);
 	}
+	
+	private void initMaterials(AssetManagerX assetManager) {
+		MaterialManager materialManager = new MaterialManager(assetManager);
+		materialManager.provideMaterial(ClientPlayer.class,
+				new MaterialInfo("debugTeam", 32, 32, 0));
+		
+		entityRenderer = new EntityRenderer(materialManager);
+	}
+
+
 
 	public void render() {
 		for (Layer layer : map.getLayers()) {

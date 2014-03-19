@@ -14,6 +14,11 @@ public class RenderObject implements Comparable<RenderObject> {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		return ((RenderObject)obj).entity.getID() == this.entity.getID();
+	}
+	
+	@Override
 	public int compareTo(RenderObject o) {
 		return material.compareTo(o.material);
 	}

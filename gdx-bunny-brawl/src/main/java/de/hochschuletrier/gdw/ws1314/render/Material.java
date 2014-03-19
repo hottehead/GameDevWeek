@@ -9,11 +9,15 @@ public class Material implements Comparable<Material> {
 	protected float width, height;
 	protected Texture texture;
 
-	public Material(Texture texture, float width, float height, int layer) {
+	protected Material(Texture texture, MaterialInfo materialInfo) {
+		putInfo(texture, materialInfo);
+	}
+	
+	protected void putInfo(Texture texture, MaterialInfo materialInfo) {
 		this.texture = texture;
-		this.Layer = layer;
-		this.width = width; 
-		this.height = height;
+		this.Layer = materialInfo.layer;
+		this.width = materialInfo.width; 
+		this.height = materialInfo.height;
 	}
 
 	/*

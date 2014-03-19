@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -20,12 +22,14 @@ public class ClientEntityManager {
     private HashMap<Long,ClientEntity> entityListMap;
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
+    protected ArrayList<ClientEntityManagerListener> listeners;
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
 		removalQueue = new LinkedList<ClientEntity>();
 		insertionQueue = new LinkedList<ClientEntity>();
+		listeners = new ArrayList<ClientEntityManagerListener>();
     }
 
     public static ClientEntityManager getInstance()
@@ -99,6 +103,9 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
+            for(ClientEntityManagerListener l : listeners) {
+            	l.onEntityRemove(e);
+            }
         }
         return listChanged;
     }
@@ -110,6 +117,9 @@ public class ClientEntityManager {
             ClientEntity e = insertionQueue.poll();
             entityList.add(e);
             entityListMap.put(e.getID(),e);
+            for(ClientEntityManagerListener l : listeners) {
+            	l.onEntityInsert(e);
+        	}
         }
         return listChanged;
     }
@@ -139,6 +149,14 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    }
+    
+    public void provideListener(ClientEntityManagerListener l) {
+    	this.listeners.add(l);
+    }
+    
+    public void removeListener(ClientEntityManagerListener l) {
+    	this.listeners.remove(l);
     }
 }
 
