@@ -83,10 +83,10 @@ public class TestHudStage extends AutoResizeStage {
 		healthBar.draw();
 		attackIcon.draw();
 		
+		DrawUtil.batch.flush();
 		this.draw();
 		Table.drawDebug(this);
                 
-        DrawUtil.batch.flush();
 
 	}
 
