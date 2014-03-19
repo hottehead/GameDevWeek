@@ -6,6 +6,8 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
 public class MaterialManager {
 
+	private static Material dbgMaterial;
+	
 	@SuppressWarnings("rawtypes")
 	private HashMap<Class, Material> map;
 	private AssetManagerX assetManager;
@@ -14,6 +16,7 @@ public class MaterialManager {
 	public MaterialManager(AssetManagerX assetManager) {
 		map = new HashMap<Class, Material>();
 		this.assetManager = assetManager;
+		dbgMaterial = new Material(assetManager.getTexture("fallback"), new MaterialInfo("", 32, 32, Integer.MAX_VALUE));
 	}
 	
 	public <E> void provideMaterial(Class<E> materialClass, MaterialInfo materialInfo) {
@@ -32,7 +35,12 @@ public class MaterialManager {
 	}
 	
 	public <E> Material fetch(Class<E> materialClass) {
-		return map.get(materialClass);
+		if(map.containsKey(materialClass)) {
+			return map.get(materialClass);
+		}
+		else {
+			return dbgMaterial;
+		}
 	}
 	
 }

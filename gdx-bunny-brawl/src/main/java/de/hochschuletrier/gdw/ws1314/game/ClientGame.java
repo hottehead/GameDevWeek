@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
@@ -14,6 +15,7 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
@@ -49,6 +51,7 @@ public class ClientGame {
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
 		
+		entityManager.createEntity(10, new Vector2(50, 50), EntityType.Ei);
 		
 		initMaterials(assets);
 	}
@@ -57,6 +60,7 @@ public class ClientGame {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 		materialManager.provideMaterial(ClientPlayer.class,
 				new MaterialInfo("debugTeam", 32, 32, 0));
+		
 		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);

@@ -8,5 +8,6 @@
 	"debugEnemy": "data/images/dbg/enemyTeam.png",
 	"debugTeam": "data/images/dbg/playerTeam.png",
 	"debugBridge": "data/images/dbg/bridge.png",
-	"debugEgg": "data/images/dbg/egg.png"
+	"debugEgg": "data/images/dbg/egg.png",
+	"fallback": "data/images/dbg/fallback.png"
 }
