@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,16 +48,18 @@ public class ServerGame {
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
 	private TiledMap map;
 	private ServerPlayer player = new ServerPlayer();
     private long eggid = 0;
+    private List<PlayerData> playerDatas;
 
-	public ServerGame() {
+	public ServerGame( List<PlayerData> playerDatas) {
 		entityManager = ServerEntityManager.getInstance();
         entityManager.setPhysixManager(manager);
-		netManager = ClientServerConnect.getInstance();
+		netManager = NetworkManager.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
+        this.playerDatas = playerDatas;
 		//loadSolids();
     }
 
@@ -69,9 +75,31 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-         entityManager.createEntity(ServerPlayer.class, new Vector2(0f,0f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
+
+        float offset = 0f;
+        for(PlayerData playerData : playerDatas ){
+            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(0f,0f+offset));
+
+            switch(playerData.getType())
+            {
+                case Noob:
+                    sp.setPlayerKit(PlayerKit.NOOB);
+                    break;
+                case Knight:
+                    sp.setPlayerKit(PlayerKit.KNIGHT);
+                    break;
+                case Hunter:
+                    sp.setPlayerKit(PlayerKit.HUNTER);
+                    break;
+                case Tank:
+                    break;
+            }
+
+            PlayerInfo pinfo = new PlayerInfo(playerData.getPlayername(),playerData.getTeam());
+            sp.setPlayerInfo(pinfo);
+            netManager.setPlayerEntityId(playerData.getId(),sp.getID());
+            offset += 10f;
+        }
 	}
 
 	public void render() {

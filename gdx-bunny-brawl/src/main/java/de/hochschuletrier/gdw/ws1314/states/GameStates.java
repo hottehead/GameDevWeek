@@ -12,7 +12,9 @@ public enum GameStates {
     MAINMENU (new MainMenuState ()),
     GAMEPLAY (new GameplayState ()),
     SERVERLOBBY (new ServerLobbyState ()),
-    CLIENTLOBBY (new ClientLobbyState ());
+    CLIENTLOBBY (new ClientLobbyState ()),
+    SERVERGAMEPLAY (new ServerGamePlayState()),
+    CLIENTGAMEPLAY (new ClientGamePlayState());
     private final GameState state;
 
     GameStates (GameState state) {
