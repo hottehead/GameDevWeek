@@ -48,6 +48,7 @@ public class ServerEgg extends ServerLevelObject
 	{
 
         ServerEntity otherEntity = this.identifyContactFixtures(contact);
+            System.out.println(otherEntity.getEntityType());
         
         switch(otherEntity.getEntityType()) {
             case Tank:

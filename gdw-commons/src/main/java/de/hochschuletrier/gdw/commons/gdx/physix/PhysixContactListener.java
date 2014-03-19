@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.commons.gdx.physix;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 /**
@@ -25,6 +26,13 @@ class PhysixContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        
+        if(fixA == null || fixB == null) {
+            return;
+        }
+        
         PhysixBody objectA = (PhysixBody) contact.getFixtureA().getBody().getUserData();
         if (objectA != null) {
             objectA.endContact(contact);
