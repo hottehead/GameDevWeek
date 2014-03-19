@@ -2,7 +2,6 @@
 
 uniform sampler2D u_prevStep;
 uniform sampler2D u_texture;
-uniform float u_fadeInFactor;
 uniform mat4 u_projTrans;
 
 in vec4 vColor;
@@ -22,9 +21,13 @@ void main() {
 
 
 	vec4 currentFrame = texture2D(u_texture, vTexCoord);
-	vec4 prevFrame = texture2D(u_prevStep, vTexCoord - vec2(abtastRate.x,0));
 
 
+	vec4 prevFrame = texture2D(u_prevStep, vTexCoord + vec2(abtastRate.x,0));
 
-	gl_FragColor = (currentFrame) + (u_fadeInFactor*prevFrame);
+	prevFrame.a = prevFrame.a * 0.25f;
+
+	float fading = mix((currentFrame), (prevFrame), 0.5f).a;
+	//gl_FragColor = vec4(currentFrame.xyz, currentFrame.a+fading);
+	gl_FragColor = currentFrame;
 }

@@ -81,7 +81,7 @@ public class ClientGame {
 		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		
 		
-		postProcessing = new TextureAdvection("data/shaders/edgeDetection.vert", "data/shaders/edgeDetection.frag");
+		postProcessing = new TextureAdvection("data/shaders/post.vert", "data/shaders/post.frag");
 		System.out.println(postProcessing.getLog());
 		advShader = new TextureAdvection("data/shaders/texAdv.vert", "data/shaders/texAdv.frag");
 		System.out.println(advShader.getLog());
@@ -93,8 +93,6 @@ public class ClientGame {
 		sceneToTexture.begin();
 		DrawUtil.batch.setShader(advShader);
 		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
-		advShader.setUniformf(postProcessing.getUniformLocation("u_fadeInFactor"), fadeIn);
-		
 		for (Layer layer : map.getLayers()) {
 			mapRenderer.render(0, 0, layer);
 		}
