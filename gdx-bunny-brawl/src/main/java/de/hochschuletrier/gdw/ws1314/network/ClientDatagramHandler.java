@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
@@ -60,7 +61,29 @@ public class ClientDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(LevelObjectReplicationDatagram levelObjectReplicationDatagram, NetConnection connection) {
-        //TODO
+        ClientEntity entity = ClientEntityManager.getInstance().getEntityById(levelObjectReplicationDatagram.getEntityId());
+        if(entity==null){
+        	logger.debug("Spawning level-object entity {}.",levelObjectReplicationDatagram.getEntityId());
+        	entity=ClientEntityManager.getInstance().createEntity(levelObjectReplicationDatagram.getEntityId(), 
+        			new Vector2(levelObjectReplicationDatagram.getXposition(),levelObjectReplicationDatagram.getYposition()),
+        			levelObjectReplicationDatagram.getEntityType());
+        	if(entity==null){
+        		logger.warn("Couldn't spawn entity of type {}.",levelObjectReplicationDatagram.getEntityType());
+        		return;
+        	}
+        }
+        if(!(entity instanceof ClientLevelObject)){
+        	logger.warn("Received LevelObjectReplicationDatagram for entity {} which is no level-object entity, something is really wrong here ...",levelObjectReplicationDatagram.getEntityId());
+        	return;
+        }
+        ClientLevelObject levelObject = (ClientLevelObject) entity;
+        levelObject.setPosition(new Vector2(levelObjectReplicationDatagram.getXposition(),levelObjectReplicationDatagram.getYposition()));
+        if(levelObjectReplicationDatagram.getVisibility()){
+        	levelObject.enable();
+        }
+        else{
+        	levelObject.disable();
+        }
     }
 
     @Override
@@ -76,7 +99,7 @@ public class ClientDatagramHandler implements DatagramHandler {
         	}
         }
         if(!(entity instanceof ClientProjectile)){
-        	logger.warn("Received ProjectileReplicationDatagram for entity {} which is no player entity, something is really wrong here ...",projectileReplicationDatagram.getEntityId());
+        	logger.warn("Received ProjectileReplicationDatagram for entity {} which is no projectile entity, something is really wrong here ...",projectileReplicationDatagram.getEntityId());
         	return;
         }
         ClientProjectile projectile = (ClientProjectile) entity;
