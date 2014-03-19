@@ -106,5 +106,9 @@ public class ServerSwordAttack extends ServerEntity {
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
     }
-    
+
+    @Override
+    public void reset(){
+
+    }
 }
