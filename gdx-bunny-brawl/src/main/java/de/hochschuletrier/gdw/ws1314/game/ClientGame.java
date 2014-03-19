@@ -3,10 +3,9 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
@@ -24,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
+import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
 import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 
 /**
@@ -40,9 +40,9 @@ public class ClientGame {
 	private EntityRenderer entityRenderer; 
 	
 	
-	private FrameBuffer sceneToTexture;
-	private TextureRegion sceneToTextureBuffer;
+	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
+	private TextureAdvection advShader;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
@@ -78,18 +78,18 @@ public class ClientGame {
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
 		
-		sceneToTexture = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-		sceneToTextureBuffer = new TextureRegion(sceneToTexture.getColorBufferTexture());
-		sceneToTextureBuffer.flip(false, false);
+		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 		
 		postProcessing = new TextureAdvection("data/shaders/edgeDetection.vert", "data/shaders/edgeDetection.frag");
-		
+		advShader = new TextureAdvection("data/shaders/texAdv.vert", "data/shaders/texAdv.frag");
 	}
 
 
 
 	public void render() {
 		sceneToTexture.begin();
+		DrawUtil.batch.setShader(advShader);
+		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 		
 		for (Layer layer : map.getLayers()) {
 			mapRenderer.render(0, 0, layer);
@@ -99,8 +99,11 @@ public class ClientGame {
 		sceneToTexture.end();
 		
 		DrawUtil.batch.setShader(postProcessing);
-		DrawUtil.batch.draw(sceneToTextureBuffer, 0, 0);
+		postProcessing.setUniformi(postProcessing.getUniformLocation("u_prevStep"), 1);
+		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
 		DrawUtil.batch.setShader(null);
+		
+		sceneToTexture.swap();
 	}
 
 	public void update(float delta) {

@@ -73,5 +73,5 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 
 
 void main() {
-	gl_FragColor = (gaussianBlur5x5(vTexCoord)) * vColor;
+	gl_FragColor = vec4(greyscale(texture2D(u_texture, vTexCoord))) * vColor;
 }
