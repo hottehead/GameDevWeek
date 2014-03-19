@@ -1,5 +1,10 @@
 package de.hochschuletrier.gdw.ws1314.state;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
 public abstract class State
 {
 	IStateListener owner;
