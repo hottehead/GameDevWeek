@@ -54,7 +54,7 @@ public class ServerGame {
         entityManager.setPhysixManager(manager);
 		netManager = ClientServerConnect.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
-		loadSolids();
+		//loadSolids();
     }
 
 

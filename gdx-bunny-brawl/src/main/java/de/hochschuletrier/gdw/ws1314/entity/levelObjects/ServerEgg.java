@@ -92,7 +92,9 @@ public class ServerEgg extends ServerLevelObject
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
             					.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
             					.fixedRotation(false).create();
+
             body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(0.1f));
+
 
             body.setGravityScale(12);
             body.addContactListener(this);
