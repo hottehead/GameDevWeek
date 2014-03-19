@@ -12,6 +12,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
@@ -70,7 +72,19 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void beginContact(Contact contact) {
+            ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
+            switch(otherEntity.getEntityType()) {
+                case Tank:
+                case Hunter:
+                case Knight:
+                case Noob:
+                    ServerPlayer player = (ServerPlayer)otherEntity;
+                    if(player.getTeamColor() != this.teamColor) {
+                        ServerEntityManager.getInstance().removeEntity(this);
+                    }
+                    break;
+            }
 	}
 
 	@Override

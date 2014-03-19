@@ -1,6 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
@@ -45,4 +47,31 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
     public void setProperties(SafeProperties properties){
         this.properties = properties;
     }
+    
+    /**
+    * method used by the beginContact method of ServerEntity-Implementations
+    * to identify the collided Object
+    */
+    protected ServerEntity identifyContactFixtures(Contact contact) {
+        
+        PhysixBody bodyA = (PhysixBody)contact.getFixtureA().getBody().getUserData();
+        PhysixBody bodyB = (PhysixBody)contact.getFixtureB().getBody().getUserData();
+        
+        try {
+            ServerEntity entityA = (ServerEntity)bodyA.getOwner();
+            ServerEntity entityB = (ServerEntity)bodyB.getOwner();
+            
+            if(entityA.getID() == this.getID()) {
+                return entityB;
+            } else {
+                return entityA;
+            }
+            
+        } catch(Exception e) {
+            
+        }
+        
+        return null;
+    }
+    
 }
