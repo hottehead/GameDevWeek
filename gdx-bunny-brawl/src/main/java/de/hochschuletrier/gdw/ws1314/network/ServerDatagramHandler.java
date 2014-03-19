@@ -50,7 +50,7 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle (EventDatagram eventDatagram, NetConnection connection) {
-        //TODO
+        logger.warn("Server received a EventDatagram, which is only intended to be sent to a client, something is wrong here...");
     }
 
     @Override
