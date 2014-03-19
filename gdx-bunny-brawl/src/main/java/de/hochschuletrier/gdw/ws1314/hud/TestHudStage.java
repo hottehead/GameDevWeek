@@ -3,7 +3,6 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -49,11 +48,7 @@ public class TestHudStage {
 		
 		
 		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager);
-		 
-		Texture barTex = assetManager.getTexture("debugBar");
-		Texture backBarTex = assetManager.getTexture("debugTooltip");
-		Texture frontBarTex = assetManager.getTexture("debugBarDecorNine");
+		healthBar.initVisual(assetManager, 30, 30, 300, 40);
 
 		this.attackIcon = new VisualBox(
 				assetManager.getTexture("debugAttackIcon"), 500, 350, 64, 64);
