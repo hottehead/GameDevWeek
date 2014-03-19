@@ -9,26 +9,17 @@ import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class NetworkManager {
 
@@ -81,7 +72,10 @@ public class NetworkManager {
         serverConnections = new ArrayList<NetConnection>();
         try {
             serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
-            if (serverReception.isRunning()) logger.info("Listening.");
+            if (serverReception.isRunning()){
+				logger.info("Listening at: {}", InetAddress.getLocalHost()
+						.getHostAddress());
+			}
         } catch (IOException e) {
             logger.error("Can't listen for connections.", e);
             serverConnections = null;
