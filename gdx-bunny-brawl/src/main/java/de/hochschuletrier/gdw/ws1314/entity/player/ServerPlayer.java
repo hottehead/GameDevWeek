@@ -271,7 +271,7 @@ public class ServerPlayer extends ServerEntity
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
     public FacingDirection  getFacingDirection()	{ return direction; }
-    public float			getCurrentEggCount()	{ return currentEggCount; }
+    public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
     public PlayerInfo		getPlayerInfo()			{ return playerInfo; }

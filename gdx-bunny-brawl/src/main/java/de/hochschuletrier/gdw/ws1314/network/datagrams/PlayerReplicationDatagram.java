@@ -20,7 +20,7 @@ public class PlayerReplicationDatagram extends BaseDatagram {
     private float xposition;
     private float yposition;
     private PlayerKit playerKit;
-    private float eggs;
+    private int eggs;
     private float health;
     private float armor;
     private FacingDirection facingDirection;
@@ -31,7 +31,7 @@ public class PlayerReplicationDatagram extends BaseDatagram {
     }
 
     public PlayerReplicationDatagram(long id, float xposition,
-			float yposition, PlayerKit playerKit, float eggs, float health,
+			float yposition, PlayerKit playerKit, int eggs, float health,
 			float armor, FacingDirection facingDirection, TeamColor teamColor) {
     	super (MessageType.DELTA, PLAYER_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.id=id;
@@ -53,16 +53,16 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 	}
 
 	@Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
+    public void handle(DatagramHandler handler, NetConnection connection) {
+        handler.handle(this, connection);
     }
 
     @Override
-    public void writeToMessage (INetMessageOut message) {
-        message.putLong (id);
-        message.putFloat (xposition);
-        message.putFloat (yposition);
-        message.putEnum (playerKit);
+    public void writeToMessage(INetMessageOut message) {
+        message.putLong(id);
+        message.putFloat(xposition);
+        message.putFloat(yposition);
+        message.putEnum(playerKit);
         message.putFloat(eggs);
         message.putFloat(health);
         message.putFloat(armor);
@@ -71,12 +71,12 @@ public class PlayerReplicationDatagram extends BaseDatagram {
     }
 
     @Override
-    public void readFromMessage (INetMessageIn message) {
-        id = message.getInt ();
-        xposition = message.getFloat ();
-        yposition = message.getFloat ();
-        playerKit = message.getEnum (PlayerKit.class);
-        eggs = message.getFloat();
+    public void readFromMessage(INetMessageIn message) {
+        id = message.getInt();
+        xposition = message.getFloat();
+        yposition = message.getFloat();
+        playerKit = message.getEnum(PlayerKit.class);
+        eggs = message.getInt();
         health = message.getFloat();
         armor = message.getFloat();
         facingDirection=message.getEnum(FacingDirection.class);
@@ -99,7 +99,7 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 		return playerKit;
 	}
 
-	public float getEggs() {
+	public int getEggs() {
 		return eggs;
 	}
 
