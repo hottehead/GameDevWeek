@@ -333,7 +333,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
+				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(16));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
