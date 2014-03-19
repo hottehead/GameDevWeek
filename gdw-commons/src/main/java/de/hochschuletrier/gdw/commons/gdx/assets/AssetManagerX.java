@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import de.hochschuletrier.gdw.commons.jackson.JacksonReader;
@@ -129,12 +131,13 @@ public class AssetManagerX extends AssetManager {
 	}
 
 	private BitmapFont generateFont(String name, int size) {
-		BitmapFont font = null;
 		TrueTypeFont ttf = getByName(name, TrueTypeFont.class);
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(ttf.handle);
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = size;
-		font = fontGenerator.generateFont(parameter);
+        parameter.flip = true;
+		BitmapFont font = fontGenerator.generateFont(parameter);
+        fontGenerator.dispose();
 		return font;
 	}
 

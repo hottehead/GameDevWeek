@@ -6,20 +6,38 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by Jerry on 18.03.14.
  */
 public class ClientEntityManager {
-    private LinkedList<ClientEntity> entityList;
+	private static ClientEntityManager instance = null;
+	
+	private LinkedList<ClientEntity> entityList;
     private HashMap<Long,ClientEntity> entityListMap;
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
 
-    public ClientEntityManager(){
+    protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
+		removalQueue = new LinkedList<ClientEntity>();
+		insertionQueue = new LinkedList<ClientEntity>();
     }
 
+    public static ClientEntityManager getInstance()
+    {
+    	if (instance == null)
+    		instance = new ClientEntityManager();
+    	
+    	return instance;
+    }
+    
     public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
         switch(type){
@@ -91,7 +109,7 @@ public class ClientEntityManager {
         return null;
     }
 
-    public void update(int delta) {
+    public void update(float delta) {
         internalRemove();
         internalInsert();
 
@@ -99,5 +117,13 @@ public class ClientEntityManager {
             e.update( delta);
 
     }
-
+    
+    public void Clear()
+    {
+    	internalRemove();
+    	this.entityList.clear();
+    	this.entityListMap.clear();
+    	this.insertionQueue.clear();
+    }
 }
+

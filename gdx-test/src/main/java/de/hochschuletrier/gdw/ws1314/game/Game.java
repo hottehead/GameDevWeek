@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -48,28 +49,35 @@ public class Game {
 	private ArrayList<PhysixEntity> entities = new ArrayList<PhysixEntity>();
 	private Player player;
 	private Vase vase;
-    
+
+	Array<Ball> b = new Array<Ball>();
+
     private TiledMap map;
     private TiledMapRendererGdx mapRenderer;
+
 
     public Game() {
 
 	}
 
 	public void init(AssetManagerX assets) {
-        PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(410, 400)
+		PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager).position(200, 500)
                 .fixedRotation(false).create();
-        body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(800, 20));
-
-        PhysixUtil.createHollowCircle(manager, 180, 180, 150, 30, 6);
-        player = new Player(410, 350);
+        body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(2000, 10));
+        
+        /*body = new PhysixBodyDef(BodyType.StaticBody, manager).position(0, 0)
+                .fixedRotation(false).create();
+        body.createFixture(new PhysixFixtureDef(manager).density(1).friction(0.5f).shapeBox(10, 1000));
+*/
+       // PhysixUtil.createHollowCircle(manager, 180, 180, 150, 30, 6);
+      	player = new Player(410, 350);
         player.initPhysics(manager);
-		entities.add(player);
+		//entities.add(player);
 
-		vase = new Vase(0, 0);
+		/*vase = new Vase(0, 0);
 		vase.initGraphics(assets);
 		vase.initPhysics(manager);
-        entities.add(vase);
+        entities.add(vase);*/
 
 		verdana_26 = assets.getFont("verdana", 24);
         Main.getInstance().console.register(gravity_f);
@@ -103,15 +111,27 @@ public class Game {
     }
 
     public void update(float delta) {
+
         mapRenderer.update(delta);
+
         manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-		vase.update();
+        if(b == null){
+        	
+        }else{
+        	for(int i = 0; i < b.size; i++){
+        		b.get(i).update();
+        	}
+        }
+		//vase.update();
     }
 
     public void addBall(int x, int y) {
-        Ball b = new Ball(x, y, 30);
-        b.initPhysics(manager);
-        entities.add(b);
+    	
+    		Ball ball = new Ball(x, y, 30);
+			b.add(ball);
+            ball.initPhysics(manager);
+            entities.add(ball);
+    	
     }
 
     public Player getPlayer() {

@@ -5,9 +5,12 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
 
 /**
  * 
@@ -17,7 +20,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 public class ServerProjectile extends ServerEntity {
 	protected float speed;
-	protected Vector2 direction;
+	protected FacingDirection facingDirection;
 	protected float flightDistance;
 	protected TeamColor teamColor;
 	protected long sourceID;
@@ -33,11 +36,11 @@ public class ServerProjectile extends ServerEntity {
 		this.speed = speed;
 	}
 
-	public Vector2 getDirection() {
-		return direction;
+	public FacingDirection getFacingDirection() {
+		return this.facingDirection;
 	}
-	public void setDirection(Vector2 direction) {
-		this.direction = direction;
+	public void setFacingDirection(FacingDirection direction) {
+		this.facingDirection = direction;
 	}
 
 	public TeamColor getTeamColor() {
@@ -91,11 +94,24 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initialize() {
-		this.type = EntityType.Projectil;
+
 	}
 
 	@Override
 	public void update(float deltaTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public EntityType getEntityType()
+	{
+		return EntityType.Projectil;
+	}
+
+	@Override
+	public void initPhysics(PhysixManager manager)
+	{
 		// TODO Auto-generated method stub
 		
 	}
