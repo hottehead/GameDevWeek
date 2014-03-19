@@ -5,14 +5,14 @@
 
 
 
+    "debugAttackIcon": "data/images/testImages/attackIcon.png",
     "debugBar": "data/images/testImages/bar.png",
+    "debugBarDecor2": "data/images/testImages/barDecor2.png",
     "debugBarDecor": "data/images/testImages/barDecoration.png",
     "debugBarDecorNine": "data/images/testImages/barDecorationNine.png",
-    "debugBarDecor2": "data/images/testImages/barDecor2.png",
     "debugBuff": "data/images/testImages/buffIcon.png",
     "debugClass": "data/images/testImages/classIcon.png",
     "debugScoreEnemy": "data/images/testImages/scoreTeamIcon.png",
     "debugScoreTeam": "data/images/testImages/scoreEnemyIcon.png",
-    "debugTooltip": "data/images/testImages/tooltip.png",
-    "debugAttackIcon": "data/images/testImages/attackIcon.png"
+    "debugTooltip": "data/images/testImages/tooltip.png"
 }

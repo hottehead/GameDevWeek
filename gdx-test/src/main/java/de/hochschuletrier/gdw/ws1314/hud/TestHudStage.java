@@ -14,6 +14,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
+import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
@@ -45,27 +46,23 @@ public class TestHudStage extends AutoResizeStage {
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		this.addActor(uiTable);
 		
-		
+		//test code healthbar
 		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager);
-		 
-		Texture barTex = assetManager.getTexture("debugBar");
-		Texture backBarTex = assetManager.getTexture("debugTooltip");
-		Texture frontBarTex = assetManager.getTexture("debugBarDecorNine");
+		healthBar.initVisual(assetManager, 30, 30, 300, 40);
 
+		//test code icons with text
 		this.attackIcon = new VisualBox(
 				assetManager.getTexture("debugAttackIcon"), 500, 350, 64, 64);
 		this.attackIcon = new BoxOffsetDecorator(this.attackIcon,
 				new StaticTextElement(assetManager.getFont("verdana", 24), "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
-		
 		
 		//test code levelList
 		LevelList list = new LevelList(defaultSkin);
 		list.addLevel("new Level");
 		list.addLevel("newer Level");
 		list.addLevel("another level");
+		list.removeLevel(1); //deletes newer level
 		uiTable.add(list);
-		
 		
 		uiTable.debug(Debug.all);
 	}
@@ -86,8 +83,6 @@ public class TestHudStage extends AutoResizeStage {
 		DrawUtil.batch.flush();
 		this.draw();
 		Table.drawDebug(this);
-                
-
 	}
 
 	float accum = 0;

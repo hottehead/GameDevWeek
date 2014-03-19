@@ -23,13 +23,14 @@ public class HealthBar {
 		logicRepresentation.setValue(maxHealthValue);
 	}
 	
-	public void initVisual(AssetManagerX assetManager) {
+	public void initVisual(AssetManagerX assetManager, float positionX, float positionY,
+			float width, float height) {
 		Texture barTex = assetManager.getTexture("debugBar");
 		Texture backBarTex = assetManager.getTexture("debugTooltip");
 		Texture frontBarTex = assetManager.getTexture("debugBarDecorNine");
 		BitmapFont hudFont = assetManager.getFont("verdana", 24);
 		
-		VisualBar healthBarVisual = new VisualBar(barTex, 30, 30, 300, 40,
+		VisualBar healthBarVisual = new VisualBar(barTex, positionX, positionY, width, height,
 				logicRepresentation);
 
 		BoxBackgroundDecoration backgroundHealth = new BoxBackgroundDecoration(
@@ -43,7 +44,6 @@ public class HealthBar {
 						backgroundHealth.getHeight() + 2, logicRepresentation));
 		visualRepresentation = new BoxFrontDecorator(visualRepresentation, frontBarTex,
 				new NinePatchSettings(1, 2, 2, 1));
-
 	}
 	
 	public MinMaxValue get() {

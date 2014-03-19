@@ -17,6 +17,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransi
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
+import de.hochschuletrier.gdw.ws1314.hud.elements.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
 /**
@@ -38,10 +39,12 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
 
-    private TestHudStage testUI;
+//    private TestHudStage testUI;
+    private GameplayStage testUI;
 
     public MainMenuState() {
-    	testUI = new TestHudStage();
+//    	testUI = new TestHudStage();
+    	testUI = new GameplayStage();
     }
 
     @Override
