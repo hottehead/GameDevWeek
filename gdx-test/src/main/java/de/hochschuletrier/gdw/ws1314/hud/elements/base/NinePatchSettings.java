@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.hud.elements;
+package de.hochschuletrier.gdw.ws1314.hud.elements.base;
 
 public class NinePatchSettings {
 	int leftBorder, rightBorder, topBorder, bottomBorder;
