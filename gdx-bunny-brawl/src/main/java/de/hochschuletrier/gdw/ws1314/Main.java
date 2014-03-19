@@ -1,5 +1,10 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -22,6 +27,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
@@ -32,9 +38,16 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
+import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
+import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
@@ -42,7 +55,8 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
  * @author Santo Pfingsten
  */
 public class Main extends StateBasedGame {
-
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
+	
 	public static final int WINDOW_WIDTH = 1024;
 	public static final int WINDOW_HEIGHT = 512;
 
@@ -102,9 +116,16 @@ public class Main extends StateBasedGame {
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
+	public String s_map = "";
+	public PlayerData[] c_players;
+	public PlayerData[] s_players = new PlayerData[5];
+	
+	public int playercount = 0;
+	
 
 	@Override
 	public void create() {
+		//s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
 		setupDummyLoader();
@@ -119,6 +140,69 @@ public class Main extends StateBasedGame {
 		GameStates.LOADING.activate();
         
 		NetworkManager.getInstance().init();
+
+		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
+			
+			@Override
+			public void callback(String map) {
+				s_map = map;
+				logger.info("New map: " + map);
+			}
+		});
+		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
+			
+			@Override
+			public void callback(String playerName, EntityType type, TeamColor team,
+					boolean accept) {
+				if(playercount >= 5)
+					return;
+				PlayerData tmp = new PlayerData(playerName, type, team, accept);
+				s_players[playercount++] = tmp;
+			}
+		});
+		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
+			@Override
+			public void callback(String map, PlayerData[] players) {
+				logger.info("Map: " + map);
+				logger.info("Playercount: " + players.length);
+				for(int i = 0; i < players.length; i++)
+					logger.info("Player" + i + ": " + players[i].getPlayername());
+				c_players = players;
+			}
+		});
+    	
+		console.register(new ConsoleCmd("sendLobbyUpdate",0,"[DEBUG]") {
+
+			@Override
+			public void execute(List<String> args) {
+				// TODO Auto-generated method stub
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players);
+			} 
+		});
+		console.register(new ConsoleCmd("sendMatchUpdate",0,"[DEBUG]Post a mapname.",1) {
+			@Override
+			public void showUsage() {
+				showUsage("<mapname-text>");
+			}
+			
+			@Override
+			public void execute(List<String> args) {
+				NetworkManager.getInstance().sendMatchUpdate(StringUtils.untokenize(args, 1, -1, false));
+			}
+			
+		});
+		
+		console.register(new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",1){
+			@Override
+			public void showUsage() {
+				showUsage("<playername>");
+			}
+			
+			@Override
+			public void execute(List<String> args) {
+				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,TeamColor.BLACK,false);
+			}
+		});
 	}
 
 	public void onLoadComplete() {

@@ -8,8 +8,16 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import org.slf4j.Logger;
@@ -168,7 +176,7 @@ public class NetworkManager {
         clientConnection.send(new MatchUpdateDatagram(map));
     }
 
-    public void sendPlayerUpdate(String playerName, EntityType type, byte team, boolean accept) {
+    public void sendPlayerUpdate(String playerName, EntityType type, TeamColor team, boolean accept) {
         if (!isClient())
             return;
         clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));

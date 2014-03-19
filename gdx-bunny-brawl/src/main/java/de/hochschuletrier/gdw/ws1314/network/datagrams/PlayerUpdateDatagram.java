@@ -5,6 +5,7 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 /**
@@ -14,14 +15,14 @@ public class PlayerUpdateDatagram extends BaseDatagram {
     public static final byte PLAYER_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x12;
     private String playerName;
     private EntityType type;
-    private byte team;
+    private TeamColor team;
     private boolean accept;
 
     public PlayerUpdateDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.DELTA, type, id, param1, param2);
     }
 
-    public PlayerUpdateDatagram (String playerName, EntityType type, byte team, boolean accept) {
+    public PlayerUpdateDatagram (String playerName, EntityType type, TeamColor team, boolean accept) {
         super (MessageType.DELTA, PLAYER_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.playerName = playerName;
         this.type = type;
@@ -38,7 +39,7 @@ public class PlayerUpdateDatagram extends BaseDatagram {
     public void writeToMessage (INetMessageOut message) {
         message.putString (playerName);
         message.putEnum (type);
-        message.put (team);
+        message.putEnum (team);
         message.putBool (accept);
     }
 
@@ -46,7 +47,7 @@ public class PlayerUpdateDatagram extends BaseDatagram {
     public void readFromMessage (INetMessageIn message) {
         playerName = message.getString ();
         type = message.getEnum (EntityType.class);
-        team = message.get ();
+        team = message.getEnum (TeamColor.class);
         accept = message.getBool ();
     }
 
@@ -58,7 +59,7 @@ public class PlayerUpdateDatagram extends BaseDatagram {
         return type;
     }
 
-    public byte getTeam () {
+    public TeamColor getTeam () {
         return team;
     }
 
