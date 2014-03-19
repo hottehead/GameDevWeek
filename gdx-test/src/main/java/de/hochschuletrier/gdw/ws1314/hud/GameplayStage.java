@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.hud.elements;
+package de.hochschuletrier.gdw.ws1314.hud;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.hud.AutoResizeStage;
+import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;

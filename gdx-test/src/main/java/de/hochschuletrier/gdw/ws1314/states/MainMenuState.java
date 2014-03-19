@@ -16,8 +16,8 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
-import de.hochschuletrier.gdw.ws1314.hud.elements.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
 /**
