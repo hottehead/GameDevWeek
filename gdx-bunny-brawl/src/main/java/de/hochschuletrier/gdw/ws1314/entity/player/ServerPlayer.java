@@ -189,7 +189,9 @@ public class ServerPlayer extends ServerEntity
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
-    public void beginContact(Contact contact) 	{}
+    public void beginContact(Contact contact) 	{
+    	
+    }
     public void endContact(Contact contact) 	{}
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
