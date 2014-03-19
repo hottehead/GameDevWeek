@@ -17,6 +17,7 @@ public class HealthBar {
 
 	VisualBox visualRepresentation;
 	MinMaxValue logicRepresentation;
+	DynamicTextElement textElement;
 	
 	public HealthBar(int maxHealthValue) {
 		logicRepresentation = new MinMaxValue(0, maxHealthValue, 1);
@@ -37,11 +38,11 @@ public class HealthBar {
 				healthBarVisual, backBarTex);
 		// BarFrontDecorator frontBar = new BarFrontDecorator(test,
 		// frontBarTex);
-
-		visualRepresentation = new BoxOffsetDecorator(backgroundHealth,
-				new DynamicTextElement(hudFont, "HP: ",
+		
+		textElement = new DynamicTextElement(hudFont, "HP: ",
 						backgroundHealth.getWidth() * 0.5f,
-						backgroundHealth.getHeight() + 2, logicRepresentation));
+						backgroundHealth.getHeight() + 2, logicRepresentation);
+		visualRepresentation = new BoxOffsetDecorator(backgroundHealth, textElement);
 		visualRepresentation = new BoxFrontDecorator(visualRepresentation, frontBarTex,
 				new NinePatchSettings(1, 2, 2, 1));
 	}
@@ -52,5 +53,9 @@ public class HealthBar {
 
 	public void draw() {
 		visualRepresentation.draw();
+	}
+	
+	public void setDecimalSpace(int n) {
+		textElement.setDecimalPLace(n);
 	}
 }

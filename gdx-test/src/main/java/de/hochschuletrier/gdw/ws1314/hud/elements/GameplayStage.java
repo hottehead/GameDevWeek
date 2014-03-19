@@ -13,6 +13,8 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.AutoResizeStage;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
+import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
+import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
 
@@ -26,9 +28,12 @@ public class GameplayStage extends AutoResizeStage {
 	
 	private VisualBox buff1, buff2, buff3;
 	
-	private VisualBox attackIcon;
-	private VisualBox layEggIcon;
+	private VisualBox attackIcon, layEggIcon;
 	
+	private VisualBox scoreTeamIcon, scoreEnemyIcon;
+	private MinMaxValue scoreTeam, scoreEnemy;
+
+	private final int maxScore = 100;	
 
 	public GameplayStage() {
 		super();
@@ -46,6 +51,7 @@ public class GameplayStage extends AutoResizeStage {
 		//healthbar
 		healthBar = new HealthBar(100);
 		healthBar.initVisual(assetManager, 114, 450, 300, 40);
+		healthBar.setDecimalSpace(2);
 		
 		//class icon
 		classIcon = new VisualBox(assetManager.getTexture("debugClass"), 50, 425, 64, 64);
@@ -57,15 +63,32 @@ public class GameplayStage extends AutoResizeStage {
 		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 364, 425, 20, 20);
 		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 394, 425, 20, 20);
 		
-		//attackIcon
-		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 300, 300, 64, 64);
+		//action icons
+		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 470, 430, 60, 60);
 		decor = new StaticTextElement(font, "Attacke", attackIcon.getWidth()*.5f,  -14);
 		attackIcon = new BoxOffsetDecorator(this.attackIcon, decor);
-		//
-		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 400, 300, 64, 64);
+		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 570, 430, 60, 60);
 		decor = new StaticTextElement(font, "Ei ablegen", layEggIcon.getWidth()*.5f,  -14);
 		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, decor);
 		
+		//score icons
+		DynamicTextElement textScore;
+		
+		scoreTeamIcon = new VisualBox(assetManager.getTexture("debugScoreTeam"), 470, 40, 60, 60);
+		scoreTeam = new MinMaxValue(0, maxScore, 1);
+		textScore = new DynamicTextElement(font, "0", scoreTeamIcon.getWidth()*.5f, 50, scoreTeam);
+		textScore.setDecimalPLace(0);
+		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, textScore);
+		decor = new StaticTextElement(font, "Team 1", this.scoreTeamIcon.getWidth()*.5f, -14);
+		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, decor);
+		
+		scoreEnemyIcon = new VisualBox(assetManager.getTexture("debugScoreEnemy"), 570, 40, 60, 60);
+		scoreEnemy = new MinMaxValue(0, maxScore, 1);
+		textScore = new DynamicTextElement(font, "0", scoreEnemyIcon.getWidth()*.5f, 50, scoreEnemy);
+		textScore.setDecimalPLace(0);
+		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, textScore);
+		decor = new StaticTextElement(font, "Team 2", this.scoreEnemyIcon.getWidth()*.5f, -14);
+		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, decor);
 		
 	}
 
@@ -80,6 +103,8 @@ public class GameplayStage extends AutoResizeStage {
 		buff3.draw();
 		attackIcon.draw();
 		layEggIcon.draw();
+		scoreEnemyIcon.draw();
+		scoreTeamIcon.draw();
 		
 		DrawUtil.batch.flush();
 		this.draw();
@@ -97,5 +122,13 @@ public class GameplayStage extends AutoResizeStage {
 			accum -= 1.0;
 			healthBar.get().setValue(MathUtils.random() * 100);
 		}
+	}
+	
+	public void advanceScoreOwnTeam() {
+		scoreTeam.stepValue();
+	}
+	
+	public void advanceScoreEnemeyTeam() {
+		scoreEnemy.stepValue();
 	}
 }
