@@ -211,11 +211,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
-
+    	moveEnd();
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
     	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
-    	//moveEnd();
+    	moveEnd();
     }
     
     protected void moveEnd()
