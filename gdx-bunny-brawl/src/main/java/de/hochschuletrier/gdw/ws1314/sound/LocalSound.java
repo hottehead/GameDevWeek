@@ -40,7 +40,7 @@ public class LocalSound {
 		distance = (float) Math.sqrt( Math.pow( (localX - remoteX), 2 ) + Math.pow( (localY - remoteY), 2 ) );
 		volume = (100 - (distance * 100 / LocalSound.maxDistance)) / 100;
 		
-		this.play("speech-tank-fall_1", volume);
+		this.play("speech-general-yeay_1", volume);
 	}
 	
 	public void play(String sound, float volume) {
