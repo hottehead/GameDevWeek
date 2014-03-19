@@ -25,9 +25,12 @@ void main() {
 
 	vec4 prevFrame = texture2D(u_prevStep, vTexCoord + vec2(abtastRate.x,0));
 
+
 	prevFrame.a = prevFrame.a * 0.25f;
 
 	float fading = mix((currentFrame), (prevFrame), 0.5f).a;
-	//gl_FragColor = vec4(currentFrame.xyz, currentFrame.a+fading);
-	gl_FragColor = currentFrame;
+
+	vec4 outColor = vec4(currentFrame.rgb, currentFrame.a+prevFrame.a);
+
+	gl_FragData[0] = vec4(currentFrame.rgb, currentFrame.a);
 }
