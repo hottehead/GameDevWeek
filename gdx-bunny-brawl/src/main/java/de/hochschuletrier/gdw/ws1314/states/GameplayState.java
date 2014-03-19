@@ -33,7 +33,7 @@ public class GameplayState extends GameState implements InputProcessor {
 		super.init(assetManager);
 		game = new ServerGame();
 		game.init(assetManager);
-		tmpGame = new ClientGame(this);
+		tmpGame = new ClientGame();
 		tmpGame.init(assetManager);
 
 		Main.inputMultiplexer.addProcessor(this);

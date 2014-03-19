@@ -2,7 +2,6 @@ package de.hochschuletrier.gdw.ws1314.game;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -13,9 +12,10 @@ import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
@@ -33,9 +33,13 @@ public class ClientGame {
 	private InputHandler inputHandler;
 	private EntityRenderer entityRenderer; 
 
-	public ClientGame() {
+	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
+		
+		inputHandler = new InputHandler();
+		Main.inputMultiplexer.addProcessor(inputHandler);
+		
 	}
 
 	public void init(AssetManagerX assets) {
@@ -50,8 +54,6 @@ public class ClientGame {
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
-		
-		entityManager.createEntity(10, new Vector2(50, 50), EntityType.Ei);
 		
 		initMaterials(assets);
 	}

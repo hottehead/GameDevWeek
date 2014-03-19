@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +26,7 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
 /**
@@ -71,6 +71,7 @@ public class ServerGame {
 		}
          entityManager.createEntity(ServerPlayer.class, new Vector2(0f,0f));
          entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
+         entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
 	}
 
 	public void render() {
