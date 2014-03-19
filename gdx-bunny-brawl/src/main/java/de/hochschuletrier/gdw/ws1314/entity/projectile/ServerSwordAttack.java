@@ -60,10 +60,6 @@ public class ServerSwordAttack extends ServerEntity {
     }
 
     @Override
-    public void dispose() {
-    }
-
-    @Override
     public void initialize() {
     }
 
