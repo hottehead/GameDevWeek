@@ -130,12 +130,14 @@ public class ServerProjectile extends ServerEntity {
 	public void disable() {
 	}
 
-	@Override
-	public void dispose() {
-	}
 
 	@Override
 	public void initialize() {
+
+	}
+
+	@Override
+    public void reset() {
 
 	}
 

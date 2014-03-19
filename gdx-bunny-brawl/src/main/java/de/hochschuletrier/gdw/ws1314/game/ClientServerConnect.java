@@ -18,16 +18,12 @@ public class ClientServerConnect {
 
     private static ClientServerConnect csc;
 
-    private ServerEntityManager sem;
-    private ClientEntityManager cem;
+
 
     private long playerID = -1;
 
     private ClientServerConnect(){
         logger.warn("Replace ClientServerConnect");
-
-        sem = ServerEntityManager.getInstance();
-        cem = ClientEntityManager.getInstance();
     }
 
     public static ClientServerConnect getInstance() {
@@ -40,6 +36,9 @@ public class ClientServerConnect {
     }
 
     public void update(){
+        ServerEntityManager sem = ServerEntityManager.getInstance();
+        ClientEntityManager cem = ClientEntityManager.getInstance();
+        //logger.info("server entity Listen size: {}",sem.getListSize());
         for(int i = 0; i < sem.getListSize(); i++){
             long id = sem.getListEntity(i).getID();
             ServerEntity senty = sem.getEntityById(id);
@@ -57,6 +56,7 @@ public class ClientServerConnect {
 
             }
             else {
+
                 centy.setPosition(senty.getPosition());
                 if(senty instanceof ServerPlayer){
                     ServerPlayer sp = (ServerPlayer)senty;
@@ -76,14 +76,14 @@ public class ClientServerConnect {
     }
 
     public void sendAction(PlayerIntention eventPlayerIntention){
-
+        ServerEntityManager sem = ServerEntityManager.getInstance();
         ServerPlayer sp = (ServerPlayer)sem.getEntityById(playerID);
         if(sp != null)
         sp.doAction(eventPlayerIntention);
     }
 
     public void despawnEntity(long id){
-        sem.removeEntity(sem.getEntityById(id));
+        ClientEntityManager cem = ClientEntityManager.getInstance();
         cem.removeEntity(cem.getEntityById(id));
     }
 

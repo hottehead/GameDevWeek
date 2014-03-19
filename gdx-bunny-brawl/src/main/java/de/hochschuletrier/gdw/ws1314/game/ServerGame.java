@@ -54,7 +54,7 @@ public class ServerGame {
         entityManager.setPhysixManager(manager);
 		netManager = ClientServerConnect.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
-		loadSolids();
+		//loadSolids();
     }
 
 
@@ -111,6 +111,7 @@ public class ServerGame {
 				int y = layerObject.getY();
 
 				boolean b = l.getBooleanProperty("solid", false);
+				System.out.println(b);
 				if (b) {
 					Primitive p = layerObject.getPrimitive();
 					if (p == Primitive.POINT) {
