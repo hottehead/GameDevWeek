@@ -35,14 +35,14 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
  */
 public class ClientGame {
 	private ClientEntityManager entityManager;
-	private NetworkManager netManager;
+	private ClientServerConnect netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
 
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
-		netManager = NetworkManager.getInstance();
+		netManager = ClientServerConnect.getInstance();
 	}
 
 	public void init(AssetManagerX assets) {

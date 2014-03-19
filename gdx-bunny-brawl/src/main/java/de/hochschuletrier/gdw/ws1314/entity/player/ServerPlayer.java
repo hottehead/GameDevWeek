@@ -1,15 +1,26 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -19,6 +30,9 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class ServerPlayer extends ServerEntity 
 {
+    private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
+
+
     private PlayerInfo	playerInfo;
     private PlayerKit 	playerKit;
     private TeamColor	teamColor;
@@ -59,6 +73,8 @@ public class ServerPlayer extends ServerEntity
     @Override
     public void update(float deltaTime) 
     {
+    	moveBegin(direction);
+    	
     	if (firstAttackFired)
     	{
     		firstAttackTimer += deltaTime;
@@ -74,7 +90,55 @@ public class ServerPlayer extends ServerEntity
     	
     	// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
     }
-    
+
+    //NOT FINAL! CHANGE AS NEEDED
+    Vector2 dir = new Vector2(0,0);
+    public void doAction(PlayerIntention intent)
+    {
+        logger.info("Hey I got a Intention: {}",intent.name());
+
+        switch (intent){
+            case MOVE_TOGGLE_UP:
+                if(dir.y > 0){
+                    dir.y = 0;
+                }
+                else {
+                    dir.y = 1;
+                }
+                break;
+            case MOVE_TOGGLE_DOWN:
+                if(dir.y > 0){
+                    dir.y = 0;
+                }
+                else{
+                    dir.y = -1;
+                }
+                break;
+            case MOVE_TOGGLE_RIGHT:
+                if(dir.x > 0){
+                    dir.x = 0;
+                }
+                else{
+                    dir.x = 1;
+                }
+                break;
+            case MOVE_TOGGLE_LEFT:
+                if(dir.x > 0){
+                    dir.x = 0;
+                }
+                else{
+                    dir.x = -1;
+                }
+                break;
+            case ATTACK_1:
+                doFirstAttack();
+                break;
+            case  ATTACK_2:
+                doSecondAttack();
+                break;
+        }
+    }
+
     public void moveBegin(FacingDirection dir)
     {
     	direction = dir;
@@ -82,6 +146,11 @@ public class ServerPlayer extends ServerEntity
     	// TODO acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
+    	moveEnd();
+    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
+    	moveEnd();
+    	
     }
     
     public void moveEnd()
@@ -89,6 +158,7 @@ public class ServerPlayer extends ServerEntity
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
+    	physicsBody.setLinearDamping(1);
     }
     
     public void doFirstAttack()
@@ -148,6 +218,13 @@ public class ServerPlayer extends ServerEntity
 	public void initPhysics(PhysixManager manager)
 	{
 		// TODO Auto-generated method stub
-		
+		//FIXME: player position muss noch irgendwo hinterlegt sein
+		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
+							  .position(new Vector2()).fixedRotation(false).create();
+		body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
+				.friction(0.5f).restitution(0.4f).shapeBox(100,100));
+		body.setGravityScale(0);
+		body.addContactListener(this);
+		setPhysicsBody(body);
 	}
 }

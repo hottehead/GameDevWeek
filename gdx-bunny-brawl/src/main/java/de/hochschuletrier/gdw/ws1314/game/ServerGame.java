@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 
 
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,8 +37,8 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-
 import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
 
 import java.util.ArrayList;
@@ -62,19 +63,20 @@ public class ServerGame {
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
-	private NetworkManager netManager;
+	private ClientServerConnect netManager;
 	private TiledMap map;
-	private TiledMapRendererGdx mapRenderer;
+	private ServerPlayer player = new ServerPlayer();
 
 	public ServerGame() {
-		entityManager = ServerEntityManager.getInstance();
-		netManager = NetworkManager.getInstance();
+		entityManager = ServerEntityManager.getInstance(manager);
+		netManager = ClientServerConnect.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
 		loadSolids();
     }
 
 
 	public void init(AssetManagerX assets) {
+		//player.initPhysics(manager);
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		map = loadMap("data/maps/miniarena.tmx");
@@ -84,21 +86,16 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
+         entityManager.createEntity(ServerPlayer.class);
 	}
 
 	public void render() {
-		for (Layer layer : map.getLayers()) {
-			mapRenderer.render(0, 0, layer);
-		}
 		manager.render();
 	}
 
 	public void update(float delta) {
 		entityManager.update(delta);
 		manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-		mapRenderer.update(delta);
-
     }
 
 	public PhysixManager getManager() {
