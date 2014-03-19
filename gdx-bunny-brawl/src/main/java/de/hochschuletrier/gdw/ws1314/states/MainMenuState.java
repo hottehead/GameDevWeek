@@ -38,7 +38,6 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
         this.music = new LocalMusic(assetManager);
-        this.music.play("music-lobby-loop");
         inputProcessor = new InputInterceptor(this) {
             @Override
             public boolean keyUp(int keycode) {
@@ -68,6 +67,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void onEnter() {
         inputProcessor.setActive(true);
+        this.music.play("music-lobby-loop");
     }
 
     @Override
