@@ -6,7 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -25,24 +28,23 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 	public ClientLobbyManager(PlayerData playerData)
 	{
 		NetworkManager.getInstance().setLobbyUpdateCallback(this);
-		NetworkManager.getInstance().sendPlayerUpdate(playerData.getPlayername(), playerData.getType(), playerData.getTeam(), playerData.isAccept());
 		this.connectedPlayers = new ArrayList<PlayerData>();
+		this.myData = playerData;
+		sendChanges();
 	}
 	
 	public List<PlayerData> getConnectedPlayers() {
 		return connectedPlayers;
 	}
+	
 	public String getMap() {
 		return map;
 	}
 	
-	
-
 	public PlayerData getPlayerData() {
 		return myData;
 	}
-
-	public void setMyData(PlayerData playerData) {
+	public void setPlayerData(PlayerData playerData) {
 		this.myData = playerData;
 	}
 
@@ -58,8 +60,13 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 		
 		for (PlayerData p : this.connectedPlayers)
 		{
-			logger.info("Connected Player: " + p.getPlayername());
+			logger.info("PlayerID: " + p.getId());
+			logger.info("PlayerName: " + p.getPlayername());
 		}
+	}
+	
+	public void sendChanges() {
+		NetworkManager.getInstance().sendPlayerUpdate(myData.getPlayername(), myData.getType(), myData.getTeam(), myData.isAccept());
 	}
 	
 }

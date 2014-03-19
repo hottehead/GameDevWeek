@@ -10,7 +10,6 @@ import de.hochschuletrier.gdw.ws1314.Main;
 public enum GameStates {
     LOADING (new LoadGameState ()),
     MAINMENU (new MainMenuState ()),
-    GAMEPLAY (new GameplayState ()),
     SERVERLOBBY (new ServerLobbyState ()),
     CLIENTLOBBY (new ClientLobbyState ()),
     SERVERGAMEPLAY (new ServerGamePlayState()),
