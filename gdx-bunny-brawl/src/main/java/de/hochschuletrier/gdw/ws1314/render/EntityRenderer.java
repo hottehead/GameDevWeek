@@ -21,6 +21,7 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 	
 	
 	public void draw() {
+		
 		for(RenderObject obj : this.renderList) {
 			Vector2 pos = obj.entity.getPosition();
 			DrawUtil.batch.draw(obj.material.texture, pos.x, pos.y+obj.material.height, obj.material.width, -obj.material.height); 
