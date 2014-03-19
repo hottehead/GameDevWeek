@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+
 import de.hochschuletrier.gdw.commons.utils.Point;
+
 import java.util.List;
 
 /**
@@ -130,4 +132,9 @@ public class PhysixManager {
             body.setAwake(true);
         }
     }
+
+	public Object createSolid(int i, int j) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
