@@ -3,6 +3,11 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
 public class StatePlayerWaiting extends State
 {
 	private State 		waitFinishedState;
@@ -38,6 +43,7 @@ public class StatePlayerWaiting extends State
 	@Override
 	public void exit()
 	{
+		((ServerPlayer) getOwner()).moveEnd();
 	}
 	
 	public void setWaitFinishedState(State state)

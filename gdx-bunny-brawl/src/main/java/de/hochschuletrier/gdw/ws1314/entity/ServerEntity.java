@@ -39,6 +39,7 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
 	public abstract void disable();
     public abstract void dispose();
     public abstract void initialize();
+    public abstract void reset();
 
 	public abstract void update(float deltaTime);
 	

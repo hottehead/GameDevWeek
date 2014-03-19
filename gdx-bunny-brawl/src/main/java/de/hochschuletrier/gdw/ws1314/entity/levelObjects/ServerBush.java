@@ -68,10 +68,15 @@ public class ServerBush extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(new Vector2()).fixedRotation(false).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
-            body.setGravityScale(0);
-            body.addContactListener(this);
-            setPhysicsBody(body);
+		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+									.fixedRotation(false).create();
+		body.createFixture(new PhysixFixtureDef(manager)
+									.density(0.5f).friction(0.0f)
+									.restitution(0.0f).shapeCircle(30));
+
+		body.setGravityScale(0);
+		body.addContactListener(this);
+		setPhysicsBody(body);
 	}
 }

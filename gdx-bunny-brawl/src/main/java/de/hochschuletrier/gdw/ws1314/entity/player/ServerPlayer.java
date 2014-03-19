@@ -18,7 +18,9 @@ import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author ElFapo
  * ASK BEFORE MODIFYING, OR I'LL MOST CERTAINLY TAKE A SHIT ON YOUR HEAD!
+ * -I'D REALLY LIKE TO SEE THIS xD
  */
 
 public class ServerPlayer extends ServerEntity implements IStateListener
@@ -44,6 +47,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
 
 	private final float RESTITUTION = 0;
+	private final float	KNOCKBACK_TIME = 0.8f;
 
 
     private PlayerInfo	playerInfo;
@@ -83,7 +87,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	idleState = new StatePlayerIdle(this);
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
-    	switchToState(idleState);
+    	currentState = idleState;
     }
     
     public void enable() {}
@@ -103,7 +107,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent)
     {
-        logger.info("Hey I got a Intention: {}",intent.name());
+        logger.info("Hey I got a Intention: {}", intent.name());
 
         switch (intent){
             case MOVE_UP_ON:
@@ -210,6 +214,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
     	
@@ -265,15 +270,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
             	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
-            	  * this.currentHealth -= hunter.angriff;
-            	  */
+            	 this.currentHealth -= AttackShootArrow.DAMAGE;
+            	  
             	 if(this.currentHealth <= 0){
             	  	 ServerEntityManager.getInstance().removeEntity(this);
             	  }
-            	 
             	 break;
-             case Bridge: 		
+             case Bridge:
+            	 ServerBridge bridge = (ServerBridge) otherEntity;
+            	 //ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 
+            	/* if(){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }*/
             	 break;
              case BridgeSwitch:	
             	 break;
@@ -323,7 +332,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		// TODO Auto-generated method stub
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(new Vector2()).fixedRotation(false).create();
+							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
 				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
@@ -338,6 +347,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		currentState = state;
 		currentState.init();
 	}
+
+    public void reset(){
+        physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+        switchToState(idleState);
+    }
 	
 	protected void applyKnockback()
 	{
