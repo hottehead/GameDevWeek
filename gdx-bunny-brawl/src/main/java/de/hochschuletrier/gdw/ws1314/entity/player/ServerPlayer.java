@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author ElFapo
  * ASK BEFORE MODIFYING, OR I'LL MOST CERTAINLY TAKE A SHIT ON YOUR HEAD!
+ * -I'D REALLY LIKE TO SEE THIS xD
  */
 
 public class ServerPlayer extends ServerEntity implements IStateListener
