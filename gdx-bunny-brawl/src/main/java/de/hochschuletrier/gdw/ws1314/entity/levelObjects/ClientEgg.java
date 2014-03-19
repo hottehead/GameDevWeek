@@ -29,6 +29,5 @@ public class ClientEgg extends ClientLevelObject
 
     public void setPosition(Vector2 position)	{
         super.setPosition(position);
-        logger.info("neue Position x:{} y:{}",position.x,position.y);
     }
 }

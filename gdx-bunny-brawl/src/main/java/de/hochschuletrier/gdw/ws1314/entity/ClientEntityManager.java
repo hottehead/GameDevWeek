@@ -85,7 +85,8 @@ public class ClientEntityManager {
     }
 
     public void removeEntity(ClientEntity e) {
-        removalQueue.add(e);
+        if(e!=null)
+            removalQueue.add(e);
     }
 
     public int getListSize() {
@@ -103,6 +104,7 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
+            entityListMap.remove(e.getID());
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityRemove(e);
             }
