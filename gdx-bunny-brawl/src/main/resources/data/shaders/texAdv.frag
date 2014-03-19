@@ -20,9 +20,9 @@ void main() {
 
 
 	vec4 currentFrame = texture2D(u_texture, vTexCoord);
-	vec4 prevFrame = texture2D(u_prevStep, vTexCoord + vec2(abtastRate.x,0));
+	vec4 prevFrame = texture2D(u_prevStep, vTexCoord - vec2(abtastRate.x,0));
 
 
 
-	gl_FragColor = (u_fadeInFactor*currentFrame) + ((1-u_fadeInFactor)*vec4(greyscale(prevFrame)));
+	gl_FragColor = (currentFrame) + (u_fadeInFactor*prevFrame);
 }

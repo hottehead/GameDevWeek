@@ -87,7 +87,7 @@ public class ClientGame {
 		System.out.println(advShader.getLog());
 	}
 
-	float fadeIn = 0;
+	float fadeIn = 0.25f;
 	
 	public void render() {
 		sceneToTexture.begin();
@@ -111,7 +111,7 @@ public class ClientGame {
 	}
 
 	public void update(float delta) {
-		fadeIn = Math.min(fadeIn + delta/100.0f, 1);
+//		fadeIn = Math.min(fadeIn + delta/100.0f, 1);
 		entityManager.update(delta);
 	}
 
