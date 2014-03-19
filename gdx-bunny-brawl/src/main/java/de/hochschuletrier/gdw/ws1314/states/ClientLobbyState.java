@@ -22,7 +22,7 @@ public class ClientLobbyState extends GameState {
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
-        clientLobby = new ClientLobbyManager(new PlayerData("John", EntityType.Hunter, TeamColor.WHITE, false));
+        clientLobby = new ClientLobbyManager(new PlayerData(1,"John", EntityType.Hunter, TeamColor.WHITE, false));
         logger.info("Client-Lobby created.");
     }
 

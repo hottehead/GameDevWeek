@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ import de.hochschuletrier.gdw.ws1314.lobby.ServerLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -119,6 +121,13 @@ public class Main extends StateBasedGame {
 		Gdx.input.setCatchBackKey(true);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
+
+	public String s_map = "";
+	public PlayerData[] c_players;
+	public List<PlayerData> s_players = new ArrayList<PlayerData>();
+	
+	//public int playercount = 0;
+	
 	
 	@Override
 	public void create() {
@@ -146,7 +155,73 @@ public class Main extends StateBasedGame {
 				logger.info("New map: " + map);
 			}
 		});
+
+		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
+			
+			@Override
+			public void callback(int playerid, String playerName, EntityType type, TeamColor team,
+					boolean accept) {
+				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
+				boolean update = false;
+				for(int i = 0; i < s_players.size(); i++){
+					if(s_players.get(i) == null)
+						continue;
+					logger.info(s_players.get(i).getId() + " == " + playerid);
+					if(s_players.get(i).getId() == playerid){
+						logger.info("Updated Player: " + playerid + " " + playerName);
+						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
+						update = true;
+						break;
+					}
+				}
+				if(!update){
+					logger.info("New Player: " + playerid + " " + playerName);
+					s_players.add(new PlayerData(playerid, playerName, type, team, accept));
+				}
+			}
+		});
+		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
+			@Override
+			public void callback(String map, PlayerData[] players) {
+				logger.info("Map: " + map);
+				logger.info("Playercount: " + players.length);
+				for(int i = 0; i < players.length; i++)
+					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getId() + " class: " + players[i].getType());
+				c_players = players;
+			}
+		});
 		
+		NetworkManager.getInstance().setPlayerDisconnectCallback(new PlayerDisconnectCallback() {
+			
+			@Override
+			public void callback(Integer[] playerid) {
+				// TODO Auto-generated method stub
+				List<PlayerData> players = new ArrayList<PlayerData>();
+				for(int i = 0; i < s_players.size(); i++){
+					boolean inlist = true;
+					for(int j = 0; j < playerid.length; j++){
+						if(playerid[j] == s_players.get(i).getId()){
+							inlist = false;
+							break;
+						}
+					}
+					if(inlist)
+						players.add(s_players.get(i));
+				}
+				//playercount = players.size();
+				s_players = players;
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
+			}
+		});
+    	
+		console.register(new ConsoleCmd("sendLobbyUpdate",0,"[DEBUG]") {
+
+			@Override
+			public void execute(List<String> args) {
+				// TODO Auto-generated method stub
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
+			} 
+		});
 		console.register(new ConsoleCmd("sendMatchUpdate",0,"[DEBUG]Post a mapname.",1) {
 			@Override
 			public void showUsage() {
@@ -168,7 +243,8 @@ public class Main extends StateBasedGame {
 			
 			@Override
 			public void execute(List<String> args) {
-				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,TeamColor.BLACK,false);
+				logger.info(args.get(1));
+				NetworkManager.getInstance().sendPlayerUpdate(args.get(1),EntityType.Noob,TeamColor.BLACK,false);
 			}
 		});
 		

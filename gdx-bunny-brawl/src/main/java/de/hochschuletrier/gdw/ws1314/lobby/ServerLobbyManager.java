@@ -39,9 +39,9 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 
 
 	@Override
-	public void callback(String playerName, EntityType type, TeamColor team, boolean accept) 
+	public void callback(int playerid,String playerName, EntityType type, TeamColor team, boolean accept) 
 	{
-		PlayerData playerData = new PlayerData(playerName, type, team, accept);
+		PlayerData playerData = new PlayerData(playerid,playerName, type, team, accept);
 		
 		logger.info(playerName + " has joined the Lobby.");
 		

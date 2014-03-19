@@ -9,6 +9,7 @@ import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
@@ -31,14 +32,14 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
-
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +60,7 @@ public class NetworkManager {
 
     private int nextPlayerNumber = 1;
 
+    private PlayerDisconnectCallback playerdisconnectcallback;
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
@@ -90,13 +92,19 @@ public class NetworkManager {
         }
 		serverConnections=new ArrayList<NetConnection>();
         try {
-			serverReception = new NetReception(ip, port, maxConnections,datagramFactory);
-			if(serverReception.isRunning()) logger.info("Listening.");
+            serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
+            if (serverReception.isRunning()){
+				logger.info("Listening at: {}", InetAddress.getLocalHost()
+						.getHostAddress());
+			}
         } catch (IOException e) {
             logger.error("Can't listen for connections.", e);
 			serverConnections=null;
 			serverReception=null;
         }
+    }
+    public PlayerDisconnectCallback getPlayerDisconnectCallback(){
+    	return playerdisconnectcallback;
     }
 
 	public LobbyUpdateCallback getLobbyUpdateCallback(){
@@ -127,7 +135,11 @@ public class NetworkManager {
         return despawnCallback;
     }
 
-	public void setLobbyUpdateCallback(LobbyUpdateCallback callback){
+    public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
+    	this.playerdisconnectcallback = callback;
+    }
+
+    public void setLobbyUpdateCallback(LobbyUpdateCallback callback) {
         this.lobbyupdatecallback = callback;
     }
 
@@ -193,8 +205,14 @@ public class NetworkManager {
         clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
     }
 
-	public void sendLobbyUpdate(String map, PlayerData[] players){
-		if(!isServer()) return;
+
+    public void sendLobbyUpdate(String map, PlayerData[] players) {
+        if (!isServer())
+            return;
+        logger.info("in sendLobbyUpdate");
+        for(int i = 0; i < players.length; i++){
+        	logger.info("Player: " + players[i].toString());
+        }
         broadcastToClients(new LobbyUpdateDatagram(map, players));
     }
 
@@ -265,6 +283,7 @@ public class NetworkManager {
 
 	public void update(){
         handleNewConnections();
+        handleDisconnects();
 		replicateServerEntities();
         handleDatagramsClient();
         handleDatagramsServer();
@@ -294,7 +313,7 @@ public class NetworkManager {
             NetConnection connection = serverReception.getNextNewConnection();
             while (connection != null) {
                 connection.setAccepted(true);
-                connection.setAttachment("Player " + (nextPlayerNumber++));
+                connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
                 serverConnections.add(connection);
                 logger.info("Client connected.");
                 connection = serverReception.getNextNewConnection();
@@ -302,8 +321,28 @@ public class NetworkManager {
         }
     }
 
-	private void handleDatagramsClient(){
-		if(!isClient()) return;
+    private void handleDisconnects() {
+    	 if (isServer()) {
+    		 List<NetConnection> toRemove = new ArrayList<NetConnection>();
+    		 for(NetConnection c : serverConnections){
+    			 if(!c.isConnected()){
+    				 toRemove.add(c);
+    			 }
+    		 }
+    		 if(toRemove.size() > 0){
+    			 List<Integer> ids = new ArrayList<Integer>();
+	    		 for(NetConnection rc : toRemove){
+	    			 serverConnections.remove(rc);
+	    			 //TODO: eindeutige ID festlegen
+	    			 ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
+	    		 }
+	    		 playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+    		 }
+    	 }
+    }
+
+    private void handleDatagramsClient() {
+        if (!isClient()) return;
 
 		DatagramHandler handler=clientDgramHandler;
 

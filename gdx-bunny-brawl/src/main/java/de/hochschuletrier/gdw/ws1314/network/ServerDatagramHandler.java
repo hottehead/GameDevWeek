@@ -10,7 +10,7 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(ChatSendDatagram chatDatagram, NetConnection connection) {
-        String sender = (String) connection.getAttachment();
+        String sender = ((ConnectionAttachment) connection.getAttachment()).getPlayername();
         NetworkManager.getInstance().broadcastToClients(
                 new ChatDeliverDatagram(sender,
                         chatDatagram.getText()));
@@ -29,7 +29,9 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection) {
-        NetworkManager.getInstance().getPlayerUpdateCallback().callback(playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept());
+    	//connection.setAttachment(new PlayerData(playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept()));
+    	int playerid = ((ConnectionAttachment) connection.getAttachment()).getId();
+    	NetworkManager.getInstance().getPlayerUpdateCallback().callback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept());
     }
 
     @Override
@@ -59,7 +61,8 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(MatchUpdateDatagram matchUpdateDatagram, NetConnection connection) {
-        NetworkManager.getInstance().getMatchUpdateCallback().callback(matchUpdateDatagram.getMap());
+    	//connection.setAttachment(matchUpdateDatagram);
+    	NetworkManager.getInstance().getMatchUpdateCallback().callback(matchUpdateDatagram.getMap());
     }
 
     @Override

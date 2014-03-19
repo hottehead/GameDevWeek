@@ -4,16 +4,22 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 public class PlayerData {
+	private int id;
 	private String playername;
 	private EntityType type;
 	private TeamColor team;
 	private boolean accept;
 	
-	public PlayerData(String playername, EntityType type, TeamColor team, boolean accept){
+	public PlayerData(int id, String playername, EntityType type, TeamColor team, boolean accept){
+		this.id = id;
 		this.playername = playername;
 		this.type = type;
 		this.team = team;
 		this.accept = accept;
+	}
+	
+	public int getId(){
+		return id;
 	}
 	
 	public String getPlayername() {
@@ -27,5 +33,9 @@ public class PlayerData {
 	}
 	public boolean isAccept() {
 		return accept;
-	}   	
+	}
+	
+	public String toString() {
+		return "id: " + id + " name: " + playername + " type:" + type.toString() + " team:" + team.toString() + " " + accept;
+	}
 }
