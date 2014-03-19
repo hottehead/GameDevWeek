@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
+import de.hochschuletrier.gdw.ws1314.shaders.PostProcessing;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -32,6 +33,9 @@ public class ClientGame {
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
 	private EntityRenderer entityRenderer; 
+	
+	
+	private PostProcessing postProcessingEffect;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
