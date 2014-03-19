@@ -24,6 +24,9 @@ import java.util.List;
 public class NetworkManager {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
+	private final String defaultIP = "0.0.0.0";
+	private final int defaultPort = 666;
+
     private static NetworkManager instance = new NetworkManager();
 
     private NetConnection clientConnection = null;
@@ -56,6 +59,7 @@ public class NetworkManager {
     public void connect(String ip, int port) {
         if (isClient()) {
             logger.warn("Ignoring new connect command because we are already connected.");
+			return;
         }
         try {
             clientConnection = new NetConnection(ip, port, datagramFactory);
@@ -68,13 +72,14 @@ public class NetworkManager {
     public void listen(String ip, int port, int maxConnections) {
         if (isServer()) {
             logger.warn("Ignoring new listen command because we are already a server.");
+			return;
         }
         serverConnections = new ArrayList<NetConnection>();
         try {
             serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
             if (serverReception.isRunning()){
-				logger.info("Listening at: {}", InetAddress.getLocalHost()
-						.getHostAddress());
+				logger.info("Listening, IP: {} Port: {}", InetAddress.getLocalHost()
+						.getHostAddress(), port);
 			}
         } catch (IOException e) {
             logger.error("Can't listen for connections.", e);
@@ -256,6 +261,8 @@ public class NetworkManager {
         Main.getInstance().console.register(sayCmd);
 		Main.getInstance().console.register(listenDefCmd);
 		Main.getInstance().console.register(stopCmd);
+		Main.getInstance().console.register(disconnectCmd);
+		Main.getInstance().console.register(devConnectCmd);
         addChatListener(new ConsoleChatListener());
     }
 
@@ -273,7 +280,7 @@ public class NetworkManager {
                 connection.setAccepted(true);
                 connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
                 serverConnections.add(connection);
-                logger.info("Client connected.");
+                logger.info("Player {} connected.", (nextPlayerNumber-1));
                 connection = serverReception.getNextNewConnection();
             }
         }
@@ -331,9 +338,8 @@ public class NetworkManager {
             }
 
             if (!connection.isConnected()) {
-                logger.info("Client disconnected.");
+                logger.info("{} disconnected.", ((PlayerData)connection.getAttachment()).getPlayername());
                 it.remove();
-                continue;
             }
         }
     }
@@ -370,7 +376,7 @@ public class NetworkManager {
                 int port = Integer.parseInt(args.get(2));
                 int maxConnections = 10;
                 if (args.size() > 3) {
-                    maxConnections = Integer.parseInt(args.get(3));
+					maxConnections = Integer.parseInt(args.get(3));
                 }
                 listen(ip, port, maxConnections);
             } catch (NumberFormatException e) {
@@ -378,6 +384,7 @@ public class NetworkManager {
             }
         }
     };
+
     private ConsoleCmd sayCmd = new ConsoleCmd("say", 0, "Post a message in chat.", 1) {
         @Override
         public void showUsage() {
@@ -390,7 +397,8 @@ public class NetworkManager {
         }
     };
 
-	private ConsoleCmd listenDefCmd = new ConsoleCmd("listenDef", 0, "Start listening for client connections at 0.0.0.0 and Port 666. (Become a server.)", 0) {
+	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "Start listening for client connections at "+defaultIP+" and Port "+defaultPort+". " +
+			"(Become a server.)", 0) {
 
 		@Override
 		public void showUsage() {
@@ -400,9 +408,13 @@ public class NetworkManager {
 		@Override
 		public void execute(List<String> args) {
 			try {
-				connect("0.0.0.0", 666);
+				int maxConnections = 10;
+				if (args.size() > 3) {
+					maxConnections = Integer.parseInt(args.get(3));
+				}
+				listen(defaultIP, defaultPort, maxConnections);
 			} catch (NumberFormatException e) {
-				showUsage();
+				logger.error("Can't create Server with default data:", e);
 			}
 		}
 	};
@@ -424,8 +436,57 @@ public class NetworkManager {
 		}
 	};
 
+	private ConsoleCmd disconnectCmd = new ConsoleCmd("disconnect", 0, "Client disconnects from Server.", 0) {
+
+		@Override
+		public void showUsage() {
+			showUsage("");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			try {
+				if(isClient()){
+					logger.warn("disconnect is TODO !!");//TODO disconnect cmd
+				}
+			} catch (NumberFormatException e) {
+				logger.error("Can't disconnect from Server:", e);
+			}
+		}
+	};
+
+	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[DEV CMD] only for network tests, connect to localhost or to test client", 1) {
+
+		@Override
+		public void showUsage() {
+			showUsage("<flag> [l = localhost, t = test server]");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			try {
+				logger.warn("[dc] is only for network development tests !");
+				if(args.get(1).equals("l")){
+					connect("localhost", defaultPort);
+				} else if (args.get(1).equals("t")){
+					connect("143.93.55.135", defaultPort);
+				}
+			} catch (Exception e) {
+				logger.error("can't connect to server", e);
+			}
+		}
+	};
+
 	private void stopServer() {
-		serverReception.shutdown();
-		logger.info("Server stopped.");
+		try{
+			if(isServer()){
+				serverReception.shutdown();
+				logger.info("Server stopped.");
+			}else {
+				logger.warn("Can't stop, i'm not a Server.");
+			}
+		}catch (Exception e){
+			logger.error("Can't Stop Server:", e);
+		}
 	}
 }
