@@ -192,6 +192,7 @@ public class Main extends StateBasedGame {
 						players.add(s_players[i]);
 				}
 				s_players = players.toArray(new PlayerData[players.size()]);
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players);
 			}
 		});
     	
