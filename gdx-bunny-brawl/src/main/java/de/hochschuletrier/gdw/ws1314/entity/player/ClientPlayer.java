@@ -24,6 +24,7 @@ public class ClientPlayer extends ClientEntity
     private FacingDirection facingDirection;
     private PlayerKit		playerKit;
     private PlayerInfo		playerInfo;
+    private TeamColor		teamColor;
     
     public int 				getEggCount() 		{ return eggCount; }
     public float 			getCurrentHealth() 	{ return currentHealth; }
@@ -32,6 +33,7 @@ public class ClientPlayer extends ClientEntity
     public PlayerKit 		getPlayerKit() 		{ return playerKit; }
     public PlayerInfo 		getPlayerInfo() 	{ return playerInfo; }
     public EntityType getEntityType() 			{ return playerKit.getEntityType(); }
+    public TeamColor		getTeamColor()		{ return teamColor; }
     
     public void setCurrentHealth(float currentHealth) 				{ this.currentHealth = currentHealth; }
     public void setEggCount(int eggCount) 							{ this.eggCount = eggCount; }
@@ -39,6 +41,7 @@ public class ClientPlayer extends ClientEntity
     public void setFacingDirection(FacingDirection facingDirection) { this.facingDirection = facingDirection; }
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
     public void setPlayerInfo(PlayerInfo playerInfo)				{ this.playerInfo = playerInfo; }
+    public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
     
     public void enable() {}
     public void disable() {}
