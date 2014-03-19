@@ -189,8 +189,8 @@ public class ServerPlayer extends ServerEntity
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
 
-    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
+    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
     	moveEnd();
 
     	
@@ -244,14 +244,16 @@ public class ServerPlayer extends ServerEntity
             	 this.currentEggCount++;
             	 break;
              case Projectil: 
+            	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
+            	  * this.currentHealth -= hunter.angriff;
+            	  */
+            	 if(this.currentHealth <= 0){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }
             	 
-            	/*  FIXME: Ich brauche als ID kein Long sondern eine Entity deren Angriff ich von den Lebenspunkten abziehen kann
-            	 * this.currentHealth -= projectile.getID().angriff;
-            	 * if(this.currentHealth <= 0){
-            	 * 		 ServerEntityManager.getInstance().removeEntity(this);
-            	 * }
-            	 */
             	 break;
              case Bridge: 		
             	 break;
