@@ -120,9 +120,9 @@ public class Main extends StateBasedGame {
 	}
 	public String s_map = "";
 	public PlayerData[] c_players;
-	public PlayerData[] s_players = new PlayerData[2];
+	public List<PlayerData> s_players = new ArrayList<PlayerData>();
 	
-	public int playercount = 0;
+	//public int playercount = 0;
 	
 
 	@Override
@@ -156,20 +156,22 @@ public class Main extends StateBasedGame {
 			@Override
 			public void callback(int playerid, String playerName, EntityType type, TeamColor team,
 					boolean accept) {
-				if(playercount >= 5)
-					return;
 				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
 				boolean update = false;
-				for(int i = 0; i < playercount; i++){
-					if(s_players[i].getId() == playerid){
+				for(int i = 0; i < s_players.size(); i++){
+					if(s_players.get(i) == null)
+						continue;
+					logger.info(s_players.get(i).getId() + " == " + playerid);
+					if(s_players.get(i).getId() == playerid){
 						logger.info("Updated Player: " + playerid + " " + playerName);
-						s_players[i] = new PlayerData(playerid, playerName, type, team, accept);
+						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
 						update = true;
+						break;
 					}
 				}
 				if(!update){
 					logger.info("New Player: " + playerid + " " + playerName);
-					s_players[playercount++] = new PlayerData(playerid, playerName, type, team, accept);
+					s_players.add(new PlayerData(playerid, playerName, type, team, accept));
 				}
 			}
 		});
@@ -190,20 +192,20 @@ public class Main extends StateBasedGame {
 			public void callback(Integer[] playerid) {
 				// TODO Auto-generated method stub
 				List<PlayerData> players = new ArrayList<PlayerData>();
-				for(int i = 0; i < s_players.length; i++){
+				for(int i = 0; i < s_players.size(); i++){
 					boolean inlist = true;
 					for(int j = 0; j < playerid.length; j++){
-						if(playerid[j] == s_players[i].getId()){
+						if(playerid[j] == s_players.get(i).getId()){
 							inlist = false;
 							break;
 						}
 					}
 					if(inlist)
-						players.add(s_players[i]);
+						players.add(s_players.get(i));
 				}
 				//playercount = players.size();
-				s_players = players.toArray(new PlayerData[playercount]);
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players);
+				s_players = players;
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 			}
 		});
     	
@@ -212,7 +214,7 @@ public class Main extends StateBasedGame {
 			@Override
 			public void execute(List<String> args) {
 				// TODO Auto-generated method stub
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players);
+				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 			} 
 		});
 		console.register(new ConsoleCmd("sendMatchUpdate",0,"[DEBUG]Post a mapname.",1) {

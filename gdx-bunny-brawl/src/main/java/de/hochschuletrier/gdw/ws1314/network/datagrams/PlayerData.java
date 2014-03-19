@@ -11,6 +11,7 @@ public class PlayerData {
 	private boolean accept;
 	
 	public PlayerData(int id, String playername, EntityType type, TeamColor team, boolean accept){
+		this.id = id;
 		this.playername = playername;
 		this.type = type;
 		this.team = team;

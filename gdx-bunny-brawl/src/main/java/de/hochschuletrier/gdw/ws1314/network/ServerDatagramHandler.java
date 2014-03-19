@@ -10,7 +10,7 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(ChatSendDatagram chatDatagram, NetConnection connection) {
-        String sender = (String) connection.getAttachment();
+        String sender = ((ConnectionAttachment) connection.getAttachment()).getPlayername();
         NetworkManager.getInstance().broadcastToClients(
                 new ChatDeliverDatagram(sender,
                         chatDatagram.getText()));
