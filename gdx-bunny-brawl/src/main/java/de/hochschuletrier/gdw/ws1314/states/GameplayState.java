@@ -28,7 +28,6 @@ public class GameplayState extends GameState implements InputProcessor {
         csc = ClientServerConnect.getInstance();
 	}
 
-	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
 		game = new ServerGame();
@@ -41,7 +40,6 @@ public class GameplayState extends GameState implements InputProcessor {
 		
 	}
 
-	@Override
 	public void render() {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
