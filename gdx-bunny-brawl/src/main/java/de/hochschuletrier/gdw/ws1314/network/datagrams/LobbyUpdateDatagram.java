@@ -37,6 +37,7 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         message.putString (map);
         message.putInt (playercount);
         for (int i = 0; i < playercount; i++) {
+        	message.putInt(players[i].getId());
             message.putString (players[i].getPlayername());
             message.putEnum (players[i].getType());
             message.putEnum(players[i].getTeam());
@@ -51,6 +52,7 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         players = new PlayerData[playercount];
         for (int i = 0; i < playercount; i++) {
         	players[i] = new PlayerData(
+        			message.getInt(),
         			message.getString(),
         			message.getEnum(EntityType.class), 
         			message.getEnum(TeamColor.class) ,

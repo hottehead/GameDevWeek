@@ -152,11 +152,11 @@ public class Main extends StateBasedGame {
 		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
 			
 			@Override
-			public void callback(String playerName, EntityType type, TeamColor team,
+			public void callback(int playerid, String playerName, EntityType type, TeamColor team,
 					boolean accept) {
 				if(playercount >= 5)
 					return;
-				PlayerData tmp = new PlayerData(playerName, type, team, accept);
+				PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
 				logger.info("New Player: " + tmp.toString());
 				s_players[playercount++] = tmp;
 			}

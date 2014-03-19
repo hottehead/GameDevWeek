@@ -50,7 +50,7 @@ public class PlayerUpdateDatagram extends BaseDatagram {
         team = message.getEnum (TeamColor.class);
         accept = message.getBool ();
     }
-
+    
     public String getPlayerName () {
         return playerName;
     }
