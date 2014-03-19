@@ -1,16 +1,16 @@
-package de.hochschuletrier.gdw.ws1314.hud.elements;
+package de.hochschuletrier.gdw.ws1314.hud.elements.base;
 
 import com.badlogic.gdx.graphics.Texture;
 
 
-public class BarFrontDecorator extends BoxDecorator {
+public class BoxFrontDecorator extends BoxDecorator {
 
-	public BarFrontDecorator(VisualBox valueBar, Texture texture) {
+	public BoxFrontDecorator(VisualBox valueBar, Texture texture) {
 		super(valueBar, new VisualBox(texture, valueBar.positionX,
 				valueBar.positionY, valueBar.width, valueBar.height));
 	}
 	
-	public BarFrontDecorator(VisualBox valueBar, Texture texture, NinePatchSettings ninePatchSettings) {
+	public BoxFrontDecorator(VisualBox valueBar, Texture texture, NinePatchSettings ninePatchSettings) {
 		super(valueBar, new NinePatchStaticBar(texture, valueBar.positionX,
 				valueBar.positionY, valueBar.width, valueBar.height, ninePatchSettings));
 	}
