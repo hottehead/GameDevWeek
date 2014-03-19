@@ -10,7 +10,7 @@ public enum PlayerKit
     KNIGHT(EntityType.Knight, 1.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new AttackSwingSword(), new BasicAttack());
     
     private final float 	maxVelocity;
-    private final int 	maxEggCount;
+    private final int 		maxEggCount;
     private final float 	baseHealth;
     private final float 	baseArmor;
     private final float 	firstAttackCooldown;

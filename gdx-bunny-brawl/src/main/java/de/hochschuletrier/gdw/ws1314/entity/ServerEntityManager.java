@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
@@ -14,6 +15,9 @@ import java.util.Queue;
  */
 public class ServerEntityManager {
     private static ServerEntityManager instance = null;
+
+    //ToDo Dirty Solution Please Fix
+    private static PhysixManager physManager;
 	
 	private Identifier entityIDs;
     private LinkedList<ServerEntity> entityList;
@@ -45,10 +49,16 @@ public class ServerEntityManager {
     
     public static ServerEntityManager getInstance()
     {
+
     	if (instance == null)
     		instance = new ServerEntityManager();
-    	
+
+
     	return instance;
+    }
+
+    public void setPhysixManager(PhysixManager physManager){
+        ServerEntityManager.physManager = physManager;
     }
 
     public ServerEntity getEntityById(long id) {
@@ -92,9 +102,10 @@ public class ServerEntityManager {
             ServerEntity e = insertionQueue.poll();
 
             e.initialize();
-
+            e.initPhysics(physManager);
 
             entityList.add(e);
+            entityListMap.put(e.getID(),e);
         }
         return listChanged;
     }
