@@ -20,6 +20,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -249,9 +250,8 @@ public class ServerPlayer extends ServerEntity
             	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
             	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 /*FIXME: Ich brauche noch die Angriffspunkte des Bogenschützen 
-            	  * this.currentHealth -= hunter.angriff;
-            	  */
+            	 this.currentHealth -= AttackShootArrow.DAMAGE;
+            	  
             	 if(this.currentHealth <= 0){
             	  	 ServerEntityManager.getInstance().removeEntity(this);
             	  }

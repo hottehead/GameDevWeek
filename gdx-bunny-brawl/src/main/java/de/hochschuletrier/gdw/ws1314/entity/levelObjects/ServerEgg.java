@@ -60,6 +60,9 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold)
 	{
+		
+		 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		
 	}
 
 	@Override
@@ -76,8 +79,10 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(new Vector2()).fixedRotation(false).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
+           						.position(new Vector2()).fixedRotation(false).create();
+            body.createFixture(new PhysixFixtureDef(manager).sensor(true).density(0.5f)
+            					.friction(0.0f).restitution(0.0f).shapeCircle(30));
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);
