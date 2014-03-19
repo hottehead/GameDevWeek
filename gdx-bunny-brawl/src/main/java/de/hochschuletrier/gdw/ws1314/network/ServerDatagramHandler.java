@@ -30,7 +30,7 @@ public class ServerDatagramHandler implements DatagramHandler {
     @Override
     public void handle(PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection) {
     	//connection.setAttachment(new PlayerData(playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept()));
-    	int playerid = connection.getAttachment().hashCode();
+    	int playerid = ((ConnectionAttachment) connection.getAttachment()).getId();
     	NetworkManager.getInstance().getPlayerUpdateCallback().callback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(), playerUpdateDatagram.isAccept());
     }
 

@@ -271,7 +271,7 @@ public class NetworkManager {
             NetConnection connection = serverReception.getNextNewConnection();
             while (connection != null) {
                 connection.setAccepted(true);
-                connection.setAttachment("Player " + (nextPlayerNumber++));
+                connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
                 serverConnections.add(connection);
                 logger.info("Client connected.");
                 connection = serverReception.getNextNewConnection();
@@ -292,7 +292,7 @@ public class NetworkManager {
 	    		 for(NetConnection rc : toRemove){
 	    			 serverConnections.remove(rc);
 	    			 //TODO: eindeutige ID festlegen
-	    			 ids.add(rc.getAttachment().hashCode());
+	    			 ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 	    		 }
 	    		 playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
     		 }
