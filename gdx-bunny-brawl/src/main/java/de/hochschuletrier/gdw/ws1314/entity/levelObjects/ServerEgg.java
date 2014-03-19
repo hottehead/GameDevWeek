@@ -6,6 +6,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 
 /**
  * 
@@ -28,6 +32,10 @@ public class ServerEgg extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact)
 	{
+		 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		 if(otherEntity instanceof ServerPlayer){
+    	  	 ServerEntityManager.getInstance().removeEntity(this);
+		 }
 	}
 
 	@Override

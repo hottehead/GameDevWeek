@@ -192,6 +192,7 @@ public class ServerPlayer extends ServerEntity
 
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
     	
