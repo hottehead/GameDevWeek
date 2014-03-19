@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author ElFapo
- *
+ * ASK BEFORE MODIFYING, OR I'LL MOST CERTAINLY TAKE A SHIT ON YOUR HEAD!
  */
 
 public class ServerPlayer extends ServerEntity 
@@ -52,6 +52,10 @@ public class ServerPlayer extends ServerEntity
     private int 		currentEggCount;
     
     FacingDirection 	direction;
+    boolean				movingUp;
+    boolean				movingDown;
+    boolean				movingLeft;
+    boolean				movingRight;
     
     public ServerPlayer()
     {
@@ -73,8 +77,6 @@ public class ServerPlayer extends ServerEntity
     @Override
     public void update(float deltaTime) 
     {
-    	moveBegin(direction);
-    	
     	if (firstAttackFired)
     	{
     		firstAttackTimer += deltaTime;
@@ -98,62 +100,90 @@ public class ServerPlayer extends ServerEntity
         logger.info("Hey I got a Intention: {}",intent.name());
 
         switch (intent){
-            case MOVE_TOGGLE_UP:
-                if(dir.y > 0){
-                    dir.y = 0;
-                }
-                else {
-                    dir.y = 1;
-                }
+            case MOVE_UP_ON:
+                movingUp = true;
                 break;
-            case MOVE_TOGGLE_DOWN:
-                if(dir.y > 0){
-                    dir.y = 0;
-                }
-                else{
-                    dir.y = -1;
-                }
+            case MOVE_DOWN_ON:
+                movingDown = true;
                 break;
-            case MOVE_TOGGLE_RIGHT:
-                if(dir.x > 0){
-                    dir.x = 0;
-                }
-                else{
-                    dir.x = 1;
-                }
+            case MOVE_LEFT_ON:
+                movingLeft = true;
                 break;
-            case MOVE_TOGGLE_LEFT:
-                if(dir.x > 0){
-                    dir.x = 0;
-                }
-                else{
-                    dir.x = -1;
-                }
+            case MOVE_RIGHT_ON:
+                movingRight = true;
+                break;
+            case MOVE_UP_OFF:
+                movingUp = false;
+                break;
+            case MOVE_DOWN_OFF:
+                movingDown = false;
+                break;
+            case MOVE_LEFT_OFF:
+                movingLeft = false;
+                break;
+            case MOVE_RIGHT_OFF:
+                movingRight = false;
                 break;
             case ATTACK_1:
-                doFirstAttack();
+            	if (!firstAttackFired && !secondAttackFired)
+            	{
+            		doFirstAttack();
+            		firstAttackTimer = 0.0f;
+            	}
                 break;
-            case  ATTACK_2:
-                doSecondAttack();
+            case ATTACK_2:
+            	if (!firstAttackFired && !secondAttackFired)
+            	{
+            		doSecondAttack();
+            		secondAttackTimer = 0.0f;
+            	}
                 break;
+            case DROP_EGG:
+            	dropEgg();
         }
+        
+        if (movingUp)
+        {
+        	if (movingLeft)
+        		moveBegin(FacingDirection.UP_LEFT);
+        	else if (movingRight)
+        		moveBegin(FacingDirection.UP_RIGHT);
+        	else
+        		moveBegin(FacingDirection.UP);
+        }
+        else if (movingDown)
+        {
+        	if (movingLeft)
+        		moveBegin(FacingDirection.DOWN_LEFT);
+        	else if (movingRight)
+        		moveBegin(FacingDirection.DOWN_RIGHT);
+        	else
+        		moveBegin(FacingDirection.DOWN);
+        }
+        else if (movingLeft)
+        	moveBegin(FacingDirection.LEFT);
+        else if (movingRight)
+        	moveBegin(FacingDirection.RIGHT);
+        else
+        	moveEnd();
     }
 
-    public void moveBegin(FacingDirection dir)
+    private void moveBegin(FacingDirection dir)
     {
     	direction = dir;
     	
-    	// TODO acceleration impulse to physics body
+    	// TODO 
+    	// Damp old impulse
+    	// acceleration impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
-    	moveEnd();
+    	
     	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 				 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
-    	moveEnd();
     	
     }
     
-    public void moveEnd()
+    private void moveEnd()
     {
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
@@ -161,12 +191,12 @@ public class ServerPlayer extends ServerEntity
     	physicsBody.setLinearDamping(1);
     }
     
-    public void doFirstAttack()
+    private void doFirstAttack()
     {
     	playerKit.doFirstAttack(this);
     }
     
-    public void doSecondAttack()
+    private void doSecondAttack()
     {
     	playerKit.doSecondAttack(this);
     }
