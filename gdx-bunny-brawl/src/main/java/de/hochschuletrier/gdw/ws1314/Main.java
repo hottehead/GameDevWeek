@@ -200,7 +200,7 @@ public class Main extends StateBasedGame {
 			
 			@Override
 			public void execute(List<String> args) {
-				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,(byte) 0,false);
+				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,TeamColor.BLACK,false);
 			}
 		});
 	}

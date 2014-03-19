@@ -8,6 +8,7 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
@@ -175,7 +176,7 @@ public class NetworkManager {
         clientConnection.send(new MatchUpdateDatagram(map));
     }
 
-    public void sendPlayerUpdate(String playerName, EntityType type, byte team, boolean accept) {
+    public void sendPlayerUpdate(String playerName, EntityType type, TeamColor team, boolean accept) {
         if (!isClient())
             return;
         clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
