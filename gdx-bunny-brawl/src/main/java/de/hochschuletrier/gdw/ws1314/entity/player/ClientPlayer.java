@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
@@ -33,6 +35,8 @@ public class ClientPlayer extends ClientEntity
     public PlayerInfo 		getPlayerInfo() 	{ return playerInfo; }
     public EntityType getEntityType() 			{ return playerKit.getEntityType(); }
     
+    Texture testTexture;
+    
     public void setCurrentHealth(float currentHealth) 				{ this.currentHealth = currentHealth; }
     public void setEggCount(int eggCount) 							{ this.eggCount = eggCount; }
     public void setCurrentArmor(float currentArmor) 				{ this.currentArmor = currentArmor; }
@@ -43,6 +47,10 @@ public class ClientPlayer extends ClientEntity
     public void enable() {}
     public void disable() {}
     public void dispose() {}
+    
+    public ClientPlayer() {
+    	
+    }
     
     public void update(float delta) 
     {
