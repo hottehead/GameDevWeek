@@ -100,7 +100,6 @@ public class ServerEgg extends ServerLevelObject
 
             body.createFixture(new PhysixFixtureDef(manager).sensor(true).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(16));
 
-
             body.setGravityScale(12);
             body.addContactListener(this);
             setPhysicsBody(body);
