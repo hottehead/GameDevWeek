@@ -20,7 +20,7 @@ public enum PlayerKit
     private final AttackType attack2;
     private final EntityType entityType;
     
-    public final float		accelerationImpulse = 1000.0f;
+    public final float		accelerationImpulse = 100.0f;
     public final float		brakeImpulse = 100.0f;
     
     private PlayerKit (	EntityType entityType,
