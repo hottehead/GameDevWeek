@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
@@ -14,6 +15,7 @@ import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 
@@ -27,21 +29,20 @@ public class ClientGame {
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
-	
-	private InputProcessor inputProcessor;
+	private InputHandler inputHandler;
 
 	public ClientGame(InputProcessor inputProcessor) {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
 		
-		this.inputProcessor = inputProcessor;
+		inputHandler = new InputHandler();
+		Main.inputMultiplexer.addProcessor(inputHandler);
+
 	}
 
 	public void init(AssetManagerX assets) {
 		map = loadMap("data/maps/miniarena.tmx");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		
-		Gdx.input.setInputProcessor(inputProcessor);
 		
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();

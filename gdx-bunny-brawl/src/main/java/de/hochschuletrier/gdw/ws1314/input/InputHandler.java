@@ -1,7 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.input;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputProcessorQueue;
 
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
@@ -11,44 +15,45 @@ import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
  * @author yannick
  *
  */
-public class InputHandler extends InputInterceptor
+public class InputHandler implements InputProcessor
 {
 	private ClientServerConnect netManager;
+	private static final Logger logger = LoggerFactory.getLogger(InputHandler.class);
 	
-	public InputHandler(InputProcessor inputProcessor)
+	public InputHandler()
 	{
-		super(inputProcessor);
 		netManager = ClientServerConnect.getInstance();
 	}
 	
 	@Override
 	public boolean keyDown(int keycode)
 	{
+		logger.info("keyDown: {}", keycode);
 		switch (keycode) 
 		{
 			case (Input.Keys.A): {
 				netManager.sendAction(PlayerIntention.MOVE_LEFT_ON);
-				break;
+				return true;
 			}
 			case (Input.Keys.S): {
 				netManager.sendAction(PlayerIntention.MOVE_DOWN_ON);
-				break;
+				return true;
 			}
 			case (Input.Keys.D): {
 				netManager.sendAction(PlayerIntention.MOVE_RIGHT_ON);
-				break;
+				return true;
 			}
 			case (Input.Keys.W): {
 				netManager.sendAction(PlayerIntention.MOVE_UP_ON);
-				break;
+				return true;
 			}
 			case (Input.Keys.SPACE): {
 				netManager.sendAction(PlayerIntention.ATTACK_1);
-				break;
+				return true;
 			}
 			case (Input.Keys.E): {
 				netManager.sendAction(PlayerIntention.DROP_EGG);
-				break;
+				return true;
 			}
 		}
 		
@@ -62,19 +67,19 @@ public class InputHandler extends InputInterceptor
 		{
 			case (Input.Keys.A): {
 				netManager.sendAction(PlayerIntention.MOVE_LEFT_OFF);
-				break;
+				return true;
 			}
 			case (Input.Keys.S): {
 				netManager.sendAction(PlayerIntention.MOVE_DOWN_OFF);
-				break;
+				return true;
 			}
 			case (Input.Keys.D): {
 				netManager.sendAction(PlayerIntention.MOVE_RIGHT_OFF);
-				break;
+				return true;
 			}
 			case (Input.Keys.W): {
 				netManager.sendAction(PlayerIntention.MOVE_UP_OFF);
-				break;
+				return true;
 			}
 		}
 		
