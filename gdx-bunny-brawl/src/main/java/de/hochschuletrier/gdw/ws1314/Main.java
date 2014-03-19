@@ -53,6 +53,7 @@ import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
 
 /**
  * 
@@ -253,6 +254,19 @@ public class Main extends StateBasedGame {
 					{
 						logger.info("Not yet connected...");
 					}
+				}
+				if (args.get(1).equals("sgp"))
+				{
+					ArrayList<PlayerData> list = new ArrayList<>();
+					for (int i = 1; i < 4; i++) {
+						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
+						list.add(p);
+					}
+					
+					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
+					GameStates.SERVERGAMEPLAY.init(assetManager);					
+					GameStates.SERVERGAMEPLAY.activate();
+					logger.info("ServerGamePlayState activated...");
 				}
 			}
 		});

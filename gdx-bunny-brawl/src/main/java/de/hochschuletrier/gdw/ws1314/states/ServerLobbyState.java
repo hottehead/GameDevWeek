@@ -41,8 +41,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener 
 
 	@Override
 	public void startGame() {
-		GameStates.SERVERGAMEPLAY.init(assetManager);
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(this.serverLobby.getPlayers());
+		GameStates.SERVERGAMEPLAY.init(assetManager);
 		GameStates.SERVERGAMEPLAY.activate();
 	}
 }
