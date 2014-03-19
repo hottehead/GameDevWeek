@@ -148,10 +148,6 @@ public class NetworkManager {
     }
 
     public void sendAction(PlayerIntention playerAction) {
-        // TODO !!
-    }
-
-    public void sendAction(int playerAction) {
         if (!isServer()) return;
         clientConnection.send(new ActionDatagram(playerAction));
     }

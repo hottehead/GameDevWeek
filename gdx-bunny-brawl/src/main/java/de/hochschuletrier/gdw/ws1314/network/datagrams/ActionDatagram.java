@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 /**
@@ -11,13 +12,13 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class ActionDatagram extends BaseDatagram {
     public static final byte ACTION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x40;
-    private int playerAction;
+    private PlayerIntention playerAction;
 
     public ActionDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public ActionDatagram (int playerAction) {
+    public ActionDatagram (PlayerIntention playerAction) {
         super (MessageType.NORMAL, ACTION_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.playerAction = playerAction;
     }
@@ -29,15 +30,15 @@ public class ActionDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-        message.putInt (playerAction);
+        message.putEnum(playerAction);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-        playerAction = message.getInt ();
+        playerAction = message.getEnum(PlayerIntention.class);
     }
 
-    public int getPlayerAction () {
+    public PlayerIntention getPlayerAction () {
         return playerAction;
     }
 }
