@@ -254,6 +254,8 @@ public class NetworkManager {
         Main.getInstance().console.register(connectCmd);
         Main.getInstance().console.register(listenCmd);
         Main.getInstance().console.register(sayCmd);
+		Main.getInstance().console.register(listenDefCmd);
+		Main.getInstance().console.register(stopCmd);
         addChatListener(new ConsoleChatListener());
     }
 
@@ -387,4 +389,43 @@ public class NetworkManager {
             sendChat(StringUtils.untokenize(args, 1, -1, false));
         }
     };
+
+	private ConsoleCmd listenDefCmd = new ConsoleCmd("listenDef", 0, "Start listening for client connections at 0.0.0.0 and Port 666. (Become a server.)", 0) {
+
+		@Override
+		public void showUsage() {
+			showUsage("");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			try {
+				connect("0.0.0.0", 666);
+			} catch (NumberFormatException e) {
+				showUsage();
+			}
+		}
+	};
+
+	private ConsoleCmd stopCmd = new ConsoleCmd("stop", 0, "Stops the Server.", 0) {
+
+		@Override
+		public void showUsage() {
+			showUsage("");
+		}
+
+		@Override
+		public void execute(List<String> args) {
+			try {
+				stopServer();
+			} catch (NumberFormatException e) {
+				showUsage();
+			}
+		}
+	};
+
+	private void stopServer() {
+		serverReception.shutdown();
+		logger.info("Server stopped.");
+	}
 }
