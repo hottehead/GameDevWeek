@@ -91,7 +91,7 @@ public class ServerEntityManager {
 
     private boolean internalRemove() {
         boolean listChanged = false;
-        ClientServerConnect netManager = ClientServerConnect.getInstance();
+        NetworkManager netManager = NetworkManager.getInstance();
         while (!removalQueue.isEmpty()) {
             listChanged = true;
             ServerEntity e = removalQueue.poll();

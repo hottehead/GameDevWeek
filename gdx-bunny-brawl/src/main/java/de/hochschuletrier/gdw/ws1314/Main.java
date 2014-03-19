@@ -53,7 +53,7 @@ import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-import de.hochschuletrier.gdw.ws1314.states.GameplayState;
+import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
 
 /**
  * 
@@ -213,15 +213,6 @@ public class Main extends StateBasedGame {
 				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 			}
 		});
-    	
-		console.register(new ConsoleCmd("sendLobbyUpdate",0,"[DEBUG]") {
-
-			@Override
-			public void execute(List<String> args) {
-				// TODO Auto-generated method stub
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
-			} 
-		});
 		console.register(new ConsoleCmd("sendMatchUpdate",0,"[DEBUG]Post a mapname.",1) {
 			@Override
 			public void showUsage() {
@@ -235,18 +226,7 @@ public class Main extends StateBasedGame {
 			
 		});
 		
-		console.register(new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",1){
-			@Override
-			public void showUsage() {
-				showUsage("<playername>");
-			}
-			
-			@Override
-			public void execute(List<String> args) {
-				logger.info(args.get(1));
-				NetworkManager.getInstance().sendPlayerUpdate(args.get(1),EntityType.Noob,TeamColor.BLACK,false);
-			}
-		});
+		
 		
 		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
 			@Override
@@ -275,6 +255,19 @@ public class Main extends StateBasedGame {
 						logger.info("Not yet connected...");
 					}
 				}
+				if (args.get(1).equals("sgp"))
+				{
+					ArrayList<PlayerData> list = new ArrayList<>();
+					for (int i = 1; i < 4; i++) {
+						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
+						list.add(p);
+					}
+					
+					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
+					GameStates.SERVERGAMEPLAY.init(assetManager);					
+					GameStates.SERVERGAMEPLAY.activate();
+					logger.info("ServerGamePlayState activated...");
+				}
 			}
 		});
 		
@@ -282,7 +275,6 @@ public class Main extends StateBasedGame {
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
-		GameStates.GAMEPLAY.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 

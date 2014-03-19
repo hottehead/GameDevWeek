@@ -24,10 +24,10 @@ public class LobbyUpdateDatagram extends BaseDatagram {
     private PlayerData[] players;
 
     public LobbyUpdateDatagram (byte type, short id, short param1, short param2) {
-        super (MessageType.DELTA, type, id, param1, param2);
+        super (MessageType.NORMAL, type, id, param1, param2);
     }
     public LobbyUpdateDatagram(String map, PlayerData[] players){
-    	super (MessageType.DELTA, LOBBY_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+    	super (MessageType.NORMAL, LOBBY_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
     	this.map = map;
     	this.playercount = players.length;
     	this.players = players;
