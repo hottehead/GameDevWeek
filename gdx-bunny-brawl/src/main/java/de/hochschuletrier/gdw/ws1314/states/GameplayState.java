@@ -10,6 +10,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 
 /**
  * Menu state
@@ -22,13 +23,14 @@ public class GameplayState extends GameState implements InputProcessor {
 	private ServerGame game;
 	private ClientGame tmpGame;
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
+	
+	private GameplayStage stage;
 
 
 	public GameplayState() {
         csc = ClientServerConnect.getInstance();
 	}
 
-	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
 		game = new ServerGame();
@@ -38,14 +40,15 @@ public class GameplayState extends GameState implements InputProcessor {
 
 		Main.inputMultiplexer.addProcessor(this);
 		
-		
+		stage = new GameplayStage();
+		stage.init(assetManager);
 	}
 
-	@Override
 	public void render() {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
 		tmpGame.render();
+		stage.render();
 	}
 
 	@Override
@@ -53,6 +56,7 @@ public class GameplayState extends GameState implements InputProcessor {
         csc.update();
 		game.update(delta);
 		tmpGame.update(delta);
+		stage.setFPSCounter(delta);
 		fpsCalc.addFrame();
 	}
 

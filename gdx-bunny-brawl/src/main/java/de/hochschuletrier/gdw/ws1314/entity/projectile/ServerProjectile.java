@@ -5,10 +5,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
@@ -16,7 +16,6 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
-import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
 
 /**
  * 
@@ -24,68 +23,78 @@ import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
  *
  */
 
+//
+// Modified by ElFapo
+
 public class ServerProjectile extends ServerEntity {
     
     //==================================================
-    // CONSTANTS
-    private static final float speed = 2.0f;
-    private static final float flightDistance = 50.0f;
-
-    //==================================================
     // VARIABLES
-    private final long sourceID;
+    private long sourceID;
 
-    private final FacingDirection facingDirection;
-    private final TeamColor teamColor;
-    private final Vector2 originPosition;
+    private FacingDirection facingDirection;
+    private TeamColor 		teamColor;
+    private Vector2 		originPosition;
+    private float velocity;
+    private float flightDistance;
+    private float despawnTime;
+    
+    private boolean physicsInitialized;
+
 
     //==================================================
-    public ServerProjectile(long sourceID) {
+    public ServerProjectile() {
             super();
-
-            this.sourceID = sourceID;
-
-            ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
-
-            this.teamColor = player.getTeamColor();
-            this.facingDirection = player.getFacingDirection();
-            this.originPosition = player.getPosition();
+            
+            sourceID = -1;
+            this.teamColor = TeamColor.BOTH;
+            this.facingDirection = FacingDirection.NONE;
+            this.originPosition = FacingDirection.NONE.getDirectionVector();
+            this.velocity = 0.0f;
+            this.flightDistance = 0.0f;
+            this.despawnTime = 0.0f;
+            this.physicsInitialized = false;
     }
 	
-//	public float getSpeed() {
-//		return speed;
-//	}
-//	public void setSpeed(float speed) {
-//		this.speed = speed;
-//	}
+	public void setPhysicalParameters(float velocity, float distance, float despawnTime) {
+		this.velocity = velocity;
+		this.flightDistance = distance;
+		this.despawnTime = despawnTime;
+	}
+	
+	public void setSource(long sourceID) {
+		this.sourceID = sourceID;
+
+        ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
+
+        this.teamColor = player.getTeamColor();
+        this.facingDirection = player.getFacingDirection();
+        this.originPosition = player.getPosition();
+	}
 
 	public FacingDirection getFacingDirection() {
 		return this.facingDirection;
 	}
-//	public void setFacingDirection(FacingDirection direction) {
-//		this.facingDirection = direction;
-//	}
 
 	public TeamColor getTeamColor() {
 		return teamColor;
 	}
-//	public void setTeamColor(TeamColor teamColor) {
-//		this.teamColor = teamColor;
-//	}
 
-//	public float getFlightDistance() {
-//		return flightDistance;
-//	}
-//	public void setFlightDistance(float flightDistance) {
-//		this.flightDistance = flightDistance;
-//	}
+	public float getFlightDistance() {
+		return flightDistance;
+	}
+
+	public void setDespawnTime(float despawnTime) {
+		this.despawnTime = despawnTime;
+	}
+	
+	public float getDespawnTime() {
+		return this.despawnTime;
+	}
 
 	public long getSourceID() {
 		return sourceID;
 	}
-//	public void setSourceID(long sourceID) {
-//		this.sourceID = sourceID;
-//	}
 
 	@Override
 	public void beginContact(Contact contact) {
@@ -101,56 +110,41 @@ public class ServerProjectile extends ServerEntity {
                 case Knight:
                 case Noob:
                     ServerPlayer player = (ServerPlayer)otherEntity;
-                    if(player.getTeamColor() != this.teamColor) {
-                        ServerEntityManager.getInstance().removeEntity(this);
-                    }
+                    if (player.getID() == sourceID)
+                    	return;
+//                    if(player.getTeamColor() != this.teamColor) {
+//                        ServerEntityManager.getInstance().removeEntity(this);
+//                    }
                     break;
                 default:
                     break;
             }
 	}
 
-	@Override
 	public void endContact(Contact contact) {
 	}
 
-	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
 	}
 
-	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 	}
 
-	@Override
-	public void enable() {
-	}
+	public void enable() {}
+	public void disable() {}
+	public void dispose() {}
+	public void initialize() {}
+    public void reset() {}
 
-	@Override
-	public void disable() {
-	}
-
-	@Override
-	public void dispose() {
-	}
-
-	@Override
-	public void initialize() {
-
-	}
-
-    @Override
-    public void reset() {
-
-    }
-
-	@Override
 	public void update(float deltaTime) {
-            Vector2 position = this.physicsBody.getPosition();
-            float distance = this.originPosition.sub(position).len();
-            if(distance > this.flightDistance) {
-                ServerEntityManager.getInstance().removeEntity(this);
-            }
+		if (!physicsInitialized)
+			return;
+		
+        Vector2 position = this.physicsBody.getPosition();
+        float distance = this.originPosition.sub(position).len();
+        if(distance > this.flightDistance) {
+            ServerEntityManager.getInstance().removeEntity(this);
+        }
 	}
 
 	@Override
@@ -160,17 +154,17 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initPhysics(PhysixManager manager){
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
-            body.setGravityScale(0);
-            body.addContactListener(this);
-            
-
-            Vector2 impulse = this.facingDirection.getDirectionVector().cpy().scl(this.speed);
-
-            body.applyImpulse(impulse);
-            
-            setPhysicsBody(body);
-	}
-	
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
+        body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
+        body.setGravityScale(0);
+        body.addContactListener(this);
+        
+        setPhysicsBody(body);
+        
+        Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
+				  					facingDirection.getDirectionVector().y * velocity);
+        physicsBody.setLinearVelocity(vel);
+        
+        physicsInitialized = true;
+	}	
 }

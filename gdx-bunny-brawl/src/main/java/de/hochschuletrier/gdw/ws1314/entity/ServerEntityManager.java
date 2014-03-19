@@ -95,10 +95,11 @@ public class ServerEntityManager {
         while (!removalQueue.isEmpty()) {
             listChanged = true;
             ServerEntity e = removalQueue.poll();
-            e.dispose();
+            e.dispose(physManager);
             entityList.remove(e);
             entityListMap.remove(e.getID());
             netManager.despawnEntity(e.getID());
+            
         }
         return listChanged;
     }

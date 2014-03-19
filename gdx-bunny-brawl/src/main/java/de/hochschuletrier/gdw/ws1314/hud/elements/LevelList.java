@@ -1,4 +1,4 @@
-package de.hochschuletrier.gdw.ws1314.hud;
+package de.hochschuletrier.gdw.ws1314.hud.elements;
 
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;

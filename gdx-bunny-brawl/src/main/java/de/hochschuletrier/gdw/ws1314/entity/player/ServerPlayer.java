@@ -81,7 +81,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.NOOB);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -136,7 +136,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 movingRight = false;
                 break;
             case ATTACK_1:
-        		attackState.setWaitTime(firstAttackCooldown);
+        		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState == idleState || currentState == walkingState)
             	{
             		attackState.setWaitFinishedState(currentState);
@@ -145,7 +145,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	}
                 break;
             case ATTACK_2:
-        		attackState.setWaitTime(secondAttackCooldown);
+        		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState == idleState || currentState == walkingState)
             	{
             		attackState.setWaitFinishedState(currentState);
@@ -213,13 +213,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
 
-    	
-    	//Vector2 vec = new Vector2(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-    	//    					  dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	//physicsBody.setLinearVelocity(vec);
-//    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.accelerationImpulse,
-//		  		 				 dir.getDirectionVector().y * playerKit.accelerationImpulse);
+    	moveEnd();
+    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
     	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
+    	moveEnd();
+
     }
     
     protected void moveEnd()
@@ -271,14 +270,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 this.currentEggCount++;
             	 break;
              case Projectil: 
-            	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 this.currentHealth -= AttackShootArrow.DAMAGE;
-            	  
-            	 if(this.currentHealth <= 0){
-            	  	 ServerEntityManager.getInstance().removeEntity(this);
-            	  }
+//            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+//            	 this.currentHealth -= AttackShootArrow.DAMAGE;
+//            	  
+//            	 if(this.currentHealth <= 0){
+//            	  	 ServerEntityManager.getInstance().removeEntity(this);
+//            	  }
             	 break;
              case Bridge:
             	 ServerBridge bridge = (ServerBridge) otherEntity;
@@ -337,7 +335,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(16));
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(32,32));
+
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
