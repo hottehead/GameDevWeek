@@ -22,6 +22,7 @@ public class LocalMusic {
 	
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
+		this.musicHandle = null;
 	}
 	
 	public void play(String title) {
@@ -35,5 +36,24 @@ public class LocalMusic {
 	
 	public void stop() {
 		this.musicHandle.stop();
+	}
+	
+	public void pause() {
+		this.musicHandle.pause();
+	}
+	
+	public void mute() {
+		this.musicHandle.setVolume(0.0f);
+	}
+	
+	public void deMute() {
+		this.musicHandle.setVolume(LocalMusic.SystemVolume);
+	}
+	
+	public boolean isMusicPlaying() {
+		if (this.musicHandle != null)
+			return this.musicHandle.isPlaying();
+		else 
+			return false;
 	}
 }
