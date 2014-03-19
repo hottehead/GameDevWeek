@@ -56,6 +56,7 @@ public class GameplayState extends GameState implements InputProcessor {
         csc.update();
 		game.update(delta);
 		tmpGame.update(delta);
+		stage.setFPSCounter(delta);
 		fpsCalc.addFrame();
 	}
 

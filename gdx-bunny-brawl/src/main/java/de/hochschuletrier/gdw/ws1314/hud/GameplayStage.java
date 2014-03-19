@@ -22,6 +22,9 @@ public class GameplayStage extends AutoResizeStage {
 	private BitmapFont font;
 	private Skin defaultSkin;
 	
+	private MinMaxValue fpsValue;
+	private DynamicTextElement fpsCounter;
+
 	private HealthBar healthBar;
 	private float accum = 0;
 	private VisualBox classIcon;
@@ -32,8 +35,7 @@ public class GameplayStage extends AutoResizeStage {
 	
 	private VisualBox scoreTeamIcon, scoreEnemyIcon;
 	private MinMaxValue scoreTeam, scoreEnemy;
-
-	private final int maxScore = 100;	
+	private final int maxScore = 100;
 
 	public GameplayStage() {
 		super();
@@ -47,6 +49,11 @@ public class GameplayStage extends AutoResizeStage {
 		this.addActor(uiTable);
 		font = assetManager.getFont("verdana", 24);
 		StaticTextElement decor;
+		
+		//FPS counter
+		fpsValue = new MinMaxValue(0, 1000, -1);
+		fpsCounter = new DynamicTextElement(font, "0", 50, 5, fpsValue);
+		fpsCounter.setDecimalPLace(3);
 		
 		//healthbar
 		healthBar = new HealthBar(100);
@@ -96,6 +103,7 @@ public class GameplayStage extends AutoResizeStage {
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		this.act(Gdx.graphics.getDeltaTime());
 		
+		fpsCounter.draw();
 		healthBar.draw();
 		classIcon.draw();
 		buff1.draw();
@@ -122,6 +130,10 @@ public class GameplayStage extends AutoResizeStage {
 			accum -= 1.0;
 			healthBar.get().setValue(MathUtils.random() * 100);
 		}
+	}
+	
+	public void setFPSCounter(float delta) {
+		fpsValue.setValue(1/delta);
 	}
 	
 	public void advanceScoreOwnTeam() {
