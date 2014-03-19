@@ -38,6 +38,7 @@ public class GameplayState extends GameState implements InputProcessor {
 
 		Main.inputMultiplexer.addProcessor(this);
 		
+		
 	}
 
 	@Override

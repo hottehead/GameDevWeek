@@ -1,34 +1,21 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
-import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -39,10 +26,12 @@ public class ClientGame {
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
+	private EntityRenderer entityRenderer; 
 
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
+		entityRenderer = new EntityRenderer();
 	}
 
 	public void init(AssetManagerX assets) {
@@ -63,6 +52,7 @@ public class ClientGame {
 		for (Layer layer : map.getLayers()) {
 			mapRenderer.render(0, 0, layer);
 		}
+		entityRenderer.draw();
 	}
 
 	public void update(float delta) {

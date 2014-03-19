@@ -1,20 +1,14 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
-import com.badlogic.gdx.math.Vector2;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.badlogic.gdx.math.Vector2;
+
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Created by Jerry on 18.03.14.
