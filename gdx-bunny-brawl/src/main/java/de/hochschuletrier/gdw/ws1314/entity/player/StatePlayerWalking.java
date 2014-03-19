@@ -4,6 +4,11 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
 public class StatePlayerWalking extends State
 {
 	FacingDirection movingDirection;
