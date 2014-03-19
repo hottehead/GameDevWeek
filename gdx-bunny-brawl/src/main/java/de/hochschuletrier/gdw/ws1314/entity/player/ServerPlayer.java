@@ -18,6 +18,7 @@ import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
@@ -253,9 +254,14 @@ public class ServerPlayer extends ServerEntity
             	 if(this.currentHealth <= 0){
             	  	 ServerEntityManager.getInstance().removeEntity(this);
             	  }
-            	 
             	 break;
-             case Bridge: 		
+             case Bridge:
+            	 ServerBridge bridge = (ServerBridge) otherEntity;
+            	 //ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 
+            	/* if(){
+            	  	 ServerEntityManager.getInstance().removeEntity(this);
+            	  }*/
             	 break;
              case BridgeSwitch:	
             	 break;
