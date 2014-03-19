@@ -38,6 +38,7 @@ public class StatePlayerWaiting extends State
 	@Override
 	public void exit()
 	{
+		((ServerPlayer) getOwner()).moveEnd();
 	}
 	
 	public void setWaitFinishedState(State state)

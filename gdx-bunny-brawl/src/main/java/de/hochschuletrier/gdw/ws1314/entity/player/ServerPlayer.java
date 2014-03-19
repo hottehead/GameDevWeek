@@ -44,6 +44,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
 
 	private final float RESTITUTION = 0;
+	private final float	KNOCKBACK_TIME = 0.8f;
 
 
     private PlayerInfo	playerInfo;
@@ -83,7 +84,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	idleState = new StatePlayerIdle(this);
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
-    	switchToState(idleState);
+    	currentState = idleState;
     }
     
     public void enable() {}
