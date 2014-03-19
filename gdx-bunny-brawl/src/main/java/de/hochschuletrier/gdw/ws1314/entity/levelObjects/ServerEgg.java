@@ -59,7 +59,7 @@ public class ServerEgg extends ServerLevelObject
             case Knight:
             case Noob:
             	System.out.println("hallo");
-            	ServerEntityManager.getInstance().createEntity(ServerEgg.class, new Vector2(200,200));
+            	ServerEntityManager.getInstance().removeEntity(this);
                 break;
             default:
                 break;
@@ -98,7 +98,7 @@ public class ServerEgg extends ServerLevelObject
             					.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
             					.fixedRotation(false).create();
 
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(16));
+            body.createFixture(new PhysixFixtureDef(manager).sensor(true).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(16));
 
 
             body.setGravityScale(12);
