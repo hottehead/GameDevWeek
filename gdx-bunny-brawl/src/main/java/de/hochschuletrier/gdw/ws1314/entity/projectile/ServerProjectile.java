@@ -84,6 +84,8 @@ public class ServerProjectile extends ServerEntity {
                         ServerEntityManager.getInstance().removeEntity(this);
                     }
                     break;
+                default:
+                    break;
             }
 	}
 
