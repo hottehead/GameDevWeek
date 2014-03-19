@@ -3,6 +3,11 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
+/**
+ * 
+ * @author ElFapo
+ *
+ */
 public class StatePlayerIdle extends State
 {
 
