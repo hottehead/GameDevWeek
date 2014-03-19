@@ -35,7 +35,7 @@ public class ServerProjectile extends ServerEntity {
     // VARIABLES
     private final long sourceID;
 
-    private final Vector2 facingDirection;
+    private final FacingDirection facingDirection;
     private final TeamColor teamColor;
     private final Vector2 originPosition;
 
@@ -48,7 +48,7 @@ public class ServerProjectile extends ServerEntity {
             ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
 
             this.teamColor = player.getTeamColor();
-            this.facingDirection = player.getFacingDirection().getDirectionVector();
+            this.facingDirection = player.getFacingDirection();
             this.originPosition = player.getPosition();
     }
 	
@@ -59,16 +59,16 @@ public class ServerProjectile extends ServerEntity {
 //		this.speed = speed;
 //	}
 
-//	public Vector2 getFacingDirection() {
-//		return this.facingDirection;
-//	}
+	public FacingDirection getFacingDirection() {
+		return this.facingDirection;
+	}
 //	public void setFacingDirection(FacingDirection direction) {
 //		this.facingDirection = direction;
 //	}
 
-//	public TeamColor getTeamColor() {
-//		return teamColor;
-//	}
+	public TeamColor getTeamColor() {
+		return teamColor;
+	}
 //	public void setTeamColor(TeamColor teamColor) {
 //		this.teamColor = teamColor;
 //	}
@@ -160,7 +160,7 @@ public class ServerProjectile extends ServerEntity {
             body.setGravityScale(0);
             body.addContactListener(this);
             
-            Vector2 impulse = this.facingDirection.scl(this.speed);
+            Vector2 impulse = this.facingDirection.getDirectionVector().scl(this.speed);
             body.applyImpulse(impulse);
             
             setPhysicsBody(body);
