@@ -159,8 +159,18 @@ public class Main extends StateBasedGame {
 				if(playercount >= 5)
 					return;
 				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
-				logger.info("New Player: " + playerid + " " + playerName);
-				s_players[playercount++] = new PlayerData(playerid, playerName, type, team, accept);;
+				boolean update = false;
+				for(int i = 0; i < playercount; i++){
+					if(s_players[i].getId() == playerid){
+						logger.info("Updated Player: " + playerid + " " + playerName);
+						s_players[i] = new PlayerData(playerid, playerName, type, team, accept);
+						update = true;
+					}
+				}
+				if(!update){
+					logger.info("New Player: " + playerid + " " + playerName);
+					s_players[playercount++] = new PlayerData(playerid, playerName, type, team, accept);
+				}
 			}
 		});
 		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
@@ -191,7 +201,8 @@ public class Main extends StateBasedGame {
 					if(inlist)
 						players.add(s_players[i]);
 				}
-				s_players = players.toArray(new PlayerData[players.size()]);
+				//playercount = players.size();
+				s_players = players.toArray(new PlayerData[playercount]);
 				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players);
 			}
 		});
