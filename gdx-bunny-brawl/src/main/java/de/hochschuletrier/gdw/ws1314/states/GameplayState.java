@@ -33,7 +33,7 @@ public class GameplayState extends GameState implements InputProcessor {
 		super.init(assetManager);
 		game = new ServerGame();
 		game.init(assetManager);
-		tmpGame = new ClientGame();
+		tmpGame = new ClientGame(this);
 		tmpGame.init(assetManager);
 
 		Main.inputMultiplexer.addProcessor(this);
@@ -68,13 +68,13 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-        tmpGame.keyDown(keycode);
+        //tmpGame.keyDown(keycode);
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-        tmpGame.keyUp(keycode);
+        //tmpGame.keyUp(keycode);
 		return false;
 	}
 
