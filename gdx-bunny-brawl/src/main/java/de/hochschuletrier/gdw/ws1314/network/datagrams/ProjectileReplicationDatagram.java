@@ -14,7 +14,7 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class ProjectileReplicationDatagram extends BaseDatagram {
     public static final byte PROJETILE_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x22;
-    private long id;
+    private long entityId;
     private float xposition;
     private float yposition;
     private FacingDirection direction;
@@ -24,9 +24,9 @@ public class ProjectileReplicationDatagram extends BaseDatagram {
         super (MessageType.DELTA, type, id, param1, param2);
     }
 
-    public ProjectileReplicationDatagram(long id, float xposition, float yposition, FacingDirection direction, TeamColor teamColor) {
+    public ProjectileReplicationDatagram(long entityId, float xposition, float yposition, FacingDirection direction, TeamColor teamColor) {
         super (MessageType.DELTA, PROJETILE_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.id = id;
+        this.entityId = entityId;
         this.xposition = xposition;
         this.yposition = yposition;
         this.direction = direction;
@@ -43,7 +43,7 @@ public class ProjectileReplicationDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-        message.putLong(id);
+        message.putLong(entityId);
         message.putFloat(xposition);
         message.putFloat(yposition);
         message.putEnum(direction);
@@ -52,15 +52,15 @@ public class ProjectileReplicationDatagram extends BaseDatagram {
 
     @Override
     public void readFromMessage(INetMessageIn message) {
-        id = message.getLong();
+        entityId = message.getLong();
         xposition = message.getFloat();
         yposition = message.getFloat();
         direction = message.getEnum(FacingDirection.class);
         teamColor = message.getEnum(TeamColor.class);
     }
 
-    public long getId() {
-        return id;
+    public long getEntityId() {
+        return entityId;
     }
 
     public float getXposition() {

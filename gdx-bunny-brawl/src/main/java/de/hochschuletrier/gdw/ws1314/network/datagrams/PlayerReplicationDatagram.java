@@ -16,10 +16,10 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class PlayerReplicationDatagram extends BaseDatagram {
     public static final byte PLAYER_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x20;
-    private long id;
+    private long entityId;
     private float xposition;
     private float yposition;
-    private PlayerKit playerKit;
+    private EntityType entityType;
     private int eggs;
     private float health;
     private float armor;
@@ -30,14 +30,14 @@ public class PlayerReplicationDatagram extends BaseDatagram {
         super (MessageType.DELTA, type, id, param1, param2);
     }
 
-    public PlayerReplicationDatagram(long id, float xposition,
-			float yposition, PlayerKit playerKit, int eggs, float health,
+    public PlayerReplicationDatagram(long entityId, float xposition,
+			float yposition, EntityType entityType, int eggs, float health,
 			float armor, FacingDirection facingDirection, TeamColor teamColor) {
     	super (MessageType.DELTA, PLAYER_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.id=id;
+        this.entityId=entityId;
     	this.xposition = xposition;
 		this.yposition = yposition;
-		this.playerKit = playerKit;
+		this.entityType = entityType;
 		this.eggs = eggs;
 		this.health = health;
 		this.armor = armor;
@@ -47,7 +47,7 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 
 	public PlayerReplicationDatagram(ServerPlayer entity) {
 		this(entity.getID(),entity.getPosition().x,entity.getPosition().y,
-				entity.getPlayerKit(),entity.getCurrentEggCount(),
+				entity.getEntityType(),entity.getCurrentEggCount(),
 				entity.getCurrentHealth(),entity.getCurrentArmor(),
 				entity.getFacingDirection(),entity.getTeamColor());
 	}
@@ -59,10 +59,10 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage(INetMessageOut message) {
-        message.putLong(id);
+        message.putLong(entityId);
         message.putFloat(xposition);
         message.putFloat(yposition);
-        message.putEnum(playerKit);
+        message.putEnum(entityType);
         message.putFloat(eggs);
         message.putFloat(health);
         message.putFloat(armor);
@@ -72,10 +72,10 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 
     @Override
     public void readFromMessage(INetMessageIn message) {
-        id = message.getInt();
+        entityId = message.getInt();
         xposition = message.getFloat();
         yposition = message.getFloat();
-        playerKit = message.getEnum(PlayerKit.class);
+        entityType = message.getEnum(EntityType.class);
         eggs = message.getInt();
         health = message.getFloat();
         armor = message.getFloat();
@@ -83,8 +83,8 @@ public class PlayerReplicationDatagram extends BaseDatagram {
         teamColor=message.getEnum(TeamColor.class);
     }
 
-	public long getId() {
-		return id;
+	public long getEntityId() {
+		return entityId;
 	}
 
 	public float getXposition() {
@@ -95,8 +95,8 @@ public class PlayerReplicationDatagram extends BaseDatagram {
 		return yposition;
 	}
 
-	public PlayerKit getPlayerKit() {
-		return playerKit;
+	public EntityType getEntityType() {
+		return entityType;
 	}
 
 	public int getEggs() {

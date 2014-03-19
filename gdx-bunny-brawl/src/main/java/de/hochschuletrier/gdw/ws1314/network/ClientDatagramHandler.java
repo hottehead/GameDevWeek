@@ -1,9 +1,17 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.math.Vector2;
 
 public class ClientDatagramHandler implements DatagramHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientDatagramHandler.class);
@@ -20,7 +28,24 @@ public class ClientDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(PlayerReplicationDatagram playerReplicationDatagram, NetConnection connection) {
-        //TODO
+        ClientEntity entity = ClientEntityManager.getInstance().getEntityById(playerReplicationDatagram.getEntityId());
+        if (entity==null){
+        	logger.debug("Spawning player entity {}.",playerReplicationDatagram.getEntityId());
+        	entity=ClientEntityManager.getInstance().createEntity(playerReplicationDatagram.getEntityId(),
+        			new Vector2(playerReplicationDatagram.getXposition(),playerReplicationDatagram.getYposition()),
+        			playerReplicationDatagram.getEntityType());
+        }
+        if(!(entity instanceof ClientPlayer)){
+        	logger.warn("Received PlayerReplicationDatagram for entity {} which is no player entity, something is really wrong here ...",playerReplicationDatagram.getEntityId());
+        }
+        ClientPlayer player = (ClientPlayer) entity;
+        player.setPosition(new Vector2(playerReplicationDatagram.getXposition(), playerReplicationDatagram.getYposition()));
+        player.setEggCount(playerReplicationDatagram.getEggs());
+        player.setCurrentHealth(playerReplicationDatagram.getHealth());
+        player.setCurrentArmor(playerReplicationDatagram.getArmor());
+        player.setFacingDirection(playerReplicationDatagram.getFacingDirection());
+        player.setTeamColor(playerReplicationDatagram.getTeamColor());
+
     }
 
     @Override
