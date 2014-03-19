@@ -431,4 +431,7 @@ public class NetworkManager {
             sendChat(StringUtils.untokenize(args, 1, -1, false));
         }
     };
+    public void setPlayerEntityId(int playerId, long entityId){
+    	//TODO Implement
+    }
 }
