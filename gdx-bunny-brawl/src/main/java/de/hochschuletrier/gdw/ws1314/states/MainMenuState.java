@@ -18,6 +18,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransi
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
+import de.hochschuletrier.gdw.ws1314.sound.*;
 
 /**
  * Menu state
@@ -28,7 +29,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
-
+    private LocalMusic music;
 
     public MainMenuState() {
     }
@@ -36,7 +37,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
-
+        this.music = new LocalMusic(assetManager);
         inputProcessor = new InputInterceptor(this) {
             @Override
             public boolean keyUp(int keycode) {
@@ -66,11 +67,13 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void onEnter() {
         inputProcessor.setActive(true);
+        this.music.play("music-lobby-loop");
     }
 
     @Override
     public void onLeave() {
         inputProcessor.setActive(false);
+        this.music.stop();
     }
 
     @Override

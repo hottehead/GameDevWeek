@@ -1,3 +1,5 @@
+#version 330
+
 uniform sampler2D u_prevStep;
 uniform sampler2D u_texture;
 uniform float u_fadeInFactor;
