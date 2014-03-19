@@ -14,6 +14,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
+import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
