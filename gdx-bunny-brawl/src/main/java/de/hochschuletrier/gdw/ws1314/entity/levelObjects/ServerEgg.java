@@ -55,7 +55,6 @@ public class ServerEgg extends ServerLevelObject
             case Knight:
             case Noob:
             	System.out.println("hallo");
-            	ServerEntityManager.getInstance().r
             	ServerEntityManager.getInstance().createEntity(ServerEgg.class, new Vector2(200,200));
                 break;
             default:
