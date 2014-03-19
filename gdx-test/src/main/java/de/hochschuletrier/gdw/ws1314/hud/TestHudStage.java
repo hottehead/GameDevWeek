@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BarBackgroundDecoration;
 import de.hochschuletrier.gdw.ws1314.hud.elements.BarFrontDecorator;
@@ -75,7 +76,7 @@ public class TestHudStage {
 		healthBar.setValue(100);
 
 		this.attackIcon = new VisualBox(
-				assetManager.getTexture("debugAttackIcon"), 500, 300, 64, 64);
+				assetManager.getTexture("debugAttackIcon"), 500, 350, 64, 64);
 		this.attackIcon = new BoxOffsetDecorator(this.attackIcon,
 				new StaticTextElement(hudFont, "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
 		
@@ -101,10 +102,14 @@ public class TestHudStage {
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
 
+                	
 		visualBar.draw();
 		attackIcon.draw();
-		
+                
+                DrawUtil.batch.flush();
+                
 		stage.draw();
+	
 		Table.drawDebug(stage);
 	}
 
