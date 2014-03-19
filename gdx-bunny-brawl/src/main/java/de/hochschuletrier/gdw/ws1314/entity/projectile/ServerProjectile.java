@@ -25,29 +25,32 @@ import de.matthiasmann.twlthemeeditor.gui.CollapsiblePanel.Direction;
  */
 
 public class ServerProjectile extends ServerEntity {
-	private final float speed;
-	private final float flightDistance;
-        
-        private final long sourceID;
-        
-        private final Vector2 facingDirection;
-	private final TeamColor teamColor;
-        private final Vector2 originPosition;
-	
-	public ServerProjectile(long sourceID) {
-		super();
-                
-                this.speed = 2.0f;
-                this.flightDistance = 50.0f;
-                
-                this.sourceID = sourceID;
-                
-                ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
-                
-                this.teamColor = player.getTeamColor();
-                this.facingDirection = player.getFacingDirection().getDirectionVector();
-                this.originPosition = player.getPosition();
-	}
+    
+    //==================================================
+    // CONSTANTS
+    private static final float speed = 2.0f;
+    private static final float flightDistance = 50.0f;
+
+    //==================================================
+    // VARIABLES
+    private final long sourceID;
+
+    private final Vector2 facingDirection;
+    private final TeamColor teamColor;
+    private final Vector2 originPosition;
+
+    //==================================================
+    public ServerProjectile(long sourceID) {
+            super();
+
+            this.sourceID = sourceID;
+
+            ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
+
+            this.teamColor = player.getTeamColor();
+            this.facingDirection = player.getFacingDirection().getDirectionVector();
+            this.originPosition = player.getPosition();
+    }
 	
 //	public float getSpeed() {
 //		return speed;
