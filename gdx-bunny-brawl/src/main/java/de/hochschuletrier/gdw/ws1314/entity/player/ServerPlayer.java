@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -19,6 +20,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,12 @@ import org.slf4j.LoggerFactory;
 public class ServerPlayer extends ServerEntity 
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
+
+
+	private final float FRICTION = 0;
+
+
+	private final float RESTITUTION = 0;
 
 
     private PlayerInfo	playerInfo;
@@ -147,8 +155,8 @@ public class ServerPlayer extends ServerEntity
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
     	//moveEnd();
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+    	/*physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());*/
     	moveEnd();
     	
     }
@@ -221,8 +229,8 @@ public class ServerPlayer extends ServerEntity
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(new Vector2()).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-				.friction(0.5f).restitution(0.4f).shapeBox(100,100));
+		body.createFixture(new PhysixFixtureDef(manager).density(0)
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
