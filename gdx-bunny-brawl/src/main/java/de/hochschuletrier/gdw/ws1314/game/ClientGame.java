@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,6 +27,7 @@ import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -35,20 +37,24 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
  */
 public class ClientGame {
 	private ClientEntityManager entityManager;
-	private ClientServerConnect netManager;
+	//private ClientServerConnect netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
+	
+	private InputHandler inputHandler;
 
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
-		netManager = ClientServerConnect.getInstance();
+		//netManager = ClientServerConnect.getInstance();
 	}
 
 	public void init(AssetManagerX assets) {
 		map = loadMap("data/maps/miniarena.tmx");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-
+		
+		Gdx.input.setInputProcessor(inputHandler);
+		
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
 			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
@@ -78,7 +84,7 @@ public class ClientGame {
 		}
 	}
 
-	public boolean keyDown(int keycode) {
+	/*public boolean keyDown(int keycode) {
 
 		switch (keycode) {
 		case (Input.Keys.A): {
@@ -130,6 +136,6 @@ public class ClientGame {
 		}
 		}
 		return false;
-	}
+	}*/
 
 }
