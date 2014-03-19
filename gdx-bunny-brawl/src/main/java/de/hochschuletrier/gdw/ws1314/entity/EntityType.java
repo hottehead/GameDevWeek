@@ -14,4 +14,5 @@ public enum EntityType {
     Bridge,
     BridgeSwitch,
     Bush,
+    SwordAttack
 }
