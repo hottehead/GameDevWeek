@@ -107,7 +107,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent)
     {
-        logger.info("Hey I got a Intention: {}",intent.name());
+        logger.info("Hey I got a Intention: {}", intent.name());
 
         switch (intent){
             case MOVE_UP_ON:
@@ -346,6 +346,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		currentState = state;
 		currentState.init();
 	}
+
+    public void reset(){
+        physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+        switchToState(idleState);
+    }
 	
 	protected void applyKnockback()
 	{

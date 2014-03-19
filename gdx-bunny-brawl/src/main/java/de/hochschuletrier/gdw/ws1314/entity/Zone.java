@@ -85,6 +85,11 @@ public class Zone extends ServerEntity
 	{
 	}
 
+    @Override
+    public void reset(){
+
+    }
+
 	@Override
 	public EntityType getEntityType()
 	{

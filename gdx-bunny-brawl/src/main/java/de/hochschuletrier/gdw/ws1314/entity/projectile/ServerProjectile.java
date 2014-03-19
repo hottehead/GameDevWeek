@@ -139,6 +139,11 @@ public class ServerProjectile extends ServerEntity {
 
 	}
 
+    @Override
+    public void reset() {
+
+    }
+
 	@Override
 	public void update(float deltaTime) {
             Vector2 position = this.physicsBody.getPosition();
