@@ -6,6 +6,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.badlogic.gdx.math.Vector2;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by Jerry on 18.03.14.
  */
@@ -20,6 +30,8 @@ public class ClientEntityManager {
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
+		removalQueue = new LinkedList<ClientEntity>();
+		insertionQueue = new LinkedList<ClientEntity>();
     }
 
     public static ClientEntityManager getInstance()
@@ -34,24 +46,40 @@ public class ClientEntityManager {
         ClientEntity e = null;
         switch(type){
             case Ei :{
+                e = new ClientEgg();
 
+                break;
+            }
+            case Noob:{
+                e = createPlayer(PlayerKit.NOOB);
                 break;
             }
             case Hunter:{
-
+                e = createPlayer(PlayerKit.HUNTER);
                 break;
             }
-            case Tank :{
-
+            /*case Tank :{
+                e = createPlayer(PlayerKit.TANK);
                 break;
-            }
+            }*/
             case Knight :{
-
+                e = createPlayer(PlayerKit.KNIGHT);
                 break;
             }
         }
-        addEntity(e);
+        if(e!=null)
+        {
+            e.setID(id);
+            e.setPosition(pos);
+            addEntity(e);
+        }
         return e;
+    }
+
+    private ClientEntity createPlayer(PlayerKit pk) {
+        ClientPlayer cp = new ClientPlayer();
+        cp.setPlayerKit(pk);
+        return cp;
     }
 
     private void addEntity(ClientEntity e) {
@@ -87,6 +115,7 @@ public class ClientEntityManager {
             listChanged = true;
             ClientEntity e = insertionQueue.poll();
             entityList.add(e);
+            entityListMap.put(e.getID(),e);
         }
         return listChanged;
     }
@@ -117,5 +146,5 @@ public class ClientEntityManager {
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
     }
-
 }
+
