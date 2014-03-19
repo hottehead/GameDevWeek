@@ -74,4 +74,10 @@ public class ProjectileReplicationDatagram extends BaseDatagram {
     public FacingDirection getDirection() {
         return direction;
     }
+
+	public TeamColor getTeamColor() {
+		return teamColor;
+	}
+    
+    
 }
