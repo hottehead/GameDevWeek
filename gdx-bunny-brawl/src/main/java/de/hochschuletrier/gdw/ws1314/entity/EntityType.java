@@ -14,4 +14,9 @@ public enum EntityType {
     Bridge,
     BridgeSwitch,
     Bush,
+    SwordAttack,
+    ContactMine,
+    Carrot,
+    Spinach,
+    Clover
 }
