@@ -181,7 +181,7 @@ public class Main extends StateBasedGame {
 				logger.info("Map: " + map);
 				logger.info("Playercount: " + players.length);
 				for(int i = 0; i < players.length; i++)
-					logger.info("Player" + i + ": " + players[i].getPlayername());
+					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getId() + " class: " + players[i].getType());
 				c_players = players;
 			}
 		});
