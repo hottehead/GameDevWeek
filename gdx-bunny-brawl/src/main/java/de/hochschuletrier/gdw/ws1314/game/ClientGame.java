@@ -3,7 +3,7 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -16,7 +16,6 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
-import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -24,23 +23,25 @@ import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 // Modfied by El Fapo: updated intention changes
 public class ClientGame {
 	private ClientEntityManager entityManager;
-	//private ClientServerConnect netManager;
+	private ClientServerConnect netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
 	
-	private InputHandler inputHandler;
+	private InputProcessor inputProcessor;
 
-	public ClientGame() {
+	public ClientGame(InputProcessor inputProcessor) {
 		entityManager = ClientEntityManager.getInstance();
-		//netManager = ClientServerConnect.getInstance();
+		netManager = ClientServerConnect.getInstance();
+		
+		this.inputProcessor = inputProcessor;
 	}
 
 	public void init(AssetManagerX assets) {
 		map = loadMap("data/maps/miniarena.tmx");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
-		Gdx.input.setInputProcessor(inputHandler);
+		Gdx.input.setInputProcessor(inputProcessor);
 		
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
