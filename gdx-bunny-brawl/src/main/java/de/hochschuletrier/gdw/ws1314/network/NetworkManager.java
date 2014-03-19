@@ -10,13 +10,17 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LevelObjectReplicationDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram.PlayerData;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
@@ -219,7 +223,15 @@ public class NetworkManager {
 			if(entity instanceof ServerProjectile){
 				broadcastToClients(new ProjectileReplicationDatagram((ServerProjectile) entity));
 			}
-			//TODO Handle other entity-types.
+			else if(entity instanceof ServerLevelObject){
+				broadcastToClients(new LevelObjectReplicationDatagram((ServerLevelObject) entity));
+			}
+			else if(entity instanceof ServerPlayer){
+				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
+			}
+			else {
+				logger.warn("Unknown entity type {} can't be replicated.",entity.getClass().getCanonicalName());
+			}
 		}
 	}
 	
