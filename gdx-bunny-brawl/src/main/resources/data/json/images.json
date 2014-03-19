@@ -5,8 +5,8 @@
 
 
     "debugBush": "data/images/dbg/bush.png",
-	"debugEnemy": "data/images/dbg/playerTeam.png",
-	"debugTeam": "data/images/dbg/enemyTeam.png",
+	"debugEnemy": "data/images/dbg/enemyTeam.png",
+	"debugTeam": "data/images/dbg/playerTeam.png",
 	"debugBridge": "data/images/dbg/bridge.png",
 	"debugEgg": "data/images/dbg/egg.png"
 }

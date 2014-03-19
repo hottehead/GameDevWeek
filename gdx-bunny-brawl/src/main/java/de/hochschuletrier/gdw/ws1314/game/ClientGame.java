@@ -49,6 +49,7 @@ public class ClientGame {
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
 		
+		
 		initMaterials(assets);
 	}
 	
@@ -58,6 +59,7 @@ public class ClientGame {
 				new MaterialInfo("debugTeam", 32, 32, 0));
 		
 		entityRenderer = new EntityRenderer(materialManager);
+		entityManager.provideListener(entityRenderer);
 	}
 
 
