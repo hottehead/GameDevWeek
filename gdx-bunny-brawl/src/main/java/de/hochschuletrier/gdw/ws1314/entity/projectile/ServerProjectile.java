@@ -160,7 +160,9 @@ public class ServerProjectile extends ServerEntity {
             body.setGravityScale(0);
             body.addContactListener(this);
             
+
             Vector2 impulse = this.facingDirection.getDirectionVector().cpy().scl(this.speed);
+
             body.applyImpulse(impulse);
             
             setPhysicsBody(body);
