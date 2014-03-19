@@ -195,6 +195,10 @@ public class NetworkManager {
     public void sendLobbyUpdate(String map, PlayerData[] players) {
         if (!isServer())
             return;
+        logger.info("in sendLobbyUpdate");
+        for(int i = 0; i < players.length; i++){
+        	logger.info("Player: " + players[i].toString());
+        }
         broadcastToClients(new LobbyUpdateDatagram(map, players));
     }
 

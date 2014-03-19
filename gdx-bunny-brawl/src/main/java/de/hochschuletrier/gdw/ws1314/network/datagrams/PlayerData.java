@@ -36,6 +36,6 @@ public class PlayerData {
 	}
 	
 	public String toString() {
-		return playername + " " + type.toString() + " " + team.toString() + " " + accept;
+		return "id: " + id + " name: " + playername + " type:" + type.toString() + " team:" + team.toString() + " " + accept;
 	}
 }
