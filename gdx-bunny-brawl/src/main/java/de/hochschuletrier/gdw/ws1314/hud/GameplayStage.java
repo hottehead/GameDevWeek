@@ -105,7 +105,6 @@ public class GameplayStage extends AutoResizeStage {
 		layEggIcon.draw();
 		scoreEnemyIcon.draw();
 		scoreTeamIcon.draw();
-		advanceScoreOwnTeam();
 		
 		DrawUtil.batch.flush();
 		this.draw();
