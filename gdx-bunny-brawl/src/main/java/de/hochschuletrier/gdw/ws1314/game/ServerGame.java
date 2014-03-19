@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,7 @@ public class ServerGame {
 	private ClientServerConnect netManager;
 	private TiledMap map;
 	private ServerPlayer player = new ServerPlayer();
+    private long eggid = 0;
 
 	public ServerGame() {
 		entityManager = ServerEntityManager.getInstance();
@@ -87,7 +89,8 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-         entityManager.createEntity(ServerPlayer.class);
+         entityManager.createEntity(ServerPlayer.class, new Vector2(0f,0f));
+         entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
 	}
 
 	public void render() {

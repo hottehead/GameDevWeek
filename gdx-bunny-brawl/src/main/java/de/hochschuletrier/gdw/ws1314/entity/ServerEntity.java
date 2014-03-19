@@ -15,7 +15,7 @@ import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 public abstract class ServerEntity extends PhysixEntity implements ContactListener
 {
 	private long 	id = -1;
-    private SafeProperties properties;
+    protected SafeProperties properties;
 	
 	public ServerEntity()
 	{

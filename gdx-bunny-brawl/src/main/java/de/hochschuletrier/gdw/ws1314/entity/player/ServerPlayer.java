@@ -311,7 +311,7 @@ public class ServerPlayer extends ServerEntity
 		// TODO Auto-generated method stub
 		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(new Vector2()).fixedRotation(false).create();
+							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
 				.friction(FRICTION).restitution(RESTITUTION).shapeBox(100,100));
 		body.setGravityScale(0);
