@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class NetworkManager {
 
@@ -44,6 +46,7 @@ public class NetworkManager {
 
     private int nextPlayerNumber = 1;
 
+    private PlayerDisconnectCallback playerdisconnectcallback;
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
@@ -85,6 +88,9 @@ public class NetworkManager {
             serverReception = null;
         }
     }
+    public PlayerDisconnectCallback getPlayerDisconnectCallback(){
+    	return playerdisconnectcallback;
+    }
 
     public LobbyUpdateCallback getLobbyUpdateCallback() {
         return lobbyupdatecallback;
@@ -112,6 +118,10 @@ public class NetworkManager {
 
     public DespawnCallback getDespawnCallback() {
         return despawnCallback;
+    }
+    
+    public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
+    	this.playerdisconnectcallback = callback;
     }
 
     public void setLobbyUpdateCallback(LobbyUpdateCallback callback) {
@@ -181,7 +191,7 @@ public class NetworkManager {
             return;
         clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
     }
-
+    
     public void sendLobbyUpdate(String map, PlayerData[] players) {
         if (!isServer())
             return;
@@ -251,6 +261,7 @@ public class NetworkManager {
 
     public void update() {
         handleNewConnections();
+        handleDisconnects();
         handleDatagramsClient();
         handleDatagramsServer();
     }
@@ -266,6 +277,26 @@ public class NetworkManager {
                 connection = serverReception.getNextNewConnection();
             }
         }
+    }
+    
+    private void handleDisconnects() {
+    	 if (isServer()) {
+    		 List<NetConnection> toRemove = new ArrayList<NetConnection>();
+    		 for(NetConnection c : serverConnections){
+    			 if(!c.isConnected()){
+    				 toRemove.add(c);
+    			 }
+    		 }
+    		 if(toRemove.size() > 0){
+    			 List<Integer> ids = new ArrayList<Integer>();
+	    		 for(NetConnection rc : toRemove){
+	    			 serverConnections.remove(rc);
+	    			 //TODO: eindeutige ID festlegen
+	    			 ids.add(rc.getAttachment().hashCode());
+	    		 }
+	    		 playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+    		 }
+    	 }
     }
 
     private void handleDatagramsClient() {

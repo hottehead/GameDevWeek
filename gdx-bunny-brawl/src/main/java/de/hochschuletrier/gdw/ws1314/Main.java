@@ -118,7 +118,7 @@ public class Main extends StateBasedGame {
 	}
 	public String s_map = "";
 	public PlayerData[] c_players;
-	public PlayerData[] s_players = new PlayerData[5];
+	public PlayerData[] s_players = new PlayerData[3];
 	
 	public int playercount = 0;
 	
@@ -157,6 +157,7 @@ public class Main extends StateBasedGame {
 				if(playercount >= 5)
 					return;
 				PlayerData tmp = new PlayerData(playerName, type, team, accept);
+				logger.info("New Player: " + tmp.toString());
 				s_players[playercount++] = tmp;
 			}
 		});
@@ -200,7 +201,8 @@ public class Main extends StateBasedGame {
 			
 			@Override
 			public void execute(List<String> args) {
-				NetworkManager.getInstance().sendPlayerUpdate(args.get(0),EntityType.Hunter,TeamColor.BLACK,false);
+				logger.info(args.get(1));
+				NetworkManager.getInstance().sendPlayerUpdate(args.get(1),EntityType.Noob,TeamColor.BLACK,false);
 			}
 		});
 	}
