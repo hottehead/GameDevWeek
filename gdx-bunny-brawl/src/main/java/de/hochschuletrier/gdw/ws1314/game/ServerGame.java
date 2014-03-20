@@ -97,10 +97,7 @@ public class ServerGame {
 
             PlayerInfo pinfo = new PlayerInfo(playerData.getPlayername(),playerData.getTeam());
             sp.setPlayerInfo(pinfo);
-            
-            logger.info(sp.getFacingDirection().name());
-            
-            netManager.setPlayerEntityId(playerData.getId(),sp.getID());
+            netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
             offset += 10f;
         }
 	}

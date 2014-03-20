@@ -62,7 +62,7 @@ public class ClientLobbyManager implements LobbyUpdateCallback, MatchUpdateCallb
 		
 		for (PlayerData p : this.connectedPlayers)
 		{
-			logger.info("PID: " + p.getId() + "|Name: " + p.getPlayername() + "|Class: " + p.getType() + "|Team: " + p.getTeam() + "|R: " + p.isAccept());
+			logger.info("PID: " + p.getPlayerId() + "|Name: " + p.getPlayername() + "|Class: " + p.getType() + "|Team: " + p.getTeam() + "|R: " + p.isAccept());
 		}
 	}
 	
