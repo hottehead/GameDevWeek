@@ -1,10 +1,6 @@
-package de.hochschuletrier.gdw.ws1314.sound;
+package de.hochschuletrier.gdw.commons.gdx.sound;
 
-import org.lwjgl.Sys;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.math.Interpolation;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
@@ -17,10 +13,8 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 public class LocalMusic {
 	private AssetManagerX assetManager;
 	private Music musicHandle;
-	private boolean fading;
-	private char fadingDirection;
 	
-	private static float SystemVolume = 1.0f;
+	private static float SystemVolume = 0.9f;
 	
 	/**
 	 * Change the general volume for music
@@ -39,11 +33,6 @@ public class LocalMusic {
 	public static float getSystemVolume() {
 		return LocalMusic.SystemVolume;
 	}
-	
-	public void setFade(char fadingDirection) {
-		this.fading = this.fading == true ? false : true;
-		this.fadingDirection = fadingDirection;
-	}
 
 	/**
 	* Constructor of the class LocalMusic
@@ -55,29 +44,8 @@ public class LocalMusic {
 		this.musicHandle = null;
 	}
 	
-	public void update(int duration) {
-		float delta = Gdx.graphics.getDeltaTime();
-        if (delta > 0.016f) {
-            delta = 0.016f;
-        }
-		if (this.fading) {
-			float volume = this.musicHandle.getVolume();
-			if (this.fadingDirection == 'i') {
-				volume += delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? LocalMusic.SystemVolume : volume;
-				this.fading = volume >= 1.0f ? false : true;
-			}
-			else if (this.fadingDirection == 'o') {
-				volume -= delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? 0.0f : volume;
-			}
-			
-			volume = volume > 1 ? 1 : volume;
-			this.musicHandle.setVolume(volume);
-			System.out.println(this.musicHandle.getVolume());
-			System.out.println(this.fadingDirection);
-			System.out.println(this.fadingDirection);
-		}
+	public void update() {
+		
 	}
 	
 	/**
