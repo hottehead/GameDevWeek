@@ -58,6 +58,12 @@ public class NetConnection extends Thread {
     private final NetMessageCache messageCacheOut = new NetMessageCache();
     /** Set to true so outgoing datagrams can be queued */
     private boolean accepted;
+    
+    /** Total bytes sent to this connection */
+    private long bytesSent=0;
+    /** Total bytes received from this connection */
+    private long bytesReceived=0;
+    
 
     /**
      * Create a connection to a client.
@@ -145,7 +151,7 @@ public class NetConnection extends Thread {
                 // Read the datagram header into the buffer.
                 headerIn.clear();
                 while (headerIn.hasRemaining()) {
-                    channel.read(headerIn);
+                    bytesReceived+=channel.read(headerIn);
                 }
 
                 // Get the values
@@ -212,7 +218,7 @@ public class NetConnection extends Thread {
                 // Normal message, param1 contains the message size.
                 msg = NetMessageAllocator.createMessage();
                 msg.prepareReading(param1, 0);
-                msg.readFromSocket(channel);
+                bytesReceived+=msg.readFromSocket(channel);
 
                 // Let the datagram read its data
                 datagram.readFromMessage(msg);
@@ -231,7 +237,7 @@ public class NetConnection extends Thread {
 
                 // Read both the message and the delta bits from the channel
                 deltaMsg.prepareReading(param1, param2);
-                deltaMsg.readFromSocket(channel);
+                bytesReceived+=deltaMsg.readFromSocket(channel);
 
                 // Let the datagram read its data
                 datagram.readFromMessage(deltaMsg);
@@ -304,7 +310,7 @@ public class NetConnection extends Thread {
         headerOut.flip();
 
         while (headerOut.hasRemaining()) {
-            channel.write(headerOut);
+            bytesSent+=channel.write(headerOut);
         }
     }
 
@@ -365,7 +371,7 @@ public class NetConnection extends Thread {
      */
     private void sendMessage(INetMessageInternal msg) throws IOException {
         msg.prepareWriting();
-        msg.writeToSocket(channel);
+        bytesSent+=msg.writeToSocket(channel);
         msg.free();
     }
 
@@ -490,4 +496,20 @@ public class NetConnection extends Thread {
     public boolean isAccepted() {
         return accepted;
     }
+
+    /**
+     * @return Number of bytes sent to the connection.
+     */
+	public long getBytesSent(){
+		return bytesSent;
+	}
+
+	/**
+	 * @returnNumber of bytes received from the connection.
+	 */
+	public long getBytesReceived(){
+		return bytesReceived;
+	}
+    
+    
 }
