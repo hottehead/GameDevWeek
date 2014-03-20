@@ -94,8 +94,6 @@ public class LevelLoader {
 				}
 			}
 
-            logger.info("type: {}",type);
-
 			switch (object.getPrimitive()) {
 			case POINT:
 				createPoint(type, object.getX(), object.getY(), object.getProperties());
