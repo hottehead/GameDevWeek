@@ -15,46 +15,50 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
  * Menu state
- *
+ * 
  * @author Santo Pfingsten
  */
 public class MainMenuState extends GameState implements InputProcessor {
 
-    private DemoShader demoShader;
-    InputInterceptor inputProcessor;
-    private LocalMusic music;
+	private DemoShader demoShader;
+	InputInterceptor inputProcessor;
+	private LocalMusic music;
 	AnimationExtended walking;
-	
+	private int stateChangeDuration=500;
 	private MainMenuStage stage;
 
-    public MainMenuState() {
-    }
+	public MainMenuState() {
+	}
 
-    @Override
-    public void init(AssetManagerX assetManager) {
-        super.init(assetManager);
+	@Override
+	public void init(AssetManagerX assetManager) {
+		super.init(assetManager);
 		walking = assetManager.getAnimation("walking");
-        this.music = new LocalMusic(assetManager);
-        inputProcessor = new InputInterceptor(this) {
-            @Override
-            public boolean keyUp(int keycode) {
-                switch (keycode) {
-                    case Keys.ESCAPE:
-                        if(GameStates.GAMEPLAY.isActive())
-                            GameStates.MAINMENU.activate(new SplitHorizontalTransition(500).reverse(), null);
-                        else if (GameStates.MAINMENU.isActive())
-                            GameStates.GAMEPLAY.activate(new SplitHorizontalTransition(500), null);
-                        return true;
-                }
-                return isActive && mainProcessor.keyUp(keycode);
-            }
-        };
-        Main.inputMultiplexer.addProcessor(inputProcessor);
-        
+		this.music = new LocalMusic(assetManager);
+		inputProcessor = new InputInterceptor(this) {
+			@Override
+			public boolean keyUp(int keycode) {
+				switch (keycode) {
+				case Keys.ESCAPE:
+					if (GameStates.GAMEPLAY.isActive()) {
+						GameStates.MAINMENU.activate(
+								 new SplitHorizontalTransition(stateChangeDuration).reverse(),
+								null);
+					} else if (GameStates.MAINMENU.isActive())
+						GameStates.GAMEPLAY.activate(
+								new SplitHorizontalTransition(stateChangeDuration), null);
+					return true;
+				}
+				return isActive && mainProcessor.keyUp(keycode);
+			}
+		};
+		Main.inputMultiplexer.addProcessor(inputProcessor);
+
 		stage = new MainMenuStage();
 		stage.init(assetManager);
-    }
+	}
 
+<<<<<<< HEAD
     @Override
     public void render() {
 		stage.render();
@@ -120,4 +124,87 @@ public class MainMenuState extends GameState implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+=======
+	@Override
+	public void render() {
+		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+		DrawUtil.batch.draw(keyFrame, 0, 0);
+		// stage.render();
+	}
+
+	float stateTime = 0f;
+
+	@Override
+	public void update(float delta) {
+		stateTime += delta;
+		music.update(stateChangeDuration);
+	}
+
+	@Override
+	public void onEnter() {
+		inputProcessor.setActive(true);
+
+		if (this.music.isMusicPlaying())
+			//this.music.deMute();
+			this.music.setFade('i');
+		else
+			this.music.play("music-lobby-loop");
+	}
+
+	@Override
+	public void onLeave() {
+		//this.music.mute();
+		this.music.setFade('o');
+		inputProcessor.setActive(false);
+	}
+
+	@Override
+	public void onLeaveComplete() {
+		music.setFade('o');
+	}
+
+	@Override
+	public void dispose() {
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return true;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		return false;
+	}
+>>>>>>> sound
 }
