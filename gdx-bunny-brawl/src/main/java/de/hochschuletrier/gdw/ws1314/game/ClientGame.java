@@ -18,19 +18,10 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
-import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
-import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
 import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
 import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
@@ -98,22 +89,6 @@ public class ClientGame {
 
 		// materialManager.provideMaterial(ClientPlayer.class,
 		// new MaterialInfo("debugTeam", 32, 32, 1));
-		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
-				"singleBunny", 110, 110, 1));
-		materialManager.provideMaterial(ClientProjectile.class,
-				new MaterialInfo("debugArrow", 16, 16, 1));
-		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
-				"carrot", 32, 32, 0));
-		materialManager.provideMaterial(ClientEgg.class, new MaterialInfo(
-				"egg", 32, 32, -1));
-		materialManager.provideMaterial(ClientSpinach.class, new MaterialInfo(
-				"spinach", 32, 32, 0));
-		materialManager.provideMaterial(ClientBridgeSwitch.class, new MaterialInfo(
-				"switch", 32, 32, 0));
-		materialManager.provideMaterial(ClientClover.class, new MaterialInfo(
-				"clover", 32, 32, 0));
-		materialManager.provideMaterial(ClientBush.class, new MaterialInfo(
-				"bush", 32, 32, 0));
 		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
