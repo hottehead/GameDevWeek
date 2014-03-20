@@ -39,17 +39,17 @@ public class ServerCarrot extends ServerLevelObject
 	
 	@Override
 	public void beginContact(Contact contact) {
-            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
-        switch(otherEntity.getEntityType()) {
-            case Tank:
-            case Hunter:
-            case Knight:
-            case Noob:
-                break;
-            default:
-                break;
-        }
+//            ServerEntity otherEntity = this.identifyContactFixtures(contact);
+//
+//        switch(otherEntity.getEntityType()) {
+//            case Tank:
+//            case Hunter:
+//            case Knight:
+//            case Noob:
+//                break;
+//            default:
+//                break;
+//        }
 	}
 
 	@Override
