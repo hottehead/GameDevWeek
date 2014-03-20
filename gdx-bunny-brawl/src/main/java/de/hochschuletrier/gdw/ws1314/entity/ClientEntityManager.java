@@ -173,7 +173,15 @@ public class ClientEntityManager {
         return listChanged;
     }
 
-
+    public boolean isPendingSpawn(long entityId){
+    	for(ClientEntity e: insertionQueue){
+    		if(e.getID()==entityId){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public ClientEntity getEntityById(long id) {
         Long lid = new Long(id);
         if(entityListMap.containsKey(lid))
