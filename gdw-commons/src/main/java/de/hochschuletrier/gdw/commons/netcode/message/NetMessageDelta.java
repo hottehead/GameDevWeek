@@ -274,7 +274,11 @@ public class NetMessageDelta implements INetMessageInternal {
     
     @Override
     public <T> T getEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[getInt()];
+    	if(!getBool()){
+    		getInt();
+    		return null;
+    	}
+    	else return clazz.getEnumConstants()[getInt()];
     }
 
     @Override
@@ -458,7 +462,8 @@ public class NetMessageDelta implements INetMessageInternal {
 
     @Override
     public void putEnum(Enum value) {
-        putInt(value.ordinal());
+    	putBool(value!=null);
+        putInt(value!=null?value.ordinal():-1);
     }
 
     @Override
