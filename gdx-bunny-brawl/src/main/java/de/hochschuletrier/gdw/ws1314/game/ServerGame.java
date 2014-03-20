@@ -58,7 +58,7 @@ public class ServerGame {
 	public void init(AssetManagerX assets) {
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		TiledMap map = assets.getTiledMap("dummy_fin_map1");
+		TiledMap map = assets.getTiledMap("dummy_fin_map2");
 		LevelLoader.load(map, entityManager, manager);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
