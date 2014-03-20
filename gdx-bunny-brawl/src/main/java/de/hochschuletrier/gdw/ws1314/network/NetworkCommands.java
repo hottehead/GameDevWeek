@@ -145,16 +145,26 @@ public class NetworkCommands{
 		}
 	};
 
-	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[CLIENT][DEV CMD] only for network tests, connect to localhost or to test client.", 1){
+	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[CLIENT][DEV CMD] start without arguments for help", 1){
 
 		@Override
 		public void showUsage(){
-			showUsage("<flag> [l = localhost, t = test server, j = jerry]");
+			showUsage("<flag> [l = localhost, t, j, d]\n"
+					+ "\t\tl = localhost\n"
+					+ "\t\td = 143.93.55.134 (RFT1301)\n"
+					+ "\t\tt = 143.93.55.135 (RFT1305)\n"
+					+ "\t\tj = 143.93.55.141 (RFT1311)");
 		}
 
 		/**
-		 * DON'T USE ME EXCEPT YOU WHAT YOU DO
-		 * @param args
+		 * DON'T USE ME
+		 * EXCEPT YOU KNOW WHAT YOU DO
+		 *
+		 * l = localhost
+		 * t = 143.93.55.134 (RFT1301)
+		 * t = 143.93.55.135 (RFT1305)
+		 * j = 143.93.55.141 (RFT1311)
+		 * @param args char
 		 */
 		@Override
 		public void execute(List<String> args){
@@ -168,6 +178,9 @@ public class NetworkCommands{
 				}
 				else if(args.get(1).equals("j")){
 					NetworkManager.getInstance().connect("143.93.55.141", NetworkManager.getInstance().getDefaultPort());
+				}
+				else if(args.get(1).equals("d")){
+					NetworkManager.getInstance().connect("143.93.55.134", NetworkManager.getInstance().getDefaultPort());
 				}
 			}
 			catch (Exception e){
