@@ -167,9 +167,9 @@ public class LevelLoader {
 					.friction(0.5f).restitution(0.4f).shapePolygon(points));
 			break;
             case "water":
-                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
-                zone.setPoligonPoints(points);
-                zone.setWaterZone();
+                //zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                //zone.setPoligonPoints(points);
+                //zone.setWaterZone();
                 break;
             case "hgrass":
                 zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
