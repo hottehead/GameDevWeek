@@ -134,18 +134,18 @@ public class AnimationExtended {
 		@Override
 		public int compareTo(Frame f) { // this ist current selber
 			if (f.equals(this)) {// current im bereich
-				System.out.println("equals " + this + " ~ " + f);
+			// System.out.println("equals " + this + " ~ " + f);
 				return 0;
 			}
 			if (this.startTime + this.duration > f.startTime + f.duration) { // current
-				System.out.println("greater " + this + " ~ " + f);
+			// System.out.println("greater " + this + " ~ " + f);
 				return +1;
 			}
 			if (this.startTime + this.duration < f.startTime + f.duration) {
-				System.out.println("less " + this + " ~ " + f);
+				// System.out.println("less " + this + " ~ " + f);
 				return -1;
 			}
-			System.out.println("undefined for " + this + " and " + f);
+			// System.out.println("undefined for " + this + " and " + f);
 			return 1;
 		}
 	}
