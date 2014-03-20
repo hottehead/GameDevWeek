@@ -10,35 +10,35 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 /**
  * Created by albsi on 17.03.14.
  */
-public class ActionDatagram extends BaseDatagram {
-    public static final byte ACTION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x40;
-    private PlayerIntention playerAction;
+public class ActionDatagram extends BaseDatagram{
+	public static final byte ACTION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x40;
+	private PlayerIntention playerAction;
 
-    public ActionDatagram (byte type, short id, short param1, short param2) {
-        super (MessageType.NORMAL, type, id, param1, param2);
-    }
+	public ActionDatagram(byte type, short id, short param1, short param2){
+		super(MessageType.NORMAL, type, id, param1, param2);
+	}
 
-    public ActionDatagram (PlayerIntention playerAction) {
-        super (MessageType.NORMAL, ACTION_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.playerAction = playerAction;
-    }
+	public ActionDatagram(PlayerIntention playerAction){
+		super(MessageType.NORMAL, ACTION_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		this.playerAction = playerAction;
+	}
 
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
-    }
+	@Override
+	public void handle(DatagramHandler handler, NetConnection connection){
+		handler.handle(this, connection);
+	}
 
-    @Override
-    public void writeToMessage (INetMessageOut message) {
-        message.putEnum(playerAction);
-    }
+	@Override
+	public void writeToMessage(INetMessageOut message){
+		message.putEnum(playerAction);
+	}
 
-    @Override
-    public void readFromMessage (INetMessageIn message) {
-        playerAction = message.getEnum(PlayerIntention.class);
-    }
+	@Override
+	public void readFromMessage(INetMessageIn message){
+		playerAction = message.getEnum(PlayerIntention.class);
+	}
 
-    public PlayerIntention getPlayerAction () {
-        return playerAction;
-    }
+	public PlayerIntention getPlayerAction(){
+		return playerAction;
+	}
 }
