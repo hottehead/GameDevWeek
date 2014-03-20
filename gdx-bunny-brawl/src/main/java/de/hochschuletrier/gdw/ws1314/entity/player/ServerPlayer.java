@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
@@ -276,9 +277,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Hunter:
              case Knight:
              case Noob:
-                 // Comment by ElFapo:
-            	 // Hier nur physikalische Kontakte berücksichtigen. Waffenkontakte werden wie bei Projektilen behandelt.
-            	 //
+//                  
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -287,23 +286,28 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             		 this.currentEggCount++;
             	 }
+     
             	 break;
              case Projectil: 
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-//            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-//            	 this.currentHealth -= AttackShootArrow.DAMAGE;
-//            	  
-//            	 if(this.currentHealth <= 0){
-//            	  	 ServerEntityManager.getInstance().removeEntity(this);
-//            	  }
+            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+            	 if(hunter.getTeamColor() != this.getTeamColor()){
+            		 this.currentHealth -= AttackShootArrow.DAMAGE;
+            	 } 
+            	 if(this.currentHealth <= 0){
+            	  	 
+            		 this.physicsBody.setPosition(0, 0);
+            	  	 
+            	 }
             	 break;
              case Bridge:
             	 ServerBridge bridge = (ServerBridge) otherEntity;
-            	 //ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 
-            	/* if(){
-            	  	 ServerEntityManager.getInstance().removeEntity(this);
-            	  }*/
+            	/*  Von Fabio Gimmillaro
+            	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
+            	 *  Nur zum Test:
+            	 * if(!bridge.getVisibility()){
+            		 this.physicsBody.setPosition(0, 0);
+            	 }*/
             	 break;
              case BridgeSwitch:	
             	 break;
@@ -316,6 +320,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  }
             	 break;
              case ContactMine:
+            	 ServerContactMine mine = (ServerContactMine) otherEntity;
+            	 
             	 break;
              case Carrot:
             	 this.setSpeedBuff(1.5f,10);
