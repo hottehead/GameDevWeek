@@ -38,12 +38,12 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
 
-//    private TestHudStage testUI;
-    private GameplayStage testUI;
+    private TestHudStage testUI;
+//    private GameplayStage testUI;
 
     public MainMenuState() {
-//    	testUI = new TestHudStage();
-    	testUI = new GameplayStage();
+    	testUI = new TestHudStage();
+//    	testUI = new GameplayStage();
     }
 
     @Override
