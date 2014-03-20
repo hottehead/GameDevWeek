@@ -28,6 +28,7 @@ import java.util.List;
  *
  * @author Patrick
  */
+// Modified by El Fapo: Added getSourceID
 public class ServerSwordAttack extends ServerEntity {
     
     //========================================
@@ -56,6 +57,11 @@ public class ServerSwordAttack extends ServerEntity {
         this.facingDirection = player.getFacingDirection();
         this.originPosition = player.getPosition();
     }
+    
+
+	public long getSourceID() {
+		return sourceID;
+	}
     
     /**
      * The collision zone of the Sword attack has the shape of a triangle.
@@ -120,8 +126,8 @@ public class ServerSwordAttack extends ServerEntity {
         
         float size = (float) Math.sqrt(2 * Math.pow(this.height, 2));
         
-        Vector2 sideL = this.facingDirection.getDirectionVector().cpy().rotate(this.amplitude * 0.5f);
-        Vector2 sideR = this.facingDirection.getDirectionVector().cpy().rotate(this.amplitude * -0.5f);
+        Vector2 sideL = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * 0.5f);
+        Vector2 sideR = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * -0.5f);
         
         int lX = (int) (oX + (sideL.x * size));
         int lY = (int) (oY + (sideL.y * size));
@@ -146,7 +152,7 @@ public class ServerSwordAttack extends ServerEntity {
         body.createFixture(new PhysixFixtureDef(manager)
                 .density(0.5f)
                 .friction(0.0f)
-                .restitution(0.0f)
+                .restitution(0.0f).shapeCircle(size)
                 .shapePolygon(points)
                 .sensor(true));
         body.setGravityScale(0);
