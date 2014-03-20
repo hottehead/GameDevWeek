@@ -215,15 +215,10 @@ public class NetworkManager {
         broadcastToClients(new GameStateDatagram(gameStates));
     }
     
-    public void sendClientId(int playerid){
+    private void sendClientId(NetConnection con){
     	if(!isServer())
     		return;
-    	for (NetConnection con : serverConnections) {
-    		ConnectionAttachment tmp = (ConnectionAttachment) con.getAttachment();
-    		if(tmp.getId() == playerid){
-    			con.send(new ClientIdDatagram(playerid));
-    		}
-        }
+    	con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getId()));
     }
 
 	public void sendMatchUpdate(String map) {
@@ -347,6 +342,7 @@ public class NetworkManager {
                 connection.setAccepted(true);
                 connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
                 serverConnections.add(connection);
+                this.sendClientId(connection);
 				logger.info("Player {} connected.", (nextPlayerNumber - 1));
                 connection = serverReception.getNextNewConnection();
             }

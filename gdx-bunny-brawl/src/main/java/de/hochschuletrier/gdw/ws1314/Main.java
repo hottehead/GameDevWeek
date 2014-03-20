@@ -156,6 +156,7 @@ public class Main extends StateBasedGame {
 			}
 		});
 		
+		
 		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
 			
 			@Override
@@ -222,21 +223,7 @@ public class Main extends StateBasedGame {
 				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 			}
 		});
-		
-		console.register(new ConsoleCmd("sendClientId",0,"[DEBUG]",1) {
-
-			@Override
-			public void execute(List<String> args) {
-				for(PlayerData p : s_players){
-					if(p.getId() == Integer.parseInt(args.get(1))){
-						logger.info("Sending ClientId: " + p.getId());
-						NetworkManager.getInstance().sendClientId(p.getId());
-					}
-				}
-				
-			}
-		});
-    	
+		 	
 		console.register(new ConsoleCmd("sendLobbyUpdate",0,"[DEBUG]") {
 
 			@Override
