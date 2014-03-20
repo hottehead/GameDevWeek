@@ -11,7 +11,8 @@ import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
-import de.hochschuletrier.gdw.ws1314.sound.*;
+import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 
 /**
  * Menu state
@@ -54,9 +55,12 @@ public class GameplayState extends GameState implements InputProcessor {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
 		tmpGame.render();
+		
+		DrawUtil.startRenderToScreen();
 		stage.render();
+		DrawUtil.endRenderToScreen();
                 
-                game.getManager().render();
+		game.getManager().render();
 	}
 
 	@Override
@@ -65,12 +69,15 @@ public class GameplayState extends GameState implements InputProcessor {
 		game.update(delta);
 		tmpGame.update(delta);
 		stage.setFPSCounter(delta);
+		stage.step();
 		fpsCalc.addFrame();
 		
 		
-		//TODO: connect ui to gamelogic
+		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
+		
 		stage.step();
+		
 	}
 
 	@Override
