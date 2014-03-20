@@ -11,11 +11,15 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Jerry on 18.03.14.
  */
 public class ClientEntityManager {
+    private static final Logger logger = LoggerFactory.getLogger(ClientEntityManager.class);
+
 	private static ClientEntityManager instance = null;
 	
 	private LinkedList<ClientEntity> entityList;
@@ -23,6 +27,8 @@ public class ClientEntityManager {
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
     protected ArrayList<ClientEntityManagerListener> listeners;
+
+    private long playerEntityID = -1;
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
@@ -72,6 +78,17 @@ public class ClientEntityManager {
             addEntity(e);
         }
         return e;
+    }
+
+    public void setPlayerEntityID(long id) {
+        playerEntityID = id;
+    }
+
+    public long getPlayerEntityID() {
+        if(playerEntityID < 0)
+            logger.warn("Sieht so aus als wurde PlayerID noch nicht gesetzt. getPlayerEntityID muss warscheinlich nochmal aufgerufen werden.");
+
+        return playerEntityID;
     }
 
     private ClientEntity createPlayer(PlayerKit pk) {
