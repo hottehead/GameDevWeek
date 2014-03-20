@@ -11,6 +11,7 @@
 	"debugBridge": "data/images/dbg/bridge.png",
 	"debugEgg": "data/images/dbg/egg.png",
 	"debugArrow": "data/images/dbg/arrow.png",
+	"debugSword": "data/images/dbg/sword.png",
 	"fallback": "data/images/dbg/fallback.png",
 	
 	"debugBar": "data/images/dbg/bar.png",
