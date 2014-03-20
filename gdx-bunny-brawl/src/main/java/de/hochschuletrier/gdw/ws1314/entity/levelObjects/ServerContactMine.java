@@ -42,16 +42,6 @@ public class ServerContactMine extends ServerLevelObject
 	}
 
 	@Override
-	public void preSolve(Contact contact, Manifold oldManifold)
-	{
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse)
-	{
-	}
-
-	@Override
 	public EntityType getEntityType()
 	{
 		return EntityType.ContactMine;
