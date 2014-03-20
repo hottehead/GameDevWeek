@@ -80,7 +80,7 @@ public class AnimationExtendedLoader extends
 			}
 		}
 		float[] frameDurations = new float[parameter.frameDuration.size()];
-		for (int i = 0; i < parameter.frameDuration.size() - 1; i++) {
+		for (int i = 0; i < parameter.frameDuration.size(); i++) {
 			frameDurations[i] = parameter.frameDuration.get(i);
 		}
 		AnimationExtended anim = new AnimationExtended(parameter.playType,

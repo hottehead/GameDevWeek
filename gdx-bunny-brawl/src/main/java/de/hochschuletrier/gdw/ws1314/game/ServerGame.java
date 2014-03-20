@@ -59,7 +59,8 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-         entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
+		 entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
+		 entityManager.createEntity(ServerPlayer.class, new Vector2(500,250f));
          entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
          entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
          entityManager.createEntity(ServerCarrot.class, new Vector2(200, 200));
@@ -70,8 +71,8 @@ public class ServerGame {
 	}
 
 	public void update(float delta) {
-		entityManager.update(delta);
 		manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		entityManager.update(delta);
     }
 
 	public PhysixManager getManager() {

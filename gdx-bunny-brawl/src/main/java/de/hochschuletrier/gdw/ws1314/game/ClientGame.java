@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -19,7 +18,12 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
@@ -47,8 +51,6 @@ public class ClientGame {
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
-
-	private OrthographicCamera sceneCamera;
 
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
@@ -87,10 +89,8 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 		
-		sceneCamera = new OrthographicCamera(width, height);
-		sceneCamera.setToOrtho(true, width, height);
-		
-
+//			System.out.println(l.getName());
+//		}
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
@@ -103,8 +103,18 @@ public class ClientGame {
 		materialManager.provideMaterial(ClientProjectile.class,
 				new MaterialInfo("debugArrow", 16, 16, 1));
 		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
-				"debugCarrot", 32, 32, 0));
-
+				"carrot", 32, 32, 0));
+		materialManager.provideMaterial(ClientEgg.class, new MaterialInfo(
+				"egg", 32, 32, -1));
+		materialManager.provideMaterial(ClientSpinach.class, new MaterialInfo(
+				"spinach", 32, 32, 0));
+		materialManager.provideMaterial(ClientBridgeSwitch.class, new MaterialInfo(
+				"switch", 32, 32, 0));
+		materialManager.provideMaterial(ClientClover.class, new MaterialInfo(
+				"clover", 32, 32, 0));
+		materialManager.provideMaterial(ClientBush.class, new MaterialInfo(
+				"bush", 32, 32, 0));
+		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
 
