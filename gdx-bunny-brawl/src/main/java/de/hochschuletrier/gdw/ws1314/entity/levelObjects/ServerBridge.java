@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerBridge extends ServerLevelObject
 {
+	boolean isVisible = false;
 	/* FIXME:
 	 * Comment: von Fabio Gimmillaro (Der komische Typ ganz hinten rechts)
 	 * Bridge braucht ID, damit man einer Brücke bestimmte Schalter hinzufügen kann
@@ -84,5 +85,12 @@ public class ServerBridge extends ServerLevelObject
 		body.addContactListener(this);
 		setPhysicsBody(body);
 		
+	}
+	@Override
+	public boolean getVisibility(){
+		return isVisible;
+	}
+	public void setVisiblity(boolean b){
+		isVisible = b;
 	}
 }
