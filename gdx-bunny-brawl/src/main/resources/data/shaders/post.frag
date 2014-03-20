@@ -21,6 +21,6 @@ void main() {
 	vec4 pixelColor = texture2D(u_texture, vTexCoord);
 	vec4 nearPixel = texture2D(u_texture, vTexCoord + vec2(abtastRate.x,abtastRate.y));
 
-	gl_FragColor = vec4(pixelColor.xyz, pixelColor.a);
+	gl_FragColor = vec4(vec4(pixelColor.rgb, pixelColor.a+nearPixel.a));
 	//gl_FragColor = nearPixel;
 }
