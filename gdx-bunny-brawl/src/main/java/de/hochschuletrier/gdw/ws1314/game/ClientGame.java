@@ -119,7 +119,6 @@ public class ClientGame {
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
 			} else {
-				System.out.println(layer.getProperties());
 				mapRenderer.render(0, 0, layer);
 			}
 		}
