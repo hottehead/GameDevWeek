@@ -42,6 +42,7 @@ public class GameplayStage extends AutoResizeStage {
 	}
 	
 	public void init(AssetManagerX assetManager) {
+		//init generic stuff
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
@@ -124,11 +125,15 @@ public class GameplayStage extends AutoResizeStage {
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 
-	public void step(float dt) {
-		accum = accum + dt;
-		if (accum > .50f) {
-			accum -= 1.0;
-			healthBar.get().setValue(MathUtils.random() * 100);
+	//for testing the healthbar
+	//can be deleted after connecting the ui with the gamelogic
+	public void step() {
+		if (healthBar.get().getValueFactor() != 0) {
+			advanceHealthbar();
+		}
+		else {
+			resetHealthbar();
+			advanceScoreOwnTeam();
 		}
 	}
 	

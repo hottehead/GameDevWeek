@@ -23,7 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 // Added Carrot Constants by ElFapo
 public class ServerCarrot extends ServerLevelObject
 {
-	public static final float CARROT_SPEEDBUFF_FACTOR = 1.1f;
+	public static final float CARROT_SPEEDBUFF_FACTOR = 1.5f;
 	public static final float CARROT_SPEEDBUFF_DURATION = 2.0f;
 	
 	public ServerCarrot()
@@ -39,18 +39,17 @@ public class ServerCarrot extends ServerLevelObject
 	
 	@Override
 	public void beginContact(Contact contact) {
-            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
-        switch(otherEntity.getEntityType()) {
-            case Tank:
-            case Hunter:
-            case Knight:
-            case Noob:
-                ServerEntityManager.getInstance().removeEntity(this);
-                break;
-            default:
-                break;
-        }
+//            ServerEntity otherEntity = this.identifyContactFixtures(contact);
+//
+//        switch(otherEntity.getEntityType()) {
+//            case Tank:
+//            case Hunter:
+//            case Knight:
+//            case Noob:
+//                break;
+//            default:
+//                break;
+//        }
 	}
 
 	@Override

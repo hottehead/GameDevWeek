@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -18,10 +19,13 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
+import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
+import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
 import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
@@ -38,88 +42,131 @@ public class ClientGame {
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
-	private EntityRenderer entityRenderer; 
+	private EntityRenderer entityRenderer;
 
-	
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
 
-	public ClientGame() { 
+	private OrthographicCamera sceneCamera;
+
+	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
-		
+
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
-		
+
 	}
+
+	CameraFollowingBehaviour cameraFollowingBehaviour;
 
 	public void init(AssetManagerX assets) {
 		map = assets.getTiledMap("dummy_fin_map2");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		
+
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
-			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
-					img.getSource());
+			String filename = CurrentResourceLocator.combinePaths(
+					tileset.getFilename(), img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
-		
+
 		initMaterials(assets);
+
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
+		LevelBoundings levelBounds = new LevelBoundings(
+				width * 0.5f,
+				height * 0.5f, map.getWidth()
+						* map.getTileWidth(), map.getHeight()
+						* map.getTileHeight());
+
+		cameraFollowingBehaviour = new CameraFollowingBehaviour(
+				DrawUtil.getCamera(), levelBounds);
+		
+		sceneCamera = new OrthographicCamera(width, height);
+		sceneCamera.setToOrtho(true, width, height);
+		
+
 	}
-	
+
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
-		materialManager.provideMaterial(ClientPlayer.class,
-				new MaterialInfo("debugTeam", 32, 32, 0));
-		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
-		
+
+		// materialManager.provideMaterial(ClientPlayer.class,
+		// new MaterialInfo("debugTeam", 32, 32, 1));
+		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
+				"singleBunny", 110, 110, 1));
+		materialManager.provideMaterial(ClientProjectile.class,
+				new MaterialInfo("debugArrow", 16, 16, 1));
+		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
+				"debugCarrot", 32, 32, 0));
+
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
-		
-		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-		
-		
-		postProcessing = new TextureAdvection("data/shaders/post.vert", "data/shaders/post.frag");
+
+		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888,
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+
+		postProcessing = new TextureAdvection("data/shaders/post.vert",
+				"data/shaders/post.frag");
 		System.out.println(postProcessing.getLog());
-		advShader = new TextureAdvection("data/shaders/texAdv.vert", "data/shaders/texAdv.frag");
+		advShader = new TextureAdvection("data/shaders/texAdv.vert",
+				"data/shaders/texAdv.frag");
 		System.out.println(advShader.getLog());
 	}
 
 	float fadeIn = 0.25f;
-	
+
 	public void render() {
 		sceneToTexture.begin();
 		DrawUtil.batch.setShader(advShader);
 		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 		for (Layer layer : map.getLayers()) {
-			mapRenderer.render(0, 0, layer);
+			if (layer.getType() == Layer.Type.OBJECT
+					&& layer.getBooleanProperty("renderEntities", false)) {
+				entityRenderer.draw();
+			} else {
+				mapRenderer.render(0, 0, layer);
+			}
 		}
-		entityRenderer.draw();
 		DrawUtil.batch.flush();
 		sceneToTexture.end();
-		
+
+		DrawUtil.startRenderToScreen();
+		DrawUtil.screenSpace.update();
 		DrawUtil.batch.setShader(postProcessing);
-		postProcessing.setUniformi(postProcessing.getUniformLocation("u_prevStep"), 1);
+		postProcessing.setUniformi(
+				postProcessing.getUniformLocation("u_prevStep"), 1);
 		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
 		DrawUtil.batch.setShader(null);
-		
+		DrawUtil.batch.flush();
+		DrawUtil.endRenderToScreen();
+
 		sceneToTexture.swap();
 	}
 
 	public void update(float delta) {
-//		fadeIn = Math.min(fadeIn + delta/100.0f, 1);
+		// fadeIn = Math.min(fadeIn + delta/100.0f, 1);
 		entityManager.update(delta);
+
+		long playerId = entityManager.getPlayerEntityID();
+		if (playerId != -1) {
+			cameraFollowingBehaviour.setFollowingEntity(entityManager
+					.getEntityById(playerId));
+		}
+		cameraFollowingBehaviour.update(delta);
 	}
 
 	public TiledMap loadMap(String filename) {
 		try {
 			return new TiledMap(filename, LayerObject.PolyMode.ABSOLUTE);
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Map konnte nicht geladen werden: "
-					+ filename);
+			throw new IllegalArgumentException(
+					"Map konnte nicht geladen werden: " + filename);
 		}
 	}
 

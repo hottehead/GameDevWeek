@@ -2,6 +2,7 @@
     "crosshair": "data/images/crosshair.png",
     "logo": "data/images/logo.png",
     "vase": "data/images/vase.png",
+    "singleBunny": "data/images/whiteKnight_single.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
@@ -11,6 +12,7 @@
 	"debugBridge": "data/images/dbg/bridge.png",
 	"debugEgg": "data/images/dbg/egg.png",
 	"debugArrow": "data/images/dbg/arrow.png",
+	"debugSword": "data/images/dbg/sword.png",
 	"fallback": "data/images/dbg/fallback.png",
 	
 	"debugBar": "data/images/dbg/bar.png",

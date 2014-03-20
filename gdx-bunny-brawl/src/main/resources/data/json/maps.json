@@ -1,4 +1,5 @@
 {
     "miniarena": "data/maps/miniarena.tmx", 
-	"dummy_fin_map1": "data/maps/dummy_fin_map1.tmx"
+	"dummy_fin_map1": "data/maps/dummy_fin_map1.tmx",
+	"dummy_fin_map2": "data/maps/dummy_fin_map2.tmx"
 }

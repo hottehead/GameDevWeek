@@ -2,12 +2,16 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +54,8 @@ public class ClientPlayer extends ClientEntity
 
     @Override
     public void doEvent(EventType event) {
-
+    	if (Main.getInstance().getCurrentState().equals(GameStates.GAMEPLAY))
+    		LocalSound.getInstance().playSoundByAction(event, this);
     }
     
     public void enable() {}
