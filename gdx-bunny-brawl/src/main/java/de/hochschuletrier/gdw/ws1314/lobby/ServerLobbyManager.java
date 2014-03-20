@@ -56,7 +56,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 	{
 		if (this.players.containsKey(playerid)) {
 			this.players.remove(playerid);
-			logger.info(playerName + " has changed Settings.");
+			logger.info(playerName + " has changed his Settings.");
 		} else {
 			logger.info(playerName + " has joined the Lobby.");
 		}

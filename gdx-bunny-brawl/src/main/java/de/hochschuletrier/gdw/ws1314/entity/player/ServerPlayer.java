@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,18 +10,25 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
+
+
+
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-
+import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -29,8 +38,10 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener
+public class ServerPlayer extends ServerEntity implements IStateListener, QueryCallback
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
@@ -58,8 +69,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	public static final float WIDTH = 32.0f;
 	public static final float HEIGHT = 32.0f;
 
+	public static final float EGG_CARRY_SPEED_PENALTY = 0.15f;
 
-    private PlayerInfo	playerInfo;
+        private boolean isOnBridge = false;
+
+
+    private PlayerData	playerData;
     private PlayerKit 	playerKit;
     private TeamColor	teamColor;
     
@@ -90,6 +105,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
+    private long				droppedEggID;
+    
     public ServerPlayer()
     {
     	super();
@@ -103,8 +120,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-    	facingDirection = FacingDirection.NONE;
     	desiredDirection = FacingDirection.NONE;
+    	facingDirection = FacingDirection.DOWN;
+    	speedBuffTimer = 0.0f;
+    	speedBuffDuration = 0.0f;
+    	speedBuffActive = false;
+    	droppedEggID = -1l;
     }
     
     public void enable() {}
@@ -131,7 +152,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     		speedBuffTimer += deltaTime;
     		if (speedBuffTimer >= speedBuffDuration)
     		{
-    			walkingState.setSpeedFactor(1.0f);
+    			walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
     			speedBuffActive = false;
     		}
     	}
@@ -256,17 +277,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	moveEnd();
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
     }
     
     protected void moveEnd()
     {
-    	// TODO brake impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
-    	//physicsBody.setLinearVelocity(FacingDirection.NONE.getDirectionVector());
     	physicsBody.setLinearDamping(BRAKING);
     }
     
@@ -282,11 +298,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     public void dropEgg()
     {
-    	// TODO Place egg on map
-    	
+    	if (currentEggCount > 0)
+    	{
     	currentEggCount--;
-    	if (currentEggCount < 0)
-    		currentEggCount = 0;
+    		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
+    		droppedEggID = egg.getID();
+    	}
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
@@ -302,17 +319,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Hunter:
              case Knight:
              case Noob:
+            	 ServerPlayer player = (ServerPlayer) otherEntity;
+            	 player.physicsBody.setLinearDamping(10);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 System.out.println(this.getCurrentEggCount());
-            	 if(this.currentEggCount < this.playerKit.getMaxEggCount()){
+            	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 {
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             	 this.currentEggCount++;
             	 }
             	 break;
-             case Projectil: 
             	
+             case Projectil:
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                  if (getID() == projectile.getSourceID())
                  	return;
@@ -320,7 +339,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  	applyDamage(projectile.getDamage());
                  ServerEntityManager.getInstance().removeEntity(otherEntity);
 
-            	  
             	 break;
              case Bridge: 		
             	 ServerBridge bridge = (ServerBridge) otherEntity;
@@ -330,6 +348,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 * if(!bridge.getVisibility()){
             		 this.physicsBody.setPosition(0, 0);
             	  }*/
+                 
+                 this.isOnBridge = true;
             	 break;
              case BridgeSwitch:	
             	 break;
@@ -346,7 +366,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 
             	 break;
              case Carrot:
-            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
+            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
             	 ServerCarrot carrot = (ServerCarrot) otherEntity;
             	 ServerEntityManager.getInstance().removeEntity(carrot);
 
@@ -356,6 +376,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Clover:
             	 break;
              case WaterZone:
+                 
+                 float upperX = this.getPosition().x - 28;
+                 float lowerX = this.getPosition().x + 28;
+                 float upperY = this.getPosition().y - 28;
+                 float lowerY = this.getPosition().y + 28;
+                 this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
+                 
             	 break;
              case AbyssZone:
             	 break;
@@ -370,7 +397,24 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  
          }
     }
-    public void endContact(Contact contact) 	{}
+    public void endContact(Contact contact) 	
+    {
+    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+         
+         if(otherEntity == null)
+             return;
+         
+         switch(otherEntity.getEntityType()) 
+         {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+                case Bridge:
+                    this.isOnBridge = false;
+                    break;
+         }
+    }
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
@@ -379,9 +423,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
-    public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
+    public PlayerData		getPlayerInfo()			{ return playerData; }
     public PlayerKit		getPlayerKit()			{ return playerKit; }
-    public TeamColor		getTeamColor()			{ return playerInfo.getTeam(); }
+    public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     
     public void setPlayerKit(PlayerKit kit)
@@ -391,14 +435,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	currentArmor = kit.getBaseArmor();
     }
     
-    public void setPlayerInfo(PlayerInfo info)
+    public void setPlayerData(PlayerData pd)
     {
-    	playerInfo = info;
-    }
-    
-    public void setTeamColor(TeamColor color)
-    {
-    	playerInfo.setTeam(color);
+    	playerData = pd;
     }
 
     public void applySpeedBuff(float factor, float duration)
@@ -416,7 +455,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(WIDTH, HEIGHT));
+				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(28));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);
@@ -463,4 +502,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		
 		// TODO Calculate KnockbackImpulse
 	}
+        
+        public boolean reportFixture (Fixture fixture) {
+            
+            try {
+                PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
+                ServerEntity entity = (ServerEntity)body.getOwner();
+                
+                if(entity.getEntityType() == EntityType.WaterZone && this.isOnBridge) {
+                    this.reset();
+                    return false;
+                }
+            } catch(Exception e) {
+            }
+            return true;
+        }
 }

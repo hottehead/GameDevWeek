@@ -1,25 +1,24 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import com.badlogic.gdx.Gdx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
-import de.hochschuletrier.gdw.ws1314.sound.*;
+import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
  * Menu state
@@ -27,11 +26,14 @@ import de.hochschuletrier.gdw.ws1314.sound.*;
  * @author Santo Pfingsten
  */
 public class MainMenuState extends GameState implements InputProcessor {
-
+	private static final Logger logger = LoggerFactory.getLogger(MainMenuState.class);
+	
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
     private LocalMusic music;
 	AnimationExtended walking;
+
+	private MainMenuStage stage;
 
     public MainMenuState() {
     }
@@ -53,23 +55,22 @@ public class MainMenuState extends GameState implements InputProcessor {
             }
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
+        
+		stage = new MainMenuStage();
+		stage.init(assetManager);
+		
+		stage.getStartServerButton().addListener(new StartServerClick());
+		stage.getStartClientButton().addListener(new StartClientClick());
     }
 
     @Override
     public void render() {
-		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		DrawUtil.batch.draw(keyFrame, 0, 0);
-    }
-
-	float stateTime = 0f;
-    @Override
-    public void update(float delta) {
-		stateTime += delta;
+		stage.render();
     }
 
     @Override
     public void onEnter() {
-        inputProcessor.setActive(true);
+        inputProcessor.setActive(false);
         
         if (this.music.isMusicPlaying())
         	this.music.deMute();
@@ -81,6 +82,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void onLeave() {
     	this.music.mute();
         inputProcessor.setActive(false);
+        
     }
 
     @Override
@@ -125,5 +127,23 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+    
+    private class StartServerClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Changing State to Server-Lobby...");
+			GameStates.SERVERLOBBY.init(assetManager);
+			GameStates.SERVERLOBBY.activate();
+		}
+    }
+    
+    private class StartClientClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Changing State to Client-Lobby...");
+			GameStates.CLIENTLOBBY.init(assetManager);
+			GameStates.CLIENTLOBBY.activate();
+		}
     }
 }

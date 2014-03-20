@@ -8,6 +8,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
@@ -271,6 +272,9 @@ public class NetworkManager{
 			else if(entity instanceof ServerPlayer){
 				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
 			}
+			else if(entity instanceof Zone){
+				//Intentionally ignored.
+			}
 			else{
 				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
 			}
@@ -347,7 +351,7 @@ public class NetworkManager{
 			}
 
 			if(!connection.isConnected()){
-				logger.info("[SERVER] {} disconnected.", ((PlayerData) connection.getAttachment()).getPlayername());
+				logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) connection.getAttachment()).getPlayername());
 				it.remove();
 			}
 		}

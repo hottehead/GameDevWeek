@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerBridge extends ServerLevelObject
 {
+	boolean isVisible = false;
 	/* FIXME:
 	 * Comment: von Fabio Gimmillaro (Der komische Typ ganz hinten rechts)
 	 * Bridge braucht ID, damit man einer Brücke bestimmte Schalter hinzufügen kann
@@ -33,7 +34,7 @@ public class ServerBridge extends ServerLevelObject
 	 * 
 	*/
 	
-	public ServerBridge(long ID)
+	public ServerBridge()
 	{
 	}
 	
@@ -78,11 +79,18 @@ public class ServerBridge extends ServerLevelObject
 									.fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager)
 									.density(0.5f).friction(0.0f)
-									.restitution(0.0f).shapeBox(100,200));
+									.restitution(0.0f).sensor(true).shapeBox(100,200));
 		
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
 		
+	}
+	@Override
+	public boolean getVisibility(){
+		return isVisible;
+	}
+	public void setVisiblity(boolean b){
+		isVisible = b;
 	}
 }

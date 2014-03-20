@@ -54,8 +54,8 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 	public void readFromMessage(INetMessageIn message){
 		entityId = message.getLong();
 		type = message.getEnum(EntityType.class);
-		xposition = message.getLong();
-		yposition = message.getLong();
+		xposition = message.getFloat();
+		yposition = message.getFloat();
 		visibility = message.getBool();
 	}
 
