@@ -31,6 +31,9 @@ public class NetworkManager{
 
 	private static NetworkManager instance = new NetworkManager();
 
+	private final String DEFAULT_SERVER_IP = "0.0.0.0";
+	private final int DEFAULT_PORT = 54293;
+
 	private NetConnection clientConnection = null;
 	private ArrayList<NetConnection> serverConnections = null;
 	private NetReception serverReception = null;
@@ -80,7 +83,7 @@ public class NetworkManager{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
 
 			if(serverReception.isRunning()){
-				logger.info("[SERVER] is running and listening at {}:{}", InetAddress.getLocalHost().getHostAddress(), port);
+				logger.info("[SERVER] is running and listening at {}:{}", getMyIp(), port);
 			}
 		}
 		catch (IOException e){
@@ -112,6 +115,29 @@ public class NetworkManager{
 
 	public GameStateCallback getGameStateCallback(){
 		return gameStateCallback;
+	}
+
+	/**
+	 * ONLY FOR LISTEN OF A SERVER
+	 */
+	public String getDefaultServerIp(){
+		return DEFAULT_SERVER_IP;
+	}
+
+	/**
+	 * Default Port
+	 */
+	public int getDefaultPort(){
+		return DEFAULT_PORT;
+	}
+
+	public String getMyIp(){
+		try{
+			return InetAddress.getLocalHost().getHostAddress().toString();
+		}catch (Exception e){
+			logger.error("NWM: error at reading local host IP, fallback to localhost\n{}", e);
+			return "127.0.0.1";
+		}
 	}
 
 	public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
@@ -247,7 +273,7 @@ public class NetworkManager{
 	}
 
 	public void init(){
-		new NetworkCommands(instance);
+		new NetworkCommands();
 		addChatListener(new ConsoleChatListener());
 	}
 

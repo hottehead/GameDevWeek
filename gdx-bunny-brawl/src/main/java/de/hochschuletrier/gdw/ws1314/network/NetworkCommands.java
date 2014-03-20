@@ -15,12 +15,8 @@ import java.util.List;
  */
 public class NetworkCommands{
 	private static final Logger logger = LoggerFactory.getLogger(NetworkCommands.class);
-	private final String defaultIP = "0.0.0.0";
-	private final int defaultPort = 666;
-	private NetworkManager networkManager;
 
-	public NetworkCommands(NetworkManager networkManager){
-		this.networkManager = networkManager;
+	public NetworkCommands(){
 		Main.getInstance().console.register(connectCmd);
 		Main.getInstance().console.register(listenCmd);
 		Main.getInstance().console.register(sayCmd);
@@ -46,7 +42,7 @@ public class NetworkCommands{
 			try{
 				String ip = args.get(1);
 				int port = Integer.parseInt(args.get(2));
-				networkManager.connect(ip, port);
+				NetworkManager.getInstance().connect(ip, port);
 			}
 			catch (NumberFormatException e){
 				showUsage();
@@ -70,7 +66,7 @@ public class NetworkCommands{
 				if(args.size() > 3){
 					maxConnections = Integer.parseInt(args.get(3));
 				}
-				networkManager.listen(ip, port, maxConnections);
+				NetworkManager.getInstance().listen(ip, port, maxConnections);
 			}
 			catch (NumberFormatException e){
 				showUsage();
@@ -86,12 +82,12 @@ public class NetworkCommands{
 
 		@Override
 		public void execute(List<String> args){
-			networkManager.sendChat(StringUtils.untokenize(args, 1, -1, false));
+			NetworkManager.getInstance().sendChat(StringUtils.untokenize(args, 1, -1, false));
 		}
 	};
 
-	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "[SERVER] Start listening for client connections at " + defaultIP + " and Port " +
-			defaultPort + ". (Become a server.)", 0){
+	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "[SERVER] Start listening for client connections at " + NetworkManager.getInstance()
+			.getDefaultServerIp() + " and Port " + NetworkManager.getInstance().getDefaultPort() + ". (Become a server.)", 0){
 
 		@Override
 		public void showUsage(){
@@ -105,7 +101,7 @@ public class NetworkCommands{
 				if(args.size() > 3){
 					maxConnections = Integer.parseInt(args.get(3));
 				}
-				networkManager.listen(defaultIP, defaultPort, maxConnections);
+				NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), maxConnections);
 			}
 			catch (NumberFormatException e){
 				logger.error("[SERVER] Can't create Server with default data:", e);
@@ -123,7 +119,7 @@ public class NetworkCommands{
 		@Override
 		public void execute(List<String> args){
 			try{
-				networkManager.stopServer();
+				NetworkManager.getInstance().stopServer();
 			}
 			catch (NumberFormatException e){
 				showUsage();
@@ -141,7 +137,7 @@ public class NetworkCommands{
 		@Override
 		public void execute(List<String> args){
 			try{
-				networkManager.disconnectFromServer();
+				NetworkManager.getInstance().disconnectFromServer();
 			}
 			catch (NumberFormatException e){
 				logger.error("[CLIENT] Can't disconnect from Server:", e);
@@ -156,18 +152,22 @@ public class NetworkCommands{
 			showUsage("<flag> [l = localhost, t = test server, j = jerry]");
 		}
 
+		/**
+		 * DON'T USE ME EXCEPT YOU WHAT YOU DO
+		 * @param args
+		 */
 		@Override
 		public void execute(List<String> args){
 			try{
 				logger.warn("[CLIENT][dc] is only for network development tests !");
 				if(args.get(1).equals("l")){
-					networkManager.connect("localhost", defaultPort);
+					NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
 				}
 				else if(args.get(1).equals("t")){
-					networkManager.connect("143.93.55.135", defaultPort);
+					NetworkManager.getInstance().connect("143.93.55.135", NetworkManager.getInstance().getDefaultPort());
 				}
 				else if(args.get(1).equals("j")){
-					networkManager.connect("143.93.55.141", defaultPort);
+					NetworkManager.getInstance().connect("143.93.55.141", NetworkManager.getInstance().getDefaultPort());
 				}
 			}
 			catch (Exception e){
