@@ -11,6 +11,8 @@ import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
+import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 
 /**
  * Menu state
@@ -23,6 +25,8 @@ public class GameplayState extends GameState implements InputProcessor {
 	private ServerGame game;
 	private ClientGame tmpGame;
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
+	private LocalMusic stateMusic;
+	private LocalSound stateSound;
 	
 	private GameplayStage stage;
 
@@ -37,13 +41,16 @@ public class GameplayState extends GameState implements InputProcessor {
 		game.init(assetManager);
 		tmpGame = new ClientGame();
 		tmpGame.init(assetManager);
+		stateMusic = new LocalMusic(assetManager);
+		stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);
 
 		Main.inputMultiplexer.addProcessor(this);
 		
 		stage = new GameplayStage();
 		stage.init(assetManager);
 	}
-
+	
 	public void render() {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
@@ -59,7 +66,13 @@ public class GameplayState extends GameState implements InputProcessor {
 		game.update(delta);
 		tmpGame.update(delta);
 		stage.setFPSCounter(delta);
+		stage.step();
 		fpsCalc.addFrame();
+		
+		
+		//TODO: connect ui to gamelogic
+		//debug healthbar till connected to gamelogic
+		stage.step();
 	}
 
 	@Override
