@@ -57,24 +57,24 @@ public class GameplayStage extends AutoResizeStage {
 		
 		//healthbar
 		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager, 114, 450, 300, 40);
+		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 300, 40);
 		healthBar.setDecimalSpace(2);
 		
 		//class icon
-		classIcon = new VisualBox(assetManager.getTexture("debugClass"), 50, 425, 64, 64);
+		classIcon = new VisualBox(assetManager.getTexture("debugClass"), 20, Gdx.graphics.getHeight()-80, 60, 60);
 		decor = new StaticTextElement(font, "Klasse", this.classIcon.getWidth()*.5f, -14);
 		classIcon = new BoxOffsetDecorator(classIcon, decor);
 		
 		//buffs
-		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 334, 425, 20, 20);
-		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 364, 425, 20, 20);
-		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 394, 425, 20, 20);
+		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 300, Gdx.graphics.getHeight()-80, 20, 20);
+		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 330, Gdx.graphics.getHeight()-80, 20, 20);
+		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 360, Gdx.graphics.getHeight()-80, 20, 20);
 		
 		//action icons
-		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 470, 430, 60, 60);
+		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), (Gdx.graphics.getWidth()*.5f)-50, Gdx.graphics.getHeight()-80, 60, 60);
 		decor = new StaticTextElement(font, "Attacke", attackIcon.getWidth()*.5f,  -14);
 		attackIcon = new BoxOffsetDecorator(this.attackIcon, decor);
-		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), 570, 430, 60, 60);
+		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), (Gdx.graphics.getWidth()*.5f)+50, Gdx.graphics.getHeight()-80, 60, 60);
 		decor = new StaticTextElement(font, "Ei ablegen", layEggIcon.getWidth()*.5f,  -14);
 		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, decor);
 		
@@ -82,7 +82,7 @@ public class GameplayStage extends AutoResizeStage {
 		//score icons
 		DynamicTextElement textScore;
 		
-		scoreTeamIcon = new VisualBox(assetManager.getTexture("debugScoreTeam"), 470, 40, 60, 60);
+		scoreTeamIcon = new VisualBox(assetManager.getTexture("debugScoreTeam"), (Gdx.graphics.getWidth()*.5f)-50, 40, 60, 60);
 		scoreTeam = new MinMaxValue(0, maxScore, 1);
 		textScore = new DynamicTextElement(font, "0", scoreTeamIcon.getWidth()*.5f, 50, scoreTeam);
 		textScore.setDecimalPLace(0);
@@ -90,7 +90,7 @@ public class GameplayStage extends AutoResizeStage {
 		decor = new StaticTextElement(font, "Team 1", this.scoreTeamIcon.getWidth()*.5f, -14);
 		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, decor);
 		
-		scoreEnemyIcon = new VisualBox(assetManager.getTexture("debugScoreEnemy"), 570, 40, 60, 60);
+		scoreEnemyIcon = new VisualBox(assetManager.getTexture("debugScoreEnemy"), (Gdx.graphics.getWidth()*.5f)+50, 40, 60, 60);
 		scoreEnemy = new MinMaxValue(0, maxScore, 1);
 		textScore = new DynamicTextElement(font, "0", scoreEnemyIcon.getWidth()*.5f, 50, scoreEnemy);
 		textScore.setDecimalPLace(0);
