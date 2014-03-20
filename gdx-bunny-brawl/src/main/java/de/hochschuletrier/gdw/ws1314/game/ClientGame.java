@@ -86,8 +86,10 @@ public class ClientGame {
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 
+//		materialManager.provideMaterial(ClientPlayer.class,
+//				new MaterialInfo("debugTeam", 32, 32, 1));
 		materialManager.provideMaterial(ClientPlayer.class,
-				new MaterialInfo("debugTeam", 32, 32, 1));
+				new MaterialInfo("singleBunny", 110, 110, 1));
 		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
 		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo("debugCarrot", 32, 32, 0));
 
@@ -108,28 +110,27 @@ public class ClientGame {
 	float fadeIn = 0.25f;
 
 	public void render() {
-		// sceneToTexture.begin();
-		// DrawUtil.batch.setShader(advShader);
-		// sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
+//		 sceneToTexture.begin();
+//		 DrawUtil.batch.setShader(advShader);
+//		 sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 
 		for (Layer layer : map.getLayers()) {
 			if (layer.getType() == Layer.Type.OBJECT
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
 			} else {
-				System.out.println(layer.getProperties());
 				mapRenderer.render(0, 0, layer);
 			}
 		}
 		DrawUtil.batch.flush();
-		// sceneToTexture.end();
-
-		// DrawUtil.batch.setShader(postProcessing);
-		// postProcessing.setUniformi(
-		// postProcessing.getUniformLocation("u_prevStep"), 1);
-
-		// DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
-		// DrawUtil.batch.setShader(null);
+//		 sceneToTexture.end();
+//
+//		 DrawUtil.batch.setShader(postProcessing);
+//		 postProcessing.setUniformi(
+//		 postProcessing.getUniformLocation("u_prevStep"), 1);
+//
+//		 DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
+//		 DrawUtil.batch.setShader(null);
 
 		sceneToTexture.swap();
 	}
