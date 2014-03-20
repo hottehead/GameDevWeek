@@ -32,5 +32,6 @@ void main() {
 
 	vec4 outColor = vec4(currentFrame.rgb, currentFrame.a+prevFrame.a);
 
-	gl_FragData[0] = vec4(currentFrame.rgb, currentFrame.a);
+	//gl_FragData[0] = vec4(currentFrame.rgb, prevFrame.acurrentFrame.a);
+	gl_FragData[0] = outColor;
 }

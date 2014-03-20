@@ -11,12 +11,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
+import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 import de.hochschuletrier.gdw.ws1314.sound.*;
 
@@ -30,6 +33,9 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
     private LocalMusic music;
+	AnimationExtended walking;
+	
+	private MainMenuStage stage;
 
     public MainMenuState() {
     }
@@ -37,6 +43,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+		walking = assetManager.getAnimation("walking");
         this.music = new LocalMusic(assetManager);
         inputProcessor = new InputInterceptor(this) {
             @Override
@@ -53,15 +60,22 @@ public class MainMenuState extends GameState implements InputProcessor {
             }
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
+        
+		stage = new MainMenuStage();
+		stage.init(assetManager);
     }
 
     @Override
     public void render() {
+		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+		DrawUtil.batch.draw(keyFrame, 0, 0);
+//		stage.render();
     }
 
+	float stateTime = 0f;
     @Override
     public void update(float delta) {
-    
+		stateTime += delta;
     }
 
     @Override

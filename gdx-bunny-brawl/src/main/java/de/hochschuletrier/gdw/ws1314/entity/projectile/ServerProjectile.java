@@ -130,12 +130,6 @@ public class ServerProjectile extends ServerEntity {
                 case Hunter:
                 case Knight:
                 case Noob:
-                    ServerPlayer player = (ServerPlayer)otherEntity;
-                    if (player.getID() == sourceID)
-                    	return;
-                    if (player.getTeamColor() != this.teamColor)
-                    	player.applyDamage(damage);
-                    ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;
@@ -165,7 +159,6 @@ public class ServerProjectile extends ServerEntity {
         float distance = pos.sub(originPosition).len();
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
-            logger.info("P O W !!!");
         }
 	}
 

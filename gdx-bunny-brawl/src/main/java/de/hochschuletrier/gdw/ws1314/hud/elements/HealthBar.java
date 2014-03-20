@@ -22,7 +22,7 @@ public class HealthBar {
 	private int maxHealthValue;
 	
 	public HealthBar(int maxHealthValue) {
-		logicRepresentation = new MinMaxValue(0, maxHealthValue, 10);
+		logicRepresentation = new MinMaxValue(0, maxHealthValue, -5);
 		logicRepresentation.setValue(maxHealthValue);
 		this.maxHealthValue = maxHealthValue;
 	}

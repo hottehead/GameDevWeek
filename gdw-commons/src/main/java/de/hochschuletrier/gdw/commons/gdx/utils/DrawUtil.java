@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.commons.gdx.utils;
 
+import java.util.LinkedList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,10 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-
-import java.util.LinkedList;
 
 /**
  *
@@ -25,6 +24,9 @@ public class DrawUtil {
 	private static Texture white;
     private static LinkedList<Matrix4> matrixStack = new LinkedList<Matrix4>();
 	private static OrthographicCamera camera;
+	
+	public static OrthographicCamera screenSpace;
+	
     public enum Mode {
 
         NORMAL,
@@ -37,6 +39,7 @@ public class DrawUtil {
 
 	public static void init() {
 		camera = new OrthographicCamera();
+		screenSpace = new OrthographicCamera();
         // create a white image for filling rects
 		Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888);
 		pixmap.setColor(Color.WHITE);
@@ -62,6 +65,9 @@ public class DrawUtil {
 		camera.setToOrtho(true, width, height);
 		camera.position.set(width / 2, height / 2, 0);
 		camera.update(true);
+		
+		screenSpace.setToOrtho(true, width, height);
+		screenSpace.update(true);
 	}
 
     public static void setClip(int x, int y, int width, int height) {
@@ -208,5 +214,14 @@ public class DrawUtil {
         m.rotate(0, 0, 1, degrees);
         m.translate(-x, -y, 0);
         batch.setTransformMatrix(m);
+    }
+    
+    public static void startRenderToScreen() {
+    	screenSpace.update();
+		batch.setProjectionMatrix(screenSpace.combined);
+    }
+    
+    public static void endRenderToScreen() {
+    	batch.setProjectionMatrix(camera.combined);
     }
 }
