@@ -196,12 +196,13 @@ public class LevelLoader {
         ServerEntity entity = null;
 		switch (type) {
 		case "solid":
+		
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
 					.position(x, y).create();
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapeBox(width, height));
 			break;
-        case "water":
+		case "water":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
             zone.setWaterZone();
             break;
