@@ -22,6 +22,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
+import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
 import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
@@ -43,7 +44,7 @@ public class ClientGame {
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
-
+	
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
@@ -51,6 +52,7 @@ public class ClientGame {
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
 
+	
 	}
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;
@@ -70,7 +72,8 @@ public class ClientGame {
 
 		initMaterials(assets);
 		
-		cameraFollowingBehaviour = new CameraFollowingBehaviour(DrawUtil.getCamera());
+		//FIXME: @Hati apply levelbounds from tiledmap file
+		cameraFollowingBehaviour = new CameraFollowingBehaviour(DrawUtil.getCamera(), new LevelBoundings(0,0, 2000, 2000));
 		
 		
 	}
@@ -98,35 +101,34 @@ public class ClientGame {
 	float fadeIn = 0.25f;
 
 	public void render() {
-		sceneToTexture.begin();
+//		sceneToTexture.begin();
 //		DrawUtil.batch.setShader(advShader);
 //		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 		for (Layer layer : map.getLayers()) {
+			System.out.println(layer.getName());
 			mapRenderer.render(0, 0, layer);
 		}
 		entityRenderer.draw();
 		DrawUtil.batch.flush();
-		sceneToTexture.end();
+//		sceneToTexture.end();
 
 //		DrawUtil.batch.setShader(postProcessing);
 //		postProcessing.setUniformi(
 //				postProcessing.getUniformLocation("u_prevStep"), 1);
-		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
+		
+//		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
 //		DrawUtil.batch.setShader(null);
 
 		sceneToTexture.swap();
 	}
 
-	boolean noPlayerSet=true;
-	
 	public void update(float delta) {
 		// fadeIn = Math.min(fadeIn + delta/100.0f, 1);
 		entityManager.update(delta);
 
 		long playerId = entityManager.getPlayerEntityID();
-		if (noPlayerSet && playerId != -1) {
+		if (playerId != -1) {
 			cameraFollowingBehaviour.setFollowingEntity(entityManager.getEntityById(playerId));
-			noPlayerSet=false;
 		}
 		cameraFollowingBehaviour.update(delta);
 	}
