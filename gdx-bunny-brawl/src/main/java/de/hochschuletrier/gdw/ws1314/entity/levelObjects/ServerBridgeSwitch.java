@@ -11,6 +11,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 
 /**
  * 
@@ -41,6 +43,22 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact)
 	{
+		 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+
+	        switch(otherEntity.getEntityType()) {
+	            case SwordAttack:
+	            case Projectil:
+	            	ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
+	     
+	            	if(bridge.getVisibility()){
+	            		ServerEntityManager.getInstance().removeEntity(bridge);
+	            	}
+	            	bridge.setVisibility(!bridge.getVisibility());
+	                break;
+	            default:
+	                break;
+	        }
+	        
 	}
 
 	@Override

@@ -3,12 +3,17 @@ package de.hochschuletrier.gdw.ws1314.entity.player.kit;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
+/**
+ * @author ElFapo
+ *  Who deleted this?
+ */
 public enum PlayerKit 
 {
-	
-    NOOB(EntityType.Noob, 100.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new BasicAttack(), new BasicAttack()),
-    HUNTER(EntityType.Hunter, 120.0f, 1, 80.0f, 0.0f, 1.0f, 1.0f, new AttackShootArrow(), new BasicAttack()),
-    KNIGHT(EntityType.Knight, 100.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new AttackSwingSword(), new BasicAttack());
+	//		TYPE				VELO	EGG HEALTH		ARMOR	COOLDOWNS	ATTACKS
+    NOOB(  EntityType.Noob, 	100.0f, 1, 	300.0f, 	0.0f, 	0.5f, 0.5f, new BasicAttack(), new BasicAttack()),
+    HUNTER(EntityType.Hunter, 	120.0f, 1, 	200.0f, 	0.0f, 	0.5f, 0.5f, new AttackShootArrow(), new BasicAttack()),
+    KNIGHT(EntityType.Knight, 	100.0f, 1, 	1000.0f, 	0.0f, 	1.0f, 0.5f, new AttackSwingSword(), new BasicAttack()),
+    TANK(  EntityType.Tank, 	70.0f,  3,  120.0f,		0.0f,	0.5f, 0.5f, new AttackBlow(), new BasicAttack());
     
     private final float 	maxVelocity;
     private final int 		maxEggCount;
@@ -26,8 +31,8 @@ public enum PlayerKit
     private PlayerKit (	EntityType entityType,
     					float 	maxVelocity, 
     					int 	maxEggCount, 
-    					float 	armor, 
     					float 	health, 
+    					float 	armor, 
     					float 	firstAttackCooldown, 
     					float 	secondAttackCooldown,
     					AttackType attack1,

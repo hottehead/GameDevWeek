@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,11 @@ public class ClientEgg extends ClientLevelObject
 	{
 		return EntityType.Ei;
 	}
+
+    @Override
+    public void doEvent(EventType event) {
+
+    }
 
     public void setPosition(Vector2 position)	{
         super.setPosition(position);

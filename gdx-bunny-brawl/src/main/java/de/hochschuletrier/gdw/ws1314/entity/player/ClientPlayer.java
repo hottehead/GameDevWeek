@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import org.slf4j.Logger;
@@ -46,6 +47,11 @@ public class ClientPlayer extends ClientEntity
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
     public void setPlayerInfo(PlayerInfo playerInfo)				{ this.playerInfo = playerInfo; }
     public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
+
+    @Override
+    public void doEvent(EventType event) {
+
+    }
     
     public void enable() {}
     public void disable() {}

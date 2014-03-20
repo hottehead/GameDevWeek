@@ -1,5 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.projectile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -35,11 +38,15 @@ public class ServerProjectile extends ServerEntity {
     private FacingDirection facingDirection;
     private TeamColor 		teamColor;
     private Vector2 		originPosition;
-    private float velocity;
-    private float flightDistance;
-    private float despawnTime;
+    private float 			velocity;
+    private float 			flightDistance;
+    private float 			despawnTime;
+    private float			damage;
+    private float			hitCircleRadius;
     
     private boolean physicsInitialized;
+    
+    private static final Logger logger = LoggerFactory.getLogger(ServerProjectile.class);
 
 
     //==================================================
@@ -53,13 +60,27 @@ public class ServerProjectile extends ServerEntity {
             this.velocity = 0.0f;
             this.flightDistance = 0.0f;
             this.despawnTime = 0.0f;
+            this.damage = 0.0f;
+            this.hitCircleRadius = 1.0f;
             this.physicsInitialized = false;
+    }
+    
+    public void setDamage(float dmg) {
+    	damage = dmg;
+    }
+    
+    public float getDamage() {
+    	return damage;
     }
 	
 	public void setPhysicalParameters(float velocity, float distance, float despawnTime) {
 		this.velocity = velocity;
 		this.flightDistance = distance;
 		this.despawnTime = despawnTime;
+	}
+	
+	public void setHitCircleRadius(float radius) {
+		hitCircleRadius = radius;
 	}
 	
 	public void setSource(long sourceID) {
@@ -112,9 +133,9 @@ public class ServerProjectile extends ServerEntity {
                     ServerPlayer player = (ServerPlayer)otherEntity;
                     if (player.getID() == sourceID)
                     	return;
-//                    if(player.getTeamColor() != this.teamColor) {
-//                        ServerEntityManager.getInstance().removeEntity(this);
-//                    }
+                    if (player.getTeamColor() != this.teamColor)
+                    	player.applyDamage(damage);
+                    ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;
@@ -140,10 +161,11 @@ public class ServerProjectile extends ServerEntity {
 		if (!physicsInitialized)
 			return;
 		
-        Vector2 position = this.physicsBody.getPosition();
-        float distance = this.originPosition.sub(position).len();
+        Vector2 pos = this.physicsBody.getPosition().cpy();
+        float distance = pos.sub(originPosition).len();
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
+            logger.info("P O W !!!");
         }
 	}
 
@@ -154,17 +176,30 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initPhysics(PhysixManager manager){
-        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
-        body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
-        body.setGravityScale(0);
-        body.addContactListener(this);
-        
-        setPhysicsBody(body);
-        
-        Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
-				  					facingDirection.getDirectionVector().y * velocity);
-        physicsBody.setLinearVelocity(vel);
-        
-        physicsInitialized = true;
+            this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
+                
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
+                    .position(this.originPosition)
+                    .fixedRotation(true)
+                    .angle(facingDirection.getAngle())
+                    .create();
+            
+            body.createFixture(new PhysixFixtureDef(manager)
+                    .density(0.5f)
+                    .friction(0.0f)
+                    .restitution(0.0f)
+                    .shapeCircle(hitCircleRadius)
+                    .sensor(true));
+            
+            body.setGravityScale(0);
+            body.addContactListener(this);
+
+            setPhysicsBody(body);
+
+            Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
+                                        facingDirection.getDirectionVector().y * velocity);
+            physicsBody.setLinearVelocity(vel);
+
+            physicsInitialized = true;
 	}	
 }
