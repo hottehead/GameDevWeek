@@ -14,7 +14,7 @@ import java.util.List;
  * Created by albsi on 20.03.14.
  */
 public class NetworkCommands{
-	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(NetworkCommands.class);
 	private final String defaultIP = "0.0.0.0";
 	private final int defaultPort = 666;
 	private NetworkManager networkManager;
@@ -34,7 +34,7 @@ public class NetworkCommands{
 		Main.getInstance().console.register(sendPlayerUpdateCmd);
 	}
 
-	private ConsoleCmd connectCmd = new ConsoleCmd("connect", 0, "Connect to a server.", 2){
+	private ConsoleCmd connectCmd = new ConsoleCmd("connect", 0, "[CLIENT] Connect to a server.", 2){
 
 		@Override
 		public void showUsage(){
@@ -53,7 +53,8 @@ public class NetworkCommands{
 			}
 		}
 	};
-	private ConsoleCmd listenCmd = new ConsoleCmd("listen", 0, "Start listening for client connections. (Become a server.)", 2){
+
+	private ConsoleCmd listenCmd = new ConsoleCmd("listen", 0, "[SERVER] Start listening for client connections. (Become a server.)", 2){
 
 		@Override
 		public void showUsage(){
@@ -89,8 +90,8 @@ public class NetworkCommands{
 		}
 	};
 
-	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "Start listening for client connections at " + defaultIP + " and Port " + defaultPort
-			+ ". " + "(Become a server.)", 0){
+	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "[SERVER] Start listening for client connections at " + defaultIP + " and Port " +
+			defaultPort + ". (Become a server.)", 0){
 
 		@Override
 		public void showUsage(){
@@ -107,12 +108,12 @@ public class NetworkCommands{
 				networkManager.listen(defaultIP, defaultPort, maxConnections);
 			}
 			catch (NumberFormatException e){
-				logger.error("Can't create Server with default data:", e);
+				logger.error("[SERVER] Can't create Server with default data:", e);
 			}
 		}
 	};
 
-	private ConsoleCmd stopCmd = new ConsoleCmd("stop", 0, "Stops the Server.", 0){
+	private ConsoleCmd stopCmd = new ConsoleCmd("stop", 0, "[SERVER] Stops the Server.", 0){
 
 		@Override
 		public void showUsage(){
@@ -130,7 +131,7 @@ public class NetworkCommands{
 		}
 	};
 
-	private ConsoleCmd disconnectCmd = new ConsoleCmd("disconnect", 0, "Client disconnects from Server.", 0){
+	private ConsoleCmd disconnectCmd = new ConsoleCmd("disconnect", 0, "[CLIENT] Client disconnects from Server.", 0){
 
 		@Override
 		public void showUsage(){
@@ -143,12 +144,12 @@ public class NetworkCommands{
 				networkManager.disconnectFromServer();
 			}
 			catch (NumberFormatException e){
-				logger.error("Can't disconnect from Server:", e);
+				logger.error("[CLIENT] Can't disconnect from Server:", e);
 			}
 		}
 	};
 
-	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[DEV CMD] only for network tests, connect to localhost or to test client", 1){
+	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[CLIENT][DEV CMD] only for network tests, connect to localhost or to test client.", 1){
 
 		@Override
 		public void showUsage(){
@@ -158,7 +159,7 @@ public class NetworkCommands{
 		@Override
 		public void execute(List<String> args){
 			try{
-				logger.warn("[dc] is only for network development tests !");
+				logger.warn("[CLIENT][dc] is only for network development tests !");
 				if(args.get(1).equals("l")){
 					networkManager.connect("localhost", defaultPort);
 				}
@@ -170,12 +171,12 @@ public class NetworkCommands{
 				}
 			}
 			catch (Exception e){
-				logger.error("can't connect to server", e);
+				logger.error("[CLIENT] can't connect to server", e);
 			}
 		}
 	};
 
-	private ConsoleCmd sendDevPlayerUpdateCmd = new ConsoleCmd("spu", 0, "[DEV CMD] only for network tests, sendPlayerUpdate", 1){
+	private ConsoleCmd sendDevPlayerUpdateCmd = new ConsoleCmd("spu", 0, "[CLIENT][DEV CMD] only for network tests, sendPlayerUpdate.", 1){
 
 		@Override
 		public void showUsage(){
@@ -185,7 +186,7 @@ public class NetworkCommands{
 		@Override
 		public void execute(List<String> args){
 			try{
-				logger.warn("[spu] is only for network development tests !");
+				logger.warn("[CLIENT][spu] is only for network development tests !");
 				if(args.get(1).equals("1")){
 					NetworkManager.getInstance().sendPlayerUpdate("player1", EntityType.Knight, TeamColor.BLACK, false);
 				}
@@ -197,12 +198,12 @@ public class NetworkCommands{
 				}
 			}
 			catch (Exception e){
-				logger.error("can't connect to server", e);
+				logger.error("[CLIENT] can't send data", e);
 			}
 		}
 	};
 
-	private ConsoleCmd sendLobbyUpdateCmd = new ConsoleCmd("sendLobbyUpdate", 0, "[DEBUG]", 0){
+	private ConsoleCmd sendLobbyUpdateCmd = new ConsoleCmd("sendLobbyUpdate", 0, "[SERVER][DEBUG] Post LobbyUpdate", 0){
 		@Override
 		public void showUsage(){
 			showUsage("");
@@ -214,7 +215,7 @@ public class NetworkCommands{
 		}
 	};
 
-	private ConsoleCmd sendMatchUpdateCmd = new ConsoleCmd("sendMatchUpdate", 0, "[DEBUG]Post a mapname.", 1){
+	private ConsoleCmd sendMatchUpdateCmd = new ConsoleCmd("sendMatchUpdate", 0, "[CLIENT][DEBUG] Post a mapname.", 1){
 		@Override
 		public void showUsage(){
 			showUsage("<mapname-text>");
@@ -226,7 +227,7 @@ public class NetworkCommands{
 		}
 	};
 
-	private ConsoleCmd sendPlayerUpdateCmd = new ConsoleCmd("sendPlayerUpdate", 0, "[DEBUG]Post playerdata", 1){
+	private ConsoleCmd sendPlayerUpdateCmd = new ConsoleCmd("sendPlayerUpdate", 0, "[CLIENT][DEBUG] Post playerdata.", 1){
 		@Override
 		public void showUsage(){
 			showUsage("<playername>");
