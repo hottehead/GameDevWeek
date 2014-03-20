@@ -34,18 +34,18 @@ public class ServerSpinach extends ServerLevelObject
 	
 	@Override
 	public void beginContact(Contact contact) {
-            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
-        switch(otherEntity.getEntityType()) {
-            case Tank:
-            case Hunter:
-            case Knight:
-            case Noob:
-                ServerEntityManager.getInstance().removeEntity(this);
-                break;
-            default:
-                break;
-        }
+//            ServerEntity otherEntity = this.identifyContactFixtures(contact);
+//
+//            switch(otherEntity.getEntityType()) {
+//                case Tank:
+//                case Hunter:
+//                case Knight:
+//                case Noob:
+//                    ServerEntityManager.getInstance().removeEntity(this);
+//                    break;
+//                default:
+//                    break;
+//            }
 	}
 
 	@Override
