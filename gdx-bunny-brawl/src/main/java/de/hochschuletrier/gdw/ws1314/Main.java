@@ -156,6 +156,7 @@ public class Main extends StateBasedGame {
 			}
 		});
 		
+		
 		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
 			
 			@Override
