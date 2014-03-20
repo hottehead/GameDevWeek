@@ -17,6 +17,7 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
@@ -84,10 +85,11 @@ public class ClientGame {
 
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
-		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
-				"debugTeam", 32, 32, 0));
-		materialManager.provideMaterial(ClientProjectile.class,
-				new MaterialInfo("debugArrow", 16, 16, 1));
+
+		materialManager.provideMaterial(ClientPlayer.class,
+				new MaterialInfo("debugTeam", 32, 32, 1));
+		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
+		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo("debugCarrot", 32, 32, 0));
 
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);

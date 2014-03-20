@@ -299,8 +299,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Tank:
              case Hunter:
              case Knight:
-             case Noob:
-//                  
+             case Noob:                 
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -309,15 +308,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             		 this.currentEggCount++;
             	 }
-     
             	 break;
              case Projectil: 
+
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                  if (getID() == projectile.getSourceID())
                  	return;
                  if (getTeamColor() != projectile.getTeamColor())
                  	applyDamage(projectile.getDamage());
                  ServerEntityManager.getInstance().removeEntity(otherEntity);
+
 
             	 break;
              case Bridge:
@@ -331,7 +331,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case BridgeSwitch:	
             	 break;
-             case Bush:			
+             case Bush:
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;

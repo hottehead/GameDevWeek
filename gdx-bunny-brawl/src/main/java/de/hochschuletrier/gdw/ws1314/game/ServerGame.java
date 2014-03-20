@@ -18,6 +18,7 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
@@ -61,6 +62,7 @@ public class ServerGame {
          entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
          entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
          entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
+         entityManager.createEntity(ServerCarrot.class, new Vector2(200, 200));
 	}
 
 	public void render() {
