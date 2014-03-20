@@ -46,15 +46,19 @@ public class ServerBridgeSwitch extends ServerLevelObject
 		 ServerEntity otherEntity = this.identifyContactFixtures(contact);
 
 	        switch(otherEntity.getEntityType()) {
-	            case Tank:
-	            case Hunter:
-	            case Knight:
-	            case Noob:
-	            	ServerEntityManager.getInstance().getEntityById(targetID);
+	            case SwordAttack:
+	            case Projectil:
+	            	ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
+	     
+	            	if(bridge.getVisibility()){
+	            		ServerEntityManager.getInstance().removeEntity(bridge);
+	            	}
+	            	bridge.setVisibility(!bridge.getVisibility());
 	                break;
 	            default:
 	                break;
 	        }
+	        
 	}
 
 	@Override
