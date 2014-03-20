@@ -113,7 +113,6 @@ public class ClientGame {
 		// sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 
 		for (Layer layer : map.getLayers()) {
-			System.out.print(layer.getName() + " : ");
 			if (layer.getType() == Layer.Type.OBJECT
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();

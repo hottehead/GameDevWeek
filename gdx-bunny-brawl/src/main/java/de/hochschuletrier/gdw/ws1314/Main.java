@@ -25,8 +25,10 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
+import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
@@ -75,11 +77,11 @@ public class Main extends StateBasedGame {
 
 		assetManager.loadAssetList("data/json/music.json", Music.class, null);
 
+		assetManager.loadAssetListWithParam("data/json/animations.json",
+				AnimationExtended.class,
+				AnimationExtendedLoader.AnimationExtendedParameter.class);
 		TiledMapParameter mapParam = new TiledMapParameter();
 		assetManager.loadAssetList("data/json/maps.json", TiledMap.class, mapParam);
-
-		assetManager.loadAssetListWithParam("data/json/animations.json", Animation.class,
-				AnimationLoader.AnimationParameter.class);
 
 		BitmapFontParameter fontParam = new BitmapFontParameter();
 		fontParam.flip = true;
@@ -115,7 +117,7 @@ public class Main extends StateBasedGame {
 
 		GameStates.LOADING.init(assetManager);
 		GameStates.LOADING.activate();
-        
+
 		NetworkManager.getInstance().init();
 	}
 
@@ -157,8 +159,8 @@ public class Main extends StateBasedGame {
 			consoleView.update(delta);
 		}
 		console.executeCmdQueue();
-        
-    	NetworkManager.getInstance().update();
+
+		NetworkManager.getInstance().update();
 	}
 
 	@Override
