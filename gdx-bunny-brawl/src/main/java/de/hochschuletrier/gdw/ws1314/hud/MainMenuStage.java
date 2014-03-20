@@ -64,7 +64,7 @@ public class MainMenuStage extends AutoResizeStage {
 		startServer = new TextButton("start Server", defaultSkin);
 		startClient = new TextButton("start Client", defaultSkin);
 		uiTable.row().padTop(20);
-		uiTable.add(startServer).row();
+		uiTable.add(startServer).row().padTop(20);
 		uiTable.add(startClient);
 	}
 
