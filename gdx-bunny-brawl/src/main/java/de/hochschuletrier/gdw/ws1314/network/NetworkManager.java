@@ -205,7 +205,7 @@ public class NetworkManager {
     }
 
     public void sendGameState(GameStates gameStates) {
-		if (!isClient())
+		if (!isServer())
 			return;
         broadcastToClients(new GameStateDatagram(gameStates));
     }
