@@ -331,7 +331,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case BridgeSwitch:	
             	 break;
-             case Bush:			
+             case Bush:
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
