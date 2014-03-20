@@ -16,7 +16,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 
-public class MainMenuStage extends AutoResizeStage {
+public class ServerLobbyStage extends AutoResizeStage {
 	
 	private BitmapFont font;
 	private Skin defaultSkin;
@@ -28,7 +28,7 @@ public class MainMenuStage extends AutoResizeStage {
 	private TextButton startClient;
 	private TextButton startServer;
 	
-	public MainMenuStage() {
+	public ServerLobbyStage() {
 		super();
 	}
 
@@ -43,10 +43,11 @@ public class MainMenuStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 		//info
-		Label label = new Label("escape still works - level list not", defaultSkin);
+		Label label = new Label("Server is listening . . .", defaultSkin);
 		uiTable.add(label);
 		uiTable.row().pad(20).bottom();
 		
+		/*
 		//level list
 		levelList = new LevelList(defaultSkin);
 		//add levels for testing
@@ -64,8 +65,9 @@ public class MainMenuStage extends AutoResizeStage {
 		startServer = new TextButton("start Server", defaultSkin);
 		startClient = new TextButton("start Client", defaultSkin);
 		uiTable.row().padTop(20);
-		uiTable.add(startServer).row();
-		uiTable.add(startClient);
+		uiTable.add(startClient).row();
+		uiTable.add(startServer);
+		*/
 	}
 
 	public void render() {		
