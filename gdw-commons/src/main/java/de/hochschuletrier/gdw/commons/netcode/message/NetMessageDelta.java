@@ -274,7 +274,7 @@ public class NetMessageDelta implements INetMessageInternal {
     
     @Override
     public <T> T getEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[get()];
+        return clazz.getEnumConstants()[getInt()];
     }
 
     @Override

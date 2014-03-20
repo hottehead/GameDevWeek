@@ -20,6 +20,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
@@ -32,7 +33,7 @@ import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 // Modfied by El Fapo: updated intention changes
 public class ClientGame {
 	private ClientEntityManager entityManager;
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
@@ -46,7 +47,7 @@ public class ClientGame {
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
-		netManager = ClientServerConnect.getInstance();
+		netManager = NetworkManager.getInstance();
 		
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);

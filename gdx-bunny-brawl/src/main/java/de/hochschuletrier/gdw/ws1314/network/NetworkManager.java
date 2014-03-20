@@ -8,13 +8,28 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+
+import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+
+import de.hochschuletrier.gdw.ws1314.network.datagrams.LevelObjectReplicationDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
+
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import org.slf4j.Logger;
@@ -83,9 +98,11 @@ public class NetworkManager {
 		serverConnections = new ArrayList<NetConnection>();
 		try {
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
+
 			if (serverReception.isRunning()) {
 				logger.info("Listening, IP: {} Port: {}", InetAddress.getLocalHost()
 						.getHostAddress(), port);
+
 			}
 		} catch (IOException e) {
 			logger.error("Can't listen for connections.", e);
@@ -197,8 +214,7 @@ public class NetworkManager {
 	}
 
 	public void sendPlayerUpdate(String playerName, EntityType type, TeamColor team, boolean accept) {
-		if (!isClient())
-			return;
+		if(!isClient()) return;
 		clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
 	}
 
@@ -548,5 +564,9 @@ public class NetworkManager {
 		} catch (Exception e) {
 			logger.error("Can't Stop Server:", e);
 		}
+	}
+
+    public void setPlayerEntityId(int playerId, long entityId){
+    	//TODO Implement
 	}
 }

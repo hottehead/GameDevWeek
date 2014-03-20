@@ -43,10 +43,11 @@ public class MainMenuState extends GameState implements InputProcessor {
             public boolean keyUp(int keycode) {
                 switch (keycode) {
                     case Keys.ESCAPE:
-                        if(GameStates.GAMEPLAY.isActive())
-                            GameStates.MAINMENU.activate(new SplitHorizontalTransition(500).reverse(), null);
+                        if(GameStates.MAINMENU.isActive()){
+                        	//GameStates.SERVERGAMEPLAY.activate(new SplitHorizontalTransition(500), null);
+                        }
                         else
-                            GameStates.GAMEPLAY.activate(new SplitHorizontalTransition(500), null);
+                            GameStates.MAINMENU.activate(new SplitHorizontalTransition(500).reverse(), null);
                         return true;
                 }
                 return isActive && mainProcessor.keyUp(keycode);
