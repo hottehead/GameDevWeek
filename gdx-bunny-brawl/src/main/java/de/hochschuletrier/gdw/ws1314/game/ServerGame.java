@@ -54,7 +54,7 @@ public class ServerGame {
         entityManager.setPhysixManager(manager);
 		netManager = ClientServerConnect.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
-		//loadSolids();
+		
     }
 
 
@@ -96,7 +96,7 @@ public class ServerGame {
 		}
 	}
 
-	public void loadSolids() {
+	/*public void loadSolids() {
 		for (int i = 0; i < map.getLayers().size(); i++) {
 			Layer l = map.getLayers().get(i);
 			ArrayList<LayerObject> objects = l.getObjects();
@@ -162,7 +162,7 @@ public class ServerGame {
 				}
 			}
 		}
-	}
+	}*/
 
 	ConsoleCmd gravity_f = new ConsoleCmd("gravity", 0, "Set gravity.", 2) {
 		@Override

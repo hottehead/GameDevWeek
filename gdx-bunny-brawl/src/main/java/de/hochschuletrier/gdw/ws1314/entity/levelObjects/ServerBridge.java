@@ -19,9 +19,22 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerBridge extends ServerLevelObject
 {
-	public ServerBridge()
+	/* FIXME:
+	 * Comment: von Fabio Gimmillaro (Der komische Typ ganz hinten rechts)
+	 * Bridge braucht ID, damit man einer Brücke bestimmte Schalter hinzufügen kann
+	 * Ich muss auch in ServerBridgeSwitch darauf zugreifen können
+	 * also bitte noch Getter einfügen oder public setzen mir egal ^^
+	 * 
+	 * private final long ID;
+	 * public ServerBridge(long ID)
+	 * {
+	 * 		this.ID = ID;
+	 * }
+	 * 
+	*/
+	
+	public ServerBridge(long ID)
 	{
-		
 	}
 	
 	@Override
