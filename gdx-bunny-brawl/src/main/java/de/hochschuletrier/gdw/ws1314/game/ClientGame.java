@@ -84,6 +84,8 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 		
+//			System.out.println(l.getName());
+//		}
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {

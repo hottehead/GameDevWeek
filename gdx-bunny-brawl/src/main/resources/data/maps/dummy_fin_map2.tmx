@@ -133,7 +133,7 @@
   <object gid="12" x="1120" y="448"/>
   <object x="512" y="-288"/>
  </objectgroup>
- <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="75" height="50" visible="0">
+ <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="75" height="50">
   <object gid="5" x="1152" y="1184"/>
   <object gid="5" x="992" y="512"/>
   <object gid="5" x="928" y="480"/>
@@ -201,16 +201,13 @@
   <object gid="271" x="1312" y="1376"/>
   <object type="solid" x="256" y="640" width="64" height="64"/>
  </objectgroup>
- <objectgroup name="Zonenebene" width="75" height="50" visible="0">
+ <objectgroup name="Zonenebene" width="75" height="50">
   <object type="startw" x="1280" y="704" width="224" height="224">
    <ellipse/>
   </object>
   <object type="startb" x="864" y="704" width="224" height="224">
    <ellipse/>
   </object>
-  <object x="0" y="0" width="2400" height="96"/>
-  <object x="2368" y="96" width="32" height="1504"/>
-  <object x="0" y="96" width="32" height="1472"/>
   <object x="0" y="1568" width="2368" height="32"/>
   <object x="32" y="96">
    <polyline points="0,0 2336,0 2336,1472 0,1472 0,0"/>
@@ -218,30 +215,47 @@
   <object type="water" x="32" y="96">
    <polygon points="0,0 2304,0 2336,0 2336,96 0,96"/>
   </object>
-  <object type="water" x="224" y="192">
-   <polygon points="0,0 0,32 -32,32 -32,64 -64,64 -64,96 -96,96 -96,1024 -64,1024 -64,1056 -32,1056 -32,1120 0,1120 0,1184 32,1184 32,1248 96,1248 96,1280 448,1280 448,1248 512,1248 512,1216 544,1216 544,1184 576,1184 576,1152 608,1152 608,1088 640,1088 640,1056 672,1056 672,1376 -192,1376 -192,0"/>
-  </object>
-  <object type="water" x="896" y="1376">
-   <polygon points="0,0 0,-128 608,-128 608,-96 640,-96 640,-64 672,-64 672,0 704,0 704,32 736,32 736,64 800,64 800,192 0,192 0,96 576,96 576,0 544,0 544,-32 512,-32 512,-64 64,-64 64,-32 32,-32 32,0 0,0"/>
-  </object>
-  <object type="water" x="1696" y="1472">
-   <polygon points="0,0 416,0 416,-32 448,-32 448,-64 480,-64 480,-128 512,-128 512,-192 544,-192 544,-256 576,-256 576,-1184 544,-1184 544,-1216 512,-1216 512,-1248 480,-1248 480,-1280 672,-1280 672,96 0,96"/>
-  </object>
-  <object type="water" x="832" y="192">
-   <polygon points="0,0 64,0 64,96 96,96 96,128 128,128 128,160 544,160 544,128 576,128 576,96 608,96 608,0 672,0 672,192 640,192 640,224 32,224 32,192 0,192 0,0"/>
-  </object>
-  <object type="hgrass" x="896" y="192">
-   <polygon points="0,0 544,0 544,96 512,96 512,128 480,128 480,160 64,160 64,128 32,128 32,96 0,96 0,0"/>
-  </object>
-  <object type="hgrass" x="896" y="1376">
-   <polygon points="0,0 32,0 32,-32 64,-32 64,-64 512,-64 512,-32 544,-32 544,0 576,0 576,96 0,96 0,0"/>
-  </object>
-  <object type="dirt" x="1216" y="416">
-   <polygon points="0,0 0,160 352,160 384,160 384,352 1056,352 1056,416 416,416 384,416 384,608 0,608 0,832 -96,832 -96,608 -96,512 288,512 288,256 -96,256 -96,0 0,0"/>
-  </object>
-  <object type="dirt" x="128" y="768">
-   <polygon points="0,0 640,0 640,-192 992,-192 992,-96 736,-96 736,160 992,160 992,256 640,256 640,64 0,64 0,0"/>
-  </object>
+  <object type="water" x="1376" y="192" width="96" height="160"/>
+  <object type="w" x="928" y="352" width="480" height="64"/>
+  <object type="water" x="864" y="192" width="96" height="160"/>
+  <object type="water" x="1408" y="352" width="32" height="32"/>
+  <object type="water" x="1344" y="320" width="32" height="32"/>
+  <object type="water" x="960" y="320" width="32" height="32"/>
+  <object type="water" x="896" y="352" width="32" height="32"/>
+  <object type="water" x="832" y="192" width="32" height="32"/>
+  <object type="water" x="1472" y="192" width="32" height="32"/>
+  <object type="water" x="128" y="192" width="32" height="32"/>
+  <object type="water" x="64" y="192" width="64" height="1344"/>
+  <object type="water" x="128" y="1024" width="32" height="512"/>
+  <object type="water" x="160" y="1312" width="32" height="224"/>
+  <object type="water" x="192" y="1408" width="32" height="32"/>
+  <object type="water" x="192" y="1440" width="672" height="96"/>
+  <object type="water" x="800" y="1408" width="32" height="32"/>
+  <object type="water" x="832" y="1376" width="32" height="64"/>
+  <object type="water" x="864" y="1312" width="32" height="96"/>
+  <object type="water" x="752" y="1296" width="32" height="32"/>
+  <object type="water" x="896" y="1280" width="576" height="64"/>
+  <object type="water" x="896" y="1344" width="32" height="32"/>
+  <object type="water" x="1472" y="1312" width="32" height="32"/>
+  <object type="water" x="1440" y="1344" width="96" height="64"/>
+  <object type="water" x="1504" y="1408" width="32" height="32"/>
+  <object type="water" x="1536" y="1408" width="32" height="32"/>
+  <object type="water" x="1504" y="1440" width="128" height="96"/>
+  <object type="water" x="864" y="1504" width="640" height="32"/>
+  <object type="water" x="1632" y="1472" width="704" height="64"/>
+  <object type="water" x="2048" y="1440" width="96" height="32"/>
+  <object type="water" x="2144" y="1376" width="192" height="96"/>
+  <object type="water" x="2176" y="1280" width="160" height="96"/>
+  <object type="water" x="2240" y="1184" width="96" height="96"/>
+  <object type="water" x="2272" y="192" width="64" height="992"/>
+  <object type="water" x="2240" y="192" width="32" height="32"/>
+  <object x="704" y="1024"/>
+  <object x="704" y="1056" width="32"/>
+ </objectgroup>
+ <objectgroup name="RenderEbene" width="75" height="50">
+  <properties>
+   <property name="renderEntities" value="true"/>
+  </properties>
  </objectgroup>
  <objectgroup name="Spielerebene (physikalische Zone)" width="75" height="50">
   <object type="solid" x="1696" y="448" width="32" height="32"/>
