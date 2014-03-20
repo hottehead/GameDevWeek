@@ -51,6 +51,39 @@ public class NetworkManager{
 	private PlayerUpdateCallback playerupdatecallback;
 	private MatchUpdateCallback matchupdatecallback;
 	private GameStateCallback gameStateCallback;
+	
+	private long lastStatTime=System.currentTimeMillis();
+	private long lastTotalBytesSent=0;
+	private long lastTotalBytesReceived=0;
+	
+	public void checkStats(){
+		long newStatTime=System.currentTimeMillis();
+		long statDT=newStatTime-lastStatTime;
+		if(statDT<10000) return;
+		long newTotalBytesSent=0;
+		long newTotalBytesReceived=0;
+		if(serverConnections!=null){
+			for(NetConnection con: serverConnections){
+				newTotalBytesSent+=con.getBytesSent();
+				newTotalBytesReceived+=con.getBytesReceived();
+			}
+		}
+		if(clientConnection!=null){
+			newTotalBytesSent+=clientConnection.getBytesSent();
+			newTotalBytesReceived+=clientConnection.getBytesReceived();
+		}
+		long deltaSent=newTotalBytesSent-lastTotalBytesSent;
+		long deltaReceive=newTotalBytesReceived-lastTotalBytesReceived;
+		double bytesSentPerSecond = deltaSent /(statDT/1000.0);
+		double bytesReceivedPerSecond = deltaReceive /(statDT/1000.0);
+		double factor=1024.0;
+		logger.info("Network Statistics: ");
+		logger.info("Sent: {} KB, {} KB/s",newTotalBytesSent/factor,bytesSentPerSecond/factor);
+		logger.info("Rec: {} KB, {} KB/s",newTotalBytesReceived/factor,bytesReceivedPerSecond/factor);
+		lastStatTime=newStatTime;
+		lastTotalBytesSent=newTotalBytesSent;
+		lastTotalBytesReceived=newTotalBytesReceived;
+	}
 
 	private NetworkManager(){
 	}
@@ -283,6 +316,7 @@ public class NetworkManager{
 		replicateServerEntities();
 		handleDatagramsClient();
 		handleDatagramsServer();
+		checkStats();
 	}
 
 	private void replicateServerEntities(){
