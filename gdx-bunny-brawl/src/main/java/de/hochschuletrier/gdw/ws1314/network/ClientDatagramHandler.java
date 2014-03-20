@@ -114,7 +114,12 @@ public class ClientDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(EventDatagram eventDatagram, NetConnection connection) {
-        NetworkManager.getInstance().getEventCallback().callback(eventDatagram.getId(), eventDatagram.getEventType());
+    	ClientEntity entity = ClientEntityManager.getInstance().getEntityById(eventDatagram.getId());
+    	if(entity==null){
+    		logger.warn("Received EventDatagram for entity {} but the entity does not exist.",eventDatagram.getId());
+    		return;
+    	}
+    	entity.doEvent(eventDatagram.getEventType());
     }
 
     @Override

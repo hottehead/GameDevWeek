@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 /**
@@ -11,16 +12,16 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
  */
 public class EventDatagram extends BaseDatagram {
     public static final byte EVENT_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x30;
-    private long id;
-    private int eventType;
+    private long entityId;
+    private EventType eventType;
 
     public EventDatagram (byte type, short id, short param1, short param2) {
         super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public EventDatagram (long id, int eventType) {
+    public EventDatagram (long id, EventType eventType) {
         super (MessageType.NORMAL, EVENT_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.id = id;
+        this.entityId = id;
         this.eventType = eventType;
     }
 
@@ -31,21 +32,21 @@ public class EventDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-        message.putLong (id);
-        message.putInt(eventType);
+        message.putLong (entityId);
+        message.putEnum(eventType);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-        id = message.getLong ();
-        eventType = message.getInt();
+        entityId = message.getLong ();
+        eventType = message.getEnum(EventType.class);
     }
 
     public long getId () {
-        return id;
+        return entityId;
     }
 
-    public int getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 }

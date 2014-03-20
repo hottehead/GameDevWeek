@@ -17,6 +17,7 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
@@ -66,7 +67,6 @@ public class NetworkManager {
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
-    private EventCallback eventCallback;
     private DespawnCallback despawnCallback;
     private GameStateCallback gameStateCallback;
 
@@ -134,10 +134,6 @@ public class NetworkManager {
         return gameStateCallback;
     }
 
-    public EventCallback getEventCallback() {
-        return eventCallback;
-    }
-
     public DespawnCallback getDespawnCallback() {
         return despawnCallback;
     }
@@ -162,10 +158,6 @@ public class NetworkManager {
         this.matchupdatecallback = callback;
     }
 
-    public void setEventCallback(EventCallback eventCallback) {
-        this.eventCallback = eventCallback;
-    }
-
     public void setDespawnCallback(DespawnCallback despawnCallback) {
         this.despawnCallback = despawnCallback;
     }
@@ -182,9 +174,9 @@ public class NetworkManager {
 		return clientConnection != null && clientConnection.isConnected();
     }
 
-    public void sendEntityEvent(long id, int eventPlayerIntention) {
+    public void sendEntityEvent(long id, EventType event) {
 		if (!isServer()) return;
-        broadcastToClients(new EventDatagram(id, eventPlayerIntention));
+        broadcastToClients(new EventDatagram(id, event));
     }
 
     public void sendAction(PlayerIntention playerAction) {
