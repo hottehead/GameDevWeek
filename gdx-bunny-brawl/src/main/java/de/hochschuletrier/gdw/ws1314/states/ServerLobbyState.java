@@ -21,6 +21,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener 
         super.init (assetManager);
        
     	serverLobby = new ServerLobbyManager();
+    	serverLobby.addServerLobbyListener(this);
     	logger.info("Server-Lobby created.");
     }
 
@@ -44,5 +45,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener 
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(this.serverLobby.getPlayers());
 		GameStates.SERVERGAMEPLAY.init(assetManager);
 		GameStates.SERVERGAMEPLAY.activate();
+		logger.info("Sending GameStateChange to Clients");
+		NetworkManager.getInstance().sendGameState(GameStates.CLIENTGAMEPLAY);
 	}
 }

@@ -12,30 +12,88 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
+import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
-public class ClientLobbyState extends GameState {
+public class ClientLobbyState extends GameState implements GameStateCallback {
 	private static final Logger logger = LoggerFactory.getLogger(ClientLobbyState.class);
 
 	protected ClientLobbyManager clientLobby;
 	
 	private ConsoleCmd sendPlayerUpdate;
+	private ConsoleCmd cpAccept;
+	private ConsoleCmd cpTeam;
+	private ConsoleCmd cpClass;
 	
     @Override
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
         this.clientLobby = new ClientLobbyManager(new PlayerData(1,"John", EntityType.Hunter, TeamColor.WHITE, false));
+        
+        NetworkManager.getInstance().setGameStateCallback(this);
+        
+        
         logger.info("Client-Lobby created.");
         
+        /*
         this.sendPlayerUpdate = new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",0) {
 			@Override
 			public void execute(List<String> args) {
 				clientLobby.sendChanges();
 			}
 		};
+		*/
 		
-		Main.getInstance().console.register(this.sendPlayerUpdate);
+		this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
+			@Override
+			public void execute(List<String> args) {
+				clientLobby.toggleReadyState();
+			}
+		};
+		
+		this.cpTeam = new ConsoleCmd("cpTeam",0,"[DEBUG]",0) {
+			@Override
+			public void execute(List<String> args) {
+				clientLobby.swapTeam();
+			}
+		};
+		
+		this.cpClass = new ConsoleCmd("cpClass",0,"[DEBUG]",1) {
+			
+			@Override
+			public void showUsage() {
+				super.showUsage("<ClassName>");
+			}
+
+			@Override
+			public void execute(List<String> args) {
+				EntityType t;
+				logger.info(args.get(0) + " |  " + args.get(1));
+				switch(args.get(1))
+				{
+				case "hunter":
+					t = EntityType.Hunter;
+					break;
+				case "knight":
+					t = EntityType.Knight;
+					break;
+				case "tank":
+					t = EntityType.Tank;
+					break;
+				default:
+					t = EntityType.Hunter;
+				}
+				
+				clientLobby.changeEntityType(t);
+			}
+		};
+		
+		Main.getInstance().console.register(this.cpAccept);
+		Main.getInstance().console.register(this.cpTeam);
+		Main.getInstance().console.register(this.cpClass);
+		//Main.getInstance().console.register(this.sendPlayerUpdate);
     }
 
     @Override
@@ -52,4 +110,16 @@ public class ClientLobbyState extends GameState {
     public void dispose () {
     	//Main.getInstance().console.unregister(this.sendPlayerUpdate);
     }
+    
+    // GameStateCallback
+	@Override
+	public void callback(GameStates gameStates) {
+		logger.info("GameStateChange received");
+		if (gameStates == GameStates.CLIENTGAMEPLAY)
+		{
+			gameStates.init(assetManager);
+			gameStates.activate();
+			logger.info("ClientGamePlayState activated.");
+		}
+	}
 }
