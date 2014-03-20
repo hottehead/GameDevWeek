@@ -1,7 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.audio.*;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.*;
 
 /**
@@ -29,10 +33,11 @@ public class LocalSound {
 		return LocalSound.SystemVolume;
 	}
 	
-	public LocalSound(AssetManagerX assetManager, ClientPlayer localPlayer) {
+	public LocalSound(AssetManagerX assetManager) {
+		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();	
 		this.assetManager = assetManager;
 		this.soundHandle = null;
-		this.localPlayer = localPlayer;
+		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(playerEntityID);
 		this.soundID = 0;
 	}
 	
@@ -59,6 +64,10 @@ public class LocalSound {
 		this.soundHandle = this.assetManager.getSound(sound);
 		this.soundID = soundHandle.play();
 		soundHandle.setVolume(this.soundID, LocalSound.SystemVolume * volume);
+	}
+	
+	public void listenLocalPlayerAction() {
+		
 	}
 
 	public void stop() {
