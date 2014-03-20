@@ -130,12 +130,6 @@ public class ServerProjectile extends ServerEntity {
                 case Hunter:
                 case Knight:
                 case Noob:
-                    ServerPlayer player = (ServerPlayer)otherEntity;
-                    if (player.getID() == sourceID)
-                    	return;
-                    if (player.getTeamColor() != this.teamColor)
-                    	player.applyDamage(damage);
-                    ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;
