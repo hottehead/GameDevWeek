@@ -11,6 +11,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +38,7 @@ public class ServerEgg extends ServerLevelObject
 
     @Override
     public void beginContact(Contact contact) {
-        ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
-        switch(otherEntity.getEntityType()) {
-            case Tank:
-            case Hunter:
-            case Knight:
-            case Noob:
-                ServerEntityManager.getInstance().removeEntity(this);
-                break;
-            default:
-                break;
-        }
+        
     }
 
     @Override
