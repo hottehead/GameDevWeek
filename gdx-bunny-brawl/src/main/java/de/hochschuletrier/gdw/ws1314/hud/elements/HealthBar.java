@@ -19,9 +19,12 @@ public class HealthBar {
 	MinMaxValue logicRepresentation;
 	DynamicTextElement textElement;
 	
+	private int maxHealthValue;
+	
 	public HealthBar(int maxHealthValue) {
-		logicRepresentation = new MinMaxValue(0, maxHealthValue, 1);
+		logicRepresentation = new MinMaxValue(0, maxHealthValue, 10);
 		logicRepresentation.setValue(maxHealthValue);
+		this.maxHealthValue = maxHealthValue;
 	}
 	
 	public void initVisual(AssetManagerX assetManager, float positionX, float positionY,
@@ -57,5 +60,9 @@ public class HealthBar {
 	
 	public void setDecimalSpace(int n) {
 		textElement.setDecimalPLace(n);
+	}
+	
+	public void reset() {
+		logicRepresentation.setValue(maxHealthValue);
 	}
 }

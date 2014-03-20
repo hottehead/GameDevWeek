@@ -11,7 +11,7 @@ public class VisualBar extends VisualBox {
 		super(tex, positionX, positionY, width, height);
 		this.watchedValue = watchedValue;
 	}
-	
+
 	public void draw() {
 		HudRendering.drawElement(texture, positionX, positionY,
 				this.watchedValue.getValueFactor() * width, height);

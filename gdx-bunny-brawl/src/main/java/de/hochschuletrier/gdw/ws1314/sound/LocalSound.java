@@ -17,8 +17,18 @@ public class LocalSound {
 	private Sound soundHandle;
 	private ClientPlayer localPlayer;
 	private long soundID;
-	static float maxDistance = 300;
-
+	
+	private static float SystemVolume;
+	private static float maxDistance = 300;
+		
+	public static void setSystemVolume(float systemVolume) {
+		LocalSound.SystemVolume = systemVolume;
+	}
+	
+	public static float getSystemVolume() {
+		return LocalSound.SystemVolume;
+	}
+	
 	public LocalSound(AssetManagerX assetManager, ClientPlayer localPlayer) {
 		this.assetManager = assetManager;
 		this.soundHandle = null;
@@ -38,6 +48,8 @@ public class LocalSound {
 		
 		//  SQRT( ( x1 - x2 )² + ( y1 - y2 )² )  <<< just pythagoras
 		distance = (float) Math.sqrt( Math.pow( (localX - remoteX), 2 ) + Math.pow( (localY - remoteY), 2 ) );
+		
+		// volume will be [volume]% (percent) of systemVolume
 		volume = (100 - (distance * 100 / LocalSound.maxDistance)) / 100;
 		
 		this.play("speech-general-yeay_1", volume);
@@ -46,7 +58,7 @@ public class LocalSound {
 	public void play(String sound, float volume) {
 		this.soundHandle = this.assetManager.getSound(sound);
 		this.soundID = soundHandle.play();
-		soundHandle.setVolume(this.soundID, volume);
+		soundHandle.setVolume(this.soundID, LocalSound.SystemVolume * volume);
 	}
 
 	public void stop() {

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
@@ -18,7 +19,7 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
 
 
-public class TestHudStage extends AutoResizeStage {
+public class TestHudStage {
 
 	HealthBar healthBar;
 	
@@ -26,9 +27,9 @@ public class TestHudStage extends AutoResizeStage {
 	VisualBox eiAblegenIcon;
 	
 	Skin defaultSkin;
+	Stage stage; 
 
 	public TestHudStage() {
-		super();
 	}
 
 	/*
@@ -39,28 +40,29 @@ public class TestHudStage extends AutoResizeStage {
 	public void init(AssetManagerX assetManager) {
 		//init generic stuff
 		initSkin(assetManager);
-		Main.inputMultiplexer.addProcessor(this);
+		stage = new Stage();
+		Main.inputMultiplexer.addProcessor(stage);
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
-		this.addActor(uiTable);
+		stage.addActor(uiTable);
 		
-		//test code healthbar
+		
 		healthBar = new HealthBar(100);
 		healthBar.initVisual(assetManager, 30, 30, 300, 40);
 
-		//test code icons with text
 		this.attackIcon = new VisualBox(
 				assetManager.getTexture("debugAttackIcon"), 500, 350, 64, 64);
 		this.attackIcon = new BoxOffsetDecorator(this.attackIcon,
 				new StaticTextElement(assetManager.getFont("verdana", 24), "Attacke", this.attackIcon.getWidth() * 0.5f, -14));
+		
 		
 		//test code levelList
 		LevelList list = new LevelList(defaultSkin);
 		list.addLevel("new Level");
 		list.addLevel("newer Level");
 		list.addLevel("another level");
-		list.removeLevel(1); //deletes newer level
 		uiTable.add(list);
+		
 		
 		uiTable.debug(Debug.all);
 	}
@@ -73,14 +75,16 @@ public class TestHudStage extends AutoResizeStage {
 	public void render() {
 		// this.setCamera(DrawUtil.getCamera());
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		this.act(Gdx.graphics.getDeltaTime());
+		stage.act(Gdx.graphics.getDeltaTime());
 
 		healthBar.draw();
 		attackIcon.draw();
-		
-		DrawUtil.batch.flush();
-		this.draw();
-		Table.drawDebug(this);
+                
+                DrawUtil.batch.flush();
+                
+		stage.draw();
+	
+		Table.drawDebug(stage);
 	}
 
 	float accum = 0;

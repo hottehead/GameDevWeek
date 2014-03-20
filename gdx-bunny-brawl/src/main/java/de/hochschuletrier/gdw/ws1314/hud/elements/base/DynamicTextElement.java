@@ -37,7 +37,7 @@ public class DynamicTextElement extends StaticTextElement {
 	}
 	
 	public void setDecimalPLace(int n) {
-		this.decimalPlace = n <= 3 ? n : 2;
+		this.decimalPlace = n <= 5 ? n : 2;
 		this.decimalPlace = n >= 0 ? this.decimalPlace : 2;
 	}
 }

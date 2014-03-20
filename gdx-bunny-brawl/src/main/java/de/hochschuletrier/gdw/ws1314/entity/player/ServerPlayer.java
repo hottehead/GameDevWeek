@@ -81,7 +81,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.NOOB);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -136,7 +136,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 movingRight = false;
                 break;
             case ATTACK_1:
-        		attackState.setWaitTime(firstAttackCooldown);
+        		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState == idleState || currentState == walkingState)
             	{
             		attackState.setWaitFinishedState(currentState);
@@ -145,7 +145,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	}
                 break;
             case ATTACK_2:
-        		attackState.setWaitTime(secondAttackCooldown);
+        		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState == idleState || currentState == walkingState)
             	{
             		attackState.setWaitFinishedState(currentState);
@@ -270,14 +270,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 this.currentEggCount++;
             	 break;
              case Projectil: 
-            	
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 this.currentHealth -= AttackShootArrow.DAMAGE;
-            	  
-            	 if(this.currentHealth <= 0){
-            	  	 ServerEntityManager.getInstance().removeEntity(this);
-            	  }
+//            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+//            	 this.currentHealth -= AttackShootArrow.DAMAGE;
+//            	  
+//            	 if(this.currentHealth <= 0){
+//            	  	 ServerEntityManager.getInstance().removeEntity(this);
+//            	  }
             	 break;
              case Bridge:
             	 ServerBridge bridge = (ServerBridge) otherEntity;
