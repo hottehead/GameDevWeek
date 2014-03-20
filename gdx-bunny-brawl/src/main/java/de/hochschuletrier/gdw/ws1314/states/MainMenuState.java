@@ -61,19 +61,23 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void update(float delta) {
-
+    
     }
 
     @Override
     public void onEnter() {
         inputProcessor.setActive(true);
-        this.music.play("music-lobby-loop");
+        
+        if (this.music.isMusicPlaying())
+        	this.music.deMute();
+        else
+        	this.music.play("music-lobby-loop");
     }
 
     @Override
     public void onLeave() {
         inputProcessor.setActive(false);
-        this.music.stop();
+        this.music.mute();
     }
 
     @Override
