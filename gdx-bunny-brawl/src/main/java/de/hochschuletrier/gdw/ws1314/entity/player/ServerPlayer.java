@@ -265,7 +265,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 this.currentEggCount++;
+            	 System.out.println(this.getCurrentEggCount());
+            	 if(this.currentEggCount < this.playerKit.getMaxEggCount()){
+            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
+            		 this.currentEggCount++;
+            	 }
             	 break;
              case Projectil: 
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
