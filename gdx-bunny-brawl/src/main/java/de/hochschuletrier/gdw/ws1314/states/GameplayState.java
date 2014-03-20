@@ -8,7 +8,9 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 
 /**
  * Menu state
@@ -17,16 +19,18 @@ import de.hochschuletrier.gdw.ws1314.game.ServerGame;
  */
 public class GameplayState extends GameState implements InputProcessor {
 
+    private ClientServerConnect csc;
 	private ServerGame game;
 	private ClientGame tmpGame;
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
+	
+	private GameplayStage stage;
 
 
 	public GameplayState() {
-
+        csc = ClientServerConnect.getInstance();
 	}
 
-	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
 		game = new ServerGame();
@@ -35,19 +39,24 @@ public class GameplayState extends GameState implements InputProcessor {
 		tmpGame.init(assetManager);
 
 		Main.inputMultiplexer.addProcessor(this);
+		
+		stage = new GameplayStage();
+		stage.init(assetManager);
 	}
 
-	@Override
 	public void render() {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
 		tmpGame.render();
+		stage.render();
 	}
 
 	@Override
 	public void update(float delta) {
-		// game.update(delta);
+        csc.update();
+		game.update(delta);
 		tmpGame.update(delta);
+		stage.setFPSCounter(delta);
 		fpsCalc.addFrame();
 	}
 
@@ -65,12 +74,13 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-
+        //tmpGame.keyDown(keycode);
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
+        //tmpGame.keyUp(keycode);
 		return false;
 	}
 

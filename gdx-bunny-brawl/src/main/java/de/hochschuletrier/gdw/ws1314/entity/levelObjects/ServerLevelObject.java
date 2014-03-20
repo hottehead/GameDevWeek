@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -28,11 +29,6 @@ public abstract class ServerLevelObject extends ServerEntity
 	}
 
 	@Override
-	public void dispose()
-	{
-	}
-
-	@Override
 	public void initialize()
 	{
 		this.isVisible = true;
@@ -42,6 +38,14 @@ public abstract class ServerLevelObject extends ServerEntity
 	public void update(float deltaTime)
 	{
 	}
+
+    @Override
+    public void reset()
+    {
+        physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+    }
+
+
 
 	public void setVisibility(boolean b)
 	{

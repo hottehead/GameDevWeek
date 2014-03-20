@@ -7,14 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
@@ -23,30 +17,17 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
-import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
-import de.hochschuletrier.gdw.commons.tiled.Layer;
-import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.utils.PhysixUtil;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -63,21 +44,22 @@ public class ServerGame {
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
-	private NetworkManager netManager;
+	private ClientServerConnect netManager;
 	private TiledMap map;
-	private TiledMapRendererGdx mapRenderer;
 	private ServerPlayer player = new ServerPlayer();
+    private long eggid = 0;
 
 	public ServerGame() {
 		entityManager = ServerEntityManager.getInstance();
-		netManager = NetworkManager.getInstance();
+        entityManager.setPhysixManager(manager);
+		netManager = ClientServerConnect.getInstance();
 		map = loadMap("data/maps/miniarena.tmx");
-		loadSolids();
+		
     }
 
 
 	public void init(AssetManagerX assets) {
-		player.initPhysics(manager);
+		//player.initPhysics(manager);
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		map = loadMap("data/maps/miniarena.tmx");
@@ -87,21 +69,18 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
+         entityManager.createEntity(ServerPlayer.class, new Vector2(0f,0f));
+         entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
+         entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
 	}
 
 	public void render() {
-		for (Layer layer : map.getLayers()) {
-			mapRenderer.render(0, 0, layer);
-		}
 		manager.render();
 	}
 
 	public void update(float delta) {
 		entityManager.update(delta);
 		manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-		mapRenderer.update(delta);
-
     }
 
 	public PhysixManager getManager() {
@@ -117,7 +96,7 @@ public class ServerGame {
 		}
 	}
 
-	public void loadSolids() {
+	/*public void loadSolids() {
 		for (int i = 0; i < map.getLayers().size(); i++) {
 			Layer l = map.getLayers().get(i);
 			ArrayList<LayerObject> objects = l.getObjects();
@@ -132,6 +111,7 @@ public class ServerGame {
 				int y = layerObject.getY();
 
 				boolean b = l.getBooleanProperty("solid", false);
+				System.out.println(b);
 				if (b) {
 					Primitive p = layerObject.getPrimitive();
 					if (p == Primitive.POINT) {
@@ -182,7 +162,7 @@ public class ServerGame {
 				}
 			}
 		}
-	}
+	}*/
 
 	ConsoleCmd gravity_f = new ConsoleCmd("gravity", 0, "Set gravity.", 2) {
 		@Override

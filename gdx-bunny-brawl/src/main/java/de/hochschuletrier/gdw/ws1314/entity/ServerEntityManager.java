@@ -1,8 +1,12 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import com.badlogic.gdx.math.Vector2;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 
 import java.util.HashMap;
@@ -14,6 +18,9 @@ import java.util.Queue;
  */
 public class ServerEntityManager {
     private static ServerEntityManager instance = null;
+
+    //ToDo Dirty Solution Please Fix
+    private static PhysixManager physManager;
 	
 	private Identifier entityIDs;
     private LinkedList<ServerEntity> entityList;
@@ -31,6 +38,8 @@ public class ServerEntityManager {
 		removalQueue = new LinkedList<ServerEntity>();
 		insertionQueue = new LinkedList<ServerEntity>();
 
+
+
         try {
             for (Class c : ClassUtils
                     .findClassesInPackage("de.hochschuletrier.gdw.ws1324.entity")) {
@@ -45,10 +54,16 @@ public class ServerEntityManager {
     
     public static ServerEntityManager getInstance()
     {
+
     	if (instance == null)
     		instance = new ServerEntityManager();
-    	
+
+
     	return instance;
+    }
+
+    public void setPhysixManager(PhysixManager physManager){
+        ServerEntityManager.physManager = physManager;
     }
 
     public ServerEntity getEntityById(long id) {
@@ -76,11 +91,15 @@ public class ServerEntityManager {
 
     private boolean internalRemove() {
         boolean listChanged = false;
+        ClientServerConnect netManager = ClientServerConnect.getInstance();
         while (!removalQueue.isEmpty()) {
             listChanged = true;
             ServerEntity e = removalQueue.poll();
-            e.dispose();
+            e.dispose(physManager);
             entityList.remove(e);
+            entityListMap.remove(e.getID());
+            netManager.despawnEntity(e.getID());
+            
         }
         return listChanged;
     }
@@ -92,9 +111,10 @@ public class ServerEntityManager {
             ServerEntity e = insertionQueue.poll();
 
             e.initialize();
-
+            e.initPhysics(physManager);
 
             entityList.add(e);
+            entityListMap.put(e.getID(),e);
         }
         return listChanged;
     }
@@ -110,14 +130,18 @@ public class ServerEntityManager {
 
     }
 
-    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass) {
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position) {
         T e = factory.createEntity(entityClass);
         assert (e != null);
+        SafeProperties properties = new SafeProperties();
+        properties.setFloat("x",position.x);
+        properties.setFloat("y",position.y);
+        e.setProperties(properties);
         addEntity(e);
         return e;
     }
 
-    public ServerEntity createEntity(String className, SafeProperties properties) {
+    public ServerEntity createEntity(String className, SafeProperties properties, Vector2 position) {
         Class<? extends ServerEntity> entityClass = classMap.get(className
                 .toLowerCase());
         if (entityClass == null) {
@@ -125,6 +149,8 @@ public class ServerEntityManager {
                     + className);
         }
         ServerEntity e = factory.createEntity(entityClass);
+        properties.setFloat("x",position.x);
+        properties.setFloat("y",position.y);
         e.setProperties(properties);
         addEntity(e);
         return e;

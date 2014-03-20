@@ -20,6 +20,6 @@ public class ClientBush extends ClientLevelObject
 	@Override
 	public EntityType getEntityType()
 	{
-		return EntityType.Bush;
+		return EntityType.ContactMine;
 	}
 }
