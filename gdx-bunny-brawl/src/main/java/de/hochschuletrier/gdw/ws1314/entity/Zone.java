@@ -5,6 +5,9 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
+import de.hochschuletrier.gdw.commons.utils.Point;
+
+import java.util.List;
 
 /**
  * 
@@ -14,7 +17,13 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 public class Zone extends ServerEntity
 {
 	private EntityType currentZone;
-	
+    private List<Point> poligonPoints;
+
+    public void setPoligonPoints(List<Point> poligonPoints)
+    {
+        this.poligonPoints = poligonPoints;
+    }
+
 	public void setWaterZone()
 	{
 		currentZone = EntityType.WaterZone;
