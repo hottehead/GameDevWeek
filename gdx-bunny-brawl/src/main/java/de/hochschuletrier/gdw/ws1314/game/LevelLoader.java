@@ -155,6 +155,10 @@ public class LevelLoader {
 	 */
 	private static void createPolygon(String type, ArrayList<Point> points,
 			SafeProperties properties) {
+
+        Vector2 pos = new Vector2(points.get(0).x,points.get(0).y);
+        Zone zone;
+
 		switch (type) {
 		case "solid":
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
@@ -162,7 +166,32 @@ public class LevelLoader {
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapePolygon(points));
 			break;
+            case "water":
+                //zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                //zone.setPoligonPoints(points);
+                //zone.setWaterZone();
+                break;
+            case "hgrass":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setGrassZone();
+                break;
+            case "hole":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setAbyssZone();
+                break;
+            case "dirt":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setPathZone();
+                break;
+            case "startw":
 
+                break;
+            case "startb":
+
+                break;
 		}
 	}
 
@@ -193,7 +222,7 @@ public class LevelLoader {
             properties.setFloat("height",height);
         }
         Zone zone;
-		ServerEntity entity = null;
+        ServerEntity entity = null;
 		switch (type) {
 		case "solid":
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)

@@ -45,7 +45,7 @@ public class MainMenuStage extends AutoResizeStage {
 		//info
 		Label label = new Label("escape still works - level list not", defaultSkin);
 		uiTable.add(label);
-		uiTable.row().pad(20).bottom();
+		uiTable.row().padTop(20);
 		
 		//level list
 		levelList = new LevelList(defaultSkin);
