@@ -93,6 +93,7 @@ public class ServerGame {
             netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
             offset += 10f;
         }
+
 	}
 
 	public void render() {
