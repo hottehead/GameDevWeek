@@ -1,0 +1,44 @@
++++Mapdesign+++
+
+KEINE UMLAUTE, KEIN 'ß'
+
+[[EBENEN]]
++=Kachelebene
+#=Objektebene
+
++OverOverlayer <-Selbst und den Spieler überlappende Objekte (je nach Bedarf)
+
++Overlayer     <-Objekte die die Spieler überlappen
+
+#Spielerebene  <- Physikalische Zone
+					solid
+#Aktionsebene  <- Interagierbare Objekte - Eier,PowerUps, Brückenschalter
+					
+#Zonenebene    <- Alle ausgewiesenen Zonen, außer 'solid'.
+					water
+					hgrass
+					hole
+					startw
+					startb
+					dirt
+
+#Brueckenebene <-jede Brücke mit eindeutiger Bezeichnung im Tile, Schalter 						in der Objekteben korrekt beschriften
+
+
++Detaillayer   <-Objekte mit denen man nicht interagieren kann, die sich 						unter dem Spieler befinden. Zäune,Steine,Brückenränder
+
++Zonelayer     <-Terrains+1 Hohes Gras,Startpunkte,Transparenz
+
++Groundlayer   <-Terrains Gras,Weg,Abgrund,Grenze,Rand,Wand,Wasser
+
+
+[[Tilesets]]
+Kommen in den Ordner 'tiles', der im selben Ordner wie die Mapdatei liegt. Es werden nur die Maps verschickt, nicht die Tilesets.
+Notfalls mit einem Texteditor in der Map ändern ./tiles/[Dateiname].png
+
+
+[[PowerUps]]
+Werden mit Seperaten TileSets in die Aktionsebene eingebaut. Die Kachel des entsprechenden Objekts (nicht das platzierte Objekt selbst) bekommt in den Objekteigenschaften:
+TYPE <egg,hay,clover,carrot,spinach,bush>
+
+*keine Umlaute und kein 'ß'
