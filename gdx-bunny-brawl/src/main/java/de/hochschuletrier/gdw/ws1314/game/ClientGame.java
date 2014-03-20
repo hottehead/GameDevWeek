@@ -99,16 +99,19 @@ public class ClientGame {
 	}
 
 	float fadeIn = 0.25f;
-
 	public void render() {
 //		sceneToTexture.begin();
 //		DrawUtil.batch.setShader(advShader);
 //		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
+		
 		for (Layer layer : map.getLayers()) {
-			System.out.println(layer.getName());
-			mapRenderer.render(0, 0, layer);
+			if(layer.getType() == Layer.Type.OBJECT && layer.getBooleanProperty("renderEntities", false)) {
+				entityRenderer.draw();
+			}
+			else {
+				mapRenderer.render(0, 0, layer);
+			}
 		}
-		entityRenderer.draw();
 		DrawUtil.batch.flush();
 //		sceneToTexture.end();
 

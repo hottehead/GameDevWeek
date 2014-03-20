@@ -1,6 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,7 +20,8 @@ public class EntityRenderer extends Pool<RenderObject> implements
 	}
 
 	public void draw() {
-
+		Collections.sort(renderList);
+		
 		for (RenderObject obj : this.renderList) {
 			Vector2 pos = obj.entity.getPosition();
 			float dh = obj.material.height * 0.5f;

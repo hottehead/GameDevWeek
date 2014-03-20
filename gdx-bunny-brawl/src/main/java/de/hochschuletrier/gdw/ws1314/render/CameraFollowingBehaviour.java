@@ -36,7 +36,7 @@ public class CameraFollowingBehaviour {
 			camera.translate(dx, dy);
 			bounds.boundVector(camera.position);
 			
-//			System.out.println(camera.position + " " + currentPos);
+			System.out.println(camera.position + " " + currentPos);
 			
 			this.prevFollowingPosition.x = this.prevFollowingPosition.x + dx;
 			this.prevFollowingPosition.y = this.prevFollowingPosition.y + dy;
