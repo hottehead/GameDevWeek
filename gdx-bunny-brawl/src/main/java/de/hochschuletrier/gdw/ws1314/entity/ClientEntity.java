@@ -30,6 +30,7 @@ public abstract class ClientEntity
 	public abstract void disable();
     public abstract void dispose();
     public abstract void update(float delta);
+    public abstract void doEvent(EventType event);
 	
 	public abstract void render();
 }
