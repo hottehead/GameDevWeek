@@ -184,7 +184,7 @@ public class ServerProjectile extends ServerEntity {
                     .density(0.5f)
                     .friction(0.0f)
                     .restitution(0.0f)
-                    .shapeCircle(30)
+                    .shapeCircle(3)
                     .sensor(true));
             
             body.setGravityScale(0);
