@@ -57,7 +57,7 @@ public class ClientGame {
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 
 	public void init(AssetManagerX assets) {
-		map = assets.getTiledMap("dummy_fin_map1");
+		map = assets.getTiledMap("dummy_fin_map2");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 
 		for (TileSet tileset : map.getTileSets()) {
@@ -111,10 +111,12 @@ public class ClientGame {
 		// sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 
 		for (Layer layer : map.getLayers()) {
+			System.out.print(layer.getName() + " : ");
 			if (layer.getType() == Layer.Type.OBJECT
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
 			} else {
+				System.out.println(layer.getProperties());
 				mapRenderer.render(0, 0, layer);
 			}
 		}

@@ -22,8 +22,8 @@ public class LoadGameState extends GameState {
         DrawUtil.fillRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Color.BLACK);
 
         float drawWidth = Gdx.graphics.getWidth() - 100.0f;
-        DrawUtil.fillRect(0, Gdx.graphics.getHeight() / 2 - 50, (int) (drawWidth * assetManager.getProgress()), 50, Color.GREEN);
-        DrawUtil.drawRect(0, Gdx.graphics.getHeight() / 2 - 25, drawWidth, 50, Color.GREEN);
+        DrawUtil.fillRect(50, Gdx.graphics.getHeight() / 2 - 25, (int) (drawWidth * assetManager.getProgress()), 50, Color.GREEN);
+        DrawUtil.drawRect(50, Gdx.graphics.getHeight() / 2 - 25, drawWidth, 50, Color.GREEN);
     }
 
     @Override
