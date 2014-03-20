@@ -105,7 +105,7 @@ public class ClientGame {
 		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
 				"carrot", 32, 32, 0));
 		materialManager.provideMaterial(ClientEgg.class, new MaterialInfo(
-				"egg", 32, 32, 0));
+				"egg", 32, 32, -1));
 		materialManager.provideMaterial(ClientSpinach.class, new MaterialInfo(
 				"spinach", 32, 32, 0));
 		materialManager.provideMaterial(ClientBridgeSwitch.class, new MaterialInfo(
