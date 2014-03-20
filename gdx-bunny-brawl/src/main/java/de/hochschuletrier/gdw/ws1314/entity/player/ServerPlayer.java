@@ -104,7 +104,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.HUNTER);
+    	setPlayerKit(PlayerKit.KNIGHT);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -346,7 +346,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                 if(attack.getTeamColor() != this.teamColor) {
+                 if(attack.getTeamColor() != this.teamColor && 
+                	attack.getSourceID()  != getID()) 
+                 {
                      this.applyDamage(attack.getDamage());
                  }
             	 break;
