@@ -63,7 +63,6 @@ public class NetworkManager {
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
-    private ActionCallback actionCallback;
     private EventCallback eventCallback;
     private DespawnCallback despawnCallback;
     private GameStateCallback gameStateCallback;
@@ -124,10 +123,6 @@ public class NetworkManager {
         return matchupdatecallback;
     }
 
-    public ActionCallback getActionCallback() {
-        return actionCallback;
-    }
-
     public GameStateCallback getGameStateCallback() {
         return gameStateCallback;
     }
@@ -154,10 +149,6 @@ public class NetworkManager {
 
 	public void setMatchUpdateCallback(MatchUpdateCallback callback) {
         this.matchupdatecallback = callback;
-    }
-
-    public void setActionCallback(ActionCallback actionCallback) {
-        this.actionCallback = actionCallback;
     }
 
     public void setEventCallback(EventCallback eventCallback) {
@@ -260,7 +251,7 @@ public class NetworkManager {
     }
 
     /**
-	 * Wird innerhalb der server-seitigen NEtzwerklogik verwendet, um Pakete an
+	 * Wird innerhalb der server-seitigen Netzwerklogik verwendet, um Pakete an
 	 * alle Clients zu schicken.
      *
      * @param dgram
@@ -444,7 +435,13 @@ public class NetworkManager {
     };
 
     public void setPlayerEntityId(int playerId, long entityId){
-    	//TODO Implement
+    	for(NetConnection nc : serverConnections){
+    		ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
+    		if(tmp.getId() == playerId){
+    			tmp.setEntityId(entityId);
+    			break;
+    		}
+    	}
     }
 
 	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "Start listening for client connections at " + defaultIP + " and Port " + defaultPort + ". " +

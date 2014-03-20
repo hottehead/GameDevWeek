@@ -1,6 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +49,13 @@ public class ServerDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(ActionDatagram actionDatagram, NetConnection connection) {
-        NetworkManager.getInstance().getActionCallback().callback(actionDatagram.getPlayerAction());
+    	long entityid = ((ConnectionAttachment) connection.getAttachment()).getEntityId();
+    	ServerEntity tmp = ServerEntityManager.getInstance().getEntityById(entityid);
+    	if(tmp instanceof ServerPlayer){
+    		((ServerPlayer) tmp).doAction(actionDatagram.getPlayerAction());
+    	} else {
+    		logger.warn("Server handle ActionDatagram: entityid of connection is no ServerPlayer");
+    	}
     }
 
     @Override
