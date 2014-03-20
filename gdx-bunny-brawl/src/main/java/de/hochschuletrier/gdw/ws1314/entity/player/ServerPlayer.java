@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,11 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 
+
+
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -22,8 +29,6 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.Zone;
-
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -310,7 +315,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
              case Tank:
              case Hunter:
              case Knight:
-             case Noob:                 
+             case Noob: 
+            	 ServerPlayer player = (ServerPlayer) otherEntity;
+            	 player.physicsBody.setLinearDamping(10);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -450,11 +457,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		// TODO Auto-generated method stub
+				// TODO Auto-generated method stub
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(WIDTH, HEIGHT));
+				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(28));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);

@@ -67,16 +67,16 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void render() {
-		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		DrawUtil.batch.draw(keyFrame, 0, 0);
-//		stage.render();
+//		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+//		DrawUtil.batch.draw(keyFrame, 0, 0);
+		stage.render();
     }
 
-	float stateTime = 0f;
-    @Override
-    public void update(float delta) {
-		stateTime += delta;
-    }
+//	float stateTime = 0f;
+//    @Override
+//    public void update(float delta) {
+//		stateTime += delta;
+//    }
 
     @Override
     public void onEnter() {
@@ -92,6 +92,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void onLeave() {
     	this.music.mute();
         inputProcessor.setActive(false);
+        
     }
 
     @Override
