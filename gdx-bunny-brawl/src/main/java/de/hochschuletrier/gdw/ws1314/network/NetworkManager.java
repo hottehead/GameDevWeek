@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.EntityIDDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LevelObjectReplicationDatagram;
@@ -368,6 +369,7 @@ public class NetworkManager{
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
 			if(tmp.getId() == playerId){
 				tmp.setEntityId(entityId);
+				nc.send(new EntityIDDatagram(entityId));
 				break;
 			}
 		}
