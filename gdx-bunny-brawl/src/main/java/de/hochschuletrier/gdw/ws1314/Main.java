@@ -29,11 +29,13 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
+import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -68,14 +70,22 @@ public class Main extends StateBasedGame {
 		param.minFilter = param.magFilter = Texture.TextureFilter.Linear;
 
 		assetManager.loadAssetList("data/json/images.json", Texture.class, param);
+
 		assetManager.loadAssetList("data/json/sounds.json", Sound.class, null);
+
 		assetManager.loadAssetList("data/json/music.json", Music.class, null);
+
+		TiledMapParameter mapParam = new TiledMapParameter();
+		assetManager.loadAssetList("data/json/maps.json", TiledMap.class, mapParam);
+
 		assetManager.loadAssetListWithParam("data/json/animations.json", Animation.class,
 				AnimationLoader.AnimationParameter.class);
+
 		BitmapFontParameter fontParam = new BitmapFontParameter();
 		fontParam.flip = true;
 		assetManager.loadAssetList("data/json/fonts_bitmap.json", BitmapFont.class,
 				fontParam);
+
 		assetManager.loadAssetList("data/json/fonts_truetype.json", TrueTypeFont.class,
 				null);
 	}
