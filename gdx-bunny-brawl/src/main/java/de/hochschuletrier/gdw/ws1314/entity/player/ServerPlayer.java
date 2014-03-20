@@ -291,6 +291,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void beginContact(Contact contact) 	{
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
          
+         if(otherEntity == null) {
+             return;
+         }
+         
          switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
@@ -327,7 +331,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case BridgeSwitch:	
             	 break;
-             case Bush:			
+             case Bush:
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
