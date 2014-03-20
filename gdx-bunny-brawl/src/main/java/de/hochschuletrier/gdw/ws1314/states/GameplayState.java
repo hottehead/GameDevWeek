@@ -49,6 +49,8 @@ public class GameplayState extends GameState implements InputProcessor {
 		// game.render();
 		tmpGame.render();
 		stage.render();
+                
+                game.getManager().render();
 	}
 
 	@Override
