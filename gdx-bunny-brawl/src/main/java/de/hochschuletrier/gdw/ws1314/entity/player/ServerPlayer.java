@@ -302,7 +302,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Tank:
              case Hunter:
              case Knight:
-             case Noob:                 
+             case Noob: 
+            	 ServerPlayer player = (ServerPlayer) otherEntity;
+            	 player.physicsBody.setLinearDamping(10);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
