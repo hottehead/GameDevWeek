@@ -92,6 +92,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void onLeave() {
     	this.music.mute();
         inputProcessor.setActive(false);
+        
     }
 
     @Override
