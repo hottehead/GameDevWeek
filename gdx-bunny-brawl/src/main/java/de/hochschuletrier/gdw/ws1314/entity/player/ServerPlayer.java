@@ -23,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
@@ -308,6 +309,31 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case Bush:			
             	 break;
+             case SwordAttack:
+                 ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
+                 if(attack.getTeamColor() != this.teamColor) {
+                     this.applyDamage(attack.getDamage());
+                 }
+            	 break;
+             case ContactMine:
+            	 break;
+             case Carrot:
+            	 this.playerKit.getMaxVelocity();
+            	 break;
+             case Spinach:
+            	 break;
+             case Clover:
+            	 break;
+             case WaterZone:
+            	 break;
+             case AbyssZone:
+            	 break;
+             case GrassZone:
+            	 break;
+             case PathZone:
+            	 break;
+             case StartZone:
+            	 break;
              default:
             	 break;
                  
@@ -341,6 +367,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void setTeamColor(TeamColor color)
     {
     	teamColor = color;
+    }
+    
+    public void setSpeedBuff(float factor, float timer){
+    	
     }
 
 	@Override
