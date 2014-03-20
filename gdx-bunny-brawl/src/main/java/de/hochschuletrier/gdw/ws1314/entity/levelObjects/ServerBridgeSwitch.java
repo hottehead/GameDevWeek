@@ -1,5 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -13,6 +16,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 
 /**
  * 
@@ -23,6 +28,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 public class ServerBridgeSwitch extends ServerLevelObject
 {
 	private long targetID;
+	private static final Logger logger = LoggerFactory.getLogger(ServerBridgeSwitch.class);
 
 	public ServerBridgeSwitch()
 	{
@@ -48,11 +54,18 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	        switch(otherEntity.getEntityType()) {
 	            case SwordAttack:
 	            case Projectil:
-	            	ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-	            	if(bridge.getVisibility()){
-	            		ServerEntityManager.getInstance().removeEntity(bridge);
+	            	ServerProjectile projectile = (ServerProjectile) otherEntity;
+	            	try{
+		            	ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
+		            	if(bridge.getVisibility()){
+		            		ServerEntityManager.getInstance().removeEntity(bridge);
+		            	}
+		            	bridge.setVisibility(!bridge.getVisibility());
+	            	}catch(NullPointerException e){
+	            		System.out.println("targetID für ServerBridgeSwitch ist noch nicht richtig gesetzt");
+	            		logger.info("targetID für ServerBridgeSwitch ist noch nicht richtig gesetzt");
 	            	}
-	            	bridge.setVisibility(!bridge.getVisibility());
+	            	ServerEntityManager.getInstance().removeEntity(projectile);
 	                break;
 	            default:
 	                break;
