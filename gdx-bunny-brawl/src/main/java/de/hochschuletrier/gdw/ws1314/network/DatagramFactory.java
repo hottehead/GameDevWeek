@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.ws1314.network;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,8 @@ public class DatagramFactory implements INetDatagramFactory{
 			return new GameStateDatagram(type, id, param1, param2);
 		case ClientIdDatagram.CLIENT_ID_DATAGRAM:
 			return new ClientIdDatagram(type, id, param1, param2);
+		case EntityIDDatagram.ENTITY_ID_DATAGRAM:
+			return new EntityIDDatagram(type, id, param1, param2);
 		default:
 			logger.warn("Received datagram with unknown type {}", type);
 			throw new IllegalArgumentException("Received datagram with unknown type: " + type);

@@ -49,6 +49,12 @@ FIRST_CUSTOM + 0x13
 playerid int
 //OK
 
+EnitityID Datagram
+Server > Client
+FIRST_CUSTOM + 0x14
+entityid int
+//OK
+
 PlayerReplicationDatagram
 Server > Client
 FIRST_CUSTOM + 0x20
