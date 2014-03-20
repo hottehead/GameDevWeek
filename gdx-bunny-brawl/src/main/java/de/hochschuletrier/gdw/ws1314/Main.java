@@ -1,20 +1,16 @@
 package de.hochschuletrier.gdw.ws1314;
 
-import org.lwjgl.opengl.GL11;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
@@ -23,27 +19,18 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
-import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
+import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
+import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
-import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
-import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
-import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
-import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
+import de.hochschuletrier.gdw.ws1314.network.*;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
@@ -168,16 +155,15 @@ public class Main extends StateBasedGame {
 				for(int i = 0; i < s_players.size(); i++){
 					if(s_players.get(i) == null)
 						continue;
-					logger.info(s_players.get(i).getPlayerId() + " == " + playerid);
 					if(s_players.get(i).getPlayerId() == playerid){
-						logger.info("Updated Player: " + playerid + " " + playerName);
+						logger.info("[SERVER] updated Player {}: {}", playerid, playerName);
 						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
 						update = true;
 						break;
 					}
 				}
 				if(!update){
-					logger.info("New Player: " + playerid + " " + playerName);
+					logger.info("[SERVER] Player {} changed name to {}.", playerid, playerName);
 					s_players.add(new PlayerData(playerid, playerName, type, team, accept));
 				}
 			}
@@ -185,10 +171,7 @@ public class Main extends StateBasedGame {
 		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
 			@Override
 			public void callback(String map, PlayerData[] players) {
-				logger.info("Map: " + map);
-				logger.info("Playercount: " + players.length);
 				for(int i = 0; i < players.length; i++)
-					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getPlayerId() + " class: " + players[i].getType());
 				c_players = players;
 			}
 		});
