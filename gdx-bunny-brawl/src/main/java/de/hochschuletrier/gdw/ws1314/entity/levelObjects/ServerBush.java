@@ -39,6 +39,10 @@ public class ServerBush extends ServerLevelObject
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
             switch(otherEntity.getEntityType()) {
+                case Projectil:
+                case SwordAttack:
+                    ServerEntityManager.getInstance().removeEntity(this);
+                    break;
                 default:
                     break;
             }
