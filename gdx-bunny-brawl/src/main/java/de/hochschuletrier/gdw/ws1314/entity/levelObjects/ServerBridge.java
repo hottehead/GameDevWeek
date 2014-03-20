@@ -35,7 +35,6 @@ public class ServerBridge extends ServerLevelObject
 	
 	public ServerBridge(long ID)
 	{
-		this.ID = ID;
 	}
 	
 	@Override
