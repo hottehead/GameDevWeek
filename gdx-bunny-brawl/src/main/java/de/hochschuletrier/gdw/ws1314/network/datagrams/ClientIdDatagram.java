@@ -10,16 +10,16 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
 public class ClientIdDatagram extends BaseDatagram {
     public static final byte CLIENT_ID_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x13;
-    private PlayerData playerData;
+    private int playerid;
 
     public ClientIdDatagram (byte type, short id,
                              short param1, short param2) {
         super (MessageType.DELTA, type, id, param1, param2);
     }
 
-    public ClientIdDatagram (PlayerData playerData) {
+    public ClientIdDatagram (int playerid) {
         super (MessageType.DELTA, CLIENT_ID_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.playerData = playerData;
+        this.playerid = playerid;
     }
 
     @Override
@@ -29,26 +29,15 @@ public class ClientIdDatagram extends BaseDatagram {
 
     @Override
     public void writeToMessage (INetMessageOut message) {
-        message.putInt (playerData.getId());
-        message.putString(playerData.getPlayername());
-        message.putEnum(playerData.getType());
-        message.putEnum(playerData.getTeam());
-        message.putBool(playerData.isAccept());
-        message.putLong(playerData.getEntityId());
+        message.putInt (playerid);
     }
 
     @Override
     public void readFromMessage (INetMessageIn message) {
-    	int id = message.getInt();
-    	String name = message.getString();
-    	EntityType type = message.getEnum(EntityType.class);
-    	TeamColor team = message.getEnum(TeamColor.class);
-    	boolean accept = message.getBool();
-    	long entityid = message.getLong();
-    	this.playerData = new PlayerData(id, name, type, team, accept, entityid);
+    	this.playerid = message.getInt();
     }
 
-    public PlayerData getPlayerData () {
-        return playerData;
+    public int getPlayerId () {
+        return playerid;
     }
 }

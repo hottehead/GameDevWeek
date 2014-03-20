@@ -215,13 +215,13 @@ public class NetworkManager {
         broadcastToClients(new GameStateDatagram(gameStates));
     }
     
-    public void sendClientId(PlayerData p){
+    public void sendClientId(int playerid){
     	if(!isServer())
     		return;
     	for (NetConnection con : serverConnections) {
     		ConnectionAttachment tmp = (ConnectionAttachment) con.getAttachment();
-    		if(tmp.getId() == p.getId()){
-    			con.send(new ClientIdDatagram(p));
+    		if(tmp.getId() == playerid){
+    			con.send(new ClientIdDatagram(playerid));
     		}
         }
     }
