@@ -46,7 +46,6 @@ import java.util.List;
  */
 public class Main extends StateBasedGame {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	
 	public static final int WINDOW_WIDTH = 1024;
 	public static final int WINDOW_HEIGHT = 512;
 
@@ -226,17 +225,18 @@ public class Main extends StateBasedGame {
 						logger.info("Not yet connected...");
 					}
 				}
-				if (args.get(1).equals("server"))
+				if (args.get(1).equals("sgp"))
 				{
-					logger.info("Changing State to Server-Lobby...");
-					GameStates.SERVERLOBBY.init(assetManager);
-					GameStates.SERVERLOBBY.activate();
-				}
-				if (args.get(1).equals("client"))
-				{
-					logger.info("Changing State to Client-Lobby...");
-					GameStates.CLIENTLOBBY.init(assetManager);
-					GameStates.CLIENTLOBBY.activate();
+					ArrayList<PlayerData> list = new ArrayList<>();
+					for (int i = 1; i < 4; i++) {
+						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
+						list.add(p);
+					}
+
+					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
+					GameStates.SERVERGAMEPLAY.init(assetManager);
+					GameStates.SERVERGAMEPLAY.activate();
+					logger.info("ServerGamePlayState activated...");
 				}
 			}
 		});
