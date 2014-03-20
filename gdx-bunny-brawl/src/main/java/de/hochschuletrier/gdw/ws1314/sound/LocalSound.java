@@ -1,7 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.audio.*;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.*;
 
 /**
@@ -63,5 +67,6 @@ public class LocalSound {
 
 	public void stop() {
 		this.soundHandle.stop();
+	    ClientEntityManager.getInstance().getPlayerEntityID();
 	}
 }
