@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="75" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dummyWasserHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="animation" value=""/>
+   <property name="animationDuration" value="0.15"/>
+   <property name="animationFrames" value="5"/>
+   <property name="animationTileOffset" value="4"/>
+  </properties>
+  <image source="tiles/dummyWasserHalb.png" width="128" height="32"/>
+ </tileset>
+ <tileset firstgid="5" name="egg" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/egg.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="6" name="carrot" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/carrot.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="7" name="clover" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/clover.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="8" name="spinach" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/spinach.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="9" name="bridge_horizontal_left" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_left.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="10" name="bridge_horizontal_middle" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_middle.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="11" name="bridge_horizontal_right" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_right.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="12" name="bridge_vertical_bottom" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_bottom.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="13" name="bridge_vertical_middle" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_middle.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="14" name="bridge_vertical_top" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_top.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="15" name="dummyTilesHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/dummyTilesHalb.png" width="512" height="512"/>
+  <terraintypes>
+   <terrain name="Gras" tile="-1"/>
+   <terrain name="Weg" tile="-1"/>
+   <terrain name="Abgrund" tile="-1"/>
+   <terrain name="Wasser" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="0,0,0,0"/>
+  <tile id="1" terrain="0,0,0,0"/>
+  <tile id="2" terrain="0,0,0,0"/>
+  <tile id="3" terrain="0,0,0,0"/>
+  <tile id="16" terrain="0,0,0,1"/>
+  <tile id="17" terrain="0,0,1,1"/>
+  <tile id="18" terrain="0,0,1,0"/>
+  <tile id="32" terrain="0,1,0,1"/>
+  <tile id="33" terrain="1,1,1,1"/>
+  <tile id="34" terrain="1,0,1,0"/>
+  <tile id="35" terrain="0,1,1,1"/>
+  <tile id="36" terrain="1,0,1,1"/>
+  <tile id="48" terrain="0,1,0,0"/>
+  <tile id="49" terrain="1,1,0,0"/>
+  <tile id="50" terrain="1,0,0,0"/>
+  <tile id="51" terrain="1,1,0,1"/>
+  <tile id="52" terrain="1,1,1,0"/>
+  <tile id="64" terrain="0,0,0,3"/>
+  <tile id="65" terrain="0,0,3,3"/>
+  <tile id="66" terrain="0,0,3,0"/>
+  <tile id="69" terrain="0,0,0,2"/>
+  <tile id="70" terrain="0,0,2,2"/>
+  <tile id="71" terrain="0,0,2,0"/>
+  <tile id="80" terrain="0,3,0,3"/>
+  <tile id="81" terrain="3,3,3,3"/>
+  <tile id="82" terrain="3,0,3,0"/>
+  <tile id="83" terrain="0,3,3,3"/>
+  <tile id="84" terrain="3,0,3,3"/>
+  <tile id="85" terrain="0,2,0,2"/>
+  <tile id="86" terrain="2,2,2,2"/>
+  <tile id="87" terrain="2,0,2,0"/>
+  <tile id="88" terrain="0,2,2,2"/>
+  <tile id="89" terrain="2,0,2,2"/>
+  <tile id="96" terrain="0,3,0,0"/>
+  <tile id="97" terrain="3,3,0,0"/>
+  <tile id="98" terrain="3,0,0,0"/>
+  <tile id="99" terrain="3,3,0,3"/>
+  <tile id="100" terrain="3,3,3,0"/>
+  <tile id="101" terrain="0,2,0,0"/>
+  <tile id="102" terrain="2,2,0,0"/>
+  <tile id="103" terrain="2,0,0,0"/>
+  <tile id="104" terrain="2,2,0,2"/>
+  <tile id="105" terrain="2,2,2,0"/>
+ </tileset>
+ <tileset firstgid="271" name="bush" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bush.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="272" name="switch" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/switch.png" width="64" height="64"/>
+ </tileset>
+ <layer name="Groundlayer (Rand, Wand, Terrain)" width="75" height="50">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <layer name="Zonelayer (hohes Gras, Start)" width="75" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2kEOwUAUxvEegjgCPYAFN+AG7oMEWyTYIsElvU2TLkbNdDr19P1/ybdp2mbyZfraRbMMAAC0ZdxArKArf3QVhp7C0BMAawaOY4sE9wTK2CP1VXUX++wCCMc8gw/2iV0byVayC7hmKVlJ1klWpNdJcpZcAq7ZSw6SY5IV6fWQPCWvgGuukpvknmRFQH35rxcAGDRMdO6/Yx6lZ6HjiWTqcZ5vF/2ItWg3k8wdx0cB9+hyP7Gquin2X0jXXdFzHCv3kH84x4LyO9/CvG4CMyhO8axV7Tete5H/r/xo/K9P44xv4h9In7583vvavw1Sd/Vt5midSS5t7SsAsOwN6PUyTQ==
+  </data>
+ </layer>
+ <layer name="Detaillayer (Deko)" width="75" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1mEOwiAMhuHdQT2D25G8/0XUHyRfmoKaNZaU90mMDGFQUsBtAwAAI9fX5xbQJkvG3NqYOradR/aa/TJ+9lyBWTyC3nMJes8/2P2fPffs8YGZRJ1JAM5hLwKYjXcu3Ttl7/lw+rc627YqjfOQb12bXeq9ck+1e0Njt2zdKH+8/pX04tN6b31sv0/5VVWL+5u9qVY4s0Yx2nxZNX+s3ZQ1l/T397N3Z1Y/r1rMGmfvPPfakGcAMlT7jx2FdQHysP8AYF3cAeexhmOsD6KQSwAQ5wmEsw3a
+  </data>
+ </layer>
+ <objectgroup name="Brueckenebene" width="75" height="50">
+  <object gid="14" x="1120" y="352"/>
+  <object name="bridge1" gid="13" x="1120" y="384"/>
+  <object name="bridge1" gid="13" x="1120" y="416"/>
+  <object gid="12" x="1120" y="448"/>
+  <object x="512" y="-288"/>
+ </objectgroup>
+ <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="75" height="50">
+  <object gid="5" x="1152" y="1184"/>
+  <object gid="5" x="992" y="512"/>
+  <object gid="5" x="928" y="480"/>
+  <object gid="271" x="864" y="544"/>
+  <object name="bridge1" gid="272" x="864" y="1152"/>
+  <object gid="5" x="928" y="256"/>
+  <object gid="5" x="960" y="224"/>
+  <object gid="5" x="992" y="1344"/>
+  <object gid="5" x="1376" y="320"/>
+  <object gid="5" x="1376" y="1440"/>
+  <object gid="5" x="1440" y="1408"/>
+  <object gid="5" x="320" y="256"/>
+  <object gid="5" x="224" y="256"/>
+  <object gid="5" x="2048" y="256"/>
+  <object gid="5" x="1536" y="256"/>
+  <object gid="5" x="1504" y="224"/>
+  <object gid="5" x="1344" y="1056"/>
+  <object gid="271" x="896" y="1088"/>
+  <object gid="271" x="992" y="1088"/>
+  <object gid="271" x="768" y="1152"/>
+  <object gid="271" x="800" y="1248"/>
+  <object gid="271" x="832" y="1088"/>
+  <object gid="5" x="960" y="1152"/>
+  <object gid="6" x="928" y="1248"/>
+  <object gid="7" x="1056" y="1184"/>
+  <object gid="8" x="832" y="1152"/>
+  <object gid="5" x="1216" y="736"/>
+  <object gid="5" x="1120" y="864"/>
+  <object gid="5" x="1184" y="928"/>
+  <object gid="271" x="640" y="320"/>
+  <object gid="5" x="1824" y="992"/>
+  <object gid="5" x="1792" y="1024"/>
+  <object gid="271" x="1696" y="1024"/>
+  <object gid="271" x="1504" y="1216"/>
+  <object gid="5" x="1536" y="1248"/>
+  <object gid="7" x="1568" y="1216"/>
+  <object gid="6" x="2240" y="896"/>
+  <object gid="271" x="1888" y="1088"/>
+  <object gid="271" x="1312" y="320"/>
+  <object gid="271" x="1152" y="320"/>
+  <object gid="271" x="960" y="288"/>
+  <object gid="5" x="2176" y="704"/>
+  <object gid="5" x="2112" y="480"/>
+  <object gid="5" x="1760" y="384"/>
+  <object gid="5" x="1888" y="768"/>
+  <object gid="5" x="1504" y="448"/>
+  <object gid="6" x="1824" y="1376"/>
+  <object gid="7" x="2144" y="1248"/>
+  <object gid="8" x="1600" y="1344"/>
+  <object gid="8" x="1152" y="1376"/>
+  <object gid="271" x="192" y="480"/>
+  <object gid="271" x="288" y="544"/>
+  <object gid="271" x="672" y="480"/>
+  <object gid="271" x="512" y="576"/>
+  <object gid="271" x="416" y="448"/>
+  <object gid="5" x="160" y="544"/>
+  <object gid="7" x="288" y="480"/>
+  <object gid="5" x="192" y="1056"/>
+  <object gid="5" x="384" y="1408"/>
+  <object gid="5" x="576" y="1216"/>
+  <object gid="5" x="576" y="1440"/>
+  <object gid="5" x="704" y="896"/>
+  <object gid="271" x="480" y="1344"/>
+  <object gid="271" x="960" y="1440"/>
+  <object gid="271" x="1312" y="1376"/>
+  <object type="solid" x="256" y="640" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup name="Zonenebene" width="75" height="50">
+  <object type="startw" x="1280" y="704" width="224" height="224">
+   <ellipse/>
+  </object>
+  <object type="startb" x="864" y="704" width="224" height="224">
+   <ellipse/>
+  </object>
+  <object x="0" y="0" width="2400" height="96"/>
+  <object x="2368" y="96" width="32" height="1504"/>
+  <object x="0" y="96" width="32" height="1472"/>
+  <object x="0" y="1568" width="2368" height="32"/>
+  <object x="32" y="96">
+   <polyline points="0,0 2336,0 2336,1472 0,1472 0,0"/>
+  </object>
+  <object type="water" x="32" y="96">
+   <polygon points="0,0 2304,0 2336,0 2336,96 0,96"/>
+  </object>
+  <object type="water" x="224" y="192">
+   <polygon points="0,0 0,32 -32,32 -32,64 -64,64 -64,96 -96,96 -96,1024 -64,1024 -64,1056 -32,1056 -32,1120 0,1120 0,1184 32,1184 32,1248 96,1248 96,1280 448,1280 448,1248 512,1248 512,1216 544,1216 544,1184 576,1184 576,1152 608,1152 608,1088 640,1088 640,1056 672,1056 672,1376 -192,1376 -192,0"/>
+  </object>
+  <object type="water" x="896" y="1376">
+   <polygon points="0,0 0,-128 608,-128 608,-96 640,-96 640,-64 672,-64 672,0 704,0 704,32 736,32 736,64 800,64 800,192 0,192 0,96 576,96 576,0 544,0 544,-32 512,-32 512,-64 64,-64 64,-32 32,-32 32,0 0,0"/>
+  </object>
+  <object type="water" x="1696" y="1472">
+   <polygon points="0,0 416,0 416,-32 448,-32 448,-64 480,-64 480,-128 512,-128 512,-192 544,-192 544,-256 576,-256 576,-1184 544,-1184 544,-1216 512,-1216 512,-1248 480,-1248 480,-1280 672,-1280 672,96 0,96"/>
+  </object>
+  <object type="water" x="832" y="192">
+   <polygon points="0,0 64,0 64,96 96,96 96,128 128,128 128,160 544,160 544,128 576,128 576,96 608,96 608,0 672,0 672,192 640,192 640,224 32,224 32,192 0,192 0,0"/>
+  </object>
+  <object type="hgrass" x="896" y="192">
+   <polygon points="0,0 544,0 544,96 512,96 512,128 480,128 480,160 64,160 64,128 32,128 32,96 0,96 0,0"/>
+  </object>
+  <object type="hgrass" x="896" y="1376">
+   <polygon points="0,0 32,0 32,-32 64,-32 64,-64 512,-64 512,-32 544,-32 544,0 576,0 576,96 0,96 0,0"/>
+  </object>
+  <object type="dirt" x="1216" y="416">
+   <polygon points="0,0 0,160 352,160 384,160 384,352 1056,352 1056,416 416,416 384,416 384,608 0,608 0,832 -96,832 -96,608 -96,512 288,512 288,256 -96,256 -96,0 0,0"/>
+  </object>
+  <object type="dirt" x="128" y="768">
+   <polygon points="0,0 640,0 640,-192 992,-192 992,-96 736,-96 736,160 992,160 992,256 640,256 640,64 0,64 0,0"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Spielerebene (physikalische Zone)" width="75" height="50">
+  <object type="solid" x="1696" y="448" width="32" height="32"/>
+  <object type="solid" x="2144" y="544" width="32" height="32"/>
+  <object type="solid" x="1632" y="704" width="32" height="32"/>
+  <object type="solid" x="1856" y="352" width="64" height="64"/>
+  <object type="solid" x="1792" y="288" width="64" height="64"/>
+  <object type="solid" x="1984" y="384" width="64" height="64"/>
+  <object type="solid" x="2112" y="352" width="64" height="64"/>
+  <object type="solid" x="2176" y="288" width="64" height="64"/>
+  <object type="solid" x="2048" y="288" width="64" height="64"/>
+  <object type="solid" x="1920" y="288" width="64" height="64"/>
+  <object type="solid" x="1056" y="320" width="32" height="32"/>
+  <object type="solid" x="1088" y="416" width="32" height="160"/>
+  <object type="solid" x="1216" y="416" width="32" height="160"/>
+  <object type="solid" x="128" y="736" width="640" height="32"/>
+  <object type="solid" x="1600" y="832" width="672" height="32"/>
+  <object type="solid" x="1600" y="928" width="288" height="32"/>
+  <object type="solid" x="1952" y="928" width="320" height="32"/>
+  <object type="solid" x="1952" y="1024" width="320" height="32"/>
+  <object type="solid" x="1952" y="928" width="32" height="96"/>
+  <object type="solid" x="2016" y="960" width="64" height="64"/>
+  <object type="solid" x="2112" y="960" width="32" height="32"/>
+  <object x="2176" y="992" width="32"/>
+  <object type="solid" x="2176" y="960" width="64" height="64"/>
+  <object type="solid" x="1696" y="1024" width="192" height="32"/>
+  <object type="solid" x="1856" y="960" width="32" height="64"/>
+  <object type="solid" x="1600" y="960" width="32" height="288"/>
+  <object type="solid" x="1600" y="1248" width="32" height="32"/>
+  <object type="solid" x="1536" y="1280" width="96" height="32"/>
+  <object type="solid" x="1088" y="1312" width="32" height="32"/>
+  <object type="solid" x="1184" y="1376" width="32" height="32"/>
+  <object type="solid" x="1280" y="1344" width="32" height="32"/>
+  <object type="solid" x="1088" y="1440" width="32" height="32"/>
+  <object type="solid" x="1088" y="1024" width="32" height="224"/>
+  <object type="solid" x="1216" y="1024" width="32" height="224"/>
+  <object type="solid" x="1344" y="1152" width="64" height="64"/>
+  <object type="solid" x="1280" y="1088" width="64" height="64"/>
+  <object type="solid" x="384" y="1280" width="64" height="64"/>
+  <object type="solid" x="608" y="1312" width="64" height="64"/>
+  <object type="solid" x="704" y="1344" width="64" height="64"/>
+  <object type="solid" x="256" y="1280" width="64" height="64"/>
+  <object type="solid" x="256" y="1376" width="64" height="64"/>
+  <object type="solid" x="160" y="864" width="64" height="64"/>
+  <object type="solid" x="128" y="640" width="64" height="64"/>
+  <object type="solid" x="256" y="640" width="32" height="32"/>
+  <object type="solid" x="384" y="640" width="64" height="64"/>
+  <object type="solid" x="512" y="640" width="64" height="64"/>
+  <object type="solid" x="640" y="640" width="64" height="64"/>
+  <object type="solid" x="704" y="672" width="32" height="32"/>
+  <object type="solid" x="896" y="544" width="32" height="32"/>
+  <object x="864" y="448" height="32"/>
+  <object type="solid" x="832" y="448" width="32" height="32"/>
+  <object type="solid" x="736" y="288" width="64" height="64"/>
+  <object type="solid" x="544" y="288" width="64" height="64"/>
+  <object type="solid" x="480" y="352" width="64" height="64"/>
+  <object type="solid" x="416" y="288" width="64" height="64"/>
+  <object type="solid" x="352" y="384" width="64" height="64"/>
+  <object type="solid" x="288" y="288" width="64" height="64"/>
+  <object type="solid" x="224" y="352" width="64" height="64"/>
+  <object type="solid" x="160" y="288" width="64" height="64"/>
+  <object type="solid" x="1536" y="288" width="64" height="64"/>
+  <object type="solid" x="800" y="1056" width="32" height="32"/>
+  <object type="solid" x="960" y="1024" width="32" height="32"/>
+  <object type="solid" x="768" y="1152" width="32" height="32"/>
+  <object x="2368" y="1568" height="64"/>
+  <object x="2368" y="1568" height="32"/>
+  <object x="2368" y="1568" height="32"/>
+ </objectgroup>
+ <layer name="Overlayer" width="75" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmllOAzEMhnsPlgsAvQDLBVjeUYF3aC8A5Qg9dP0y0siKlXHiOJPk/6RfapRpFkuJl5nNBgAAAAATF6RL0hXpOqEtjeOx1lh/6l4kbki3pDvSNqEtjVOC2BxWe5G4Jz2QHklPCW1pnBLE5rDai8Qz6YX0SnpLaEvjlCA2h9VeJHakD9In6SuhLY1TgtgcVnsBoEe4fz6wft4eGe6f/1k/b48M98+wlQz3z63ZKjcn0OQI3D9z25yyd1OW3JzAI69ZC7k5gUdesxZycwKPvGYt5OYEo+UI36QfI+2d1+7NL+nPSEfntXvjUc/shVb9vuXdsfT+aNXvW94dS++Pkfx+Lq36/dgZ3Cue7d2Hx87gUfFs7z48Vhs8CL8n3g3XUgNN/DKvU4TO2LxucQr0t3QGQzVkTfwyt1XojPV0BkO1Pk38svbaoCUhW2nil9FtpYlfRrdVzv+9yf3mRkPrttLU03PtyN9FaN9N1LaVpp5eqz4xxVK13/to6um16hNTrFQ7HtLU01GfWE6r9QkAAAAAAGvOWAy7EQ==
+  </data>
+ </layer>
+ <layer name="Overoverlayer(je nach Bedarf)" width="75" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2MkJQzEMhOHXR5YGsjSQpYHkpYEs/ZeRydUIYgRW7Oj/YE4Cw/gi0DQBAAAgwkJZKitl7Zj3pHWXjbJVdsreeK+c96x1l4NyVE7K2XivnPesdZeLclVm5Wa8V8571rrLXXkoT+VlvFfOexbdZaS/+eafugAAAAAAgN+z7sYj3cUjWXfjke7ikay78Uh38UjW3Xiku3gk6zbKvTQX9lM99lM99lM99lM99hM+Mu4tb+eMe8vbOePe8nbOuLe8nTPurYydAQC5vAHxoDP/
+  </data>
+ </layer>
+</map>

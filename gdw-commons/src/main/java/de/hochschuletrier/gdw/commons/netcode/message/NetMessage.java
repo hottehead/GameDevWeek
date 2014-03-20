@@ -96,7 +96,7 @@ public class NetMessage implements INetMessageInternal {
     
     @Override
     public <T> T getEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[buffer.get()];
+        return clazz.getEnumConstants()[buffer.getInt()];
     }
 
     @Override

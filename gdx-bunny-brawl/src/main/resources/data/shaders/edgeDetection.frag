@@ -8,8 +8,8 @@ in vec2 vTexCoord;
 
 float greyscale(vec4 colorValue) {
 	float val=0.0f;
-	for(int i=0;i<4;++i) {
-		val = val+ colorValue[i] * 0.25f;
+	for(int i=0;i<3;++i) {
+		val = val+ colorValue[i] * 0.33f;
 	}
 	return val;
 }
@@ -71,8 +71,6 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 	endResult.xyz = endResult.xyz * kernelFactor;
 	return endResult;
 }
-
-
 
 void main() {
 	gl_FragColor = (texture2D(u_texture, vTexCoord)) * vColor;

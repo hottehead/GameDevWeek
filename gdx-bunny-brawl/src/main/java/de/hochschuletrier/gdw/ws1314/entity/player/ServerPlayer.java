@@ -258,8 +258,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 //
                  break;
              case Ei:			
-            	 // Comment by ElFapo:
-            	 // Ei muss von nach dem Einsammeln gelöscht werden.
             	 ServerEgg egg = (ServerEgg) otherEntity;
             	 this.currentEggCount++;
             	 break;
@@ -323,7 +321,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	public void initPhysics(PhysixManager manager)
 	{
 		// TODO Auto-generated method stub
-		//FIXME: player position muss noch irgendwo hinterlegt sein
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
