@@ -39,7 +39,7 @@ public class ClientGame {
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
 	private EntityRenderer entityRenderer; 
-	
+
 	
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
@@ -55,7 +55,7 @@ public class ClientGame {
 	}
 
 	public void init(AssetManagerX assets) {
-		map = loadMap("data/maps/miniarena.tmx");
+		map = assets.getTiledMap("dummy_fin_map1");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
 		for (TileSet tileset : map.getTileSets()) {
