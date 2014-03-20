@@ -55,9 +55,12 @@ public class GameplayState extends GameState implements InputProcessor {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
 		tmpGame.render();
+		
+		DrawUtil.startRenderToScreen();
 		stage.render();
+		DrawUtil.endRenderToScreen();
                 
-                game.getManager().render();
+		game.getManager().render();
 	}
 
 	@Override
@@ -70,9 +73,11 @@ public class GameplayState extends GameState implements InputProcessor {
 		fpsCalc.addFrame();
 		
 		
-		//TODO: connect ui to gamelogic
+		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
+		
 		stage.step();
+		
 	}
 
 	@Override
