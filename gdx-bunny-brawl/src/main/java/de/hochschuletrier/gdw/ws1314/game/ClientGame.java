@@ -18,6 +18,7 @@ import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
@@ -55,7 +56,7 @@ public class ClientGame {
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 	
 	public void init(AssetManagerX assets) {
-		map = loadMap("data/maps/miniarena.tmx");
+		map = assets.getTiledMap("dummy_fin_map1");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 
 		for (TileSet tileset : map.getTileSets()) {
@@ -78,6 +79,7 @@ public class ClientGame {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
 				"debugTeam", 32, 32, 0));
+		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
 
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);

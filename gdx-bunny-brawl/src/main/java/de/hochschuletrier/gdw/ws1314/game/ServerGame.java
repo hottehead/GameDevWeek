@@ -45,7 +45,6 @@ public class ServerGame {
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
 	private ClientServerConnect netManager;
-	private TiledMap map;
 	private ServerPlayer player = new ServerPlayer();
     private long eggid = 0;
 
@@ -53,16 +52,14 @@ public class ServerGame {
 		entityManager = ServerEntityManager.getInstance();
         entityManager.setPhysixManager(manager);
 		netManager = ClientServerConnect.getInstance();
-		map = loadMap("data/maps/miniarena.tmx");
-		//loadSolids();
     }
 
 
 	public void init(AssetManagerX assets) {
-		//player.initPhysics(manager);
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		map = loadMap("data/maps/miniarena.tmx");
+		TiledMap map = assets.getTiledMap("dummy_fin_map1");
+		LevelLoader.load(map, entityManager, manager);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
 			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
@@ -85,83 +82,6 @@ public class ServerGame {
 
 	public PhysixManager getManager() {
 		return manager;
-	}
-
-	public TiledMap loadMap(String filename) {
-		try {
-			return new TiledMap(filename, LayerObject.PolyMode.ABSOLUTE);
-		} catch (Exception ex) {
-			throw new IllegalArgumentException("Map konnte nicht geladen werden: "
-					+ filename);
-		}
-	}
-
-	public void loadSolids() {
-		for (int i = 0; i < map.getLayers().size(); i++) {
-			Layer l = map.getLayers().get(i);
-			ArrayList<LayerObject> objects = l.getObjects();
-			if (objects == null) {
-				continue;
-			}
-
-			for (int k = 0; k < objects.size(); k++) {
-				LayerObject layerObject = objects.get(k);
-				Vector2 origin = new Vector2(layerObject.getX(), layerObject.getY());
-				int x = layerObject.getX();
-				int y = layerObject.getY();
-
-				boolean b = l.getBooleanProperty("solid", false);
-				System.out.println(b);
-				if (b) {
-					Primitive p = layerObject.getPrimitive();
-					if (p == Primitive.POINT) {
-						PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
-								.position(origin).fixedRotation(true).create();
-						List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-						points.add(new de.hochschuletrier.gdw.commons.utils.Point(x, y));
-						body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-								.friction(0.5f).restitution(0.4f).shapePolygon(points));
-					} else if (p == Primitive.RECT) {
-						PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
-								.position(origin).fixedRotation(true).create();
-						List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-						points.add(new de.hochschuletrier.gdw.commons.utils.Point(x, y));
-						body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-								.friction(0.5f).restitution(0.4f).shapeBox(x, y));
-					} else if (p == Primitive.TILE) {
-						PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
-								.position(origin).fixedRotation(true).create();
-						List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-						for (int j = 0; j < points.size(); j++) {
-							points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,
-									y));
-						}
-						body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-								.friction(0.5f).restitution(0.4f).shapePolygon(points));
-					} else if (p == Primitive.POLYGON) {
-						PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
-								.position(origin).fixedRotation(true).create();
-						List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-						for (int j = 0; j < points.size(); j++) {
-							points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,
-									y));
-						}
-						body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-								.friction(0.5f).restitution(0.4f).shapePolygon(points));
-					} else if (p == Primitive.POLYLINE) {
-						PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, manager)
-								.position(origin).fixedRotation(true).create();
-						List<de.hochschuletrier.gdw.commons.utils.Point> points = new ArrayList<de.hochschuletrier.gdw.commons.utils.Point>();
-						for (int j = 0; j < points.size(); j++) {
-							points.add(new de.hochschuletrier.gdw.commons.utils.Point(x,
-									y));
-						}
-						body.createFixture(new PhysixFixtureDef(manager).density(0.5f)
-								.friction(0.5f).restitution(0.4f).shapePolygon(points));
-					}
-				}
-			}
-		}
 	}
 
 	ConsoleCmd gravity_f = new ConsoleCmd("gravity", 0, "Set gravity.", 2) {

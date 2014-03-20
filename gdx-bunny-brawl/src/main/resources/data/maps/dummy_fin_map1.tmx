@@ -8,11 +8,11 @@
    <property name="animationFrames" value="5"/>
    <property name="animationTileOffset" value="5"/>
   </properties>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/dummyWasserHalb.png" width="128" height="32"/>
+  <image source="tiles/dummyWasserHalb.png" width="128" height="32"/>
  </tileset>
  <tileset firstgid="5" name="egg" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/egg.png" width="32" height="32"/>
+  <image source="tiles/egg.png" width="32" height="32"/>
   <tile id="0">
    <properties>
     <property name="TYPE" value="egg"/>
@@ -21,7 +21,7 @@
  </tileset>
  <tileset firstgid="6" name="carrot" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/carrot.png" width="32" height="32"/>
+  <image source="tiles/carrot.png" width="32" height="32"/>
   <tile id="0">
    <properties>
     <property name="TYPE" value="carrot"/>
@@ -30,11 +30,11 @@
  </tileset>
  <tileset firstgid="7" name="clover" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/clover.png" width="32" height="32"/>
+  <image source="tiles/clover.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="8" name="spinach" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/spinach.png" width="32" height="32"/>
+  <image source="tiles/spinach.png" width="32" height="32"/>
   <tile id="0">
    <properties>
     <property name="TYPE" value="spinach"/>
@@ -43,31 +43,31 @@
  </tileset>
  <tileset firstgid="9" name="bridge_horizontal_left" tilewidth="32" tileheight="96">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_horizontal_left.png" width="32" height="96"/>
+  <image source="tiles/bridge_horizontal_left.png" width="32" height="96"/>
  </tileset>
  <tileset firstgid="10" name="bridge_horizontal_middle" tilewidth="32" tileheight="96">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_horizontal_middle.png" width="32" height="96"/>
+  <image source="tiles/bridge_horizontal_middle.png" width="32" height="96"/>
  </tileset>
  <tileset firstgid="11" name="bridge_horizontal_right" tilewidth="32" tileheight="96">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_horizontal_right.png" width="32" height="96"/>
+  <image source="tiles/bridge_horizontal_right.png" width="32" height="96"/>
  </tileset>
  <tileset firstgid="12" name="bridge_vertical_bottom" tilewidth="96" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_vertical_bottom.png" width="96" height="32"/>
+  <image source="tiles/bridge_vertical_bottom.png" width="96" height="32"/>
  </tileset>
  <tileset firstgid="13" name="bridge_vertical_middle" tilewidth="96" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_vertical_middle.png" width="96" height="32"/>
+  <image source="tiles/bridge_vertical_middle.png" width="96" height="32"/>
  </tileset>
  <tileset firstgid="14" name="bridge_vertical_top" tilewidth="96" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bridge_vertical_top.png" width="96" height="32"/>
+  <image source="tiles/bridge_vertical_top.png" width="96" height="32"/>
  </tileset>
  <tileset firstgid="15" name="dummyTilesHalb" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/dummyTilesHalb.png" width="512" height="512"/>
+  <image source="tiles/dummyTilesHalb.png" width="512" height="512"/>
   <terraintypes>
    <terrain name="Gras" tile="-1"/>
    <terrain name="Weg" tile="-1"/>
@@ -120,11 +120,11 @@
  </tileset>
  <tileset firstgid="271" name="switch" tilewidth="64" tileheight="64">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/switch.png" width="64" height="64"/>
+  <image source="tiles/switch.png" width="64" height="64"/>
  </tileset>
  <tileset firstgid="272" name="bush" tilewidth="64" tileheight="64">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/bush.png" width="64" height="64"/>
+  <image source="tiles/bush.png" width="64" height="64"/>
   <tile id="0">
    <properties>
     <property name="TYPE" value="bush"/>
@@ -133,7 +133,7 @@
  </tileset>
  <tileset firstgid="273" name="straw" tilewidth="64" tileheight="64">
   <tileoffset x="1" y="1"/>
-  <image source="../../../../home/emolotow/workspace/gdw/gdx-bunny-brawl/src/main/resources/data/maps/tiles/straw.png" width="64" height="64"/>
+  <image source="tiles/straw.png" width="64" height="64"/>
   <tile id="0">
    <properties>
     <property name="TYPE" value="straw"/>
