@@ -97,4 +97,9 @@ public class ServerDatagramHandler implements DatagramHandler{
 	public void handle(ClientIdDatagram clientIdDatagram, NetConnection connection){
 		logger.warn("Server received a ClientIdDatagram, which is only intended to be sent to a client, something is wrong here...");
 	}
+
+	@Override
+	public void handle(EntityIDDatagram entityIDDatagram, NetConnection connection){
+		logger.warn("Server received a EntityIDDatagram, which is only intended to be sent to a client, something is wrong here...");
+	}
 }

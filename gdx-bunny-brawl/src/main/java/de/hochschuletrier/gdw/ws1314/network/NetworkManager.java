@@ -368,6 +368,7 @@ public class NetworkManager{
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
 			if(tmp.getId() == playerId){
 				tmp.setEntityId(entityId);
+				
 				break;
 			}
 		}

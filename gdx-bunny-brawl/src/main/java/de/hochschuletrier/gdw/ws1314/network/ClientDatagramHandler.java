@@ -153,4 +153,10 @@ public class ClientDatagramHandler implements DatagramHandler{
 	public void handle(ClientIdDatagram clientIdDatagram, NetConnection connection){
 		NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerId());
 	}
+
+	@Override
+	public void handle(EntityIDDatagram entityIDDatagram, NetConnection connection){
+		// TODO Auto-generated method stub
+		ClientEntityManager.getInstance().setPlayerEntityID(entityIDDatagram.getEntityId());
+	}
 }
