@@ -59,7 +59,7 @@ public class MainMenuState extends GameState implements InputProcessor {
                 return isActive && mainProcessor.keyUp(keycode);
             }
         };
-        Main.inputMultiplexer.addProcessor(inputProcessor);
+//        Main.inputMultiplexer.addProcessor(inputProcessor);
         
 		stage = new MainMenuStage();
 		stage.init(assetManager);
@@ -67,16 +67,16 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void render() {
-		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		DrawUtil.batch.draw(keyFrame, 0, 0);
-//		stage.render();
+//		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+//		DrawUtil.batch.draw(keyFrame, 0, 0);
+		stage.render();
     }
 
-	float stateTime = 0f;
-    @Override
-    public void update(float delta) {
-		stateTime += delta;
-    }
+//	float stateTime = 0f;
+//    @Override
+//    public void update(float delta) {
+//		stateTime += delta;
+//    }
 
     @Override
     public void onEnter() {
