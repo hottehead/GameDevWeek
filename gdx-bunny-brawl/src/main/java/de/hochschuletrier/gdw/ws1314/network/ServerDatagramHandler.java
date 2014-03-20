@@ -53,13 +53,13 @@ public class ServerDatagramHandler implements DatagramHandler {
     	long entityid = ((ConnectionAttachment) connection.getAttachment()).getEntityId();
     	ServerEntity tmp = ServerEntityManager.getInstance().getEntityById(entityid);
     	if(tmp==null){
-    		logger.warn("Recieved ActionDatagram for entity with id {} but the entity does not exist.");
+    		logger.warn("Recieved ActionDatagram for entity with id {} but the entity does not exist.",entityid);
     		return;
     	}
     	if(tmp instanceof ServerPlayer){
     		((ServerPlayer) tmp).doAction(actionDatagram.getPlayerAction());
     	} else {
-    		logger.warn("Server handle ActionDatagram: entityid of connection is no ServerPlayer");
+    		logger.warn("Server handle ActionDatagram: entityid {} of connection is no ServerPlayer",entityid);
     	}
     }
 
