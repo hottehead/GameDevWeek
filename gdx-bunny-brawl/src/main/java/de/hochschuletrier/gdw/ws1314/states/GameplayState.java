@@ -60,6 +60,11 @@ public class GameplayState extends GameState implements InputProcessor {
 		tmpGame.update(delta);
 		stage.setFPSCounter(delta);
 		fpsCalc.addFrame();
+		
+		
+		//TODO: connect ui to gamelogic
+		//debug healthbar till connected to gamelogic
+		stage.step();
 	}
 
 	@Override
