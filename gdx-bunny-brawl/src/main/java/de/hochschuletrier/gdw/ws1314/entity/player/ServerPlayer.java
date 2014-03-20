@@ -89,6 +89,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
+    	facingDirection = FacingDirection.NONE;
+    	desiredDirection = FacingDirection.NONE;
     }
     
     public void enable() {}
@@ -307,7 +309,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public float			getCurrentArmor()		{ return currentArmor; }
     public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
     public PlayerKit		getPlayerKit()			{ return playerKit; }
-    public TeamColor		getTeamColor()			{ return teamColor; }
+    public TeamColor		getTeamColor()			{ return playerInfo.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     
     public void setPlayerKit(PlayerKit kit)
@@ -326,7 +328,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     public void setTeamColor(TeamColor color)
     {
-    	teamColor = color;
+    	playerInfo.setTeam(color);
     }
 
 	@Override

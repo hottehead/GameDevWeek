@@ -50,6 +50,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 		this.listener.remove(listener);
 	}
 	
+	// PlayerUpdateCallback
 	@Override
 	public void callback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept) 
 	{

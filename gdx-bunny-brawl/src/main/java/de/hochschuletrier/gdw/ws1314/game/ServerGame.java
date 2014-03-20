@@ -79,7 +79,7 @@ public class ServerGame {
         float offset = 0f;
         for(PlayerData playerData : playerDatas ){
             ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(0f,0f+offset));
-
+            
             switch(playerData.getType())
             {
                 case Noob:
@@ -97,6 +97,9 @@ public class ServerGame {
 
             PlayerInfo pinfo = new PlayerInfo(playerData.getPlayername(),playerData.getTeam());
             sp.setPlayerInfo(pinfo);
+            
+            logger.info(sp.getFacingDirection().name());
+            
             netManager.setPlayerEntityId(playerData.getId(),sp.getID());
             offset += 10f;
         }
