@@ -40,6 +40,7 @@ public class CameraFollowingBehaviour {
 			
 			this.prevFollowingPosition.x = this.prevFollowingPosition.x + dx;
 			this.prevFollowingPosition.y = this.prevFollowingPosition.y + dy;
+			bounds.boundVector(prevFollowingPosition);
 		}
 	}
 }

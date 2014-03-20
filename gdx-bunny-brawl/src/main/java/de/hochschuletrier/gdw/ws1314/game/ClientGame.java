@@ -44,7 +44,7 @@ public class ClientGame {
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
-	
+
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
@@ -52,11 +52,10 @@ public class ClientGame {
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
 
-	
 	}
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;
-	
+
 	public void init(AssetManagerX assets) {
 		map = assets.getTiledMap("dummy_fin_map1");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
@@ -71,18 +70,24 @@ public class ClientGame {
 		mapRenderer.setDrawLines(false);
 
 		initMaterials(assets);
+
+		LevelBoundings levelBounds = new LevelBoundings(
+				Gdx.graphics.getWidth() * 0.5f,
+				Gdx.graphics.getHeight() * 0.5f, map.getWidth()
+						* map.getTileWidth(), map.getHeight()
+						* map.getTileHeight());
 		
-		//FIXME: @Hati apply levelbounds from tiledmap file
-		cameraFollowingBehaviour = new CameraFollowingBehaviour(DrawUtil.getCamera(), new LevelBoundings(0,0, 2000, 2000));
-		
-		
+		cameraFollowingBehaviour = new CameraFollowingBehaviour(
+				DrawUtil.getCamera(), levelBounds);
+
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
 				"debugTeam", 32, 32, 0));
-		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
+		materialManager.provideMaterial(ClientProjectile.class,
+				new MaterialInfo("debugArrow", 16, 16, 1));
 
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
@@ -99,28 +104,29 @@ public class ClientGame {
 	}
 
 	float fadeIn = 0.25f;
+
 	public void render() {
-//		sceneToTexture.begin();
-//		DrawUtil.batch.setShader(advShader);
-//		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
-		
+		// sceneToTexture.begin();
+		// DrawUtil.batch.setShader(advShader);
+		// sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
+
 		for (Layer layer : map.getLayers()) {
-			if(layer.getType() == Layer.Type.OBJECT && layer.getBooleanProperty("renderEntities", false)) {
+			if (layer.getType() == Layer.Type.OBJECT
+					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
-			}
-			else {
+			} else {
 				mapRenderer.render(0, 0, layer);
 			}
 		}
 		DrawUtil.batch.flush();
-//		sceneToTexture.end();
+		// sceneToTexture.end();
 
-//		DrawUtil.batch.setShader(postProcessing);
-//		postProcessing.setUniformi(
-//				postProcessing.getUniformLocation("u_prevStep"), 1);
-		
-//		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
-//		DrawUtil.batch.setShader(null);
+		// DrawUtil.batch.setShader(postProcessing);
+		// postProcessing.setUniformi(
+		// postProcessing.getUniformLocation("u_prevStep"), 1);
+
+		// DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
+		// DrawUtil.batch.setShader(null);
 
 		sceneToTexture.swap();
 	}
@@ -131,7 +137,8 @@ public class ClientGame {
 
 		long playerId = entityManager.getPlayerEntityID();
 		if (playerId != -1) {
-			cameraFollowingBehaviour.setFollowingEntity(entityManager.getEntityById(playerId));
+			cameraFollowingBehaviour.setFollowingEntity(entityManager
+					.getEntityById(playerId));
 		}
 		cameraFollowingBehaviour.update(delta);
 	}
