@@ -4,26 +4,18 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.NetEventDatagram;
-import de.hochschuletrier.gdw.commons.netcode.message.INetMessageInternal;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessage;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageAllocator;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageCache;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageDelta;
+import de.hochschuletrier.gdw.commons.netcode.message.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.StandardSocketOptions;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A NetConnection represents a connection from server to client or vice versa.
@@ -170,6 +162,8 @@ public class NetConnection extends Thread {
                 else if (type != INetDatagram.Type.KEEP_ALIVE) {
                     handleDatagram(type, id, param1, param2);
                 }
+			}catch (java.nio.channels.AsynchronousCloseException e){
+				//
             } catch (IOException e) {
                 logger.error("Failed reading NetDatagram", e);
                 // During a shutdown, we don't record exceptions

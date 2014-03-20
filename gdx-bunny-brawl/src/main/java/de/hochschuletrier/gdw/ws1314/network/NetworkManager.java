@@ -1,21 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
-import de.hochschuletrier.gdw.commons.utils.StringUtils;
-import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
@@ -28,7 +16,6 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
-import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
@@ -41,12 +28,18 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class NetworkManager {
 
     private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
-	private final String defaultIP = "0.0.0.0";
-	private final int defaultPort = 666;
 
     private static NetworkManager instance = new NetworkManager();
 
@@ -86,7 +79,7 @@ public class NetworkManager {
         try {
 			clientConnection = new NetConnection(ip, port, datagramFactory);
 			if (clientConnection.isAccepted())
-				logger.info("Connected.");
+				logger.info("Connected to {} on port {}", ip, port);
         } catch (IOException e) {
 			logger.error("Can't connect.", e);
         }
@@ -100,9 +93,11 @@ public class NetworkManager {
 		serverConnections = new ArrayList<NetConnection>();
         try {
             serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
+
 			if (serverReception.isRunning()){
 				logger.info("Listening, IP: {} Port: {}", InetAddress.getLocalHost()
 						.getHostAddress(), port);
+
 			}
         } catch (IOException e) {
             logger.error("Can't listen for connections.", e);
@@ -232,13 +227,11 @@ public class NetworkManager {
         clientConnection.send(new PlayerUpdateDatagram(playerName, type, team, accept));
     }
 
-
     public void sendLobbyUpdate(String map, PlayerData[] players) {
         if (!isServer())
             return;
-        logger.info("in sendLobbyUpdate");
-		for (int i = 0; i < players.length; i++) {
-        	logger.info("Player: " + players[i].toString());
+		for (PlayerData pd:players){
+			logger.info("Player: " + pd.toString());
         }
         broadcastToClients(new LobbyUpdateDatagram(map, players));
     }
@@ -296,17 +289,12 @@ public class NetworkManager {
 		if (isClient()) {
             clientConnection.shutdown();
 			clientConnection = null;
+			logger.info("Disconnect from Server.");
         }
     }
 
 	public void init() {
-        Main.getInstance().console.register(connectCmd);
-        Main.getInstance().console.register(listenCmd);
-        Main.getInstance().console.register(sayCmd);
-		Main.getInstance().console.register(listenDefCmd);
-		Main.getInstance().console.register(stopCmd);
-		Main.getInstance().console.register(disconnectCmd);
-		Main.getInstance().console.register(devConnectCmd);
+		new NetworkCommands(instance);
         addChatListener(new ConsoleChatListener());
     }
 
@@ -407,148 +395,15 @@ public class NetworkManager {
         }
     }
 
-	private ConsoleCmd connectCmd = new ConsoleCmd("connect", 0, "Connect to a server.", 2) {
-
-        @Override
-        public void showUsage() {
-            showUsage("<ip> <port>");
-        }
-
-        @Override
-        public void execute(List<String> args) {
-            try {
-                String ip = args.get(1);
-                int port = Integer.parseInt(args.get(2));
-                connect(ip, port);
-            } catch (NumberFormatException e) {
-                showUsage();
-            }
-        }
-    };
-	private ConsoleCmd listenCmd = new ConsoleCmd("listen", 0, "Start listening for client connections. (Become a server.)", 2) {
-
-        @Override
-        public void showUsage() {
-            showUsage("<interface-ip> <port> [max-connections = 10]");
-        }
-
-        @Override
-        public void execute(List<String> args) {
-            try {
-                String ip = args.get(1);
-                int port = Integer.parseInt(args.get(2));
-                int maxConnections = 10;
-				if (args.size() > 3) {
-					maxConnections = Integer.parseInt(args.get(3));
-                }
-                listen(ip, port, maxConnections);
-            } catch (NumberFormatException e) {
-                showUsage();
-            }
-        }
-    };
-
-	private ConsoleCmd sayCmd = new ConsoleCmd("say", 0, "Post a message in chat.", 1) {
-        @Override
-        public void showUsage() {
-            showUsage("<message-text>");
-        }
-
-        @Override
-        public void execute(List<String> args) {
-            sendChat(StringUtils.untokenize(args, 1, -1, false));
-        }
-    };
-
     public void setPlayerEntityId(int playerId, long entityId){
     	//TODO Implement
     }
 
-	private ConsoleCmd listenDefCmd = new ConsoleCmd("listendef", 0, "Start listening for client connections at " + defaultIP + " and Port " + defaultPort + ". " +
-			"(Become a server.)", 0) {
-
-		@Override
-		public void showUsage() {
-			showUsage("");
-		}
-
-		@Override
-		public void execute(List<String> args) {
-			try {
-				int maxConnections = 10;
-				if (args.size() > 3) {
-					maxConnections = Integer.parseInt(args.get(3));
-				}
-				listen(defaultIP, defaultPort, maxConnections);
-			} catch (NumberFormatException e) {
-				logger.error("Can't create Server with default data:", e);
-			}
-		}
-	};
-
-	private ConsoleCmd stopCmd = new ConsoleCmd("stop", 0, "Stops the Server.", 0) {
-
-		@Override
-		public void showUsage() {
-			showUsage("");
-		}
-
-		@Override
-		public void execute(List<String> args) {
-			try {
-				stopServer();
-			} catch (NumberFormatException e) {
-				showUsage();
-			}
-		}
-	};
-
-	private ConsoleCmd disconnectCmd = new ConsoleCmd("disconnect", 0, "Client disconnects from Server.", 0) {
-
-		@Override
-		public void showUsage() {
-			showUsage("");
-		}
-
-		@Override
-		public void execute(List<String> args) {
-			try {
-				if (isClient()) {
-					logger.warn("disconnect is TODO !!");//TODO disconnect cmd
-				}
-			} catch (NumberFormatException e) {
-				logger.error("Can't disconnect from Server:", e);
-			}
-		}
-	};
-
-	private ConsoleCmd devConnectCmd = new ConsoleCmd("dc", 0, "[DEV CMD] only for network tests, connect to localhost or to test client", 1) {
-
-		@Override
-		public void showUsage() {
-			showUsage("<flag> [l = localhost, t = test server]");
-		}
-
-		@Override
-		public void execute(List<String> args) {
-			try {
-				logger.warn("[dc] is only for network development tests !");
-				if (args.get(1).equals("l")) {
-					connect("localhost", defaultPort);
-				} else if (args.get(1).equals("t")) {
-					connect("143.93.55.135", defaultPort);
-				}
-			} catch (Exception e) {
-				logger.error("can't connect to server", e);
-			}
-		}
-	};
-
-	private void stopServer() {
+	public void stopServer() {
 		try {
 			if (isServer()) {
 				serverReception.shutdown();
-				logger.info("Server stopped.");
+				logger.info("[SERVER] stopped");
 			} else {
 				logger.warn("Can't stop, i'm not a Server.");
 			}
