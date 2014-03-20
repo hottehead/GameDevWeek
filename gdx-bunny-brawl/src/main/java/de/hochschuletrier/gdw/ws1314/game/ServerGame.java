@@ -71,8 +71,8 @@ public class ServerGame {
 	}
 
 	public void update(float delta) {
-		entityManager.update(delta);
 		manager.update(STEP_SIZE, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+		entityManager.update(delta);
     }
 
 	public PhysixManager getManager() {
