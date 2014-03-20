@@ -42,8 +42,8 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         message.putString (map);
         message.putInt (playercount);
         for (int i = 0; i < playercount; i++) {
-        	logger.info("PUT id: " + players[i].getId() + " name: " + players[i].getPlayername());
-        	message.putInt(players[i].getId());
+        	logger.info("PUT id: " + players[i].getPlayerId() + " name: " + players[i].getPlayername());
+        	message.putInt(players[i].getPlayerId());
             message.putString (players[i].getPlayername());
             message.putEnum (players[i].getType());
             message.putEnum(players[i].getTeam());
