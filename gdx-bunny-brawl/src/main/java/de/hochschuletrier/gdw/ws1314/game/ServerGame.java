@@ -3,7 +3,6 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -88,8 +87,8 @@ public class ServerGame {
                     break;
             }
 
-            PlayerInfo pinfo = new PlayerInfo(playerData.getPlayername(),playerData.getTeam());
-            sp.setPlayerInfo(pinfo);
+        
+            sp.setPlayerData(playerData);
             netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
             offset += 10f;
         }

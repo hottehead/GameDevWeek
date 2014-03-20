@@ -14,7 +14,6 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
@@ -29,6 +28,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 
@@ -59,7 +59,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	public static final float HEIGHT = 32.0f;
 
 
-    private PlayerInfo	playerInfo;
+    private PlayerData	playerData;
     private PlayerKit 	playerKit;
     private TeamColor	teamColor;
     
@@ -379,9 +379,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
-    public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
+    public PlayerData		getPlayerInfo()			{ return playerData; }
     public PlayerKit		getPlayerKit()			{ return playerKit; }
-    public TeamColor		getTeamColor()			{ return playerInfo.getTeam(); }
+    public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     
     public void setPlayerKit(PlayerKit kit)
@@ -391,14 +391,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	currentArmor = kit.getBaseArmor();
     }
     
-    public void setPlayerInfo(PlayerInfo info)
+    public void setPlayerData(PlayerData pd)
     {
-    	playerInfo = info;
-    }
-    
-    public void setTeamColor(TeamColor color)
-    {
-    	playerInfo.setTeam(color);
+    	playerData = pd;
     }
 
     public void applySpeedBuff(float factor, float duration)
