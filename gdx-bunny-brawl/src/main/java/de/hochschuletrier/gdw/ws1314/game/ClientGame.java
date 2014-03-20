@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -48,8 +47,6 @@ public class ClientGame {
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
 
-	private OrthographicCamera sceneCamera;
-
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
 		netManager = ClientServerConnect.getInstance();
@@ -87,10 +84,6 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 		
-		sceneCamera = new OrthographicCamera(width, height);
-		sceneCamera.setToOrtho(true, width, height);
-		
-
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
