@@ -89,7 +89,7 @@ public class ClientGame {
 		
 		sceneCamera = new OrthographicCamera(width, height);
 		sceneCamera.setToOrtho(true, width, height);
-//		for( Layer l : this.map.getLayers()) { //test for checking layer
+//		for( Layer l : this.map.getLayers()) { //test for checking layer 
 //			System.out.println(l.getName());
 //		}
 
