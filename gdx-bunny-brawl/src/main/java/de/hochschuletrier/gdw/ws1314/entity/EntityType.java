@@ -5,20 +5,20 @@ package de.hochschuletrier.gdw.ws1314.entity;
  */
 public enum EntityType {
 	None,
-    Noob, //ok
-	Knight, //ok
-    Hunter, //ok
-    Tank, //ok
-    Ei, //ok
-    Projectil, //ok
-    Bridge, //ok
-    BridgeSwitch, //ok
-    Bush, //ok
-    SwordAttack, //TODO
-    ContactMine, //ok
-    Carrot, //ok
-    Spinach, //ok
-    Clover, //ok
+    Noob,
+	Knight, 
+    Hunter,
+    Tank, 
+    Ei, 
+    Projectil, 
+    Bridge, 
+    BridgeSwitch, 
+    Bush,
+    SwordAttack,
+    ContactMine,
+    Carrot,
+    Spinach,
+    Clover, 
     WaterZone,
     AbyssZone,
     GrassZone,

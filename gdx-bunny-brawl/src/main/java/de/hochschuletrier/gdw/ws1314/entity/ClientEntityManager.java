@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridge;
@@ -19,9 +22,6 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -86,9 +86,6 @@ public class ClientEntityManager {
             case Bush:
             	e = new ClientBush();
             	break;
-            case SwordAttack:
-            	//TODO clientswordattack
-            	break;
             case ContactMine:
             	e = new ClientContactMine();
             	break;
@@ -100,17 +97,6 @@ public class ClientEntityManager {
             	break;
             case Clover:
             	e = new ClientClover();
-            	break;
-            case WaterZone:
-            	//TODO how to define zones
-            	break;
-            case AbyssZone:
-            	break;
-            case GrassZone:
-            	break;
-            case PathZone:
-            	break;
-            case StartZone:
             	break;
         }
         if(e!=null)
