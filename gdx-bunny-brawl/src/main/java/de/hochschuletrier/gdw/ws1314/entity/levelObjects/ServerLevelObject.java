@@ -29,11 +29,6 @@ public abstract class ServerLevelObject extends ServerEntity
 	}
 
 	@Override
-	public void dispose()
-	{
-	}
-
-	@Override
 	public void initialize()
 	{
 		this.isVisible = true;

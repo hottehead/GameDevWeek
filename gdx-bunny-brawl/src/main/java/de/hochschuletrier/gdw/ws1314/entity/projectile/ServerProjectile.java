@@ -130,19 +130,16 @@ public class ServerProjectile extends ServerEntity {
 	public void disable() {
 	}
 
-	@Override
-	public void dispose() {
-	}
 
 	@Override
 	public void initialize() {
 
 	}
 
-    @Override
+	@Override
     public void reset() {
 
-    }
+	}
 
 	@Override
 	public void update(float deltaTime) {

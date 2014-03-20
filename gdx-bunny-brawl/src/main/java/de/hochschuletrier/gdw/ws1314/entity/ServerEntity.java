@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 
 /**
@@ -37,7 +38,15 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
 	
 	public abstract void enable();
 	public abstract void disable();
-    public abstract void dispose();
+        
+    public void dispose(PhysixManager manager) {
+        
+        if(physicsBody != null) {
+              manager.destroy(physicsBody);
+        }
+        
+    }   
+    
     public abstract void initialize();
     public abstract void reset();
 
