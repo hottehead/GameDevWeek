@@ -286,6 +286,27 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case Bush:			
             	 break;
+             case SwordAttack:
+            	 break;
+             case ContactMine:
+            	 break;
+             case Carrot:
+            	 this.playerKit.getMaxVelocity();
+            	 break;
+             case Spinach:
+            	 break;
+             case Clover:
+            	 break;
+             case WaterZone:
+            	 break;
+             case AbyssZone:
+            	 break;
+             case GrassZone:
+            	 break;
+             case PathZone:
+            	 break;
+             case StartZone:
+            	 break;
              default:
             	 break;
                  
@@ -319,6 +340,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void setTeamColor(TeamColor color)
     {
     	teamColor = color;
+    }
+    
+    public void setSpeedBuff(float factor, float timer){
+    	
     }
 
 	@Override
