@@ -42,6 +42,7 @@ public class ServerProjectile extends ServerEntity {
     private float 			flightDistance;
     private float 			despawnTime;
     private float			damage;
+    private float			hitCircleRadius;
     
     private boolean physicsInitialized;
     
@@ -59,6 +60,8 @@ public class ServerProjectile extends ServerEntity {
             this.velocity = 0.0f;
             this.flightDistance = 0.0f;
             this.despawnTime = 0.0f;
+            this.damage = 0.0f;
+            this.hitCircleRadius = 1.0f;
             this.physicsInitialized = false;
     }
     
@@ -74,6 +77,10 @@ public class ServerProjectile extends ServerEntity {
 		this.velocity = velocity;
 		this.flightDistance = distance;
 		this.despawnTime = despawnTime;
+	}
+	
+	public void setHitCircleRadius(float radius) {
+		hitCircleRadius = radius;
 	}
 	
 	public void setSource(long sourceID) {
@@ -154,8 +161,6 @@ public class ServerProjectile extends ServerEntity {
 		if (!physicsInitialized)
 			return;
 		
-		logger.info(getPosition().x + " " + getPosition().y + " - " + originPosition.x + " " + originPosition.y);
-		
         Vector2 pos = this.physicsBody.getPosition().cpy();
         float distance = pos.sub(originPosition).len();
         if(distance > this.flightDistance) {
@@ -172,19 +177,18 @@ public class ServerProjectile extends ServerEntity {
 	@Override
 	public void initPhysics(PhysixManager manager){
             this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
-            float angle = this.facingDirection.getDirectionVector().getAngleRad();
                 
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                     .position(this.originPosition)
                     .fixedRotation(true)
-                    .angle(angle)
+                    .angle(facingDirection.getAngle())
                     .create();
             
             body.createFixture(new PhysixFixtureDef(manager)
                     .density(0.5f)
                     .friction(0.0f)
                     .restitution(0.0f)
-                    .shapeCircle(3)
+                    .shapeCircle(hitCircleRadius)
                     .sensor(true));
             
             body.setGravityScale(0);
@@ -193,7 +197,7 @@ public class ServerProjectile extends ServerEntity {
             setPhysicsBody(body);
 
             Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
-                                                                            facingDirection.getDirectionVector().y * velocity);
+                                        facingDirection.getDirectionVector().y * velocity);
             physicsBody.setLinearVelocity(vel);
 
             physicsInitialized = true;
