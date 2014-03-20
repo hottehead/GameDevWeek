@@ -276,8 +276,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Tank:
              case Hunter:
              case Knight:
-             case Noob:
-//                  
+             case Noob:                 
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -286,19 +285,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             		 this.currentEggCount++;
             	 }
-     
             	 break;
              case Projectil: 
-            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-            	 if(hunter.getTeamColor() != this.getTeamColor()){
-            		 this.currentHealth -= AttackShootArrow.DAMAGE;
-            	 } 
-            	 if(this.currentHealth <= 0){
-            	  	 
-            		 this.physicsBody.setPosition(0, 0);
-            	  	 
-            	 }
+//            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+//            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
+//            	 if(hunter.getTeamColor() != this.getTeamColor()){
+//            		 this.currentHealth -= AttackShootArrow.DAMAGE;
+//            	 } 
+//            	 if(this.currentHealth <= 0){
+//            	  	 
+//            		 this.physicsBody.setPosition(0, 0);
+//            	  	 
+//            	 }
             	 break;
              case Bridge:
             	 ServerBridge bridge = (ServerBridge) otherEntity;
