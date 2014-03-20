@@ -40,7 +40,7 @@ public class DoubleBufferFBO {
 	}
 	
 	public TextureRegion getActiveFrameBuffer() {
-		return textureRegions[1-renderToIdx];
+		return textureRegions[renderToIdx];
 	}
 	
 	public void bindOtherBufferTo(int textureId) {

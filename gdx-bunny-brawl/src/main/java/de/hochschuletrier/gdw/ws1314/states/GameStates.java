@@ -51,4 +51,5 @@ public enum GameStates {
     boolean isActive () {
         return Main.getInstance ().getCurrentState () == state;
     }
+
 }

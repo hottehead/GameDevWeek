@@ -13,7 +13,7 @@ public class VisualBox extends VisualElement {
 		this.height = height;
 		this.texture = texture;
 	}
-	
+
 	public float getWidth() {
 		return width;
 	}

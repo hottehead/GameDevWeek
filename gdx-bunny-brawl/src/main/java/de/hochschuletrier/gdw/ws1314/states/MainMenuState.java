@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
@@ -30,6 +31,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
     private LocalMusic music;
+	AnimationExtended walking;
 
     public MainMenuState() {
     }
@@ -37,17 +39,14 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+		walking = assetManager.getAnimation("walking");
         this.music = new LocalMusic(assetManager);
         inputProcessor = new InputInterceptor(this) {
             @Override
             public boolean keyUp(int keycode) {
                 switch (keycode) {
                     case Keys.ESCAPE:
-                        if(GameStates.MAINMENU.isActive()){
-                        	//GameStates.SERVERGAMEPLAY.activate(new SplitHorizontalTransition(500), null);
-                        }
-                        else
-                            GameStates.MAINMENU.activate(new SplitHorizontalTransition(500).reverse(), null);
+                    	//Wird aktuelle nicht benutzt (laut Jerry)
                         return true;
                 }
                 return isActive && mainProcessor.keyUp(keycode);
@@ -58,23 +57,31 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void render() {
+		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+		DrawUtil.batch.draw(keyFrame, 0, 0);
     }
 
+	float stateTime = 0f;
     @Override
     public void update(float delta) {
-
+		stateTime += delta;
+		System.out.println(stateTime);
     }
 
     @Override
     public void onEnter() {
         inputProcessor.setActive(true);
+        
+        if (this.music.isMusicPlaying())
+        	this.music.deMute();
+        else
         this.music.play("music-lobby-loop");
     }
 
     @Override
     public void onLeave() {
+    	this.music.mute();
         inputProcessor.setActive(false);
-        this.music.stop();
     }
 
     @Override

@@ -1,7 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
@@ -31,10 +33,9 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
         }
     }
 	
-	public long getID()
-	{
-		return this.id;
-	}
+    public long getID() {
+        return this.id;
+    }
 	
 	public abstract void enable();
 	public abstract void disable();
@@ -82,6 +83,14 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
         }
         
         return null;
+    }
+    
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
     }
     
 }

@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.commons.gdx.assets;
 
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AsynchronousAssetLoaderX;
@@ -47,7 +48,7 @@ public class AssetManagerX extends AssetManager {
 
 	public AssetManagerX(FileHandleResolver resolver) {
 		super(resolver);
-
+		setLoader(AnimationExtended.class, new AnimationExtendedLoader(resolver));
 		setLoader(Animation.class, new AnimationLoader(resolver));
 		setLoader(TiledMap.class, new TiledMapLoader(resolver));
 		setLoader(TrueTypeFont.class, new TrueTypeFontLoader(resolver));
@@ -64,8 +65,8 @@ public class AssetManagerX extends AssetManager {
 		return null;
 	}
 
-	public Animation getAnimation(String name) {
-		return getByName(name, Animation.class);
+	public AnimationExtended getAnimation(String name) {
+		return getByName(name, AnimationExtended.class);
 	}
 
 	/**

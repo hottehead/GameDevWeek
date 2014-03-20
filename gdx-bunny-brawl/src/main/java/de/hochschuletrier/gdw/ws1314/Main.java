@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import org.lwjgl.opengl.GL11;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -17,11 +19,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
+import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -33,6 +38,9 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
+import de.hochschuletrier.gdw.commons.tiled.TiledMap;
+import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
@@ -70,32 +78,27 @@ public class Main extends StateBasedGame {
 		return instance;
 	}
 
-
-	private void setupDummyLoader() {
-		// Just adding some sleep dummies for a progress bar test
-		InternalFileHandleResolver fileHandleResolver = new InternalFileHandleResolver();
-		assetManager.setLoader(SleepDummyLoader.SleepDummy.class, new SleepDummyLoader(
-				fileHandleResolver));
-		SleepDummyLoader.SleepDummyParameter dummyParam = new SleepDummyLoader.SleepDummyParameter(
-				100);
-		for (int i = 0; i < 50; i++) {
-			assetManager.load("dummy" + i, SleepDummyLoader.SleepDummy.class, dummyParam);
-		}
-	}
-
 	private void loadAssetLists() {
 		TextureParameter param = new TextureParameter();
 		param.minFilter = param.magFilter = Texture.TextureFilter.Linear;
 
 		assetManager.loadAssetList("data/json/images.json", Texture.class, param);
+
 		assetManager.loadAssetList("data/json/sounds.json", Sound.class, null);
+
 		assetManager.loadAssetList("data/json/music.json", Music.class, null);
-		assetManager.loadAssetListWithParam("data/json/animations.json", Animation.class,
-				AnimationLoader.AnimationParameter.class);
+
+		assetManager.loadAssetListWithParam("data/json/animations.json",
+				AnimationExtended.class,
+				AnimationExtendedLoader.AnimationExtendedParameter.class);
+		TiledMapParameter mapParam = new TiledMapParameter();
+		assetManager.loadAssetList("data/json/maps.json", TiledMap.class, mapParam);
+
 		BitmapFontParameter fontParam = new BitmapFontParameter();
 		fontParam.flip = true;
 		assetManager.loadAssetList("data/json/fonts_bitmap.json", BitmapFont.class,
 				fontParam);
+
 		assetManager.loadAssetList("data/json/fonts_truetype.json", TrueTypeFont.class,
 				null);
 	}
@@ -125,7 +128,6 @@ public class Main extends StateBasedGame {
 		//s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
-		setupDummyLoader();
 		loadAssetLists();
 		setupGdx();
 		skin = new Skin(Gdx.files.internal("data/skins/basic.json"));

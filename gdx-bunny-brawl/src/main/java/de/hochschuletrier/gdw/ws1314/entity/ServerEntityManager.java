@@ -1,12 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
 import com.badlogic.gdx.math.Vector2;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
+import de.hochschuletrier.gdw.ws1314.game.LevelLoader;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+
 
 
 import java.util.HashMap;

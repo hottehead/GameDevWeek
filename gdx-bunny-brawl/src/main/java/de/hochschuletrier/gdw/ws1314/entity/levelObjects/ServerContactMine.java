@@ -42,16 +42,6 @@ public class ServerContactMine extends ServerLevelObject
 	}
 
 	@Override
-	public void preSolve(Contact contact, Manifold oldManifold)
-	{
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse)
-	{
-	}
-
-	@Override
 	public EntityType getEntityType()
 	{
 		return EntityType.ContactMine;
@@ -64,7 +54,7 @@ public class ServerContactMine extends ServerLevelObject
 									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
 									.fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager)
-									.density(0.5f).friction(0.0f)
+									.density(0.5f).friction(0.0f).sensor(true)
 									.restitution(0.0f).shapeBox(10,10));
 
 		body.setGravityScale(0);

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dummyWasserHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="animation" value=""/>
+   <property name="animationDuration" value="0.15"/>
+   <property name="animationFrames" value="5"/>
+   <property name="animationTileOffset" value="5"/>
+  </properties>
+  <image source="tiles/dummyWasserHalb.png" width="128" height="32"/>
+ </tileset>
+ <tileset firstgid="5" name="egg" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="egg"/>
+  </properties>
+  <image source="tiles/egg.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="6" name="carrot" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="carrot"/>
+  </properties>
+  <image source="tiles/carrot.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="7" name="clover" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="clover"/>
+  </properties>
+  <image source="tiles/clover.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="8" name="spinach" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="spinach"/>
+  </properties>
+  <image source="tiles/spinach.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="9" name="bridge_horizontal_left" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_left.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="10" name="bridge_horizontal_middle" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_middle.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="11" name="bridge_horizontal_right" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_right.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="12" name="bridge_vertical_bottom" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_bottom.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="13" name="bridge_vertical_middle" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_middle.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="14" name="bridge_vertical_top" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_top.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="15" name="dummyTilesHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/dummyTilesHalb.png" width="512" height="512"/>
+  <terraintypes>
+   <terrain name="Gras" tile="-1"/>
+   <terrain name="Weg" tile="-1"/>
+   <terrain name="Abgrund" tile="-1"/>
+   <terrain name="Wasser" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="0,0,0,0"/>
+  <tile id="1" terrain="0,0,0,0"/>
+  <tile id="2" terrain="0,0,0,0"/>
+  <tile id="3" terrain="0,0,0,0"/>
+  <tile id="16" terrain="0,0,0,1"/>
+  <tile id="17" terrain="0,0,1,1"/>
+  <tile id="18" terrain="0,0,1,0"/>
+  <tile id="32" terrain="0,1,0,1"/>
+  <tile id="33" terrain="1,1,1,1"/>
+  <tile id="34" terrain="1,0,1,0"/>
+  <tile id="35" terrain="0,1,1,1"/>
+  <tile id="36" terrain="1,0,1,1"/>
+  <tile id="48" terrain="0,1,0,0"/>
+  <tile id="49" terrain="1,1,0,0"/>
+  <tile id="50" terrain="1,0,0,0"/>
+  <tile id="51" terrain="1,1,0,1"/>
+  <tile id="52" terrain="1,1,1,0"/>
+  <tile id="64" terrain="0,0,0,3"/>
+  <tile id="65" terrain="0,0,3,3"/>
+  <tile id="66" terrain="0,0,3,0"/>
+  <tile id="69" terrain="0,0,0,2"/>
+  <tile id="70" terrain="0,0,2,2"/>
+  <tile id="71" terrain="0,0,2,0"/>
+  <tile id="80" terrain="0,3,0,3"/>
+  <tile id="81" terrain="3,3,3,3"/>
+  <tile id="82" terrain="3,0,3,0"/>
+  <tile id="83" terrain="0,3,3,3"/>
+  <tile id="84" terrain="3,0,3,3"/>
+  <tile id="85" terrain="0,2,0,2"/>
+  <tile id="86" terrain="2,2,2,2"/>
+  <tile id="87" terrain="2,0,2,0"/>
+  <tile id="88" terrain="0,2,2,2"/>
+  <tile id="89" terrain="2,0,2,2"/>
+  <tile id="96" terrain="0,3,0,0"/>
+  <tile id="97" terrain="3,3,0,0"/>
+  <tile id="98" terrain="3,0,0,0"/>
+  <tile id="99" terrain="3,3,0,3"/>
+  <tile id="100" terrain="3,3,3,0"/>
+  <tile id="101" terrain="0,2,0,0"/>
+  <tile id="102" terrain="2,2,0,0"/>
+  <tile id="103" terrain="2,0,0,0"/>
+  <tile id="104" terrain="2,2,0,2"/>
+  <tile id="105" terrain="2,2,2,0"/>
+ </tileset>
+ <tileset firstgid="271" name="bush" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="bush"/>
+  </properties>
+  <image source="tiles/bush.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="272" name="straw" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="hay"/>
+  </properties>
+  <image source="tiles/straw.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="273" name="switch" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/switch.png" width="64" height="64"/>
+ </tileset>
+ <layer name="Groundlayer (Rand, Wand, Terrain)" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <layer name="Zonelayer (hohes Gras, Start)" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <layer name="Detaillayer (Deko)" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <objectgroup name="Brueckenebene" width="50" height="50"/>
+ <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="50" height="50"/>
+ <objectgroup name="Zonenebene" width="50" height="50"/>
+ <objectgroup name="Spielerebene (physikalische Zone)" width="50" height="50"/>
+ <layer name="Overlayer" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+ <layer name="Overoverlayer(je nach Bedarf)" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAADg3wAnEAAB
+  </data>
+ </layer>
+</map>
