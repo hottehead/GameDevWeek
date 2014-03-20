@@ -67,7 +67,6 @@ public class NetworkManager {
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
-    private DespawnCallback despawnCallback;
     private GameStateCallback gameStateCallback;
 
 	private NetworkManager() {
@@ -134,10 +133,6 @@ public class NetworkManager {
         return gameStateCallback;
     }
 
-    public DespawnCallback getDespawnCallback() {
-        return despawnCallback;
-    }
-
     public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
     	this.playerdisconnectcallback = callback;
     }
@@ -156,10 +151,6 @@ public class NetworkManager {
 
 	public void setMatchUpdateCallback(MatchUpdateCallback callback) {
         this.matchupdatecallback = callback;
-    }
-
-    public void setDespawnCallback(DespawnCallback despawnCallback) {
-        this.despawnCallback = despawnCallback;
     }
 
     public void setGameStateCallback(GameStateCallback gameStateCallback) {

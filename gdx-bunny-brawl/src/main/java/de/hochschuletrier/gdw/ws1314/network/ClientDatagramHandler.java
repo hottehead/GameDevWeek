@@ -134,7 +134,12 @@ public class ClientDatagramHandler implements DatagramHandler {
 
     @Override
     public void handle(DespawnDatagram despawnDatagram, NetConnection connection) {
-        NetworkManager.getInstance().getDespawnCallback().callback(despawnDatagram.getId());
+        ClientEntity entity = ClientEntityManager.getInstance().getEntityById(despawnDatagram.getEntityId());
+        if(entity==null){
+        	logger.warn("Received DespawnDatagram for already non-existent entity {}.",despawnDatagram.getEntityId());
+        	return;
+        }
+        ClientEntityManager.getInstance().removeEntity(entity);
     }
 
     @Override
