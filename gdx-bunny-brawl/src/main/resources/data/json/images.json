@@ -3,6 +3,13 @@
     "logo": "data/images/logo.png",
     "vase": "data/images/vase.png",
     "singleBunny": "data/images/whiteKnight_single.png",
+    "bush": "data/images/bush.png",
+    "carrot": "data/images/carrot.png",
+    "egg": "data/images/egg.png",
+    "clover": "data/images/clover.png",
+    "spinach": "data/images/spinach.png",
+    "straw": "data/images/straw.png",
+    "switch": "data/images/switch.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
