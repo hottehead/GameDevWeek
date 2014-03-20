@@ -35,9 +35,10 @@ public class ServerProjectile extends ServerEntity {
     private FacingDirection facingDirection;
     private TeamColor 		teamColor;
     private Vector2 		originPosition;
-    private float velocity;
-    private float flightDistance;
-    private float despawnTime;
+    private float 			velocity;
+    private float 			flightDistance;
+    private float 			despawnTime;
+    private float			damage;
     
     private boolean physicsInitialized;
 
@@ -54,6 +55,14 @@ public class ServerProjectile extends ServerEntity {
             this.flightDistance = 0.0f;
             this.despawnTime = 0.0f;
             this.physicsInitialized = false;
+    }
+    
+    public void setDamage(float dmg) {
+    	damage = dmg;
+    }
+    
+    public float getDamage() {
+    	return damage;
     }
 	
 	public void setPhysicalParameters(float velocity, float distance, float despawnTime) {
@@ -112,9 +121,9 @@ public class ServerProjectile extends ServerEntity {
                     ServerPlayer player = (ServerPlayer)otherEntity;
                     if (player.getID() == sourceID)
                     	return;
-//                    if(player.getTeamColor() != this.teamColor) {
-//                        ServerEntityManager.getInstance().removeEntity(this);
-//                    }
+                    if (player.getTeamColor() != this.teamColor)
+                    	player.applyDamage(damage);
+                    ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;
@@ -154,8 +163,9 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initPhysics(PhysixManager manager){
+		this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
         PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
-        body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30));
+        body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30).sensor(true));
         body.setGravityScale(0);
         body.addContactListener(this);
         
