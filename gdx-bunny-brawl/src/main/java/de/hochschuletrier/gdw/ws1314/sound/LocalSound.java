@@ -33,10 +33,12 @@ public class LocalSound {
 		return LocalSound.SystemVolume;
 	}
 	
-	public LocalSound(AssetManagerX assetManager, ClientPlayer localPlayer) {
+	public LocalSound(AssetManagerX assetManager) {
+		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();
+		
 		this.assetManager = assetManager;
 		this.soundHandle = null;
-		this.localPlayer = localPlayer;
+		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(playerEntityID);
 		this.soundID = 0;
 	}
 	
@@ -64,9 +66,12 @@ public class LocalSound {
 		this.soundID = soundHandle.play();
 		soundHandle.setVolume(this.soundID, LocalSound.SystemVolume * volume);
 	}
+	
+	public void listenLocalPlayerAction() {
+		
+	}
 
 	public void stop() {
 		this.soundHandle.stop();
-	    ClientEntityManager.getInstance().getPlayerEntityID();
 	}
 }
