@@ -68,9 +68,9 @@ public class ClientEntityManager {
             case Hunter:
                 e = createPlayer(PlayerKit.HUNTER);
                 break;
-            case Tank :
+            /*case Tank :
                 e = createPlayer(PlayerKit.TANK);
-                break;
+                break;*/
             case Knight :
                 e = createPlayer(PlayerKit.KNIGHT);
                 break;
