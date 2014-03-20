@@ -48,7 +48,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
 
     public static final float FRICTION = 0;
-	public static final float	BRAKING = 5.0f;
+	public static final float BRAKING = 5.0f;
 
 
 	public static final float RESTITUTION = 0;
@@ -57,6 +57,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	
 	public static final float WIDTH = 32.0f;
 	public static final float HEIGHT = 32.0f;
+	
+	public static final float EGG_CARRY_SPEED_PENALTY = 0.15f;
 
 
     private PlayerInfo	playerInfo;
@@ -90,6 +92,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
+    private long				droppedEggID;
+    
     public ServerPlayer()
     {
     	super();
@@ -106,6 +110,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = 0.0f;
     	speedBuffActive = false;
+    	droppedEggID = -1l;
     }
     
     public void enable() {}
@@ -132,7 +137,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     		speedBuffTimer += deltaTime;
     		if (speedBuffTimer >= speedBuffDuration)
     		{
-    			walkingState.setSpeedFactor(1.0f);
+    			walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
     			speedBuffActive = false;
     		}
     	}
@@ -257,17 +262,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	moveEnd();
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
     	moveEnd();
 
     }
     
     protected void moveEnd()
     {
-    	// TODO brake impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
-    	//physicsBody.setLinearVelocity(FacingDirection.NONE.getDirectionVector());
     	physicsBody.setLinearDamping(BRAKING);
     }
     
@@ -283,11 +283,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     public void dropEgg()
     {
-    	// TODO Place egg on map
-    	
-    	currentEggCount--;
-    	if (currentEggCount < 0)
-    		currentEggCount = 0;
+    	if (currentEggCount > 0)
+    	{
+    		currentEggCount--;
+    		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
+    		droppedEggID = egg.getID();
+    	}
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
@@ -306,21 +307,20 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 System.out.println(this.getCurrentEggCount());
-            	 if(this.currentEggCount < this.playerKit.getMaxEggCount()){
+            	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 {
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             		 this.currentEggCount++;
             	 }
             	 break;
-             case Projectil: 
-
+            	 
+             case Projectil:
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                  if (getID() == projectile.getSourceID())
                  	return;
                  if (getTeamColor() != projectile.getTeamColor())
                  	applyDamage(projectile.getDamage());
                  ServerEntityManager.getInstance().removeEntity(otherEntity);
-
 
             	 break;
              case Bridge:
@@ -347,7 +347,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 
             	 break;
              case Carrot:
-            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
+            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
             	 ServerCarrot carrot = (ServerCarrot) otherEntity;
             	 ServerEntityManager.getInstance().removeEntity(carrot);
 
@@ -371,7 +371,21 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  
          }
     }
-    public void endContact(Contact contact) 	{}
+    public void endContact(Contact contact) 	
+    {
+    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+         
+         if(otherEntity == null)
+             return;
+         
+         switch(otherEntity.getEntityType()) 
+         {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+         }
+    }
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
