@@ -47,13 +47,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-	private final float FRICTION = 0;
-	private final float	BRAKING = 5.0f;
+    public static final float FRICTION = 0;
+	public static final float	BRAKING = 5.0f;
 
 
-	private final float RESTITUTION = 0;
-	private final float	KNOCKBACK_TIME = 0.8f;
-	private final float ATTACK_TIME = 0.18f;
+	public static final float RESTITUTION = 0;
+	public static final float KNOCKBACK_TIME = 0.8f;
+	public static final float ATTACK_TIME = 0.18f;
+	
+	public static final float WIDTH = 32.0f;
+	public static final float HEIGHT = 32.0f;
 
 
     private PlayerInfo	playerInfo;
@@ -299,8 +302,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Tank:
              case Hunter:
              case Knight:
-             case Noob:
-//                  
+             case Noob:                 
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -309,15 +311,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             		 this.currentEggCount++;
             	 }
-     
             	 break;
              case Projectil: 
+
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                  if (getID() == projectile.getSourceID())
                  	return;
                  if (getTeamColor() != projectile.getTeamColor())
                  	applyDamage(projectile.getDamage());
                  ServerEntityManager.getInstance().removeEntity(otherEntity);
+
 
             	 break;
              case Bridge:
@@ -331,7 +334,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case BridgeSwitch:	
             	 break;
-             case Bush:			
+             case Bush:
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
@@ -413,7 +416,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(32,32));
+				.friction(FRICTION).restitution(RESTITUTION).shapeBox(WIDTH, HEIGHT));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);

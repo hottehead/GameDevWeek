@@ -159,7 +159,6 @@ public class ServerProjectile extends ServerEntity {
         float distance = pos.sub(originPosition).len();
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
-            logger.info("P O W !!!");
         }
 	}
 
