@@ -183,14 +183,12 @@ public class NetworkManager {
     }
 
     public void sendEntityEvent(long id, int eventPlayerIntention) {
-		if (!isClient())
-			return;
-        clientConnection.send(new EventDatagram(id, eventPlayerIntention));
+		if (!isServer()) return;
+        broadcastToClients(new EventDatagram(id, eventPlayerIntention));
     }
 
     public void sendAction(PlayerIntention playerAction) {
-		if (!isServer())
-			return;
+		if (!isClient()) return;
         clientConnection.send(new ActionDatagram(playerAction));
     }
 
