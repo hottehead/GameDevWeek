@@ -171,18 +171,31 @@ public class ServerProjectile extends ServerEntity {
 
 	@Override
 	public void initPhysics(PhysixManager manager){
-		this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
-        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager).position(this.originPosition).fixedRotation(true).create();
-        body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30).sensor(true));
-        body.setGravityScale(0);
-        body.addContactListener(this);
-        
-        setPhysicsBody(body);
-        
-        Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
-				  					facingDirection.getDirectionVector().y * velocity);
-        physicsBody.setLinearVelocity(vel);
-        
-        physicsInitialized = true;
+            this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
+            float angle = this.facingDirection.getDirectionVector().getAngleRad();
+                
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
+                    .position(this.originPosition)
+                    .fixedRotation(true)
+                    .angle(angle)
+                    .create();
+            
+            body.createFixture(new PhysixFixtureDef(manager)
+                    .density(0.5f)
+                    .friction(0.0f)
+                    .restitution(0.0f)
+                    .shapeCircle(30)
+                    .sensor(true));
+            
+            body.setGravityScale(0);
+            body.addContactListener(this);
+
+            setPhysicsBody(body);
+
+            Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
+                                                                            facingDirection.getDirectionVector().y * velocity);
+            physicsBody.setLinearVelocity(vel);
+
+            physicsInitialized = true;
 	}	
 }
