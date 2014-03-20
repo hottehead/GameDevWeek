@@ -209,7 +209,7 @@ public class NetworkManager {
         broadcastToClients(new DespawnDatagram(id));
     }
 
-    public void changeGameState(GameStates gameStates) {
+    public void sendGameState(GameStates gameStates) {
 		if (!isClient())
 			return;
         broadcastToClients(new GameStateDatagram(gameStates));

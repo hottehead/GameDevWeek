@@ -34,17 +34,41 @@ public class PlayerData {
 	public String getPlayername() {
 		return playername;
 	}
+	
 	public EntityType getType() {
 		return type;
 	}
+	
 	public TeamColor getTeam() {
 		return team;
 	}
+	
 	public boolean isAccept() {
 		return accept;
 	}
 	public long getEntityId() {
 		return entityid;
+	}
+	
+	public boolean toggleAccept()
+	{
+		this.accept = !this.accept;
+		return this.accept;
+	}
+	
+	public TeamColor swapTeam()
+	{
+		if (this.team == TeamColor.WHITE)
+			this.team = TeamColor.BLACK;
+		else
+			this.team = TeamColor.WHITE;
+		
+		return this.team;
+	}
+	
+	public void changeEntityType(EntityType newType)
+	{
+		this.type = newType;
 	}
 	
 	public String toString() {
