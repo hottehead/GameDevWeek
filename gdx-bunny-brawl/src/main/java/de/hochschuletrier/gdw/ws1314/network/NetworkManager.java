@@ -72,21 +72,21 @@ public class NetworkManager{
 
 	public void connect(String ip, int port){
 		if(isClient()){
-			logger.warn("Ignoring new connect command because we are already connected.");
+			logger.warn("[CLIENT] Ignoring new connect command because we are already connected.");
 			return;
 		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
-			if(clientConnection.isAccepted()) logger.info("Connected to {} on port {}", ip, port);
+			if(clientConnection.isAccepted()) logger.info("[CLIENT] Connected to Server with IP: {} on Port: {}", ip, port);
 		}
 		catch (IOException e){
-			logger.error("Can't connect.", e);
+			logger.error("[CLIENT] Can't connect.", e);
 		}
 	}
 
 	public void listen(String ip, int port, int maxConnections){
 		if(isServer()){
-			logger.warn("Ignoring new listen command because we are already a server.");
+			logger.warn("[SERVER] Ignoring new listen command because we are already a server.");
 			return;
 		}
 		serverConnections = new ArrayList<NetConnection>();
@@ -94,12 +94,12 @@ public class NetworkManager{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
 
 			if(serverReception.isRunning()){
-				logger.info("Listening, IP: {} Port: {}", InetAddress.getLocalHost().getHostAddress(), port);
+				logger.info("[SERVER] Listening, IP: {} Port: {}", InetAddress.getLocalHost().getHostAddress(), port);
 
 			}
 		}
 		catch (IOException e){
-			logger.error("Can't listen for connections.", e);
+			logger.error("[SERVER] Can't listen for connections.", e);
 			serverConnections = null;
 			serverReception = null;
 		}
@@ -199,7 +199,7 @@ public class NetworkManager{
 	public void sendLobbyUpdate(String map, PlayerData[] players){
 		if(!isServer()) return;
 		for(PlayerData pd:players){
-			logger.info("Player: " + pd.toString());
+			logger.info("[SERVER] Player: " + pd.toString());
 		}
 		broadcastToClients(new LobbyUpdateDatagram(map, players));
 	}
@@ -213,7 +213,7 @@ public class NetworkManager{
 			receiveChat("SERVER", text);
 		}
 		else{
-			logger.error("Can't send chat message, when not connected.");
+			logger.error("[CLIENT] Can't send chat message, when not connected.");
 		}
 	}
 
@@ -245,7 +245,7 @@ public class NetworkManager{
 	 */
 	void broadcastToClients(BaseDatagram dgram){
 		if(!isServer()){
-			logger.warn("Request to broadast datagram to clients will be ignored because of non-server context.");
+			logger.warn("[SERVER] Request to broadast datagram to clients will be ignored because of non-server context.");
 			return;
 		}
 		for(NetConnection con:serverConnections){
@@ -257,7 +257,7 @@ public class NetworkManager{
 		if(isClient()){
 			clientConnection.shutdown();
 			clientConnection = null;
-			logger.info("Disconnect from Server.");
+			logger.info("[CLIENT] Disconnect from Server.");
 		}
 	}
 
@@ -288,7 +288,7 @@ public class NetworkManager{
 				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
 			}
 			else{
-				logger.warn("Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
+				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
 			}
 		}
 	}
@@ -301,7 +301,7 @@ public class NetworkManager{
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
 				serverConnections.add(connection);
 				this.sendClientId(connection);
-				logger.info("Player {} connected.", (nextPlayerNumber - 1));
+				logger.info("[SERVER] Player {} connected.", (nextPlayerNumber - 1));
 				connection = serverReception.getNextNewConnection();
 			}
 		}
@@ -358,7 +358,7 @@ public class NetworkManager{
 			}
 
 			if(!connection.isConnected()){
-				logger.info("{} disconnected.", ((PlayerData) connection.getAttachment()).getPlayername());
+				logger.info("[SERVER] {} disconnected.", ((PlayerData) connection.getAttachment()).getPlayername());
 				it.remove();
 			}
 		}
@@ -378,15 +378,19 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				for (NetConnection nc:serverConnections){
+					nc.shutdown();
+
+				}
 				serverReception.shutdown();
 				logger.info("[SERVER] stopped");
 			}
 			else{
-				logger.warn("Can't stop, i'm not a Server.");
+				logger.warn("[SERVER] Can't stop, i'm not a Server.");
 			}
 		}
 		catch (Exception e){
-			logger.error("Can't Stop Server:", e);
+			logger.error("[SERVER] Can't Stop Server:", e);
 		}
 	}
 }
