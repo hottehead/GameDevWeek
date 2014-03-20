@@ -12,7 +12,7 @@ public class PlayerData{
 	private long entityid;
 
 	public PlayerData(int playerid, String playername, EntityType type, TeamColor team, boolean accept){
-		this(playerid, playername, type, team, accept, 0);
+		this(playerid, playername, type, team, accept, -1);
 	}
 
 	public PlayerData(int playerid, String playername, EntityType type, TeamColor team, boolean accept, long entityid){
