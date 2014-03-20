@@ -1,33 +1,38 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 
+public class EntityRenderer extends Pool<RenderObject> implements
+		ClientEntityManagerListener {
 
-
-public class EntityRenderer extends Pool<RenderObject> implements ClientEntityManagerListener {
-	
 	ArrayList<RenderObject> renderList;
 	MaterialManager materials;
-	
+
 	public EntityRenderer(MaterialManager materialManager) {
 		renderList = new ArrayList<RenderObject>();
 		materials = materialManager;
 	}
-	
-	
+
 	public void draw() {
+		Collections.sort(renderList);
 		
-		for(RenderObject obj : this.renderList) {
+		for (RenderObject obj : this.renderList) {
 			Vector2 pos = obj.entity.getPosition();
-			DrawUtil.batch.draw(obj.material.texture, pos.x, pos.y+obj.material.height, obj.material.width, -obj.material.height); 
+			float dh = obj.material.height * 0.5f;
+			float dw = obj.material.width * 0.5f;
+
+			DrawUtil.batch.draw(obj.material.texture, pos.x - dw, pos.y - dh
+					+ obj.material.height, obj.material.width,
+					-obj.material.height);
 		}
 	}
-	
+
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
 		RenderObject renderObj = this.fetch();
@@ -39,8 +44,8 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 	@Override
 	public void onEntityRemove(ClientEntity entity) {
 		// find object in renderObj -> remove and provide to pool, without O(n)
-		for(RenderObject obj : renderList) {
-			if(obj.entity.getID() == entity.getID()) {
+		for (RenderObject obj : renderList) {
+			if (obj.entity.getID() == entity.getID()) {
 				providePoolObject(obj);
 				renderList.remove(obj);
 				return;
@@ -48,10 +53,9 @@ public class EntityRenderer extends Pool<RenderObject> implements ClientEntityMa
 		}
 	}
 
-
 	@Override
 	protected void onEmptyPool() {
-		for(int i=0;i<10;++i) {
+		for (int i = 0; i < 10; ++i) {
 			providePoolObject(new RenderObject(null, null));
 		}
 	}

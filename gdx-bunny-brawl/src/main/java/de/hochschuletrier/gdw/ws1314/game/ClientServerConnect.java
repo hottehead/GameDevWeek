@@ -51,6 +51,7 @@ public class ClientServerConnect {
                     case Tank:
                     case Knight:
                         playerID = id;
+                        cem.setPlayerEntityID(id);
                         break;
                 }
 

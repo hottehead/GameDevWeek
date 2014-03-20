@@ -14,16 +14,19 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  */
 public class StatePlayerWalking extends State
 {
-	FacingDirection movingDirection;
+	private FacingDirection movingDirection;
 	
-	Vector2 velocity;
-	PhysixBody body;
+	private Vector2 		velocity;
+	private PhysixBody 		body;
+	
+	private float			speedFactor;
 	
 	public StatePlayerWalking(IStateListener owner)
 	{
 		super(owner);
 		movingDirection = FacingDirection.NONE;
 		body = null;
+		speedFactor = 1.0f;
 	}
 
 	@Override
@@ -41,7 +44,7 @@ public class StatePlayerWalking extends State
 		newVelocity.y += body.getLinearVelocity().y;
 		
 		float len = newVelocity.len();
-		float maxVel = player.getPlayerKit().getMaxVelocity();
+		float maxVel = player.getPlayerKit().getMaxVelocity() * speedFactor;
 		if (len > maxVel)
 		{
 			newVelocity.x = newVelocity.x / len * maxVel;
@@ -72,5 +75,10 @@ public class StatePlayerWalking extends State
 	public void setPhysixBody(PhysixBody body)
 	{
 		this.body = body;
+	}
+	
+	public void setSpeedFactor(float speedFactor)
+	{
+		this.speedFactor = speedFactor;
 	}
 }

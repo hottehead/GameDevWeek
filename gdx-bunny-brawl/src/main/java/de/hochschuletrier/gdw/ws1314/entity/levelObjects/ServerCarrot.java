@@ -11,14 +11,21 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 
 /**
  * 
  * @author yannick
  *
  */
+
+// Added Carrot Constants by ElFapo
 public class ServerCarrot extends ServerLevelObject
 {
+	public static final float CARROT_SPEEDBUFF_FACTOR = 1.1f;
+	public static final float CARROT_SPEEDBUFF_DURATION = 2.0f;
+	
 	public ServerCarrot()
 	{
 		super();
@@ -31,22 +38,23 @@ public class ServerCarrot extends ServerLevelObject
 	}
 	
 	@Override
-	public void beginContact(Contact contact)
-	{
+	public void beginContact(Contact contact) {
+            ServerEntity otherEntity = this.identifyContactFixtures(contact);
+
+        switch(otherEntity.getEntityType()) {
+            case Tank:
+            case Hunter:
+            case Knight:
+            case Noob:
+                ServerEntityManager.getInstance().removeEntity(this);
+                break;
+            default:
+                break;
+        }
 	}
 
 	@Override
 	public void endContact(Contact contact)
-	{
-	}
-
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold)
-	{
-	}
-
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse)
 	{
 	}
 
@@ -59,16 +67,20 @@ public class ServerCarrot extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
-									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-									.fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager)
-									.density(0.5f).friction(0.0f)
-									.restitution(0.0f).shapeBox(50,50));
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+                .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+                .fixedRotation(false).create();
 
-		body.setGravityScale(0);
-		body.addContactListener(this);
-		setPhysicsBody(body);
+            body.createFixture(new PhysixFixtureDef(manager)
+                .density(0.5f)
+                .friction(0.0f)
+                .restitution(0.0f)
+                .shapeCircle(16)
+                .sensor(true));
+
+            body.setGravityScale(0);
+            body.addContactListener(this);
+            setPhysicsBody(body);
 	}
 
 }
