@@ -16,7 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.hud.LevelSelectorStage;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
@@ -39,12 +39,12 @@ public class MainMenuState extends GameState implements InputProcessor {
     private DemoShader demoShader;
     InputInterceptor inputProcessor;
 
-    private TestHudStage testUI;
-    private LevelSelectorStage levelSelection;
+//    private TestHudStage testUI;
+    private GameplayStage testUI;
 
     public MainMenuState() {
-    	testUI = new TestHudStage();
-    	levelSelection = new LevelSelectorStage();
+//    	testUI = new TestHudStage();
+    	testUI = new GameplayStage();
     }
 
     @Override
@@ -74,7 +74,6 @@ public class MainMenuState extends GameState implements InputProcessor {
                 return isActive && mainProcessor.keyUp(keycode);
             }
         };
-        levelSelection.init(assetManager);
 
         
         Main.inputMultiplexer.addProcessor(inputProcessor);

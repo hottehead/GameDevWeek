@@ -14,5 +14,14 @@ public enum EntityType {
     Bridge,
     BridgeSwitch,
     Bush,
-    SwordAttack
+    SwordAttack,
+    ContactMine,
+    Carrot,
+    Spinach,
+    Clover,
+    WaterZone,
+    AbyssZone,
+    GrassZone,
+    PathZone,
+    StartZone
 }

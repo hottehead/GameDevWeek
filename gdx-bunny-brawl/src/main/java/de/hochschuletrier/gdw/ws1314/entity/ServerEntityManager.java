@@ -1,9 +1,12 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 
 import java.util.HashMap;
@@ -34,6 +37,8 @@ public class ServerEntityManager {
         entityIDs = new Identifier(20);
 		removalQueue = new LinkedList<ServerEntity>();
 		insertionQueue = new LinkedList<ServerEntity>();
+
+
 
         try {
             for (Class c : ClassUtils
@@ -86,11 +91,15 @@ public class ServerEntityManager {
 
     private boolean internalRemove() {
         boolean listChanged = false;
+        ClientServerConnect netManager = ClientServerConnect.getInstance();
         while (!removalQueue.isEmpty()) {
             listChanged = true;
             ServerEntity e = removalQueue.poll();
-            e.dispose();
+            e.dispose(physManager);
             entityList.remove(e);
+            entityListMap.remove(e.getID());
+            netManager.despawnEntity(e.getID());
+            
         }
         return listChanged;
     }
@@ -121,14 +130,18 @@ public class ServerEntityManager {
 
     }
 
-    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass) {
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position) {
         T e = factory.createEntity(entityClass);
         assert (e != null);
+        SafeProperties properties = new SafeProperties();
+        properties.setFloat("x",position.x);
+        properties.setFloat("y",position.y);
+        e.setProperties(properties);
         addEntity(e);
         return e;
     }
 
-    public ServerEntity createEntity(String className, SafeProperties properties) {
+    public ServerEntity createEntity(String className, SafeProperties properties, Vector2 position) {
         Class<? extends ServerEntity> entityClass = classMap.get(className
                 .toLowerCase());
         if (entityClass == null) {
@@ -136,6 +149,8 @@ public class ServerEntityManager {
                     + className);
         }
         ServerEntity e = factory.createEntity(entityClass);
+        properties.setFloat("x",position.x);
+        properties.setFloat("y",position.y);
         e.setProperties(properties);
         addEntity(e);
         return e;

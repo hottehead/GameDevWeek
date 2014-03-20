@@ -5,9 +5,10 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
 public enum PlayerKit 
 {
-    NOOB(EntityType.Noob, 1.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new BasicAttack(), new BasicAttack()),
-    HUNTER(EntityType.Hunter, 1.2f, 1, 80.0f, 0.0f, 1.0f, 1.0f, new AttackShootArrow(), new BasicAttack()),
-    KNIGHT(EntityType.Knight, 1.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new AttackSwingSword(), new BasicAttack());
+	
+    NOOB(EntityType.Noob, 100.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new BasicAttack(), new BasicAttack()),
+    HUNTER(EntityType.Hunter, 120.0f, 1, 80.0f, 0.0f, 1.0f, 1.0f, new AttackShootArrow(), new BasicAttack()),
+    KNIGHT(EntityType.Knight, 100.0f, 1, 100.0f, 0.0f, 1.0f, 1.0f, new AttackSwingSword(), new BasicAttack());
     
     private final float 	maxVelocity;
     private final int 		maxEggCount;
@@ -19,7 +20,7 @@ public enum PlayerKit
     private final AttackType attack2;
     private final EntityType entityType;
     
-    public final float		accelerationImpulse = 100.0f;
+    public final float		accelerationImpulse = 800.0f;
     public final float		brakeImpulse = 100.0f;
     
     private PlayerKit (	EntityType entityType,

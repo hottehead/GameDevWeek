@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.InputProcessorQueue;
 
-import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 
 /**
