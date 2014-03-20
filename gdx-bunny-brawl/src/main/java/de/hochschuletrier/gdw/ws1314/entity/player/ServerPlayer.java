@@ -313,7 +313,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case ContactMine:
             	 break;
              case Carrot:
-            	 this.playerKit.getMaxVelocity();
+            	 this.setSpeedBuff(1.5f,10);
             	 break;
              case Spinach:
             	 break;
