@@ -34,8 +34,7 @@ public class LocalSound {
 	}
 	
 	public LocalSound(AssetManagerX assetManager) {
-		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();
-		
+		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();	
 		this.assetManager = assetManager;
 		this.soundHandle = null;
 		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(playerEntityID);
