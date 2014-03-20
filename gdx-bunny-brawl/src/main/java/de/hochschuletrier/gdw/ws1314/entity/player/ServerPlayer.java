@@ -23,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
@@ -309,6 +310,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Bush:			
             	 break;
              case SwordAttack:
+                 ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
+                 if(attack.getTeamColor() != this.teamColor) {
+                     this.applyDamage(attack.getDamage());
+                 }
             	 break;
              case ContactMine:
             	 break;

@@ -67,6 +67,10 @@ public class ServerSwordAttack extends ServerEntity {
     public float getDespawnTime() {
         return despawnTime;
     }
+    
+    public TeamColor getTeamColor() {
+	return teamColor;
+    }
 
     @Override
     public void enable() {
