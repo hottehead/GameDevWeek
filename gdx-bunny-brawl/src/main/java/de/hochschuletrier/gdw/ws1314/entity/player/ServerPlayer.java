@@ -14,6 +14,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
@@ -31,6 +32,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -357,6 +359,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Clover:
             	 break;
              case WaterZone:
+                 
             	 break;
              case AbyssZone:
             	 break;
@@ -365,6 +368,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case PathZone:
             	 break;
              case StartZone:
+                 if(this.currentEggCount > 0) {
+                     //TODO give Points
+                     
+                     this.currentEggCount = 0;
+                 }
             	 break;
              default:
             	 break;
