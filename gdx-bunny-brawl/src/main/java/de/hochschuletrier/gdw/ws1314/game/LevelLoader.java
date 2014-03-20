@@ -17,6 +17,8 @@ import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.Zone;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class LevelLoader {
 	private static TiledMap map;
 	private static Set<Class> classes;
 	private static HashMap<String, String> classToPath = new HashMap<>();
-	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager) {
@@ -79,37 +81,17 @@ public class LevelLoader {
 	private static void loadObjectLayer(Layer layer) {
 		for (LayerObject object : layer.getObjects()) {
 			String type = object.getType();
-			if (object.getPrimitive() == LayerObject.Primitive.TILE)
-				type = object.getProperty("type", null);
+			if (type == null || type.isEmpty())
+				type = object.getProperty("type", "");
 
 			TileSet findTileSet = map.findTileSet(object.getGid());
-			if (findTileSet != null) {
-				type = findTileSet.getProperty("type", null);
-				if (type == null) {
+			if ((type == null || type.isEmpty()) && findTileSet != null) {
+				type = findTileSet.getProperty("type", findTileSet.getName());
+				if (type == null || type.isEmpty()) {
 					logger.warn("Couldn't find type for object with GID "
 							+ object.getGid());
 					continue;
 				}
-			}else {
-				continue;
-			}
-			try {
-				Class clazz = Class.forName(classToPath.get(type));
-				entityManager.createEntity(clazz,
-						new Vector2(object.getX(), object.getY()));
-				logger.info("Creating Entity Type " + clazz);
-				System.out.println("asdsd");
-			} catch (ClassNotFoundException e) {
-				logger.error("No class found for type " + type);
-				e.printStackTrace();
-			}
-
-			if (object.getProperties() != null) {
-				object.getProperties()
-						.setString(
-								"renderLayer",
-								layer.getProperty("renderLayer",
-										String.valueOf(layer.getIndex())));
 			}
 
 			switch (object.getPrimitive()) {
@@ -121,7 +103,9 @@ public class LevelLoader {
 						object.getHeight(), object.getProperties());
 				break;
 			case TILE:
-
+                if (findTileSet == null){
+                    continue;
+                }
 				createTile(type, object.getX(), object.getLowestY(), object.getWidth(),
 						object.getHeight(), object.getProperties(), object.getName(),
 						object.getGid());
@@ -130,7 +114,7 @@ public class LevelLoader {
 				createPolygon(type, object.getPoints(), object.getProperties());
 				break;
 			case POLYLINE:
-				createPolyLine(object.getType(), object.getPoints(),
+				createPolyLine(type, object.getPoints(),
 						object.getProperties(), object.getName());
 				break;
 			}
@@ -171,6 +155,10 @@ public class LevelLoader {
 	 */
 	private static void createPolygon(String type, ArrayList<Point> points,
 			SafeProperties properties) {
+
+        Vector2 pos = new Vector2(points.get(0).x,points.get(0).y);
+        Zone zone;
+
 		switch (type) {
 		case "solid":
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
@@ -178,7 +166,32 @@ public class LevelLoader {
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapePolygon(points));
 			break;
+            case "water":
+                //zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                //zone.setPoligonPoints(points);
+                //zone.setWaterZone();
+                break;
+            case "hgrass":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setGrassZone();
+                break;
+            case "hole":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setAbyssZone();
+                break;
+            case "dirt":
+                zone = (Zone)entityManager.createEntity(Zone.class,pos,properties);
+                zone.setPoligonPoints(points);
+                zone.setPathZone();
+                break;
+            case "startw":
 
+                break;
+            case "startb":
+
+                break;
 		}
 	}
 
@@ -203,7 +216,13 @@ public class LevelLoader {
 		x += width / 2;
 		y += height / 2;
 
-		ServerEntity entity = null;
+        if(properties != null)
+        {
+            properties.setFloat("width",width);
+            properties.setFloat("height",height);
+        }
+        Zone zone;
+        ServerEntity entity = null;
 		switch (type) {
 		case "solid":
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
@@ -211,8 +230,32 @@ public class LevelLoader {
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapeBox(width, height));
 			break;
+        case "water":
+            zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
+            zone.setWaterZone();
+            break;
+        case "hgrass":
+            zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
+            zone.setGrassZone();
+            break;
+        case "hole":
+            zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
+            zone.setAbyssZone();
+            break;
+        case "dirt":
+            zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
+            zone.setPathZone();
+            break;
+        case "startw":
+
+            break;
+        case "startb":
+
+            break;
+
+
 		default:
-			System.err.println("Unknown Rect-Object in Map, type: " + type);
+			logger.warn("Unknown Rect-Object in Map, type: {}", type);
 			break;
 		}
 	}
@@ -239,6 +282,8 @@ public class LevelLoader {
 		x += width / 2;
 		y += height / 2;
 
+        Vector2 pos = new Vector2(x,y);
+
 		ServerEntity entity = null;
 		switch (type) {
 		case "solid":
@@ -246,6 +291,33 @@ public class LevelLoader {
 					.position(x, y).create();
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapeBox(width, height));
+            break;
+            case  "egg":
+                entityManager.createEntity(ServerEgg.class,pos,properties);
+                break;
+            case  "carrot":
+                entityManager.createEntity(ServerCarrot.class,pos,properties);
+                break;
+            case  "clover":
+                entityManager.createEntity(ServerClover.class,pos,properties);
+                break;
+            case  "spinach":
+                entityManager.createEntity(ServerSpinach.class,pos,properties);
+                break;
+            case  "bridge_horizontal_left":
+            case  "bridge_horizontal_middle":
+            case  "bridge_vertical_bottom":
+            case  "bridge_vertical_middle":
+            case  "bridge_vertical_top":
+                properties.setString("img",type);
+                entityManager.createEntity(ServerBridge.class,pos,properties);
+                break;
+            case  "bush":
+                entityManager.createEntity(ServerBush.class,pos,properties);
+                break;
+            case  "switch":
+                entityManager.createEntity(ServerBridgeSwitch.class,pos,properties);
+                break;
 		}
 
 		if (entity != null) {

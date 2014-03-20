@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -17,7 +18,12 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
@@ -72,27 +78,43 @@ public class ClientGame {
 
 		initMaterials(assets);
 
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
 		LevelBoundings levelBounds = new LevelBoundings(
-				Gdx.graphics.getWidth() * 0.5f,
-				Gdx.graphics.getHeight() * 0.5f, map.getWidth()
+				width * 0.5f,
+				height * 0.5f, map.getWidth()
 						* map.getTileWidth(), map.getHeight()
 						* map.getTileHeight());
-		
+
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
-
+		
+//			System.out.println(l.getName());
+//		}
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 
-//		materialManager.provideMaterial(ClientPlayer.class,
-//				new MaterialInfo("debugTeam", 32, 32, 1));
-		materialManager.provideMaterial(ClientPlayer.class,
-				new MaterialInfo("singleBunny", 110, 110, 1));
-		materialManager.provideMaterial(ClientProjectile.class, new MaterialInfo("debugArrow", 16, 16, 1));
-		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo("debugCarrot", 32, 32, 0));
-
+		// materialManager.provideMaterial(ClientPlayer.class,
+		// new MaterialInfo("debugTeam", 32, 32, 1));
+		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
+				"singleBunny", 110, 110, 1));
+		materialManager.provideMaterial(ClientProjectile.class,
+				new MaterialInfo("debugArrow", 16, 16, 1));
+		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
+				"carrot", 32, 32, 0));
+		materialManager.provideMaterial(ClientEgg.class, new MaterialInfo(
+				"egg", 32, 32, 0));
+		materialManager.provideMaterial(ClientSpinach.class, new MaterialInfo(
+				"spinach", 32, 32, 0));
+		materialManager.provideMaterial(ClientBridgeSwitch.class, new MaterialInfo(
+				"switch", 32, 32, 0));
+		materialManager.provideMaterial(ClientClover.class, new MaterialInfo(
+				"clover", 32, 32, 0));
+		materialManager.provideMaterial(ClientBush.class, new MaterialInfo(
+				"bush", 32, 32, 0));
+		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
 
@@ -110,10 +132,9 @@ public class ClientGame {
 	float fadeIn = 0.25f;
 
 	public void render() {
-//		 sceneToTexture.begin();
-//		 DrawUtil.batch.setShader(advShader);
-//		 sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
-
+		sceneToTexture.begin();
+		DrawUtil.batch.setShader(advShader);
+		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 		for (Layer layer : map.getLayers()) {
 			if (layer.getType() == Layer.Type.OBJECT
 					&& layer.getBooleanProperty("renderEntities", false)) {
@@ -123,14 +144,17 @@ public class ClientGame {
 			}
 		}
 		DrawUtil.batch.flush();
-//		 sceneToTexture.end();
-//
-//		 DrawUtil.batch.setShader(postProcessing);
-//		 postProcessing.setUniformi(
-//		 postProcessing.getUniformLocation("u_prevStep"), 1);
-//
-//		 DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
-//		 DrawUtil.batch.setShader(null);
+		sceneToTexture.end();
+
+		DrawUtil.startRenderToScreen();
+		DrawUtil.screenSpace.update();
+		DrawUtil.batch.setShader(postProcessing);
+		postProcessing.setUniformi(
+				postProcessing.getUniformLocation("u_prevStep"), 1);
+		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
+		DrawUtil.batch.setShader(null);
+		DrawUtil.batch.flush();
+		DrawUtil.endRenderToScreen();
 
 		sceneToTexture.swap();
 	}

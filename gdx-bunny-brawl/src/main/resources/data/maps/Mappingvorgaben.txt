@@ -42,3 +42,10 @@ Werden mit Seperaten TileSets in die Aktionsebene eingebaut. Die Kachel des ents
 TYPE <egg,hay,clover,carrot,spinach,bush>
 
 *keine Umlaute und kein 'ß'
+
+
+Bäume setzt man folgendermaßen: OOOO 		Mauern nach dem Schema: OOOOOOOO	O=Overlayer
+								OOOO								WWWWWWWW	W=Detaillayer
+								OOOO
+								OWWO
+								OWWO

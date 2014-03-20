@@ -3,6 +3,13 @@
     "logo": "data/images/logo.png",
     "vase": "data/images/vase.png",
     "singleBunny": "data/images/whiteKnight_single.png",
+    "bush": "data/images/bush.png",
+    "carrot": "data/images/carrot.png",
+    "egg": "data/images/egg.png",
+    "clover": "data/images/clover.png",
+    "spinach": "data/images/spinach.png",
+    "straw": "data/images/straw.png",
+    "switch": "data/images/switch.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
@@ -12,6 +19,7 @@
 	"debugBridge": "data/images/dbg/bridge.png",
 	"debugEgg": "data/images/dbg/egg.png",
 	"debugArrow": "data/images/dbg/arrow.png",
+	"debugSword": "data/images/dbg/sword.png",
 	"fallback": "data/images/dbg/fallback.png",
 	
 	"debugBar": "data/images/dbg/bar.png",
@@ -20,8 +28,8 @@
     "debugBarDecor2": "data/images/dbg/barDecor2.png",
     "debugBuff": "data/images/dbg/buffIcon.png",
     "debugClass": "data/images/dbg/classIcon.png",
-    "debugScoreEnemy": "data/images/dbg/scoreTeamIcon.png",
-    "debugScoreTeam": "data/images/dbg/scoreEnemyIcon.png",
+    "debugScoreEnemy": "data/images/dbg/scoreEnemyIcon.png",
+    "debugScoreTeam": "data/images/dbg/scoreTeamIcon.png",
     "debugTooltip": "data/images/dbg/tooltip.png",
     "debugAttackIcon": "data/images/dbg/attackIcon.png"
     

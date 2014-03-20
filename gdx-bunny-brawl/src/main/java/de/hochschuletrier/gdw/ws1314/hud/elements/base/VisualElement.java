@@ -9,5 +9,10 @@ public abstract class VisualElement {
 		this.positionY = positionY;
 	}
 	
+	public void setPosition(float positionX, float positionY) {
+		this.positionX = positionX;
+		this.positionY = positionY;
+	}
+	
 	public abstract void draw();
 }
