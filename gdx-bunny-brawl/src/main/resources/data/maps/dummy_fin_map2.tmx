@@ -203,9 +203,15 @@
  </objectgroup>
  <objectgroup name="Zonenebene" width="75" height="50">
   <object type="startw" x="1280" y="704" width="224" height="224">
+   <properties>
+    <property name="direction " value="right"/>
+   </properties>
    <ellipse/>
   </object>
   <object type="startb" x="864" y="704" width="224" height="224">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
    <ellipse/>
   </object>
   <object x="0" y="0" width="2400" height="96"/>
@@ -242,6 +248,11 @@
   <object type="dirt" x="128" y="768">
    <polygon points="0,0 640,0 640,-192 992,-192 992,-96 736,-96 736,160 992,160 992,256 640,256 640,64 0,64 0,0"/>
   </object>
+ </objectgroup>
+ <objectgroup name="Renderebene" width="75" height="50">
+  <properties>
+   <property name="renderEntities" value="true"/>
+  </properties>
  </objectgroup>
  <objectgroup name="Spielerebene (physikalische Zone)" width="75" height="50">
   <object type="solid" x="1696" y="448" width="32" height="32"/>
