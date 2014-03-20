@@ -2,8 +2,8 @@
     "walking": {
         "filename": "data/animations/walking.png",
         "frames" : 7,
-        "frameDuration": [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ] ,
-        "playType" : "LOOP",
+        "frameDuration": [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.0 ] ,
+        "playType" : "REVERSED",
         "columns": 7,
         "rows" : 1
     }
