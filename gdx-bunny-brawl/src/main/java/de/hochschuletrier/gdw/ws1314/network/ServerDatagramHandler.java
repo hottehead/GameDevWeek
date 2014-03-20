@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.network;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,4 +75,10 @@ public class ServerDatagramHandler implements DatagramHandler {
     public void handle(GameStateDatagram gameStateDatagram, NetConnection connection) {
         logger.warn("Server received a GameStateDatagram, which is only intended to be sent to a client, something is wrong here...");
     }
+
+	@Override
+	public void handle(ClientIdDatagram clientIdDatagram,
+			NetConnection connection) {
+		logger.warn("Server received a ClientIdDatagram, which is only intended to be sent to a client, something is wrong here...");
+	}
 }
