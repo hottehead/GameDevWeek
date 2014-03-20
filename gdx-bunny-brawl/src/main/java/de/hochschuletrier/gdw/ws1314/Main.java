@@ -243,18 +243,17 @@ public class Main extends StateBasedGame {
 						logger.info("Not yet connected...");
 					}
 				}
-				if (args.get(1).equals("sgp"))
+				if (args.get(1).equals("server"))
 				{
-					ArrayList<PlayerData> list = new ArrayList<>();
-					for (int i = 1; i < 4; i++) {
-						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
-						list.add(p);
-					}
-					
-					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
-					GameStates.SERVERGAMEPLAY.init(assetManager);					
-					GameStates.SERVERGAMEPLAY.activate();
-					logger.info("ServerGamePlayState activated...");
+					logger.info("Changing State to Server-Lobby...");
+					GameStates.SERVERLOBBY.init(assetManager);
+					GameStates.SERVERLOBBY.activate();
+				}
+				if (args.get(1).equals("client"))
+				{
+					logger.info("Changing State to Client-Lobby...");
+					GameStates.CLIENTLOBBY.init(assetManager);
+					GameStates.CLIENTLOBBY.activate();
 				}
 			}
 		});
