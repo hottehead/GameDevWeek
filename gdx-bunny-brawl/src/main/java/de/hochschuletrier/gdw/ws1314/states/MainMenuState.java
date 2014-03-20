@@ -68,7 +68,6 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void update(float delta) {
 		stateTime += delta;
-		System.out.println(stateTime);
     }
 
     @Override
