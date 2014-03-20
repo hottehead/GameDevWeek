@@ -177,12 +177,11 @@ public class ServerProjectile extends ServerEntity {
 	@Override
 	public void initPhysics(PhysixManager manager){
             this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
-            float angle = this.facingDirection.getDirectionVector().getAngleRad();
                 
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                     .position(this.originPosition)
                     .fixedRotation(true)
-                    .angle(angle)
+                    .angle(facingDirection.getAngle())
                     .create();
             
             body.createFixture(new PhysixFixtureDef(manager)
