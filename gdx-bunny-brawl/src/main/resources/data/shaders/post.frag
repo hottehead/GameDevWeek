@@ -1,4 +1,4 @@
-#version 330
+#version 130
 
 uniform sampler2D u_texture;
 uniform mat4 u_projTrans;

@@ -7,10 +7,19 @@ import java.util.Queue;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,28 +57,61 @@ public class ClientEntityManager {
     
     public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
-        switch(type){
-            case Ei :{
+        switch(type)
+        {
+            case Ei :
                 e = new ClientEgg();
-
                 break;
-            }
-            case Noob:{
+            case Noob:
                 e = createPlayer(PlayerKit.NOOB);
                 break;
-            }
-            case Hunter:{
+            case Hunter:
                 e = createPlayer(PlayerKit.HUNTER);
                 break;
-            }
-            /*case Tank :{
+            case Tank :
                 e = createPlayer(PlayerKit.TANK);
                 break;
-            }*/
-            case Knight :{
+            case Knight :
                 e = createPlayer(PlayerKit.KNIGHT);
                 break;
-            }
+            case Projectil: 
+            	e = new ClientProjectile();
+            	break;
+            case Bridge:
+            	e = new ClientBridge();
+            	break;
+            case BridgeSwitch:
+            	e = new ClientBridgeSwitch();
+            	break;
+            case Bush:
+            	e = new ClientBush();
+            	break;
+            case SwordAttack:
+            	//TODO clientswordattack
+            	break;
+            case ContactMine:
+            	e = new ClientContactMine();
+            	break;
+            case Carrot:
+            	e = new ClientCarrot();
+            	break;
+            case Spinach:
+            	e = new ClientSpinach();
+            	break;
+            case Clover:
+            	e = new ClientClover();
+            	break;
+            case WaterZone:
+            	//TODO how to define zones
+            	break;
+            case AbyssZone:
+            	break;
+            case GrassZone:
+            	break;
+            case PathZone:
+            	break;
+            case StartZone:
+            	break;
         }
         if(e!=null)
         {

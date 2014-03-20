@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import org.lwjgl.opengl.GL11;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
