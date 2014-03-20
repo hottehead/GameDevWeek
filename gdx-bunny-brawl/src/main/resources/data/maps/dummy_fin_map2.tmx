@@ -201,7 +201,7 @@
   <object gid="271" x="1312" y="1376"/>
   <object type="solid" x="256" y="640" width="64" height="64"/>
  </objectgroup>
- <objectgroup name="Zonenebene" width="75" height="50">
+ <objectgroup name="Zonenebene" width="75" height="50" opacity="0.92">
   <object type="startw" x="1280" y="704" width="224" height="224">
    <properties>
     <property name="direction " value="right"/>
@@ -327,7 +327,7 @@
    eJztmllOAzEMhnsPlgsAvQDLBVjeUYF3aC8A5Qg9dP0y0siKlXHiOJPk/6RfapRpFkuJl5nNBgAAAAATF6RL0hXpOqEtjeOx1lh/6l4kbki3pDvSNqEtjVOC2BxWe5G4Jz2QHklPCW1pnBLE5rDai8Qz6YX0SnpLaEvjlCA2h9VeJHakD9In6SuhLY1TgtgcVnsBoEe4fz6wft4eGe6f/1k/b48M98+wlQz3z63ZKjcn0OQI3D9z25yyd1OW3JzAI69ZC7k5gUdesxZycwKPvGYt5OYEo+UI36QfI+2d1+7NL+nPSEfntXvjUc/shVb9vuXdsfT+aNXvW94dS++Pkfx+Lq36/dgZ3Cue7d2Hx87gUfFs7z48Vhs8CL8n3g3XUgNN/DKvU4TO2LxucQr0t3QGQzVkTfwyt1XojPV0BkO1Pk38svbaoCUhW2nil9FtpYlfRrdVzv+9yf3mRkPrttLU03PtyN9FaN9N1LaVpp5eqz4xxVK13/to6um16hNTrFQ7HtLU01GfWE6r9QkAAAAAAGvOWAy7EQ==
   </data>
  </layer>
- <layer name="Overoverlayer(je nach Bedarf)" width="75" height="50">
+ <layer name="Overoverlayer(je nach Bedarf)" width="75" height="50" opacity="0">
   <data encoding="base64" compression="zlib">
    eJzt2MkJQzEMhOHXR5YGsjSQpYHkpYEs/ZeRydUIYgRW7Oj/YE4Cw/gi0DQBAAAgwkJZKitl7Zj3pHWXjbJVdsreeK+c96x1l4NyVE7K2XivnPesdZeLclVm5Wa8V8571rrLXXkoT+VlvFfOexbdZaS/+eafugAAAAAAgN+z7sYj3cUjWXfjke7ikay78Uh38UjW3Xiku3gk6zbKvTQX9lM99lM99lM99lM99hM+Mu4tb+eMe8vbOePe8nbOuLe8nTPurYydAQC5vAHxoDP/
   </data>
