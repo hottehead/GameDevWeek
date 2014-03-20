@@ -508,11 +508,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
                 ServerEntity entity = (ServerEntity)body.getOwner();
                 
-                if(entity.getEntityType() = WaterZone) {
+                if(entity.getEntityType() == EntityType.WaterZone) {
                     this.reset();
+                    return false;
                 }
             } catch(Exception e) {
-                
             }
+            return true;
         }
 }
