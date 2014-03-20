@@ -18,6 +18,8 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
+import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 import de.hochschuletrier.gdw.ws1314.sound.*;
 
@@ -32,6 +34,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     InputInterceptor inputProcessor;
     private LocalMusic music;
 	AnimationExtended walking;
+	
+	private MainMenuStage stage;
 
     public MainMenuState() {
     }
@@ -56,19 +60,23 @@ public class MainMenuState extends GameState implements InputProcessor {
             }
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
+        
+		stage = new MainMenuStage();
+		stage.init(assetManager);
     }
 
     @Override
     public void render() {
 		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
 		DrawUtil.batch.draw(keyFrame, 0, 0);
+//		stage.render();
     }
 
 	float stateTime = 0f;
     @Override
     public void update(float delta) {
 		stateTime += delta;
-		System.out.println(stateTime);
+//		System.out.println(stateTime);
     }
 
     @Override

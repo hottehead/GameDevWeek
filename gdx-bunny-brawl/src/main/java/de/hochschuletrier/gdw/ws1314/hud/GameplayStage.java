@@ -42,6 +42,7 @@ public class GameplayStage extends AutoResizeStage {
 	}
 	
 	public void init(AssetManagerX assetManager) {
+		//init generic stuff
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
