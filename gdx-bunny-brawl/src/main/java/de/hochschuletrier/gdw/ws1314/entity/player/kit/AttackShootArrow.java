@@ -17,7 +17,7 @@ public class AttackShootArrow extends AttackType
 {
 	public static final int DAMAGE = 50;
 	public static final float ARROW_SPAWN_DISTANCE = 20.0f;
-	public static final float ARROW_VELOCITY = 25.0f;
+	public static final float ARROW_VELOCITY = 250.0f;
 	public static final float ARROW_FLIGHT_DISTANCE = 300.0f;
 	public static final float ARROW_DESPAWN_TIME = 1.0f;
 	

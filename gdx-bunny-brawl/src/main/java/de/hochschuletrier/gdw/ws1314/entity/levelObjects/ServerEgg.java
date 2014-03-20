@@ -16,6 +16,9 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 

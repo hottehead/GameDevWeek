@@ -23,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
@@ -49,6 +50,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
 	private final float RESTITUTION = 0;
 	private final float	KNOCKBACK_TIME = 0.8f;
+	private final float ATTACK_TIME = 0.18f;
 
 
     private PlayerInfo	playerInfo;
@@ -66,6 +68,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private StatePlayerWalking	 walkingState;
     
     private State				 currentState;
+    
+    private float				 attackCooldown;
+    private float				 attackCooldownTimer;
+    private boolean				 attackAvailable;
     
     FacingDirection 	facingDirection;
     FacingDirection		desiredDirection;
@@ -99,7 +105,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     {
     	currentState.update(deltaTime);
     	
-    	// TODO Handle physics body velocity etc. Physics body shall not be faster than direction * playerKit.getMaxVelocity()
+    	if (!attackAvailable)
+    	{
+        	attackCooldownTimer += deltaTime;
+        	if (attackCooldownTimer > attackCooldown)
+        	{
+        		attackAvailable = true;
+        	}
+    	}
     }
 
     //NOT FINAL! CHANGE AS NEEDED
@@ -132,18 +145,28 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 movingRight = false;
                 break;
             case ATTACK_1:
-        		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
+            	if (!attackAvailable)
+            		break;
+        		attackState.setWaitTime(ATTACK_TIME);
             	if (currentState == idleState || currentState == walkingState)
             	{
+            		attackCooldown = playerKit.getFirstAttackCooldown();
+            		attackCooldownTimer = 0.0f;
+            		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		doFirstAttack();
             	}
                 break;
             case ATTACK_2:
-        		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
+            	if (!attackAvailable)
+            		break;
+        		attackState.setWaitTime(ATTACK_TIME);
         		if (currentState == idleState || currentState == walkingState)
             	{
+            		attackCooldown = playerKit.getSecondAttackCooldown();
+            		attackCooldownTimer = 0.0f;
+            		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		doSecondAttack();
@@ -286,6 +309,31 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case Bush:			
             	 break;
+             case SwordAttack:
+                 ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
+                 if(attack.getTeamColor() != this.teamColor) {
+                     this.applyDamage(attack.getDamage());
+                 }
+            	 break;
+             case ContactMine:
+            	 break;
+             case Carrot:
+            	 this.playerKit.getMaxVelocity();
+            	 break;
+             case Spinach:
+            	 break;
+             case Clover:
+            	 break;
+             case WaterZone:
+            	 break;
+             case AbyssZone:
+            	 break;
+             case GrassZone:
+            	 break;
+             case PathZone:
+            	 break;
+             case StartZone:
+            	 break;
              default:
             	 break;
                  
@@ -319,6 +367,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void setTeamColor(TeamColor color)
     {
     	teamColor = color;
+    }
+    
+    public void setSpeedBuff(float factor, float timer){
+    	
     }
 
 	@Override
