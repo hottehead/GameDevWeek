@@ -99,9 +99,12 @@ public class ServerSwordAttack extends ServerEntity {
 
     @Override
     public void initPhysics(PhysixManager manager) {
+        float angle = this.facingDirection.getDirectionVector().getAngleRad();
+        
         PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
                 .position(this.originPosition)
                 .fixedRotation(true)
+                .angle(angle)
                 .create();
         
         body.createFixture(new PhysixFixtureDef(manager)
