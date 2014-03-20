@@ -55,9 +55,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private PlayerKit 	playerKit;
     private TeamColor	teamColor;
     
-    private float 		firstAttackCooldown;
-    private float 		secondAttackCooldown;
-    
     private float		currentHealth;
     private float		currentArmor;
     
@@ -89,6 +86,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
+    	facingDirection = FacingDirection.DOWN;
     }
     
     public void enable() {}
@@ -108,8 +106,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent)
     {
-        logger.info("Hey I got a Intention: {}", intent.name());
-
         switch (intent){
             case MOVE_UP_ON:
                 movingUp = true;
@@ -205,7 +201,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
     protected void moveBegin(FacingDirection dir)
     {
-    	logger.info("Move begin: " + facingDirection);
     	facingDirection = desiredDirection;
     	// TODO 
     	// Damp old impulse
@@ -223,7 +218,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     protected void moveEnd()
     {
-    	logger.info("Move end: " + facingDirection);
     	// TODO brake impulse to physics body
     	// Use direction vector and impulse constant to create the impulse vector
     	// Check PlayerKit for impulse constant
@@ -311,8 +305,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void setPlayerKit(PlayerKit kit)
     {
     	playerKit = kit;
-    	firstAttackCooldown = kit.getFirstAttackCooldown();
-    	secondAttackCooldown = kit.getSecondAttackCooldown();
     	currentHealth = kit.getBaseHealth();
     	currentArmor = kit.getBaseArmor();
     }
@@ -353,11 +345,31 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 
     public void reset(){
         physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+        currentHealth = playerKit.getBaseHealth();
+        currentArmor = playerKit.getBaseArmor();
+        facingDirection = FacingDirection.DOWN;
+        		
         switchToState(idleState);
+    }
+    
+    public void applyDamage(float amount)
+    {
+    	amount -= currentArmor;
+    	if (amount < 0)
+    		amount = 0;
+    	currentHealth -= amount;
+    	currentArmor -= amount;
+    	
+    	if (currentArmor < 0)
+    		currentArmor = 0;
+    	
+    	if (currentHealth <= 0)
+    		reset();
     }
 	
 	protected void applyKnockback()
 	{
+		knockbackState.setWaitTime(KNOCKBACK_TIME);
 		switchToState(knockbackState);
 		
 		// TODO Calculate KnockbackImpulse
