@@ -57,9 +57,9 @@ public class LocalMusic {
 	
 	public void update(int duration) {
 		float delta = Gdx.graphics.getDeltaTime();
-        if (delta > 0.016f) {
+        /*if (delta > 0.016f) {
             delta = 0.016f;
-        }
+        }*/
 		if (this.fading) {
 			float volume = this.musicHandle.getVolume();
 			if (this.fadingDirection == 'i') {

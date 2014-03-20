@@ -62,9 +62,9 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 	@Override
 	public void render() {
-		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		DrawUtil.batch.draw(keyFrame, 0, 0);
-		// stage.render();
+		//TextureRegion keyFrame = walking.getKeyFrame(stateTime);
+		//DrawUtil.batch.draw(keyFrame, 0, 0);
+		//stage.render();
 	}
 
 	float stateTime = 0f;
