@@ -133,10 +133,17 @@ public class ServerEntityManager {
 
     }
 
-    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position) {
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position){
+        return createEntity(entityClass,position,null);
+    }
+
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position , SafeProperties properties) {
         T e = factory.createEntity(entityClass);
         assert (e != null);
-        SafeProperties properties = new SafeProperties();
+
+        if(properties == null)
+            properties = new SafeProperties();
+
         properties.setFloat("x",position.x);
         properties.setFloat("y",position.y);
         e.setProperties(properties);
