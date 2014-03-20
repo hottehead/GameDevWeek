@@ -19,9 +19,9 @@ public class EventDatagram extends BaseDatagram {
         super (MessageType.NORMAL, type, id, param1, param2);
     }
 
-    public EventDatagram (long id, EventType eventType) {
+    public EventDatagram (long entityId, EventType eventType) {
         super (MessageType.NORMAL, EVENT_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.entityId = id;
+        this.entityId = entityId;
         this.eventType = eventType;
     }
 
@@ -42,7 +42,7 @@ public class EventDatagram extends BaseDatagram {
         eventType = message.getEnum(EventType.class);
     }
 
-    public long getId () {
+    public long getEntityId () {
         return entityId;
     }
 
