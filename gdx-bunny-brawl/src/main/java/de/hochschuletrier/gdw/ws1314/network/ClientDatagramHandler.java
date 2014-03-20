@@ -150,6 +150,6 @@ public class ClientDatagramHandler implements DatagramHandler {
 	@Override
 	public void handle(ClientIdDatagram clientIdDatagram,
 			NetConnection connection) {
-		NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerData());
+		NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerId());
 	}
 }
