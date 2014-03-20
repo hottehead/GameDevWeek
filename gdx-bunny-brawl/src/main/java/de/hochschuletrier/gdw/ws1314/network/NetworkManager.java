@@ -28,6 +28,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
@@ -59,14 +60,15 @@ public class NetworkManager {
 
     private int nextPlayerNumber = 1;
 
-    private PlayerDisconnectCallback playerdisconnectcallback;
-    private LobbyUpdateCallback lobbyupdatecallback;
-    private PlayerUpdateCallback playerupdatecallback;
-    private MatchUpdateCallback matchupdatecallback;
-    private ActionCallback actionCallback;
-    private EventCallback eventCallback;
-    private DespawnCallback despawnCallback;
-    private GameStateCallback gameStateCallback;
+	private PlayerDisconnectCallback playerdisconnectcallback;
+	private ClientIdCallback clientidcallback;
+	private LobbyUpdateCallback lobbyupdatecallback;
+	private PlayerUpdateCallback playerupdatecallback;
+	private MatchUpdateCallback matchupdatecallback;
+	private ActionCallback actionCallback;
+	private EventCallback eventCallback;
+	private DespawnCallback despawnCallback;
+	private GameStateCallback gameStateCallback;
 
 	private NetworkManager() {
 	}
@@ -112,6 +114,10 @@ public class NetworkManager {
     	return playerdisconnectcallback;
     }
 
+	public ClientIdCallback getClientIdCallback(){
+		return clientidcallback;
+	}
+
 	public LobbyUpdateCallback getLobbyUpdateCallback() {
         return lobbyupdatecallback;
     }
@@ -143,6 +149,10 @@ public class NetworkManager {
     public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
     	this.playerdisconnectcallback = callback;
     }
+	
+	public void setClientIdCallback(ClientIdCallback callback){
+		this.clientidcallback = callback;
+	}
 
     public void setLobbyUpdateCallback(LobbyUpdateCallback callback) {
         this.lobbyupdatecallback = callback;
@@ -343,7 +353,6 @@ public class NetworkManager {
     			 List<Integer> ids = new ArrayList<Integer>();
 				for (NetConnection rc : toRemove) {
 	    			 serverConnections.remove(rc);
-	    			 //TODO: eindeutige ID festlegen
 	    			 ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 	    		 }
 	    		 playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));

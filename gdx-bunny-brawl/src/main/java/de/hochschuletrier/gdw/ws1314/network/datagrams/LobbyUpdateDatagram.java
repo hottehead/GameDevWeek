@@ -7,7 +7,6 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
-import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
@@ -49,6 +48,7 @@ public class LobbyUpdateDatagram extends BaseDatagram {
             message.putEnum (players[i].getType());
             message.putEnum(players[i].getTeam());
             message.putBool (players[i].isAccept());
+            message.putLong(players[i].getEntityId());
         }
     }
 
@@ -63,8 +63,9 @@ public class LobbyUpdateDatagram extends BaseDatagram {
         	EntityType type = message.getEnum(EntityType.class);
         	TeamColor team = message.getEnum(TeamColor.class);
         	boolean accept = message.getBool();
+        	long entityid = message.getLong();
         	logger.info("GET id: " + id + " name: " + name);
-        	players[i] = new PlayerData(id, name, type, team, accept);
+        	players[i] = new PlayerData(id, name, type, team, accept, entityid);
         }
     }
 

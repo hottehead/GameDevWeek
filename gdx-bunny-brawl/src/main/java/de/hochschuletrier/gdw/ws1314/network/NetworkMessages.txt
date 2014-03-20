@@ -43,6 +43,12 @@ Team byte
 Accept boolean
 //OK
 
+ClientID Datagram
+Server > Client
+FIRST_CUSTOM + 0x13
+playerid int
+//OK
+
 PlayerReplicationDatagram
 Server > Client
 FIRST_CUSTOM + 0x20
