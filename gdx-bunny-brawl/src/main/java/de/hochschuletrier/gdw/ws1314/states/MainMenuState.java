@@ -59,7 +59,7 @@ public class MainMenuState extends GameState implements InputProcessor {
                 return isActive && mainProcessor.keyUp(keycode);
             }
         };
-//        Main.inputMultiplexer.addProcessor(inputProcessor);
+        Main.inputMultiplexer.addProcessor(inputProcessor);
         
 		stage = new MainMenuStage();
 		stage.init(assetManager);
