@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -46,6 +45,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.lobby.ServerLobbyManager;
+import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -122,6 +122,7 @@ public class Main extends StateBasedGame {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
+	public int c_own_id;
 	public String s_map = "";
 	public PlayerData[] c_players;
 	public List<PlayerData> s_players = new ArrayList<PlayerData>();
@@ -146,6 +147,14 @@ public class Main extends StateBasedGame {
 		GameStates.LOADING.activate();
         
 		NetworkManager.getInstance().init();
+		NetworkManager.getInstance().setClientIdCallback(new ClientIdCallback() {
+			
+			@Override
+			public void callback(int playerid) {
+				c_own_id = playerid;
+				logger.info("Own id: " + c_own_id);
+			}
+		});
 		
 		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
 			
@@ -211,6 +220,20 @@ public class Main extends StateBasedGame {
 				//playercount = players.size();
 				s_players = players;
 				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
+			}
+		});
+		
+		console.register(new ConsoleCmd("sendClientId",0,"[DEBUG]",1) {
+
+			@Override
+			public void execute(List<String> args) {
+				for(PlayerData p : s_players){
+					if(p.getId() == Integer.parseInt(args.get(1))){
+						logger.info("Sending ClientId: " + p.getId());
+						NetworkManager.getInstance().sendClientId(p.getId());
+					}
+				}
+				
 			}
 		});
     	
