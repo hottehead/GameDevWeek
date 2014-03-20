@@ -29,6 +29,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
@@ -212,6 +213,17 @@ public class NetworkManager {
 		if (!isClient())
 			return;
         broadcastToClients(new GameStateDatagram(gameStates));
+    }
+    
+    public void sendClientId(PlayerData p){
+    	if(!isServer())
+    		return;
+    	for (NetConnection con : serverConnections) {
+    		ConnectionAttachment tmp = (ConnectionAttachment) con.getAttachment();
+    		if(tmp.getId() == p.getId()){
+    			con.send(new ClientIdDatagram(p));
+    		}
+        }
     }
 
 	public void sendMatchUpdate(String map) {
