@@ -28,6 +28,8 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
+import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
@@ -60,6 +62,7 @@ public class NetworkManager {
     private int nextPlayerNumber = 1;
 
     private PlayerDisconnectCallback playerdisconnectcallback;
+	private ClientIdCallback clientidcallback;
     private LobbyUpdateCallback lobbyupdatecallback;
     private PlayerUpdateCallback playerupdatecallback;
     private MatchUpdateCallback matchupdatecallback;
@@ -111,6 +114,10 @@ public class NetworkManager {
     	return playerdisconnectcallback;
     }
 
+	public ClientIdCallback getClientIdCallback(){
+		return clientidcallback;
+	}
+
 	public LobbyUpdateCallback getLobbyUpdateCallback() {
         return lobbyupdatecallback;
     }
@@ -138,6 +145,10 @@ public class NetworkManager {
     public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
     	this.playerdisconnectcallback = callback;
     }
+
+	public void setClientIdCallback(ClientIdCallback callback){
+		this.clientidcallback = callback;
+	}
 
     public void setLobbyUpdateCallback(LobbyUpdateCallback callback) {
         this.lobbyupdatecallback = callback;
@@ -193,6 +204,17 @@ public class NetworkManager {
 		if (!isClient())
 			return;
         broadcastToClients(new GameStateDatagram(gameStates));
+    }
+
+    public void sendClientId(PlayerData p){
+    	if(!isServer())
+    		return;
+    	for (NetConnection con : serverConnections) {
+    		ConnectionAttachment tmp = (ConnectionAttachment) con.getAttachment();
+    		if(tmp.getId() == p.getId()){
+    			con.send(new ClientIdDatagram(p));
+    		}
+        }
     }
 
 	public void sendMatchUpdate(String map) {
@@ -334,7 +356,6 @@ public class NetworkManager {
     			 List<Integer> ids = new ArrayList<Integer>();
 				for (NetConnection rc : toRemove) {
 	    			 serverConnections.remove(rc);
-	    			 //TODO: eindeutige ID festlegen
 	    			 ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 	    		 }
 	    		 playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));

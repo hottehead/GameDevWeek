@@ -6,10 +6,9 @@ import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
-import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,4 +136,10 @@ public class ClientDatagramHandler implements DatagramHandler {
     public void handle(GameStateDatagram gameStateDatagram, NetConnection connection) {
         NetworkManager.getInstance().getGameStateCallback().callback(gameStateDatagram.getGameStates());
     }
+
+	@Override
+	public void handle(ClientIdDatagram clientIdDatagram,
+			NetConnection connection) {
+		NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerData());
+	}
 }

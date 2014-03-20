@@ -9,13 +9,22 @@ public class PlayerData {
 	private EntityType type;
 	private TeamColor team;
 	private boolean accept;
+	private long entityid;
 	
 	public PlayerData(int id, String playername, EntityType type, TeamColor team, boolean accept){
+		this(id,playername,type,team,accept, 0);
+	}
+	public PlayerData(int id, String playername, EntityType type, TeamColor team, boolean accept, long entityid){
 		this.id = id;
 		this.playername = playername;
 		this.type = type;
 		this.team = team;
 		this.accept = accept;
+		this.entityid = entityid;
+	}
+	
+	public void setEntityId(long entityid){
+		this.entityid = entityid;
 	}
 	
 	public int getId(){
@@ -33,6 +42,9 @@ public class PlayerData {
 	}
 	public boolean isAccept() {
 		return accept;
+	}
+	public long getEntityId() {
+		return entityid;
 	}
 	
 	public String toString() {
