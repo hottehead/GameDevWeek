@@ -276,7 +276,7 @@ public class NetConnection extends Thread {
                 }
             } catch (IOException e) {
                 logger.error("Failed sending NetDatagram", e);
-                
+
                 // An exception causes a disconnect right now, maybe want to change that ?
                 if (disconnectException == null) {
                     disconnectException = e;
@@ -377,7 +377,9 @@ public class NetConnection extends Thread {
             if (!shutdown) {
                 try {
                     sendHeader(NetDatagram.Type.DISCONNECT, (short) 0, (short) 0, (short) 0);
-                } catch (IOException e) {
+                } catch (java.nio.channels.AsynchronousCloseException e) {
+					return;
+				} catch (IOException e) {
                     logger.error("Failed sending disconnect", e);
                     // doesn't matter if the disconnect event does not get send
                 }
