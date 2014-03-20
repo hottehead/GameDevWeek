@@ -49,7 +49,10 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		// game.render();
 		tmpGame.render();
+		
+		DrawUtil.startRenderToScreen();
 		stage.render();
+		DrawUtil.endRenderToScreen();
                 
 		//TODO: Jemand der weis woher das kommt bitte fixen, hier war nach dem Merge zwischen integration_test/network_gameplay und master ein Build-Fehler.
                 //game.getManager().render();
@@ -63,9 +66,11 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 		fpsCalc.addFrame();
 		
 		
-		//TODO: connect ui to gamelogic
+		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
+		
 		stage.step();
+		
 	}
 
 	@Override
