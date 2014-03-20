@@ -19,6 +19,8 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
@@ -74,12 +76,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
     
-    FacingDirection 	facingDirection;
-    FacingDirection		desiredDirection;
-    boolean				movingUp;
-    boolean				movingDown;
-    boolean				movingLeft;
-    boolean				movingRight;
+    private FacingDirection 	facingDirection;
+    private FacingDirection		desiredDirection;
+    private boolean				movingUp;
+    private boolean				movingDown;
+    private boolean				movingLeft;
+    private boolean				movingRight;
+    
+    private float				speedBuffTimer;
+    private float				speedBuffDuration;
+    private boolean				speedBuffActive;
     
     public ServerPlayer()
     {
@@ -94,6 +100,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
     	facingDirection = FacingDirection.DOWN;
+    	speedBuffTimer = 0.0f;
+    	speedBuffDuration = 0.0f;
+    	speedBuffActive = false;
     }
     
     public void enable() {}
@@ -113,6 +122,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         	{
         		attackAvailable = true;
         	}
+    	}
+    	
+    	if (speedBuffActive)
+    	{
+    		speedBuffTimer += deltaTime;
+    		if (speedBuffTimer >= speedBuffDuration)
+    		{
+    			walkingState.setSpeedFactor(1.0f);
+    			speedBuffActive = false;
+    		}
     	}
     }
 
@@ -272,6 +291,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void beginContact(Contact contact) 	{
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
          
+         if(otherEntity == null) {
+             return;
+         }
+         
          switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
@@ -287,16 +310,15 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 }
             	 break;
              case Projectil: 
-//            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-//            	 ServerPlayer hunter = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(projectile.getID());
-//            	 if(hunter.getTeamColor() != this.getTeamColor()){
-//            		 this.currentHealth -= AttackShootArrow.DAMAGE;
-//            	 } 
-//            	 if(this.currentHealth <= 0){
-//            	  	 
-//            		 this.physicsBody.setPosition(0, 0);
-//            	  	 
-//            	 }
+
+            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+                 if (getID() == projectile.getSourceID())
+                 	return;
+                 if (getTeamColor() != projectile.getTeamColor())
+                 	applyDamage(projectile.getDamage());
+                 ServerEntityManager.getInstance().removeEntity(otherEntity);
+
+
             	 break;
              case Bridge:
             	 ServerBridge bridge = (ServerBridge) otherEntity;
@@ -309,7 +331,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 break;
              case BridgeSwitch:	
             	 break;
-             case Bush:			
+             case Bush:
             	 break;
              case SwordAttack:
                  ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
@@ -322,7 +344,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 
             	 break;
              case Carrot:
-            	 this.setSpeedBuff(1.5f,10);
+            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
+            	 ServerCarrot carrot = (ServerCarrot) otherEntity;
+            	 ServerEntityManager.getInstance().removeEntity(carrot);
+
             	 break;
              case Spinach:
             	 break;
@@ -373,8 +398,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	teamColor = color;
     }
     
-    public void setSpeedBuff(float factor, float timer){
-    	
+    public void applySpeedBuff(float factor, float duration)
+    {
+    	speedBuffActive = true;
+    	speedBuffTimer = 0.0f;
+    	speedBuffDuration = duration;
+    	walkingState.setSpeedFactor(factor);
     }
 
 	@Override

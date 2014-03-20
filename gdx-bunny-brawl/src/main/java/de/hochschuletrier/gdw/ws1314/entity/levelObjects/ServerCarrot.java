@@ -19,8 +19,13 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
  * @author yannick
  *
  */
+
+// Added Carrot Constants by ElFapo
 public class ServerCarrot extends ServerLevelObject
 {
+	public static final float CARROT_SPEEDBUFF_FACTOR = 1.1f;
+	public static final float CARROT_SPEEDBUFF_DURATION = 2.0f;
+	
 	public ServerCarrot()
 	{
 		super();
