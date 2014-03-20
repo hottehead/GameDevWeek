@@ -28,7 +28,7 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdCallback;
+import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
@@ -208,7 +208,7 @@ public class NetworkManager {
         broadcastToClients(new DespawnDatagram(id));
     }
 
-    public void changeGameState(GameStates gameStates) {
+    public void sendGameState(GameStates gameStates) {
 		if (!isClient())
 			return;
         broadcastToClients(new GameStateDatagram(gameStates));
