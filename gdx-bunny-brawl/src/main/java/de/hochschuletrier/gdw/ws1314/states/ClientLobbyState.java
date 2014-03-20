@@ -16,6 +16,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
+import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -37,7 +38,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
         super.init (assetManager);
         
         this.clientLobby = new ClientLobbyManager("John");
-
+        
         // TODO: Temporär nur zum localen Testen
         if (!NetworkManager.getInstance().isClient())
         {
@@ -46,6 +47,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 	        if (!NetworkManager.getInstance().isClient())
 	        	logger.warn("Connection could not be established! Server maybe not running.");
         }
+        
+        this.clientLobby.sendChanges();
+        
+        
         
         NetworkManager.getInstance().setGameStateCallback(this);
         
