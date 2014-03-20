@@ -28,7 +28,6 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
-import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.*;
@@ -152,7 +151,6 @@ public class Main extends StateBasedGame {
 				for(int i = 0; i < s_players.size(); i++){
 					if(s_players.get(i) == null)
 						continue;
-					logger.info(s_players.get(i).getId() + " == " + playerid);
 					if(s_players.get(i).getId() == playerid){
 						logger.info("Updated Player: " + playerid + " " + playerName);
 						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
@@ -171,8 +169,10 @@ public class Main extends StateBasedGame {
 			public void callback(String map, PlayerData[] players) {
 				logger.info("Map: " + map);
 				logger.info("Playercount: " + players.length);
-				for(int i = 0; i < players.length; i++)
-					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getId() + " class: " + players[i].getType());
+				int i = 0;
+				for(PlayerData pd:players){
+					logger.info("Player" + i++ + ": " + pd.getPlayername() + " id: " + pd.getId() + " class: " + pd.getType());
+				}
 				c_players = players;
 			}
 		});
@@ -199,42 +199,7 @@ public class Main extends StateBasedGame {
 				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 			}
 		});
-    	
-		console.register(new ConsoleCmd("sendLobbyUpdate",0,"[DEBUG]") {
 
-			@Override
-			public void execute(List<String> args) {
-				// TODO Auto-generated method stub
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
-			} 
-		});
-		console.register(new ConsoleCmd("sendMatchUpdate",0,"[DEBUG]Post a mapname.",1) {
-			@Override
-			public void showUsage() {
-				showUsage("<mapname-text>");
-			}
-			
-			@Override
-			public void execute(List<String> args) {
-				NetworkManager.getInstance().sendMatchUpdate(StringUtils.untokenize(args, 1, -1, false));
-			}
-			
-		});
-		
-		console.register(new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",1){
-			@Override
-			public void showUsage() {
-				showUsage("<playername>");
-			}
-			
-			@Override
-			public void execute(List<String> args) {
-				logger.info(args.get(1));
-				NetworkManager.getInstance().sendPlayerUpdate(args.get(1),EntityType.Noob,TeamColor.BLACK,false);
-			}
-		});
-		
-		
 		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
 			@Override
 			public void showUsage() {
@@ -278,6 +243,13 @@ public class Main extends StateBasedGame {
 			}
 		});
 		
+	}
+
+	/**
+	 * NETWORK nur von sendLobbyUpdateCmd aus NetworkCommands nutzen !
+	 */
+	public void sendDevLobbyUpdate(){
+		NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 	}
 
 	public void onLoadComplete() {
