@@ -24,6 +24,10 @@ public class MainMenuStage extends AutoResizeStage {
 	private LevelList levelList;
 	private TextButton startButton;
 	
+	//server-client-testing
+	private TextButton startClient;
+	private TextButton startServer;
+	
 	public MainMenuStage() {
 		super();
 	}
@@ -55,6 +59,13 @@ public class MainMenuStage extends AutoResizeStage {
 		//start Button
 		startButton = new TextButton("LADEN", defaultSkin);
 		uiTable.add(startButton);
+		
+		//testing server-client stuff
+		startClient = new TextButton("start Server", defaultSkin);
+		startServer = new TextButton("start Client", defaultSkin);
+		uiTable.row().padTop(20);
+		uiTable.add(startClient).row();
+		uiTable.add(startServer);
 	}
 
 	public void render() {		
@@ -81,4 +92,13 @@ public class MainMenuStage extends AutoResizeStage {
 	public TextButton getStartButton() {
 		return startButton;
 	}
+	
+	//for testing server-client stuff
+	public TextButton getStartClientButton() {
+		return startClient;
+	}
+	public TextButton getStartServerButton() {
+		return startClient;
+	}
+	
 }
