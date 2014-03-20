@@ -13,22 +13,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.EntityIDDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LevelObjectReplicationDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +62,7 @@ public class NetworkManager{
 		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
-			if(clientConnection.isAccepted()) logger.info("[CLIENT] Connected to Server with IP: {} on Port: {}", ip, port);
+			if(clientConnection.isAccepted()) logger.info("[CLIENT] connected to server {}:{}", ip, port);
 		}
 		catch (IOException e){
 			logger.error("[CLIENT] Can't connect.", e);
@@ -94,8 +79,7 @@ public class NetworkManager{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
 
 			if(serverReception.isRunning()){
-				logger.info("[SERVER] Listening, IP: {} Port: {}", InetAddress.getLocalHost().getHostAddress(), port);
-
+				logger.info("[SERVER] is running and listening at {}:{}", InetAddress.getLocalHost().getHostAddress(), port);
 			}
 		}
 		catch (IOException e){
@@ -257,7 +241,7 @@ public class NetworkManager{
 		if(isClient()){
 			clientConnection.shutdown();
 			clientConnection = null;
-			logger.info("[CLIENT] Disconnect from Server.");
+			logger.info("[CLIENT] disconnected from server.");
 		}
 	}
 
@@ -319,10 +303,15 @@ public class NetworkManager{
 				List<Integer> ids = new ArrayList<Integer>();
 				for(NetConnection rc:toRemove){
 					serverConnections.remove(rc);
+					logger.info("[SERVER] {} disconnected", ((ConnectionAttachment)rc.getAttachment()).getPlayername());
+					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment)rc.getAttachment()).playername+" disconnected"));
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
 				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
 			}
+		}
+		if(isClient()){
+
 		}
 	}
 
@@ -380,7 +369,6 @@ public class NetworkManager{
 			if(isServer()){
 				for (NetConnection nc:serverConnections){
 					nc.shutdown();
-
 				}
 				serverReception.shutdown();
 				logger.info("[SERVER] stopped");

@@ -235,7 +235,7 @@ public class NetworkCommands{
 
 		@Override
 		public void execute(List<String> args){
-			logger.info(args.get(1));
+			logger.info("[CLIENT] name changed to {}", args.get(1));
 			NetworkManager.getInstance().sendPlayerUpdate(args.get(1), EntityType.Noob, TeamColor.BLACK, false);
 		}
 	};
