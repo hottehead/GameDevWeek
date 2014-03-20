@@ -28,4 +28,6 @@ public interface DatagramHandler {
     void handle (DespawnDatagram despawnDatagram, NetConnection connection);
 
     void handle (GameStateDatagram gameStateDatagram, NetConnection connection);
+
+	void handle(ClientIdDatagram clientIdDatagram, NetConnection connection);
 }

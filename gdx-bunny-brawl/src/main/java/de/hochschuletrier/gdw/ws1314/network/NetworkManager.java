@@ -46,6 +46,7 @@ public class NetworkManager {
 	private int nextPlayerNumber = 1;
 
 	private PlayerDisconnectCallback playerdisconnectcallback;
+	private ClientIdCallback clientidcallback;
 	private LobbyUpdateCallback lobbyupdatecallback;
 	private PlayerUpdateCallback playerupdatecallback;
 	private MatchUpdateCallback matchupdatecallback;
@@ -97,6 +98,10 @@ public class NetworkManager {
 	public PlayerDisconnectCallback getPlayerDisconnectCallback() {
 		return playerdisconnectcallback;
 	}
+	
+	public ClientIdCallback getClientIdCallback(){
+		return clientidcallback;
+	}
 
 	public LobbyUpdateCallback getLobbyUpdateCallback() {
 		return lobbyupdatecallback;
@@ -128,6 +133,10 @@ public class NetworkManager {
 
 	public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback) {
 		this.playerdisconnectcallback = callback;
+	}
+	
+	public void setClientIdCallback(ClientIdCallback callback){
+		this.clientidcallback = callback;
 	}
 
 	public void setLobbyUpdateCallback(LobbyUpdateCallback callback) {
