@@ -38,7 +38,7 @@ public class LevelLoader {
 	private static TiledMap map;
 	private static Set<Class> classes;
 	private static HashMap<String, String> classToPath = new HashMap<>();
-	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager) {

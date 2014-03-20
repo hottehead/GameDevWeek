@@ -69,7 +69,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 
 	@Override
 	public void readFromMessage(INetMessageIn message){
-		entityId = message.getInt();
+		entityId = message.getLong();
 		xposition = message.getFloat();
 		yposition = message.getFloat();
 		entityType = message.getEnum(EntityType.class);
