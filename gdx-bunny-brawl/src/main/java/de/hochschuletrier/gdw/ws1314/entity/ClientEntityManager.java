@@ -59,7 +59,7 @@ public class ClientEntityManager {
         ClientEntity e = null;
         switch(type)
         {
-            case Ei :
+            case Ei:
                 e = new ClientEgg();
                 break;
             case Noob:
@@ -68,10 +68,10 @@ public class ClientEntityManager {
             case Hunter:
                 e = createPlayer(PlayerKit.HUNTER);
                 break;
-            /*case Tank :
+            case Tank:
                 e = createPlayer(PlayerKit.TANK);
-                break;*/
-            case Knight :
+                break;
+            case Knight:
                 e = createPlayer(PlayerKit.KNIGHT);
                 break;
             case Projectil: 
@@ -98,6 +98,8 @@ public class ClientEntityManager {
             case Clover:
             	e = new ClientClover();
             	break;
+			default:
+				break;
         }
         if(e!=null)
         {
