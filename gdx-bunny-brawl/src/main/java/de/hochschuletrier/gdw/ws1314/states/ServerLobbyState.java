@@ -20,6 +20,9 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener 
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
        
+        // TODO: Temporär nur zum localen Testen
+        NetworkManager.getInstance().listen("localhost", 666, 10);
+        
     	serverLobby = new ServerLobbyManager();
     	serverLobby.addServerLobbyListener(this);
     	logger.info("Server-Lobby created.");

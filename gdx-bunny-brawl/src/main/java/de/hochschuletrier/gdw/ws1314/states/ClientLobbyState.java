@@ -30,7 +30,13 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
-        this.clientLobby = new ClientLobbyManager(new PlayerData(1,"John", EntityType.Hunter, TeamColor.WHITE, false));
+        this.clientLobby = new ClientLobbyManager("John");
+        
+        // TODO: Temporär nur zum localen Testen
+        NetworkManager.getInstance().connect("localhost", 666);
+        
+        if (NetworkManager.getInstance().isClient())
+        	logger.warn("Connection ");
         
         NetworkManager.getInstance().setGameStateCallback(this);
         
@@ -70,7 +76,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			@Override
 			public void execute(List<String> args) {
 				EntityType t;
-				logger.info(args.get(0) + " |  " + args.get(1));
 				switch(args.get(1))
 				{
 				case "hunter":
