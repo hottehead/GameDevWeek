@@ -63,7 +63,8 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 			EntityType type = message.getEnum(EntityType.class);
 			TeamColor team = message.getEnum(TeamColor.class);
 			boolean accept = message.getBool();
-			players[i] = new PlayerData(id, name, type, team, accept);
+			long entityId = message.getLong();
+			players[i] = new PlayerData(id, name, type, team, accept,entityId);
 		}
 	}
 
