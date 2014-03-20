@@ -39,7 +39,7 @@ public class ClientGame {
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
 	private EntityRenderer entityRenderer; 
-	
+
 	
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
@@ -78,10 +78,10 @@ public class ClientGame {
 		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
-		
+
 		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-		
-		
+
+
 		postProcessing = new TextureAdvection("data/shaders/edgeDetection.vert", "data/shaders/edgeDetection.frag");
 		System.out.println(postProcessing.getLog());
 		advShader = new TextureAdvection("data/shaders/texAdv.vert", "data/shaders/texAdv.frag");
