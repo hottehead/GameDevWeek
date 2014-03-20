@@ -60,7 +60,7 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 		
 		for (PlayerData p : this.connectedPlayers)
 		{
-			logger.info("PlayerID: " + p.getId());
+			logger.info("PlayerID: " + p.getPlayerId());
 			logger.info("PlayerName: " + p.getPlayername());
 		}
 	}

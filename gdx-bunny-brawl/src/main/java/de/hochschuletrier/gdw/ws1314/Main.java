@@ -166,7 +166,8 @@ public class Main extends StateBasedGame {
 				for(int i = 0; i < s_players.size(); i++){
 					if(s_players.get(i) == null)
 						continue;
-					if(s_players.get(i).getId() == playerid){
+					logger.info(s_players.get(i).getPlayerId() + " == " + playerid);
+					if(s_players.get(i).getPlayerId() == playerid){
 						logger.info("Updated Player: " + playerid + " " + playerName);
 						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
 						update = true;
@@ -184,10 +185,8 @@ public class Main extends StateBasedGame {
 			public void callback(String map, PlayerData[] players) {
 				logger.info("Map: " + map);
 				logger.info("Playercount: " + players.length);
-				int i = 0;
-				for(PlayerData pd:players){
-					logger.info("Player" + i++ + ": " + pd.getPlayername() + " id: " + pd.getId() + " class: " + pd.getType());
-				}
+				for(int i = 0; i < players.length; i++)
+					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getPlayerId() + " class: " + players[i].getType());
 				c_players = players;
 			}
 		});
@@ -201,7 +200,7 @@ public class Main extends StateBasedGame {
 				for(int i = 0; i < s_players.size(); i++){
 					boolean inlist = true;
 					for(int j = 0; j < playerid.length; j++){
-						if(playerid[j] == s_players.get(i).getId()){
+						if(playerid[j] == s_players.get(i).getPlayerId()){
 							inlist = false;
 							break;
 						}
