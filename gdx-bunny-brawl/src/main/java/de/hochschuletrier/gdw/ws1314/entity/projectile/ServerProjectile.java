@@ -1,5 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.projectile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -41,6 +44,8 @@ public class ServerProjectile extends ServerEntity {
     private float			damage;
     
     private boolean physicsInitialized;
+    
+    private static final Logger logger = LoggerFactory.getLogger(ServerProjectile.class);
 
 
     //==================================================
@@ -149,10 +154,13 @@ public class ServerProjectile extends ServerEntity {
 		if (!physicsInitialized)
 			return;
 		
-        Vector2 position = this.physicsBody.getPosition();
-        float distance = this.originPosition.sub(position).len();
+		logger.info(getPosition().x + " " + getPosition().y + " - " + originPosition.x + " " + originPosition.y);
+		
+        Vector2 pos = this.physicsBody.getPosition().cpy();
+        float distance = pos.sub(originPosition).len();
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
+            logger.info("P O W !!!");
         }
 	}
 
