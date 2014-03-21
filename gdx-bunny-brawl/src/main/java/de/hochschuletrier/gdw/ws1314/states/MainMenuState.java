@@ -1,6 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -51,6 +52,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 		stage = new MainMenuStage();
 		stage.init(assetManager);
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -91,6 +93,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
+		stage.dispose();
 	}
 
 	@Override

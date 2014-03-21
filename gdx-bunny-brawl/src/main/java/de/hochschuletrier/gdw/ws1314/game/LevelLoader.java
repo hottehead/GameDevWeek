@@ -15,8 +15,10 @@ import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.utils.Point;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.TeamSpawnZone;
 import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 
@@ -25,6 +27,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,7 @@ public class LevelLoader {
 	private static Vector2 startpos;
 	private static TiledMap map;
 	private static Set<Class> classes;
+	private static GameInfo gameInfo;
 	private static HashMap<String, String> classToPath = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
@@ -44,8 +48,10 @@ public class LevelLoader {
     private static HashMap<Integer,ArrayList<Long>> bridgeIDs = new HashMap<>();
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
-			PhysixManager physicsManager) {
+			PhysixManager physicsManager, GameInfo gameInfo) {
 		LevelLoader.map = map;
+
+		logger.info("Lade Level: {}", map.getFilename());
 
 		LevelLoader.entityManager = entityManager;
 		LevelLoader.physicsManager = physicsManager;
@@ -53,6 +59,9 @@ public class LevelLoader {
         bridgeSwitchIDs.clear();
         bridgeIDs.clear();
 		physicsManager.reset();
+
+		LevelLoader.gameInfo = gameInfo;
+
 		try {
 			classes = ClassUtils
 					.findClassesInPackage("de.hochschuletrier.gdw.ws1314.entity.levelObjects");
@@ -248,6 +257,7 @@ public class LevelLoader {
             properties.setFloat("height",height);
         }
         Zone zone;
+		TeamSpawnZone spawnZone;
         ServerEntity entity = null;
 		switch (type) {
 		case "solid":
@@ -274,10 +284,16 @@ public class LevelLoader {
             zone.setPathZone();
             break;
         case "startw":
-
+			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
+			spawnZone.setRect(x,y,width,height);
+			spawnZone.setTeamWhite();
+			gameInfo.addTeam(TeamColor.WHITE,spawnZone);
             break;
         case "startb":
-
+			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
+			spawnZone.setRect(x,y,width,height);
+			spawnZone.setTeamBlack();
+			gameInfo.addTeam(TeamColor.BLACK,spawnZone);
             break;
 
 

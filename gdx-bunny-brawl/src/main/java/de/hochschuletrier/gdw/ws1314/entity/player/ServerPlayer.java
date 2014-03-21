@@ -353,7 +353,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 }
                 	 break;
             	 case ContactMine:
-                	 ServerContactMine mine = (ServerContactMine) otherEntity;
                 	 
                 	 break;
                  case Carrot:
@@ -362,16 +361,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case Spinach:
                 	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                	 ServerSpinach spinach = (ServerSpinach) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(spinach);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
+
                 	 break;
                  case WaterZone:
                      
+                     logger.info("spieler kollision mit wasser");
                      float upperX = this.getPosition().x - WIDTH;
                      float lowerX = this.getPosition().x + WIDTH;
                      float upperY = this.getPosition().y - HEIGHT;
@@ -602,7 +602,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 	}
         
     public boolean reportFixture (Fixture fixture) {
-        
+        logger.info("report fixture aufgerufen");
         try {
             PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
             ServerEntity entity = (ServerEntity)body.getOwner();
