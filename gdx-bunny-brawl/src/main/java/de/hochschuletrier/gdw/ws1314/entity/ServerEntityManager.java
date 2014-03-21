@@ -6,6 +6,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.LevelLoader;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -34,6 +35,8 @@ public class ServerEntityManager {
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
     protected ServerEntityFactory factory;
     
+    private GameInfo gameInfo = new GameInfo();
+    
     protected ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
@@ -56,7 +59,11 @@ public class ServerEntityManager {
 
     }
     
-    public static ServerEntityManager getInstance()
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+
+	public static ServerEntityManager getInstance()
     {
 
     	if (instance == null)
@@ -173,6 +180,7 @@ public class ServerEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo=new GameInfo();
     	// classMap und identifier brauchen nicht neu erstellt zu werden!?
     }
 
