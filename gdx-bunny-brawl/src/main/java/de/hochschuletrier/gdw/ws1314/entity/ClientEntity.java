@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class ClientEntity
 {
+	private float 		stateTime;
 	private Vector2 	position;
 	private long 		id;
 	
@@ -36,5 +37,8 @@ public abstract class ClientEntity
     public abstract void doEvent(EventType event);
 	
 	public abstract void render();
-
+	
+	public float getStateTime() {
+		return stateTime;
+	}
 }
