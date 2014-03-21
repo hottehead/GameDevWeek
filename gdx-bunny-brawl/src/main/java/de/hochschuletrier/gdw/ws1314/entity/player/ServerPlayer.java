@@ -29,6 +29,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
@@ -116,6 +117,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private Fixture fixtureDeathCheck;
     
     private boolean isDead;
+    private ServerBridgeSwitch currentBridgeSwitch;
     
     
     public ServerPlayer()
@@ -247,6 +249,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             case DROP_EGG:
         		if (currentState == idleState || currentState == walkingState)
         			dropEgg();
+        		break;
+            case USE_SOMETHING:
+                if(this.currentBridgeSwitch != null) {
+                    this.currentBridgeSwitch.pushSwitch();
+                }
+                break;
+            default:
+                break;
         }
         
         desiredDirection = FacingDirection.NONE;
@@ -405,6 +415,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                      this.isOnBridge = true;
                 	 break;
                  case BridgeSwitch:	
+                     this.currentBridgeSwitch = (ServerBridgeSwitch)otherEntity;
                 	 break;
                  case Bush:
                 	 break;

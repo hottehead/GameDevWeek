@@ -38,11 +38,13 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs = new ArrayList<Long>();
 	}
 	
-	// Note: Switch pushing must be solved by collision reaction
-//	public void pushSwitch()
-//	{
-//		//bridge.setVisibility(!bridge.getVisibility());
-//	}
+	public void pushSwitch()
+	{
+	    for(long id : targetIDs) {
+	        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(id);
+	        bridge.setVisibility(!bridge.getVisibility());
+	    }
+	}
 
 	public void initialize()
 	{
