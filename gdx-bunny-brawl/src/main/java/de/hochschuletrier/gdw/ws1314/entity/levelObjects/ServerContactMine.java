@@ -44,7 +44,7 @@ public class ServerContactMine extends ServerLevelObject
 			case Hunter:
 			case Knight:
 			case Tank:
-				
+				this.isActive = true;
 		}
 	}
 	
