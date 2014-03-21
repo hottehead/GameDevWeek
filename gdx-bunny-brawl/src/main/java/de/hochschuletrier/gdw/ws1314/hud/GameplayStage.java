@@ -25,12 +25,15 @@ public class GameplayStage extends AutoResizeStage {
 	private MinMaxValue fpsValue;
 	private DynamicTextElement fpsCounter;
 
+	private int MaxHealth = 100;
+	
 	private HealthBar healthBar;
 	private VisualBox classIcon;
 	
 	private VisualBox buff1, buff2, buff3;
 	
 	private VisualBox attackIcon, layEggIcon;
+	private MinMaxValue eggCount;
 	
 	private VisualBox scoreTeamIcon, scoreEnemyIcon;
 	private MinMaxValue scoreTeam, scoreEnemy;
@@ -80,6 +83,10 @@ public class GameplayStage extends AutoResizeStage {
 		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), (Gdx.graphics.getWidth()*.5f)+50, Gdx.graphics.getHeight()-80, 60, 60);
 		decor = new StaticTextElement(font, "Ei ablegen", layEggIcon.getWidth()*.5f,  -14);
 		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, decor);
+		eggCount = new MinMaxValue(0, 10, 1);
+		DynamicTextElement eggLabel = new DynamicTextElement(font, "", attackIcon.getWidth()*.5f, 50, eggCount);
+		eggLabel.setDecimalPLace(6);
+		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, eggLabel);
 		
 
 		//score icons
@@ -134,6 +141,8 @@ public class GameplayStage extends AutoResizeStage {
 			this.healthBar.get().setMaxValue(visualDataEntity.getPlayerKit().getBaseHealth());
 			this.healthBar.get().setValue(visualDataEntity.getCurrentHealth());
 			
+			this.eggCount.setValue(visualDataEntity.getEggCount());
+			
 		}
 	}
 	
@@ -151,6 +160,7 @@ public class GameplayStage extends AutoResizeStage {
 
 	public void setDisplayedPlayer(ClientPlayer playerEntity) {
 		visualDataEntity = playerEntity;
+//		healthBar.get().setMaxValue(visualDataEntity.get) //TODO: set MaxHealth
 	}
 	
 }
