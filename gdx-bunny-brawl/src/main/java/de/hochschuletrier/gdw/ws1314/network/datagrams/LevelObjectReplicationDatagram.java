@@ -8,9 +8,6 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class LevelObjectReplicationDatagram extends BaseDatagram{
 	public static final byte LEVEL_OBJECT_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x21;
 	private long entityId;

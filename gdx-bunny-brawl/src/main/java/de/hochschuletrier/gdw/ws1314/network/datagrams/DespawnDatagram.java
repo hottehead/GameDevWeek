@@ -6,9 +6,6 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class DespawnDatagram extends BaseDatagram{
 	public static final byte DESPAWN_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x31;
 	private long entityId;

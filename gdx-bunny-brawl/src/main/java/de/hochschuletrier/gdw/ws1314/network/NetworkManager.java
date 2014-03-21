@@ -23,14 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class NetworkManager{
-
 	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
 
 	private static NetworkManager instance = new NetworkManager();
-
-	private final String DEFAULT_SERVER_IP = "0.0.0.0";
-	private final int DEFAULT_PORT = 54293;
-
 	private NetConnection clientConnection = null;
 	private ArrayList<NetConnection> serverConnections = null;
 	private NetReception serverReception = null;
@@ -38,9 +33,7 @@ public class NetworkManager{
 
 	private ServerDatagramHandler serverDgramHandler = new ServerDatagramHandler();
 	private ClientDatagramHandler clientDgramHandler = new ClientDatagramHandler();
-	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
-
-	private int nextPlayerNumber = 1;
+	private ArrayList<ChatListener> chatListeners = new ArrayList<>();
 
 	private DisconnectCallback disconnectcallback;
 	private PlayerDisconnectCallback playerdisconnectcallback;
@@ -49,57 +42,58 @@ public class NetworkManager{
 	private PlayerUpdateCallback playerupdatecallback;
 	private MatchUpdateCallback matchupdatecallback;
 	private GameStateCallback gameStateCallback;
-	
+
 	private long lastStatTime = System.currentTimeMillis();
 	private long lastTotalBytesSent = 0;
 	private long lastTotalBytesReceived = 0;
 	private long lastTotalDgramsSent = 0;
 	private long lastTotalDgramsReceived = 0;
-	
 	private float ping = 0;
-	
+
+	private int nextPlayerNumber = 1;
+
 	public float getPing(){
 		return ping;
 	}
-	
+
 	void updatePing(float newPing){
-		ping=0.9f*ping+0.1f*newPing;
+		ping = 0.9f * ping + 0.1f * newPing;
 	}
-	
+
 	public void checkStats(){
-		long newStatTime=System.currentTimeMillis();
-		long statDT=newStatTime-lastStatTime;
-		if(statDT<60000) return;
-		long newTotalBytesSent=0;
-		long newTotalBytesReceived=0;
-		long newTotalDgramsSent=0;
-		long newTotalDgramsReceived=0;
-		if(serverConnections!=null){
-			for(NetConnection con: serverConnections){
-				newTotalBytesSent+=con.getBytesSent();
-				newTotalBytesReceived+=con.getBytesReceived();
-				newTotalDgramsSent+=con.getDatagramsSent();
-				newTotalDgramsReceived+=con.getDatagramsReceived();
+		long newStatTime = System.currentTimeMillis();
+		long statDT = newStatTime - lastStatTime;
+		if(statDT < 60000) return;
+		long newTotalBytesSent = 0;
+		long newTotalBytesReceived = 0;
+		long newTotalDgramsSent = 0;
+		long newTotalDgramsReceived = 0;
+		if(serverConnections != null){
+			for(NetConnection con : serverConnections){
+				newTotalBytesSent += con.getBytesSent();
+				newTotalBytesReceived += con.getBytesReceived();
+				newTotalDgramsSent += con.getDatagramsSent();
+				newTotalDgramsReceived += con.getDatagramsReceived();
 			}
 		}
-		if(clientConnection!=null){
-			newTotalBytesSent+=clientConnection.getBytesSent();
-			newTotalBytesReceived+=clientConnection.getBytesReceived();
-			newTotalDgramsSent+=clientConnection.getDatagramsSent();
-			newTotalDgramsReceived+=clientConnection.getDatagramsReceived();
+		if(clientConnection != null){
+			newTotalBytesSent += clientConnection.getBytesSent();
+			newTotalBytesReceived += clientConnection.getBytesReceived();
+			newTotalDgramsSent += clientConnection.getDatagramsSent();
+			newTotalDgramsReceived += clientConnection.getDatagramsReceived();
 		}
-		long deltaBytesSent=newTotalBytesSent-lastTotalBytesSent;
-		long deltaBytesReceived=newTotalBytesReceived-lastTotalBytesReceived;
-		long deltaDgramsSent=newTotalDgramsSent-lastTotalDgramsSent;
-		long deltaDgramsReceived=newTotalDgramsReceived-lastTotalDgramsReceived;
-		double bytesSentPerSecond = deltaBytesSent /(statDT/1000.0);
-		double bytesReceivedPerSecond = deltaBytesReceived /(statDT/1000.0);
-		double dgramsSentPerSecond = deltaDgramsSent /(statDT/1000.0);
-		double dgramsReceivedPerSecond = deltaDgramsReceived /(statDT/1000.0);
-		double factor=1024.0;
-		double rF=100.0;//Rounding Factor
+		long deltaBytesSent = newTotalBytesSent - lastTotalBytesSent;
+		long deltaBytesReceived = newTotalBytesReceived - lastTotalBytesReceived;
+		long deltaDgramsSent = newTotalDgramsSent - lastTotalDgramsSent;
+		long deltaDgramsReceived = newTotalDgramsReceived - lastTotalDgramsReceived;
+		double bytesSentPerSecond = deltaBytesSent / (statDT / 1000.0);
+		double bytesReceivedPerSecond = deltaBytesReceived / (statDT / 1000.0);
+		double dgramsSentPerSecond = deltaDgramsSent / (statDT / 1000.0);
+		double dgramsReceivedPerSecond = deltaDgramsReceived / (statDT / 1000.0);
+		double factor = 1024.0;
+		double rF = 100.0;//Rounding Factor
 		if(isClient()){
-			logger.info("Network Statistics: Ping {} ms",ping);
+			logger.info("Network Statistics: Ping {} ms", ping);
 		}
 		else{
 			logger.info("Network Statistics:");
@@ -109,13 +103,13 @@ public class NetworkManager{
 				newTotalBytesSent / factor, Math.round(bytesSentPerSecond * rF) / rF,
 				newTotalDgramsSent, Math.round(dgramsSentPerSecond * rF) / rF);
 		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
-				newTotalBytesReceived/factor,Math.round(bytesReceivedPerSecond*rF)/rF,
-				newTotalDgramsReceived,Math.round(dgramsReceivedPerSecond*rF)/rF);
-		lastStatTime=newStatTime;
-		lastTotalBytesSent=newTotalBytesSent;
-		lastTotalBytesReceived=newTotalBytesReceived;
-		lastTotalDgramsSent=newTotalDgramsSent;
-		lastTotalDgramsReceived=newTotalDgramsReceived;
+				newTotalBytesReceived / factor, Math.round(bytesReceivedPerSecond * rF) / rF,
+				newTotalDgramsReceived, Math.round(dgramsReceivedPerSecond * rF) / rF);
+		lastStatTime = newStatTime;
+		lastTotalBytesSent = newTotalBytesSent;
+		lastTotalBytesReceived = newTotalBytesReceived;
+		lastTotalDgramsSent = newTotalDgramsSent;
+		lastTotalDgramsReceived = newTotalDgramsReceived;
 	}
 
 	private NetworkManager(){
@@ -133,7 +127,8 @@ public class NetworkManager{
 		if(port < 1024){
 			logger.warn("port must higher or equal 1024");
 			return;
-		}else if(port > 65535){
+		}
+		else if(port > 65535){
 			logger.warn("port must lower or equal 65535");
 			return;
 		}
@@ -165,7 +160,21 @@ public class NetworkManager{
 			serverReception = null;
 		}
 	}
-	
+
+	/**
+	 * ONLY FOR LISTEN OF A SERVER
+	 */
+	public String getDefaultServerIp(){
+		return "0.0.0.0";
+	}
+
+	/**
+	 * Default Port
+	 */
+	public int getDefaultPort(){
+		return 54293;
+	}
+
 	/**
 	 * DisconnectCallback: wird auf Server und Clientseite aufgerufen, sobald die eigene Verbindung verloren geht.
 	 * z.B: Client disconnected daraufhin wir dieser Callback aufgerufen, damit der GameState geändert werden kann
@@ -173,7 +182,7 @@ public class NetworkManager{
 	public DisconnectCallback getDisconnectCallback(){
 		return disconnectcallback;
 	}
-	
+
 	/**
 	 * PlayerDisconnectCallback: Serverseitig. Wenn einer oder mehrere Clients disconnecten, wird deren ID
 	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
@@ -182,14 +191,14 @@ public class NetworkManager{
 	public PlayerDisconnectCallback getPlayerDisconnectCallback(){
 		return playerdisconnectcallback;
 	}
-	
+
 	/**
 	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
 	 */
 	public ClientIdCallback getClientIdCallback(){
 		return clientidcallback;
 	}
-	
+
 	/**
 	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
 	 */
@@ -203,7 +212,7 @@ public class NetworkManager{
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
 	}
-	
+
 	/**
 	 * Serverseitig: der Client teilt einen Mapvorschlag mit
 	 */
@@ -218,30 +227,16 @@ public class NetworkManager{
 		return gameStateCallback;
 	}
 
-	/**
-	 * ONLY FOR LISTEN OF A SERVER
-	 */
-	public String getDefaultServerIp(){
-		return DEFAULT_SERVER_IP;
-	}
-
-	/**
-	 * Default Port
-	 */
-	public int getDefaultPort(){
-		return DEFAULT_PORT;
-	}
-
 	public String getMyIp(){
 		try{
-			return InetAddress.getLocalHost().getHostAddress().toString();
+			return InetAddress.getLocalHost().getHostAddress();
 		}
 		catch (Exception e){
 			logger.error("NWM: error at reading local host IP, fallback to localhost\n{}", e);
 			return "127.0.0.1";
 		}
 	}
-	
+
 	public void setDisconnectCallback(DisconnectCallback callback){
 		this.disconnectcallback = callback;
 	}
@@ -345,9 +340,9 @@ public class NetworkManager{
 	/**
 	 * Wird von der Verarbeitungslogik für Chat-Datagramme verwendet, um Chat-Nachrichten an den Listener zuzustellen. Aufruf von anderer Stelle ist eher nicht
 	 * sinnvoll.
-	 * 
-	 * @param sender
-	 * @param text
+	 *
+	 * @param sender String
+	 * @param text   String
 	 */
 	void receiveChat(String sender, String text){
 		for(ChatListener l : chatListeners){
@@ -357,8 +352,8 @@ public class NetworkManager{
 
 	/**
 	 * Wird innerhalb der server-seitigen Netzwerklogik verwendet, um Pakete an alle Clients zu schicken.
-	 * 
-	 * @param dgram
+	 *
+	 * @param dgram BaseDatagram
 	 */
 	void broadcastToClients(BaseDatagram dgram){
 		if(!isServer()){
@@ -405,7 +400,7 @@ public class NetworkManager{
 				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
 			}
 			else if(entity instanceof Zone){
-				//Intentionally ignored.
+				//Intentionally ignored. //TODO implement this
 			}
 			else{
 				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
@@ -447,7 +442,9 @@ public class NetworkManager{
 					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
-				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+				if(this.playerdisconnectcallback != null){
+					this.playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+				}
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
@@ -517,8 +514,8 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
-				if(this.disconnectcallback!=null){
-					this.disconnectcallback.callback("[SERVER] Stopped");
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.callback("[SERVER] Stopped.");
 				}
 				logger.info("[SERVER] stopped");
 			}
@@ -527,7 +524,7 @@ public class NetworkManager{
 			}
 		}
 		catch (Exception e){
-			logger.error("[SERVER] Can't Stop Server:", e);
+			logger.error("[SERVER] Can't Stop Server.", e);
 		}
 	}
 
