@@ -21,17 +21,16 @@ public class EntityRenderer extends Pool<RenderObject> implements
 
 	public void draw() {
 		Collections.sort(renderList);
-		
+
 		for (RenderObject obj : this.renderList) {
 			Vector2 pos = obj.entity.getPosition();
-			
+
 			float dh = obj.material.height * 0.5f;
 			float dw = obj.material.width * 0.5f;
-
 			
-			
-			DrawUtil.batch.draw(obj.getActiveTexture(), pos.x-dw,  pos.y-dh
-					+ obj.material.height, 0, 0, obj.material.width, -obj.material.height, 1, 1, obj.entity.getFacingDirection().getAngle());
+			DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh, pos.x, pos.y,
+					obj.material.width, obj.material.height, 1, 1,
+					90.0f);
 		}
 	}
 

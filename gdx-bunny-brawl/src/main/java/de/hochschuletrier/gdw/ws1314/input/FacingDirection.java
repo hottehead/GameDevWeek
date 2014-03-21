@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.input;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -29,8 +30,8 @@ public enum FacingDirection
 	{
 		direction = new Vector2(x, y);
 		angle = direction.x == 0.0f && 
-				direction.y == 0.0f ? 0.0f 
-						: direction.getAngleRad();
+				direction.y == 0.0f ? MathUtils.PI //180deg
+						: MathUtils.PI+direction.getAngleRad();
 	}
 	
 	public Vector2 getDirectionVector()
