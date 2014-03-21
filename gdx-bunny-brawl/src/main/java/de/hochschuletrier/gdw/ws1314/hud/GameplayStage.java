@@ -26,7 +26,6 @@ public class GameplayStage extends AutoResizeStage {
 	private DynamicTextElement fpsCounter;
 
 	private HealthBar healthBar;
-	private float accum = 0;
 	private VisualBox classIcon;
 	
 	private VisualBox buff1, buff2, buff3;
@@ -61,7 +60,7 @@ public class GameplayStage extends AutoResizeStage {
 		
 		//healthbar
 		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 300, 40);
+		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 250, 40);
 		healthBar.setDecimalSpace(2);
 		
 		//class icon
@@ -70,9 +69,9 @@ public class GameplayStage extends AutoResizeStage {
 		classIcon = new BoxOffsetDecorator(classIcon, decor);
 		
 		//buffs
-		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 300, Gdx.graphics.getHeight()-80, 20, 20);
-		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 330, Gdx.graphics.getHeight()-80, 20, 20);
-		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 360, Gdx.graphics.getHeight()-80, 20, 20);
+		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 250, Gdx.graphics.getHeight()-80, 20, 20);
+		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 280, Gdx.graphics.getHeight()-80, 20, 20);
+		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 310, Gdx.graphics.getHeight()-80, 20, 20);
 		
 		//action icons
 		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), (Gdx.graphics.getWidth()*.5f)-50, Gdx.graphics.getHeight()-80, 60, 60);
