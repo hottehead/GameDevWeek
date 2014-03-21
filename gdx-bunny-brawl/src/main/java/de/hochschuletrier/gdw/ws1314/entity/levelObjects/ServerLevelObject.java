@@ -60,5 +60,5 @@ public abstract class ServerLevelObject extends ServerEntity
 	}
 
 	public void setEntityState(EntityStates state){this.entityState = state;}
-	public EntityStates getEntityState(EntityStates state){return entityState;}
+	public EntityStates getEntityState(){return entityState;}
 }

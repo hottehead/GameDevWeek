@@ -85,6 +85,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 		else{
 			levelObject.disable();
 		}
+		levelObject.setLevelObjectState(levelObjectReplicationDatagram.getEntityState());
 	}
 
 	@Override
