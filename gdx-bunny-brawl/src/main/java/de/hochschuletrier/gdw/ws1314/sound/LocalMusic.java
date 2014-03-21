@@ -1,11 +1,10 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
-import org.lwjgl.Sys;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.math.Interpolation;
 
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.preferences.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
 /**
@@ -21,8 +20,7 @@ public class LocalMusic {
 	private char fadingDirection;
 	private int duration;
 	
-	private static float SystemVolume = 0.9f;
-	
+	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music");
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume
@@ -31,6 +29,7 @@ public class LocalMusic {
 	 */
 	public static void setSystemVolume(float systemVolume) {
 		LocalMusic.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat("volume-music", systemVolume);
 	}
 	
 	/**
@@ -56,6 +55,7 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
+		System.out.println(LocalMusic.SystemVolume);
 	}
 	
 	public void update(int duration) {
