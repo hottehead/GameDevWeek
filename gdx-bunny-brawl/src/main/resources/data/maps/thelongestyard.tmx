@@ -16,6 +16,11 @@
    <property name="TYPE" value="egg"/>
   </properties>
   <image source="tiles/egg.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="egg"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="6" name="carrot" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
@@ -23,6 +28,11 @@
    <property name="TYPE" value="carrot"/>
   </properties>
   <image source="tiles/carrot.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="carrot"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="7" name="clover" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
@@ -30,6 +40,11 @@
    <property name="TYPE" value="clover"/>
   </properties>
   <image source="tiles/clover.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="clover"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="8" name="spinach" tilewidth="32" tileheight="32">
   <tileoffset x="1" y="1"/>
@@ -37,6 +52,11 @@
    <property name="TYPE" value="spinach"/>
   </properties>
   <image source="tiles/spinach.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="spinach"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="9" name="bridge_horizontal_left" tilewidth="32" tileheight="96">
   <tileoffset x="1" y="1"/>
@@ -93,8 +113,8 @@
   <tile id="37" terrain="7,4,7,4"/>
   <tile id="38" terrain="4,4,4,4"/>
   <tile id="39" terrain="4,7,4,7"/>
-  <tile id="40" terrain="7,4,4,4"/>
-  <tile id="41" terrain="4,7,4,4"/>
+  <tile id="40" terrain="4,4,4,7"/>
+  <tile id="41" terrain="4,4,7,4"/>
   <tile id="48" terrain="0,1,0,0"/>
   <tile id="49" terrain="1,1,0,0"/>
   <tile id="50" terrain="1,0,0,0"/>
@@ -103,8 +123,8 @@
   <tile id="53" terrain="7,4,7,7"/>
   <tile id="54" terrain="4,4,7,7"/>
   <tile id="55" terrain="4,7,7,7"/>
-  <tile id="56" terrain="4,4,7,4"/>
-  <tile id="57" terrain="4,4,4,7"/>
+  <tile id="56" terrain="4,7,4,4"/>
+  <tile id="57" terrain="7,4,4,4"/>
   <tile id="64" terrain="0,0,0,3"/>
   <tile id="65" terrain="0,0,3,3"/>
   <tile id="66" terrain="0,0,3,0"/>
@@ -165,6 +185,11 @@
    <property name="TYPE" value="bush"/>
   </properties>
   <image source="tiles/bush.png" width="64" height="64"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="bush"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="272" name="straw" tilewidth="64" tileheight="64">
   <tileoffset x="1" y="1"/>
@@ -172,24 +197,54 @@
    <property name="TYPE" value="hay"/>
   </properties>
   <image source="tiles/straw.png" width="64" height="64"/>
+  <tile id="0">
+   <properties>
+    <property name="TYPE" value="hay"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="273" name="switch" tilewidth="64" tileheight="64">
   <tileoffset x="1" y="1"/>
   <image source="tiles/switch.png" width="64" height="64"/>
  </tileset>
+ <tileset firstgid="274" name="Home" tilewidth="32" tileheight="32">
+  <image source="tiles/home.png" trans="ffffff" width="192" height="96"/>
+  <terraintypes>
+   <terrain name="startb" tile="-1"/>
+   <terrain name="startw" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain=",,,0"/>
+  <tile id="1" terrain=",,0,0"/>
+  <tile id="2" terrain=",,0,"/>
+  <tile id="3" terrain=",,,1"/>
+  <tile id="4" terrain=",,1,1"/>
+  <tile id="5" terrain=",,1,"/>
+  <tile id="6" terrain=",0,,0"/>
+  <tile id="7" terrain="0,0,0,0"/>
+  <tile id="8" terrain="0,,0,"/>
+  <tile id="9" terrain=",1,,1"/>
+  <tile id="10" terrain="1,1,1,1"/>
+  <tile id="11" terrain="1,,1,"/>
+  <tile id="12" terrain=",0,,"/>
+  <tile id="13" terrain="0,0,,"/>
+  <tile id="14" terrain="0,,,"/>
+  <tile id="15" terrain=",1,,"/>
+  <tile id="16" terrain="1,1,,"/>
+  <tile id="17" terrain="1,,,"/>
+ </tileset>
  <layer name="Groundlayer (Rand, Wand, Terrain)" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="Zonelayer (hohes Gras, Start)" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   eJztwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADApwGWAAAB
+   eJztmglu2zAQAN0PBD3S+z5f4B4PSNo8LO0LmrYPSFs/s2vABBbEUiIr0eKKQ2AAI5INiuNdLjc+ubHZnAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKyA1Fh6XoBfwG+KN/KMb4V3K3/WMb93hXvC/QbmOqfbC+G98KFzv4+FJ8LTBuY6t9uU3zXF9pjfl8Ir4XUDc52DrXL7UfgcOVxbbPe2/24z3eJ3nBbz3JnM5dxwq92n/Hukll+PeU779TLnJfzGee5LYzHck98xTyG/htc5+Vavk6f12ufuT47mO5Wtir+SuiP2G/ayWw7WLLU/t1hLzOW3NBatOmXv9qbDtQlevdUSNf2uKc/FazD0PN5i3MqzqbOF5Tj33pbZFjy73s88OA6Ozlfiagwr/oKznDzUa/2tafl7bbksyUOt+72UOX098G2G+Xk7J5XEakyN3mbJmTTH6U/h6sCvGRynzklLe6zht0ZvU39m6Z5+aTiNmepY19Gtx65ez3gtc+riGrm5pHaP3cZed8Jvxd/D339MnKuu0VqO3SFHOXVxjedMxUeIzVTsfTe8/tnY90z16wm9ntrllDxZ4ztnubH22Z3htWe/seOwnkP7TO2ehpUXLDc6Zq9G3On83ZtfvaY6z6by75Sa7H/QbnR9dK321FT9ZNVcPfot4dg9qzhOcxyHvTp+71D+7o1UHj723mzlYe3Yuh7idO9f19C9uC05/8R5+NhnwOBvF8VqiFOde3cduhxyNxR/Q/cc8wx4rXxZ+Xisvpq7R+mBnN7EkmekGJ1vdM7VrsPQTvWYq0fpgdS5N3XP0r241P88tOuS0YPjnPj09LuFktHDGSk3Pr38bqFk9JSnvfTKp/i9LdfvCKeH++hz+GNoPJDrD4VHym8vMbwWhsYzuf5ceKH8EsO+GTsr49c/cX8ypuceFwAAAAAAAAAAAAAAAAAAgMU/rDDUJw==
   </data>
  </layer>
  <layer name="Detaillayer (Deko)" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   eJzt2jsKwCAQBUCvm+QE+Rw+2lqohaAsM/D6hcdWuykBAAAAAAAAAAAAAAAAAABATEfO2ci3bjQmuHOeRvQbW+m33ulr6UTMVPqtd/pdOhEAAAAAANG5LcWm39j0G5t+99X7yxmJO/++en85I3HnBwAAAAAAAAAAAAAAdvMDcrMffQ==
+   eJzt22tKw0AQAOD+lV7Aq+gNFD2A+LiHD7yB3kDPaooUQprSjd3HbP0+GOiPkA7JZncm265WAAAAAAAAAAAAAPTkvHUCAMHcDHHbOgmKuB/iYYjHIZ4a51LCXesE/omzhGPWCcetM+QC/Dr1+U/PBunU8qdpe19L1/Ipdd5YznouylpWe8059R6NOGN7qechXiaxnYs2n9/bpZbVxRCXGc7TW706HZfTueijekZlXA1x3eB7o4+Hr9Xu8/3aNCNKiz4ma+t1bW5lc73m6oJjI+K8o59eptTckvu8tfpp6hvXsLnndmsnQL/M4css3RPYmNsX+Mt5Us6bU4lesESvFKFn0hvlFel6Rt6T6nH+jnQ958ZZpLG39dY6gQ7NjbNIY28s0v1NXfcjzz3R3mNHur8lRR4ThxyTey/3d+nefrTnqJXP1gkkarW339K+nnL825xD8V09a44xruN6XnMASjpUwy15F+0/i0zpEfKL+A6SPKK+g4QaavVrS+uafcereQAAAAAAAACAiH4A1NFHMA==
   </data>
  </layer>
  <objectgroup name="Brueckenebene" width="120" height="80">
@@ -273,8 +328,122 @@
   <object name="bridge4" gid="10" x="2432" y="1856"/>
   <object name="bridge4" gid="10" x="2720" y="1856"/>
  </objectgroup>
- <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="120" height="80"/>
- <objectgroup name="Zonenebene" width="120" height="80"/>
+ <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="120" height="80">
+  <object gid="273" x="2176" y="1664"/>
+  <object gid="273" x="2048" y="1280"/>
+  <object gid="273" x="1504" y="1696"/>
+  <object gid="273" x="1632" y="1152"/>
+  <object gid="273" x="2880" y="1920"/>
+  <object gid="273" x="2912" y="1120"/>
+  <object gid="272" x="960" y="1728"/>
+  <object gid="272" x="992" y="1184"/>
+  <object gid="271" x="1664" y="1408"/>
+  <object gid="271" x="1632" y="1472"/>
+  <object gid="271" x="1536" y="1312"/>
+  <object gid="271" x="1536" y="1568"/>
+  <object gid="271" x="1536" y="800"/>
+  <object gid="271" x="1664" y="2080"/>
+  <object gid="271" x="736" y="1952"/>
+  <object gid="271" x="832" y="1792"/>
+  <object gid="271" x="416" y="1440"/>
+  <object gid="271" x="352" y="1408"/>
+  <object gid="271" x="1088" y="1312"/>
+  <object gid="271" x="1184" y="1376"/>
+  <object gid="271" x="2336" y="1760"/>
+  <object gid="271" x="2240" y="1376"/>
+  <object gid="271" x="2048" y="896"/>
+  <object gid="271" x="2016" y="1120"/>
+  <object gid="271" x="3264" y="1216"/>
+  <object gid="271" x="3136" y="1408"/>
+  <object gid="271" x="3424" y="1536"/>
+  <object gid="271" x="3456" y="1248"/>
+  <object gid="271" x="3200" y="1856"/>
+  <object gid="271" x="3136" y="1824"/>
+  <object gid="271" x="2784" y="1888"/>
+  <object gid="271" x="2816" y="1088"/>
+  <object gid="271" x="2976" y="960"/>
+  <object gid="5" x="1184" y="1472"/>
+  <object gid="5" x="1120" y="1280"/>
+  <object gid="5" x="448" y="1408"/>
+  <object gid="5" x="800" y="1376"/>
+  <object gid="5" x="544" y="864"/>
+  <object gid="5" x="1248" y="2080"/>
+  <object gid="5" x="1696" y="1440"/>
+  <object gid="5" x="2048" y="1824"/>
+  <object gid="5" x="2208" y="1408"/>
+  <object gid="5" x="2272" y="1440"/>
+  <object gid="5" x="2080" y="864"/>
+  <object gid="5" x="2368" y="1728"/>
+  <object gid="5" x="2240" y="1184"/>
+  <object gid="5" x="2816" y="1856"/>
+  <object gid="5" x="2848" y="1056"/>
+  <object gid="5" x="3168" y="1376"/>
+  <object gid="5" x="3136" y="1376"/>
+  <object gid="5" x="3456" y="1504"/>
+  <object gid="5" x="3424" y="1504"/>
+  <object gid="5" x="3488" y="1216"/>
+  <object gid="5" x="3456" y="1216"/>
+  <object gid="5" x="3296" y="1312"/>
+  <object gid="5" x="3296" y="1440"/>
+  <object gid="5" x="1600" y="736"/>
+  <object gid="5" x="1664" y="2176"/>
+ </objectgroup>
+ <objectgroup name="Zonenebene" width="120" height="80">
+  <object type="hole" x="2464" y="800" width="256" height="1536"/>
+  <object type="hole" x="2304" y="1056" width="448" height="320"/>
+  <object type="hole" x="2752" y="1088" width="160" height="192"/>
+  <object type="hole" x="2752" y="1120" width="224" height="160"/>
+  <object type="hole" x="2720" y="1280" width="128" height="480"/>
+  <object type="hole" x="2368" y="1472" width="576" height="192"/>
+  <object type="hole" x="2400" y="1664" width="64" height="96"/>
+  <object type="hole" x="2336" y="1472" width="32" height="64"/>
+  <object type="hole" x="2848" y="1664" width="64" height="32"/>
+  <object type="hole" x="2848" y="1696" width="32" height="32"/>
+  <object type="hole" x="2944" y="1536" width="32" height="64"/>
+  <object type="hole" x="2976" y="1184" width="32" height="64"/>
+  <object type="hole" x="2848" y="1280" width="32" height="32"/>
+  <object type="hole" x="2336" y="1376" width="128" height="96"/>
+  <object type="hole" x="2368" y="800" width="96" height="288"/>
+  <object type="hole" x="2240" y="800" width="128" height="128"/>
+  <object type="hole" x="2272" y="928" width="96" height="32"/>
+  <object type="hole" x="2432" y="1760" width="32" height="96"/>
+  <object type="hole" x="2368" y="1856" width="416" height="352"/>
+  <object type="hole" x="2784" y="1920" width="640" height="288"/>
+  <object type="hole" x="2784" y="1888" width="96" height="32"/>
+  <object type="hole" x="2944" y="1888" width="480" height="32"/>
+  <object type="hole" x="3072" y="1856" width="96" height="32"/>
+  <object type="hole" x="3200" y="1856" width="224" height="32"/>
+  <object type="hole" x="3424" y="1792" width="224" height="416"/>
+  <object type="hole" x="3360" y="1824" width="64" height="32"/>
+  <object type="hole" x="3520" y="1760" width="192" height="32"/>
+  <object type="hole" x="3552" y="1632" width="160" height="128"/>
+  <object type="hole" x="3616" y="1568" width="96" height="64"/>
+  <object type="hole" x="3648" y="1280" width="64" height="288"/>
+  <object type="hole" x="3616" y="1376" width="32" height="64"/>
+  <object type="hole" x="3360" y="896" width="352" height="160"/>
+  <object type="hole" x="3488" y="1056" width="224" height="64"/>
+  <object type="hole" x="3584" y="1120" width="128" height="128"/>
+  <object type="hole" x="3616" y="1248" width="96" height="32"/>
+  <object type="hole" x="3552" y="1120" width="32" height="64"/>
+  <object type="hole" x="3520" y="1120" width="32" height="32"/>
+  <object type="hole" x="3456" y="1056" width="32" height="32"/>
+  <object type="hole" x="3328" y="960" width="32" height="32"/>
+  <object type="hole" x="3264" y="928" width="96" height="32"/>
+  <object type="hole" x="3168" y="896" width="192" height="32"/>
+  <object type="hole" x="2720" y="896" width="192" height="32"/>
+  <object type="hole" x="2720" y="832" width="896" height="64"/>
+  <object type="hole" x="2304" y="1472" width="32" height="32"/>
+  <object type="hole" x="1760" y="2016" width="608" height="192"/>
+  <object type="hole" x="1728" y="2080" width="32" height="128"/>
+  <object type="hole" x="1696" y="2176" width="32" height="32"/>
+  <object type="hole" x="1792" y="1120" width="160" height="800"/>
+  <object type="hole" x="1728" y="1888" width="160" height="128"/>
+  <object type="hole" x="1760" y="1280" width="288" height="256"/>
+  <object type="hole" x="1760" y="992" width="160" height="224"/>
+  <object type="hole" x="2048" y="1312" width="96" height="224"/>
+  <object type="hole" x="1952" y="1184" width="64" height="96"/>
+  <object type="hole" x="2016" y="1216" width="32" height="64"/>
+ </objectgroup>
  <objectgroup name="Renderlayer" width="120" height="80">
   <properties>
    <property name="renderEntities" value="true"/>
@@ -283,12 +452,12 @@
  <objectgroup name="Spielerebene (physikalische Zone)" width="120" height="80"/>
  <layer name="Overlayer" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   eJzt2MltAkEQBdDJgyUBlgSwSYAlAS93QwSG5CmJCzRG5tAzLXW/J31pjtWqufzqOgAAAAAAAAAAAAAAAGjTKDKOTCLTwrOQ3ywyjywiy8KzkN8q8hZ5j6wLz0J+m8g2sovsC89Cfh+Rz8hX5LvwLADAa/TnuqX92b7rkvbn1u8lP5FDhpxuvo+DvuBe2p9bv5f8dtfd5Mx50BfcS/uze0nd3EsA4JF+OpxcXemvPOtMQ/RT/9BVH13pv87URz9N99n6jaOkPvppus/Wbxwl9dFP0326cdQl3acbR13sEwAAAAAAAAAAAAAAAIAaXQD8xUVl
+   eJzt2UsKwlAMBdDuw88G/GzAzwYE96GC+x+aoRS0IM+mxnPgQoeZvJJLug4AAAAAAAAAAACAIbPIPLKILJNnob1VZB3ZRLbJs9DeLrKPHCLH5Flo7/T0fU6bAoAps8vXZpevzS5fm10eGNMlcn2Te95oQAP9N33LHacMfbq2f+7TQ3vBJ5naf0efrk2fBoBx6Ua1/XM36vtGV8ruTLpRbboRAABMR4tOCQC/zj2hNveE2twTanNPAAAAAAAAAAAA4JUHSFUtUQ==
   </data>
  </layer>
  <layer name="Overoverlayer(je nach Bedarf)" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   eJzt2McNAkEQRNHNY2ETwCSASQCTACb/MKgb0pwHjdS8J/17S32raQIAAAAAAAAAAAAAAACoaU6rtE7L4Fvob5O2aZf2g2+hv0M6plM6D76F/i7pmm7pPvgW+nukZ3ql9+BbAAD4spPUZiepzU5Sm52kNjsJAMBv2Ttqaf9p76il/ae9o5b2n/aOWtp/2jtq8U8AAAAAAAAAAAAAAADg33wABcAS6Q==
+   eJzt18kJAzEMBdDpI0sDWRrI0kAg/ZczOgbGNxusUd6DDz7q8DHSsgAAAAAAAAAAAAAAAADAfhwix8gpcp48C+NdItfILXKfPAvjPSLPyCvynjxLL3/R1ufn/Z02xRj+otoq/UVsVfqLAEazw9Zmh63NDlubHRaAf+EmqS3LTdLqme71y3KTtHqWpXt7luUmafUsS/fo1+pZlu4BednjarPH1WaPq80eBwAAAAAAAAAAAAAA7N0KEsUSyg==
   </data>
  </layer>
 </map>

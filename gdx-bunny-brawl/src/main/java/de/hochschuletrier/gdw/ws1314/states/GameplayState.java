@@ -84,7 +84,10 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
+<<<<<<< HEAD
 		//stage.dispose();
+=======
+>>>>>>> fd0685a10eefc58f4ebf742972f30eaa1f58c3b0
 	}
 
 	@Override

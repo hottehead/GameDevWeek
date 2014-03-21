@@ -336,6 +336,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 ServerCarrot carrot = (ServerCarrot) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(carrot);
 
+
                 	 break;
                  case Spinach:
                 	 break;
