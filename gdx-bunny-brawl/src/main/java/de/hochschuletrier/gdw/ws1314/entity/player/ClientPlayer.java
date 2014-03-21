@@ -1,6 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
-import com.badlogic.gdx.graphics.Texture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
@@ -11,9 +12,6 @@ import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -42,7 +40,6 @@ public class ClientPlayer extends ClientEntity
     public EntityType getEntityType() 			{ return playerKit.getEntityType(); }
     public TeamColor		getTeamColor()		{ return teamColor; }
     
-    Texture testTexture;
     
     public void setCurrentHealth(float currentHealth) 				{ this.currentHealth = currentHealth; }
     public void setEggCount(int eggCount) 							{ this.eggCount = eggCount; }

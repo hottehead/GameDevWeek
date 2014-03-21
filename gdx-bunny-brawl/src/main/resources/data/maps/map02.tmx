@@ -111,26 +111,32 @@
   <tileoffset x="1" y="1"/>
   <image source="tiles/switch.png" width="64" height="64"/>
  </tileset>
+ <tileset firstgid="273" name="home" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/home.png" width="192" height="96"/>
+ </tileset>
+ <tileset firstgid="291" name="mine" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/mine.png" width="32" height="32"/>
+ </tileset>
  <layer name="Groundlayer (Rand, Wand, Terrain)" width="75" height="50">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="Zonelayer (hohes Gras, Start)" width="75" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt1kEOwUAUxvEegjgCPQI34AbugwRbJNgiwSV9XTSZRdVMx0T1/X/Jt5nMNJOX19dmGQAAAAAAAAqDirV5gmcCLnqkubraxb67AMIxz+CDPrFrrWyUbcCZhbJUVklu1F5H5aScA87slL1ySHKj9rorD+UZcOaiXJVbkhsBzeW/vgBg0DDR3n/HPErPQo3HysRjn28t+hF3abupMqtYHwU8o8v1iVVXm7L/QmrdFb2KNbcO+Zs9FrjffAvz+huYQXHKd62u3+hFfJvVGV/w+e5b/DdwfZo5zCQAgOsFKZUQjg==
+   eJzt1ksOgjAQgOFyBBXE92ujHEFvoDfw/hdxWJB0gbW1NGLn/5LZNENDJ8MUYwAAAAAAANCqe9aeCfYEbPTI91y1i/12AYRjnsEHfaLXpDBmKjEr/J8pJbeSmAc8k4NazruQWAaceyW5a4mNslpt5bw7iX3AuQ+Se5Q4KasVxq/59QsACp0T5f475lF6Gmp8lbh55PnWoop4l7G7Szx61i8Be+Rcn1iu2nT9F1LrXJQ9a3Ydmjc5Gth3voZ5PQRmUJzuW3P1G72IoWmd8S2fe1/jv4Ht08xhJgEAbC8lSwfE
   </data>
  </layer>
  <layer name="Detaillayer (Deko)" width="75" height="50">
   <data encoding="base64" compression="zlib">
-   eJztmgFOxCAQRXsH3TO4exf3ACZ6Ay+grp5APYHuWa2JxJ/JwEChdJaZl5BlKC3ML0wL3WlyHMdxHCfF9Zx2DepsxRZ9C21i27QfW2tW0v7WfbXG7ZyOFbZU3hKpjVa+xLif00OFLZVT7gr6lmrjKqMPS32RKL1ndP5zfe8Jtl/qSylUY3q9pfdgC3r7sqY2j4LdGs33WYpJJ8F2/nGt0mDMeCfHqG0RnIsYM75IPWo7jhVq1wQ91jVaqF0TBJt7R7iJ5Dn7wJwfymjdUUE/D/CL2uyhnMvHqFlXLuFpTs+N0gtzffSdQstS44c7fyRi/mE5pw89TxpfoxL8zpmbiIWYlfKRjpeS8dMydsTiB0eP5/6e5HEs4fFfm3tmaolXa+1XBJ/Rz1g85+pYjVOteZ3Sc+qtoG7JHLxEpD2cE5PnYo2FdYek1SfkP/5+uVijcb+UvmPX7iGjVtwz8QzHv5njWuZgztqjdl/U0j5qTKvc+OFa5cePEbTKXftLc1AaXyNolYv0bUIaX5a0qv02YUmrEdC+nx7epc5SxQ6U/OdGm46aQR1b6dZ7D72GpT5rXFetjUWftXNJc81xHEc7P8+UcBI=
+   eJztmm1OwzAMhnsAxB/KrsB2FzjAJLjBLgAMTgCcAHZWOmkRlmXHSeMmLvEjRc3Xmvht4ibphsFxHMdxnBjjFG4V6rSiRd9Cm7Bt3I/WmuW037qvvXE/hYeCtJSvidSGli0cj1N4KkhL+Zj95XqN8ncJv4Vt3CT0Ya4tErnPDM9/qu81ge3n2pIL1hjfb+4zaEFtW5bU5jCFK5ReEsvPeS+UH4W084drFQf6jA9UhtM9Auci9BnfqB5OO04vlO4JauxrrFC6Jwhpao1wx8SpNLW/CXm47n8F2rkDV6jNFuRTcQ5pDafN8xRelMIrcX9oOwbnxcZPyr56zXD2wXxKH/w7aXxZYqN4r2B3ytyEWPVZo2LdmI14vOSMH03fwfkPihrv/S2Kw7EEy89p6p1pxV/FzivwuNkw+RTBZmgn58+pOlb9FLY9Zx624G2Iz6n3jLo5c3CNSGc4RyJO+Zql/I+lsSZp9QXin5cr5Ws0z0tT1wuSjniNjc+Mc8+QoVbUO/EEyn+Ico05ODJxri6lZcreo/RctKdzVE6rVP9hXStNf8Vpleo/rGt1hppzUMPUvb80B6XxtQat5oI1lr5NSOOrpVa11wOl3ybWPK4srb1qoXWevpR2YS11kipWIOc/Nz19lygF6qilW+0z9BLm2mz5fyhL0aPN1lnTXHMcx7HOL1BPchk=
   </data>
  </layer>
  <objectgroup name="Brueckenebene" width="75" height="50">
-  <object gid="14" x="1120" y="352"/>
   <object name="bridge1" gid="13" x="1120" y="384"/>
   <object name="bridge1" gid="13" x="1120" y="416"/>
-  <object gid="12" x="1120" y="448"/>
   <object x="512" y="-288"/>
  </objectgroup>
  <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="75" height="50">
@@ -138,18 +144,22 @@
   <object gid="5" x="992" y="512"/>
   <object gid="5" x="928" y="480"/>
   <object gid="271" x="864" y="544"/>
-  <object name="bridge1" gid="272" x="864" y="1152"/>
-  <object gid="5" x="928" y="256"/>
+  <object name="switch1" gid="272" x="864" y="1152">
+   <properties>
+    <property name="activate" value="false"/>
+   </properties>
+  </object>
+  <object gid="5" x="1088" y="256"/>
   <object gid="5" x="960" y="224"/>
-  <object gid="5" x="992" y="1344"/>
-  <object gid="5" x="1376" y="320"/>
+  <object gid="5" x="1024" y="1440"/>
+  <object gid="5" x="1312" y="224"/>
   <object gid="5" x="1376" y="1440"/>
-  <object gid="5" x="1440" y="1408"/>
+  <object gid="5" x="992" y="1408"/>
   <object gid="5" x="320" y="256"/>
   <object gid="5" x="224" y="256"/>
   <object gid="5" x="2048" y="256"/>
   <object gid="5" x="1536" y="256"/>
-  <object gid="5" x="1504" y="224"/>
+  <object gid="5" x="1504" y="256"/>
   <object gid="5" x="1344" y="1056"/>
   <object gid="271" x="896" y="1088"/>
   <object gid="271" x="992" y="1088"/>
@@ -194,68 +204,76 @@
   <object gid="5" x="192" y="1056"/>
   <object gid="5" x="384" y="1408"/>
   <object gid="5" x="576" y="1216"/>
-  <object gid="5" x="576" y="1440"/>
+  <object gid="5" x="544" y="1408"/>
   <object gid="5" x="704" y="896"/>
   <object gid="271" x="480" y="1344"/>
   <object gid="271" x="960" y="1440"/>
   <object gid="271" x="1312" y="1376"/>
   <object type="solid" x="256" y="640" width="64" height="64"/>
+  <object gid="291" x="224" y="1056"/>
+  <object gid="291" x="192" y="992"/>
+  <object gid="291" x="1440" y="1248"/>
  </objectgroup>
  <objectgroup name="Zonenebene" width="75" height="50">
-  <object type="startw" x="1280" y="704" width="224" height="224">
-   <ellipse/>
-  </object>
-  <object type="startb" x="864" y="704" width="224" height="224">
-   <ellipse/>
-  </object>
+  <object x="0" y="0" width="2400" height="96"/>
+  <object x="2368" y="96" width="32" height="1504"/>
+  <object x="0" y="96" width="32" height="1472"/>
   <object x="0" y="1568" width="2368" height="32"/>
   <object x="32" y="96">
    <polyline points="0,0 2336,0 2336,1472 0,1472 0,0"/>
   </object>
-  <object type="water" x="32" y="96">
-   <polygon points="0,0 2304,0 2336,0 2336,96 0,96"/>
+  <object type="dirt" x="192" y="768">
+   <polygon points="0,0 608,0 608,-160 928,-160 960,-160 960,-288 992,-288 992,-160 1376,-160 1376,-128 640,-128 640,192 1376,192 1376,224 992,224 992,448 960,448 960,224 608,224 608,32 0,32"/>
   </object>
+  <object type="dirt" x="1536" y="640">
+   <polygon points="0,0 32,0 0,0 32,0 32,128 672,128 672,160 32,160 32,320 0,320"/>
+  </object>
+  <object type="water" x="64" y="128" width="2272" height="64"/>
+  <object type="water" x="64" y="192" width="64" height="1344"/>
+  <object type="water" x="128" y="1472" width="2208" height="64"/>
+  <object type="water" x="2272" y="192" width="64" height="1280"/>
+  <object type="water" x="2240" y="1184" width="32" height="288"/>
+  <object type="water" x="2176" y="1280" width="64" height="192"/>
+  <object type="water" x="2144" y="1376" width="32" height="96"/>
+  <object type="water" x="2048" y="1440" width="96" height="32"/>
+  <object type="water" x="160" y="1440" width="704" height="32"/>
+  <object type="water" x="128" y="1024" width="32" height="448"/>
+  <object type="water" x="160" y="1312" width="32" height="128"/>
+  <object type="water" x="192" y="1408" width="32" height="32"/>
+  <object type="water" x="800" y="1408" width="64" height="32"/>
+  <object type="water" x="832" y="1376" width="64" height="32"/>
+  <object type="water" x="864" y="1312" width="64" height="64"/>
+  <object type="water" x="896" y="1280" width="576" height="32"/>
+  <object type="water" x="1440" y="1312" width="64" height="96"/>
+  <object type="water" x="1504" y="1344" width="32" height="128"/>
+  <object type="water" x="1536" y="1408" width="32" height="64"/>
+  <object type="water" x="1568" y="1440" width="64" height="32"/>
+  <object type="water" x="928" y="1312" width="512" height="32"/>
+  <object type="water" x="832" y="1344" width="32" height="32"/>
+  <object type="water" x="800" y="1376" width="32" height="32"/>
   <object type="water" x="1376" y="192" width="96" height="160"/>
-  <object type="w" x="928" y="352" width="480" height="64"/>
   <object type="water" x="864" y="192" width="96" height="160"/>
-  <object type="water" x="1408" y="352" width="32" height="32"/>
+  <object type="water" x="928" y="352" width="480" height="64"/>
   <object type="water" x="1344" y="320" width="32" height="32"/>
+  <object type="water" x="1408" y="352" width="32" height="32"/>
   <object type="water" x="960" y="320" width="32" height="32"/>
   <object type="water" x="896" y="352" width="32" height="32"/>
-  <object type="water" x="832" y="192" width="32" height="32"/>
   <object type="water" x="1472" y="192" width="32" height="32"/>
-  <object type="water" x="128" y="192" width="32" height="32"/>
-  <object type="water" x="64" y="192" width="64" height="1344"/>
-  <object type="water" x="128" y="1024" width="32" height="512"/>
-  <object type="water" x="160" y="1312" width="32" height="224"/>
-  <object type="water" x="192" y="1408" width="32" height="32"/>
-  <object type="water" x="192" y="1440" width="672" height="96"/>
-  <object type="water" x="800" y="1408" width="32" height="32"/>
-  <object type="water" x="832" y="1376" width="32" height="64"/>
-  <object type="water" x="864" y="1312" width="32" height="96"/>
-  <object type="water" x="752" y="1296" width="32" height="32"/>
-  <object type="water" x="896" y="1280" width="576" height="64"/>
-  <object type="water" x="896" y="1344" width="32" height="32"/>
-  <object type="water" x="1472" y="1312" width="32" height="32"/>
-  <object type="water" x="1440" y="1344" width="96" height="64"/>
-  <object type="water" x="1504" y="1408" width="32" height="32"/>
-  <object type="water" x="1536" y="1408" width="32" height="32"/>
-  <object type="water" x="1504" y="1440" width="128" height="96"/>
-  <object type="water" x="864" y="1504" width="640" height="32"/>
-  <object type="water" x="1632" y="1472" width="704" height="64"/>
-  <object type="water" x="2048" y="1440" width="96" height="32"/>
-  <object type="water" x="2144" y="1376" width="192" height="96"/>
-  <object type="water" x="2176" y="1280" width="160" height="96"/>
-  <object type="water" x="2240" y="1184" width="96" height="96"/>
-  <object type="water" x="2272" y="192" width="64" height="992"/>
   <object type="water" x="2240" y="192" width="32" height="32"/>
-<<<<<<< HEAD
-=======
-  <object x="704" y="1024"/>
-  <object x="704" y="1056" width="32"/>
->>>>>>> f8113d551ea6ad9ffce69c78cbd3602aab6c3f70
+  <object type="water" x="832" y="192" width="32" height="32"/>
+  <object type="water" x="128" y="192" width="32" height="32"/>
+  <object type="startw" x="1280" y="704" width="224" height="224">
+   <properties>
+    <property name="direction" value="up"/>
+   </properties>
+  </object>
+  <object type="startb" x="864" y="704" width="224" height="224">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
  </objectgroup>
- <objectgroup name="RenderEbene" width="75" height="50">
+ <objectgroup name="Renderlayer" width="75" height="50">
   <properties>
    <property name="renderEntities" value="true"/>
   </properties>

@@ -1,16 +1,10 @@
 package de.hochschuletrier.gdw.commons.gdx.assets;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
-
-import de.hochschuletrier.gdw.commons.utils.Point;
 
 public class AnimationExtended {
 
@@ -25,6 +19,7 @@ public class AnimationExtended {
 	private PlayMode playMode;
 	TreeMap<Frame, Integer> frames = new TreeMap<AnimationExtended.Frame, Integer>();
 	Frame current = new Frame(0, 0);
+	
 
 	public AnimationExtended(PlayMode playMode, float[] frameDurations,
 			TextureRegion... keyFrames) {
@@ -32,6 +27,11 @@ public class AnimationExtended {
 		this.frameDurations = frameDurations;
 		this.playMode = playMode;
 		int index = 0;
+		
+		for(TextureRegion t : keyFrames) {
+			t.flip(false, true);
+		}
+		
 		for (float f : frameDurations) {
 			frames.put(new Frame(animationDuration, f), index);
 			animationDuration += f;
@@ -41,7 +41,6 @@ public class AnimationExtended {
 
 	public TextureRegion getKeyFrame(float stateTime) {
 		int frameNumber = getKeyFrameIndex(stateTime);
-		System.out.println(frameNumber);
 		return keyFrames[frameNumber];
 	}
 
@@ -67,9 +66,16 @@ public class AnimationExtended {
 			// frameNumber = frames.floorEntry(current).getValue();
 			break;
 		case LOOP_PINGPONG:
-			frameNumber = frameNumber % ((keyFrames.length * 2) - 2);
-			if (frameNumber >= keyFrames.length)
-				frameNumber = keyFrames.length - 2 - (frameNumber - keyFrames.length);
+			current.startTime = stateTime % (animationDuration * 2);
+			fetchedEntry = frames.floorEntry(current);
+			frameNumber = fetchedEntry.getValue();
+			if (current.startTime >= animationDuration) {
+				Frame backFrame = new Frame(current.startTime, 0);
+				backFrame.startTime = current.startTime - animationDuration;
+				fetchedEntry = frames.floorEntry(backFrame);
+				frameNumber = fetchedEntry.getValue();
+				
+			}
 			break;
 		case LOOP_RANDOM:
 			frameNumber = MathUtils.random(keyFrames.length - 1);
@@ -81,10 +87,8 @@ public class AnimationExtended {
 			frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
 			break;
 		case LOOP_REVERSED:
-			// frameNumber = frameNumber % keyFrames.length;
-			if (frameNumber == null) {
-				current.startTime = (animationDuration);
-			}
+			current.startTime = animationDuration - (stateTime % animationDuration);
+			fetchedEntry = frames.floorEntry(current);
 			frameNumber = frames.floorEntry(current).getValue();
 			// frameNumber = keyFrames.length - frameNumber - 1;
 			break;
