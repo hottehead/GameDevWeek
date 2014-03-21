@@ -3,11 +3,10 @@ package de.hochschuletrier.gdw.ws1314.basic;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.entity.TeamSpawnZone;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import org.omg.CORBA.IntHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -16,46 +15,77 @@ import java.util.Observable;
 public class GameInfo extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(GameInfo.class);
 
+	private ArrayList<GameInfoListener> listeners = new ArrayList<>();
 
-    private HashMap<TeamColor,IntHolder> TeamPoints = new HashMap<>();
+    private int TeamPointsWhite = 0;
+	private int TeamPointsBlack = 0;
+	private int remainigEggs = 0;
 
-    private HashMap<TeamColor,TeamSpawnZone> TeamSpawnZone = new HashMap<>();
+	private TeamSpawnZone TeamSpawnZoneWhite;
+	private TeamSpawnZone TeamSpawnZoneBlack;
 
-    public void Increment(TeamColor team){
-        if(!TeamPoints.containsKey(team)){
-            logger.warn("Team {} exsistiert nicht.",team.name());
-            return;
-        }
 
-         TeamPoints.get(team).value++;
-        notifyObservers(this);
-    }
-
-    public void addTeam(TeamColor team, TeamSpawnZone zone) {
-        TeamPoints.put(team,new IntHolder(0));
-        TeamSpawnZone.put(team,zone);
-    }
-
-	public void addTeam(TeamColor team) {
-		TeamPoints.put(team,new IntHolder(0));
-	}
-
-	public Point getASpawnPoint(TeamColor team)
-	{
-		if(!TeamSpawnZone.containsKey(team)){
-			logger.warn("Team {} exsistiert nicht. Ein Punkt 0,0 Wurde zurück gegeben.",team.name());
-			return new Point(0,0);
+	public Point getASpawnPoint(TeamColor team)	{
+		switch(team){
+			case BLACK:
+				return TeamSpawnZoneBlack.getRandomPointInZone();
+			case WHITE:
+				return TeamSpawnZoneWhite.getRandomPointInZone();
 		}
 
-		return TeamSpawnZone.get(team).getRandomPointInZone();
+		return new Point(0,0);
 	}
 
-    public int getTeamPoints(TeamColor team) {
-        if(!TeamPoints.containsKey(team)){
-            logger.warn("Team {} exsistiert nicht.",team.name());
-            return 0;
-        }
+	public void addListner(GameInfoListener listener){
+		listeners.add(listener);
+	}
 
-        return TeamPoints.get(team).value;
-    }
+	public void removeListner(GameInfoListener listener){
+		listeners.remove(listener);
+	}
+
+	private void sendUpdate(){
+		for(GameInfoListener listener : listeners){
+			listener.gameInfoChanged(TeamPointsBlack,TeamPointsWhite,remainigEggs);
+		}
+	}
+
+	public int getTeamPointsWhite() {
+		return TeamPointsWhite;
+	}
+
+	public void setTeamPointsWhite(int teamPointsWhite) {
+		TeamPointsWhite = teamPointsWhite;
+		sendUpdate();
+	}
+
+	public int getTeamPointsBlack() {
+		return TeamPointsBlack;
+	}
+
+	public void setTeamPointsBlack(int teamPointsBlack) {
+		TeamPointsBlack = teamPointsBlack;
+		sendUpdate();
+	}
+
+	public void setTeamSpawnZoneWhite(TeamSpawnZone teamSpawnZoneWhite) {
+		TeamSpawnZoneWhite = teamSpawnZoneWhite;
+	}
+
+	public void setTeamSpawnZoneBlack(TeamSpawnZone teamSpawnZoneBlack) {
+		TeamSpawnZoneBlack = teamSpawnZoneBlack;
+	}
+
+	public int getRemainigEggs() {
+		return remainigEggs;
+	}
+
+	public void setRemainigEggs(int remainigEggs) {
+		this.remainigEggs = remainigEggs;
+		sendUpdate();
+	}
+
+	public int getAllEggs(){
+		return remainigEggs + TeamPointsBlack + TeamPointsWhite;
+	}
 }

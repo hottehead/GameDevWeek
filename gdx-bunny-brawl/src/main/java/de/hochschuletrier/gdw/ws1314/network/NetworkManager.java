@@ -49,57 +49,73 @@ public class NetworkManager{
 	private PlayerUpdateCallback playerupdatecallback;
 	private MatchUpdateCallback matchupdatecallback;
 	private GameStateCallback gameStateCallback;
-
+	
 	private long lastStatTime = System.currentTimeMillis();
 	private long lastTotalBytesSent = 0;
 	private long lastTotalBytesReceived = 0;
 	private long lastTotalDgramsSent = 0;
 	private long lastTotalDgramsReceived = 0;
-
+	
+	private float ping = 0;
+	
+	public float getPing(){
+		return ping;
+	}
+	
+	void updatePing(float newPing){
+		ping=0.9f*ping+0.1f*newPing;
+	}
+	
 	public void checkStats(){
-		long newStatTime = System.currentTimeMillis();
-		long statDT = newStatTime - lastStatTime;
-		if(statDT < 30000) return;
-		long newTotalBytesSent = 0;
-		long newTotalBytesReceived = 0;
-		long newTotalDgramsSent = 0;
-		long newTotalDgramsReceived = 0;
-		if(serverConnections != null){
-			for(NetConnection con : serverConnections){
-				newTotalBytesSent += con.getBytesSent();
-				newTotalBytesReceived += con.getBytesReceived();
-				newTotalDgramsSent += con.getDatagramsSent();
-				newTotalDgramsReceived += con.getDatagramsReceived();
+		long newStatTime=System.currentTimeMillis();
+		long statDT=newStatTime-lastStatTime;
+		if(statDT<30000) return;
+		long newTotalBytesSent=0;
+		long newTotalBytesReceived=0;
+		long newTotalDgramsSent=0;
+		long newTotalDgramsReceived=0;
+		if(serverConnections!=null){
+			for(NetConnection con: serverConnections){
+				newTotalBytesSent+=con.getBytesSent();
+				newTotalBytesReceived+=con.getBytesReceived();
+				newTotalDgramsSent+=con.getDatagramsSent();
+				newTotalDgramsReceived+=con.getDatagramsReceived();
 			}
 		}
-		if(clientConnection != null){
-			newTotalBytesSent += clientConnection.getBytesSent();
-			newTotalBytesReceived += clientConnection.getBytesReceived();
-			newTotalDgramsSent += clientConnection.getDatagramsSent();
-			newTotalDgramsReceived += clientConnection.getDatagramsReceived();
+		if(clientConnection!=null){
+			newTotalBytesSent+=clientConnection.getBytesSent();
+			newTotalBytesReceived+=clientConnection.getBytesReceived();
+			newTotalDgramsSent+=clientConnection.getDatagramsSent();
+			newTotalDgramsReceived+=clientConnection.getDatagramsReceived();
 		}
-		long deltaBytesSent = newTotalBytesSent - lastTotalBytesSent;
-		long deltaBytesReceived = newTotalBytesReceived - lastTotalBytesReceived;
-		long deltaDgramsSent = newTotalDgramsSent - lastTotalDgramsSent;
-		long deltaDgramsReceived = newTotalDgramsReceived - lastTotalDgramsReceived;
-		double bytesSentPerSecond = deltaBytesSent / (statDT / 1000.0);
-		double bytesReceivedPerSecond = deltaBytesReceived / (statDT / 1000.0);
-		double dgramsSentPerSecond = deltaDgramsSent / (statDT / 1000.0);
-		double dgramsReceivedPerSecond = deltaDgramsReceived / (statDT / 1000.0);
-		double factor = 1024.0;
-		double rF = 100.0;//Rounding Factor
-		logger.info("Network Statistics: ");
+		long deltaBytesSent=newTotalBytesSent-lastTotalBytesSent;
+		long deltaBytesReceived=newTotalBytesReceived-lastTotalBytesReceived;
+		long deltaDgramsSent=newTotalDgramsSent-lastTotalDgramsSent;
+		long deltaDgramsReceived=newTotalDgramsReceived-lastTotalDgramsReceived;
+		double bytesSentPerSecond = deltaBytesSent /(statDT/1000.0);
+		double bytesReceivedPerSecond = deltaBytesReceived /(statDT/1000.0);
+		double dgramsSentPerSecond = deltaDgramsSent /(statDT/1000.0);
+		double dgramsReceivedPerSecond = deltaDgramsReceived /(statDT/1000.0);
+		double factor=1024.0;
+		double rF=100.0;//Rounding Factor
+		if(isClient()){
+			logger.info("Network Statistics: Ping {} ms",ping);
+		}
+		else{
+			logger.info("Network Statistics:");
+		}
+
 		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
 				newTotalBytesSent / factor, Math.round(bytesSentPerSecond * rF) / rF,
 				newTotalDgramsSent, Math.round(dgramsSentPerSecond * rF) / rF);
 		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
-				newTotalBytesReceived / factor, Math.round(bytesReceivedPerSecond * rF) / rF,
-				newTotalDgramsSent, Math.round(dgramsSentPerSecond * rF) / rF);
-		lastStatTime = newStatTime;
-		lastTotalBytesSent = newTotalBytesSent;
-		lastTotalBytesReceived = newTotalBytesReceived;
-		lastTotalDgramsSent = newTotalDgramsSent;
-		lastTotalDgramsReceived = newTotalDgramsReceived;
+				newTotalBytesReceived/factor,Math.round(bytesReceivedPerSecond*rF)/rF,
+				newTotalDgramsReceived,Math.round(dgramsReceivedPerSecond*rF)/rF);
+		lastStatTime=newStatTime;
+		lastTotalBytesSent=newTotalBytesSent;
+		lastTotalBytesReceived=newTotalBytesReceived;
+		lastTotalDgramsSent=newTotalDgramsSent;
+		lastTotalDgramsReceived=newTotalDgramsReceived;
 	}
 
 	private NetworkManager(){
@@ -142,7 +158,7 @@ public class NetworkManager{
 			serverReception = null;
 		}
 	}
-
+	
 	/*
 	 * DisconnectCallback: wird auf Server und Clientseite aufgerufen, sobald die eigene Verbindung verloren geht.
 	 * z.B: Client disconnected daraufhin wir dieser Callback aufgerufen, damit der GameState geändert werden kann
@@ -150,7 +166,7 @@ public class NetworkManager{
 	public DisconnectCallback getDisconnectCallback(){
 		return disconnectcallback;
 	}
-
+	
 	/*
 	 * PlayerDisconnectCallback: Serverseitig. Wenn einer oder mehrere Clients disconnecten, wird deren ID
 	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
@@ -159,14 +175,14 @@ public class NetworkManager{
 	public PlayerDisconnectCallback getPlayerDisconnectCallback(){
 		return playerdisconnectcallback;
 	}
-
+	
 	/*
 	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
 	 */
 	public ClientIdCallback getClientIdCallback(){
 		return clientidcallback;
 	}
-
+	
 	/*
 	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
 	 */
@@ -180,7 +196,7 @@ public class NetworkManager{
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
 	}
-
+	
 	/*
 	 * Serverseitig: der Client teilt einen Mapvorschlag mit
 	 */
@@ -218,7 +234,7 @@ public class NetworkManager{
 			return "127.0.0.1";
 		}
 	}
-
+	
 	public void setDisconnectCallback(DisconnectCallback callback){
 		this.disconnectcallback = callback;
 	}
@@ -322,7 +338,7 @@ public class NetworkManager{
 	/**
 	 * Wird von der Verarbeitungslogik für Chat-Datagramme verwendet, um Chat-Nachrichten an den Listener zuzustellen. Aufruf von anderer Stelle ist eher nicht
 	 * sinnvoll.
-	 *
+	 * 
 	 * @param sender
 	 * @param text
 	 */
@@ -334,7 +350,7 @@ public class NetworkManager{
 
 	/**
 	 * Wird innerhalb der server-seitigen Netzwerklogik verwendet, um Pakete an alle Clients zu schicken.
-	 *
+	 * 
 	 * @param dgram
 	 */
 	void broadcastToClients(BaseDatagram dgram){
@@ -367,6 +383,7 @@ public class NetworkManager{
 		handleDatagramsClient();
 		handleDatagramsServer();
 		checkStats();
+		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
 	}
 
 	private void replicateServerEntities(){

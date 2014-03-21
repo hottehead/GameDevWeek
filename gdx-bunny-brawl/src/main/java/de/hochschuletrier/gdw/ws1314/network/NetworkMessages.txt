@@ -118,3 +118,9 @@ FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 PlayerEvent int
 //ok
+
+PingDatagram
+Both
+FIRST_CUSTOM + 0x50
+MessageType.NORMAL
+timestamp long

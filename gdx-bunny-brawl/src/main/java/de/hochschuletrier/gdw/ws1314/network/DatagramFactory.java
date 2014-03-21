@@ -41,6 +41,8 @@ public class DatagramFactory implements INetDatagramFactory{
 			return new ClientIdDatagram(type, id, param1, param2);
 		case EntityIDDatagram.ENTITY_ID_DATAGRAM:
 			return new EntityIDDatagram(type, id, param1, param2);
+		case PingDatagram.PING_DATAGRAM:
+			return new PingDatagram(type, id, param1, param2);
 		default:
 			logger.warn("Received datagram with unknown type {}", type);
 			throw new IllegalArgumentException("Received datagram with unknown type: " + type);

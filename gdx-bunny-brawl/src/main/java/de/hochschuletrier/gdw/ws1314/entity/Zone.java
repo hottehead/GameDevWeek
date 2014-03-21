@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class Zone extends ServerEntity
 {
-	private EntityType currentZone;
+	protected EntityType currentZone;
     private ArrayList<Point> poligonPoints;
 
     public void setPoligonPoints(ArrayList<Point> poligonPoints)

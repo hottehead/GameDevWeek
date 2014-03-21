@@ -60,7 +60,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 		message.putFloat(xposition);
 		message.putFloat(yposition);
 		message.putEnum(entityType);
-		message.putFloat(eggs);
+		message.putInt(eggs);
 		message.putFloat(health);
 		message.putFloat(armor);
 		message.putEnum(facingDirection);
