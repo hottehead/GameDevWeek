@@ -130,6 +130,7 @@ public class ServerProjectile extends ServerEntity {
             switch(otherEntity.getEntityType()) {
             	case BridgeSwitch:
             	case Bush:
+            	case HayBale:
             			ServerEntityManager.getInstance().removeEntity(this);
             			
                     break;
@@ -177,6 +178,7 @@ public class ServerProjectile extends ServerEntity {
                     .position(this.originPosition)
                     .fixedRotation(true)
                     .angle(facingDirection.getAngle())
+                    .bullet(true)
                     .create();
             
             body.createFixture(new PhysixFixtureDef(manager)

@@ -70,10 +70,8 @@ public class GameplayState extends GameState implements InputProcessor {
 		
 		
 		
-		//TODO: @Eppi connect ui to gamelogic
-		//debug healthbar till connected to gamelogic
 	}
-
+	
 	@Override
 	public void onEnter() {
 	}

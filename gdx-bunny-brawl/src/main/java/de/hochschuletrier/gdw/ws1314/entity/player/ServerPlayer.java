@@ -336,14 +336,15 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case Carrot:
                 	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
-                	 ServerCarrot carrot = (ServerCarrot) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(carrot);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
 
 
                 	 break;
                  case Spinach:
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case WaterZone:
                      
@@ -387,14 +388,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() == projectile.getSourceID())
-                     	break;
-                     if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() != projectile.getSourceID() )
+                     //if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
+                        ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:

@@ -41,6 +41,9 @@ public class AnimationExtended {
 
 	public TextureRegion getKeyFrame(float stateTime) {
 		int frameNumber = getKeyFrameIndex(stateTime);
+		if(keyFrames[frameNumber]==null) {
+			System.out.println("walking.getKeyFrame(stateTime) in Method render throws NullPointer");
+		}
 		return keyFrames[frameNumber];
 	}
 
