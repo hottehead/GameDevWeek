@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ public class ServerGame {
 	private ClientServerConnect netManager;
 	private ServerPlayer player = new ServerPlayer();
     private long eggid = 0;
+	private GameInfo gameInfo;
 
 	public ServerGame() {
 		entityManager = ServerEntityManager.getInstance();
@@ -50,10 +52,11 @@ public class ServerGame {
 
 
 	public void init(AssetManagerX assets) {
+		gameInfo = new GameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		TiledMap map = assets.getTiledMap("dummy_fin_map2");
-		LevelLoader.load(map, entityManager, manager);
+		LevelLoader.load(map, entityManager, manager, gameInfo);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
 			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),

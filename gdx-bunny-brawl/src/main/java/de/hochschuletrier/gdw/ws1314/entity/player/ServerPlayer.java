@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,6 +114,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
     
+    private ArrayList<Fixture> waterFixtures;
+    
     public ServerPlayer()
     {
     	super();
@@ -135,6 +139,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	healthBuffDuration = 0.f;
     	healthBuffActive = false;
     	droppedEggID = -1l;
+    	waterFixtures = new ArrayList<Fixture>();
     }
     
     public void enable() {}
@@ -145,6 +150,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     @Override
     public void update(float deltaTime) 
     {
+        //kollision mit wasser
+        for(Fixture fix : this.waterFixtures) {
+            if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
+                logger.info("Spieler ist im Wasser");
+            }
+        }
+        
     	currentState.update(deltaTime);
     	
     	if (!attackAvailable)
@@ -385,13 +397,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case WaterZone:
-                     
                      logger.info("spieler kollision mit wasser");
-                     float upperX = this.getPosition().x - WIDTH;
-                     float lowerX = this.getPosition().x + WIDTH;
-                     float upperY = this.getPosition().y - HEIGHT;
-                     float lowerY = this.getPosition().y + HEIGHT;
-                     this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
+                     
+                     Fixture fix = this.getCollidingFixture(contact);
+                     this.waterFixtures.add(fix);
+                     
+                     //float upperX = this.getPosition().x - WIDTH;
+                     //float lowerX = this.getPosition().x + WIDTH;
+                     //float upperY = this.getPosition().y - HEIGHT;
+                     //float lowerY = this.getPosition().y + HEIGHT;
+                     //this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
                      
                 	 break;
                  case AbyssZone:
@@ -474,6 +489,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
              		break;
                 case Bridge:
                     this.isOnBridge = false;
+                    break;
+                case WaterZone:
+                    logger.info("spieler: endContact mit wasser");
+                    Fixture fix = this.getCollidingFixture(contact);
+                    this.waterFixtures.remove(fix);
                     break;
                 default:
                 	break;
