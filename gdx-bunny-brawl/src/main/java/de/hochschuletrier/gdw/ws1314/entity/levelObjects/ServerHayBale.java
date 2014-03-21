@@ -67,6 +67,7 @@ public class ServerHayBale extends ServerLevelObject
 			case WaterZone:
 				this.physicsBody.setLinearDamping(100);
 				speed = 0;
+				break;
 			case Knight:
 			case Hunter:
 			case Noob:
