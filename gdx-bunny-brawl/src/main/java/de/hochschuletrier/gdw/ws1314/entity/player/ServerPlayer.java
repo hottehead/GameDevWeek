@@ -182,7 +182,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		if (healthBuffTimer >= healthBuffDuration)
     		{
     			this.setCurrentHealth(1.f/ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-    			logger.info("Health: "+currentHealth);
     			healthBuffActive = false;
     		}
     	}
