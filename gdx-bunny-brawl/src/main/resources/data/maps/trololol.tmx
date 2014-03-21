@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="80" height="44" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="dummyWasserHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="animation" value=""/>
+   <property name="animationDuration" value="0.15"/>
+   <property name="animationFrames" value="5"/>
+   <property name="animationTileOffset" value="5"/>
+  </properties>
+  <image source="tiles/dummyWasserHalb.png" width="128" height="32"/>
+ </tileset>
+ <tileset firstgid="5" name="dummyTilesHalb" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/dummyTilesHalb.png" width="512" height="512"/>
+  <terraintypes>
+   <terrain name="Gras" tile="-1"/>
+   <terrain name="Weg" tile="-1"/>
+   <terrain name="Abgrund" tile="-1"/>
+   <terrain name="Wasser" tile="-1"/>
+  </terraintypes>
+  <tile id="0" terrain="0,0,0,0"/>
+  <tile id="1" terrain="0,0,0,0"/>
+  <tile id="2" terrain="0,0,0,0"/>
+  <tile id="3" terrain="0,0,0,0"/>
+  <tile id="16" terrain="0,0,0,1"/>
+  <tile id="17" terrain="0,0,1,1"/>
+  <tile id="18" terrain="0,0,1,0"/>
+  <tile id="32" terrain="0,1,0,1"/>
+  <tile id="33" terrain="1,1,1,1"/>
+  <tile id="34" terrain="1,0,1,0"/>
+  <tile id="35" terrain="0,1,1,1"/>
+  <tile id="36" terrain="1,0,1,1"/>
+  <tile id="48" terrain="0,1,0,0"/>
+  <tile id="49" terrain="1,1,0,0"/>
+  <tile id="50" terrain="1,0,0,0"/>
+  <tile id="51" terrain="1,1,0,1"/>
+  <tile id="52" terrain="1,1,1,0"/>
+  <tile id="64" terrain="0,0,0,3"/>
+  <tile id="65" terrain="0,0,3,3"/>
+  <tile id="66" terrain="0,0,3,0"/>
+  <tile id="69" terrain="0,0,0,2"/>
+  <tile id="70" terrain="0,0,2,2"/>
+  <tile id="71" terrain="0,0,2,0"/>
+  <tile id="80" terrain="0,3,0,3"/>
+  <tile id="81" terrain="3,3,3,3"/>
+  <tile id="82" terrain="3,0,3,0"/>
+  <tile id="83" terrain="0,3,3,3"/>
+  <tile id="84" terrain="3,0,3,3"/>
+  <tile id="85" terrain="0,2,0,2"/>
+  <tile id="86" terrain="2,2,2,2"/>
+  <tile id="87" terrain="2,0,2,0"/>
+  <tile id="88" terrain="0,2,2,2"/>
+  <tile id="89" terrain="2,0,2,2"/>
+  <tile id="96" terrain="0,3,0,0"/>
+  <tile id="97" terrain="3,3,0,0"/>
+  <tile id="98" terrain="3,0,0,0"/>
+  <tile id="99" terrain="3,3,0,3"/>
+  <tile id="100" terrain="3,3,3,0"/>
+  <tile id="101" terrain="0,2,0,0"/>
+  <tile id="102" terrain="2,2,0,0"/>
+  <tile id="103" terrain="2,0,0,0"/>
+  <tile id="104" terrain="2,2,0,2"/>
+  <tile id="105" terrain="2,2,2,0"/>
+ </tileset>
+ <tileset firstgid="261" name="egg" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="egg"/>
+  </properties>
+  <image source="tiles/egg.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="262" name="carrot" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="carrot"/>
+  </properties>
+  <image source="tiles/carrot.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="263" name="clover" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="clover"/>
+  </properties>
+  <image source="tiles/clover.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="264" name="spinach" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="spinach"/>
+  </properties>
+  <image source="tiles/spinach.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="265" name="bridge_horizontal_left" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_left.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="266" name="bridge_horizontal_middle" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_middle.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="267" name="bridge_horizontal_right" tilewidth="32" tileheight="96">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_horizontal_right.png" width="32" height="96"/>
+ </tileset>
+ <tileset firstgid="268" name="bridge_vertical_bottom" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_bottom.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="269" name="bridge_vertical_middle" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_middle.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="270" name="bridge_vertical_top" tilewidth="96" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/bridge_vertical_top.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="271" name="bush" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="bush"/>
+  </properties>
+  <image source="tiles/bush.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="272" name="straw" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="hay"/>
+  </properties>
+  <image source="tiles/straw.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="273" name="switch" tilewidth="64" tileheight="64">
+  <tileoffset x="1" y="1"/>
+  <image source="tiles/switch.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="274" name="home" tilewidth="32" tileheight="32">
+  <image source="tiles/home.png" width="192" height="96"/>
+ </tileset>
+ <layer name="Groundlayer (Rand, Wand, Terrain)" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJztmllu3DAQRElJyNHykeQA2XcE2fcT2D6BkwOHA1hA+alao2QYQePhR8EjDZfq6mbTA1ROKXUFvWD3nM378d1wBR3fybuMdx3mDVdjuEYv43UvcslpyiHjO44nd91f1+8EymeQ54jbYOaPsShHfc/1XDzUVHlmrNun67r3Zh7nRDGqbsojY3+nO/Vh7FGddWZtzfWANVzcrMkR3Id78vPIXznkNOWpvLSmyK3DWtSKa2Xsr9rzTDpNXMwZ+7kz6faP9HJxRznVcRzLOJSLclB+HeZ2aZofPs/V39wYlzPHy81jTbva1Th1njs3rve6/qIgD51DbtQ3OkeMh7WgPB0v1wuVq9YG88i61XpyfVbn5eTjcb2KfTgaz3PCPXl3RPXHfZgTd/+4vLNGyNWdGfKPcqvrsI+4Hqj3nLsTlAt7m86h/tH5pUY7vCt4cyJ4m3wduvv3WcHzPXhdcOvE8GqBLi8KvhR83YOfG4hnbfxYoMu3hWt930A8a6NmzE2/7ax1LNiSfncK7q6MezdIv4cFj1bG46Zf0++I9TurqN9lZf0+F3yojE+V9Ts05hFzvX9pj6Z+h8ZWc48a8f0Nr3/huGX9asTX9Gv6Nf2afk2/Kd6n+H+GjzdAvxrx7cPLyrE9TfV/7z6pnKNDY1ac4u+P9vut6df0a/rVWGvujvtfOPTu3JJ+x4im33ZibvrFWOI/uNhAPGvjfIEuS/0HvzcQz9r4tUCXnf9APWDqUaIv6kHB7RPB/eS9ZfRR0xtGn5n6tZzPlB5K5z+k/059TDqO/lP65ZzXbwC4p/OROt7O+0oPdaTHPo8dPXt9us6X/ll65uifpRcz8pvSZ6f70oOt71STIZjnvJ7U1HlOI90Zq/7V2iE/+mZdnrQmOM7VrO7l/K/0Xqo+zi/scsw6cX5P5sDln/zUh8vccW3WONdmLp2W1NHVfmeeGQt9oM7jqvFGeRzMvu67bNZzfS3y2pIndaQH1sXI/Ok553h3tliXOo6e2j5NeUce3D7Ylx5et787IzpXz63rJTyjmjueM/Z/nRvVnzujXJd8Xb2xH3KOuytc39Q4nUeaeZrzTpPzXM9jPfHcR2eGn9kf9L2uHdWru8d4HtlHmf8/Si9AAQ==
+  </data>
+ </layer>
+ <layer name="Zonelayer (hohes Gras, Start)" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJztmc1qwkAUhZOldNeapppUbaUKbXWnQnWlT6D2/Z+lZyOE1PzMzfw5ng8+iGBm7hznMiRGESGEEEIIuTCEmWNz46s0xyf8cuy38VWaQ5LfAm5LLgXj+JjfHh4Uvi/J79p6u+xjX/I7whM8w9+W9zC/bvxE/3uxyZ2mcerGq0K1vyTYmMMVqv2liqSHSfjY6qkQe9dWT7F3iY8k8LnG1F1p1mpLYowH01j93g84q3GuqUYJJmp7REZPsF/IKsN1Dl+ZXyMvyGgAh4Ws3nD9Dqel/Hot8pTW+CD4raqoqlNHfuU6R/g8hhNN9a/gusaNnmlE+FwbIYTcGyE+A9sk5Gdg7g05fD/iPyb3d9PYLufWgcn93TS2rblJuNzCf4O+nr82zrauc/D8JYQQQsi98AeNWkgZ
+  </data>
+ </layer>
+ <layer name="Detaillayer (Deko)" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJztmU2SmzAQRjsrjBnGbFnYc4TkBskN5v63iZXSix4KZnASZpwUXaXCyEJqff2rVsROO+2000477bTT/0n9tR2vbbi2JrfXD+Xo92mIso9D7nvNfen9tMGabW59Xuc5r3PIfal1ue+YW83H0wZ83aJn/e6j8JowA6chpvtJfWmP5w34aaPIDV7a/ASvNj/pWyvHz9f2ZcW4Gv+XlfMnnpNsz2pgl/h8zf+7by29VHOn78comNSyOGh9dH2oxiND44c+zO3567V9u4NnaC3uaU/oHXvFZmq5n/KYRJfc0JND1Zf28pS/xf6Yr9fYiOInDhrb61v0sdMYvqkJLP/Unudwn5sTv9JEsVfwRA+O8avfAS/2y76O+f0lN/A/5/7UxvwEP9ahoXfI9hTF9+Fbmvvg2IzADbtoo/CM7dCXqNMTHUI/wCm9P0XRv9RGrQPGzHXU79C4Noo/PFW/+7+y+z8nbIF99vqN3yMWJ77xWeAKfmd9l96xX2SC/TFv6h/zXF1M8UTXzpoPmcLfFnnA7xA82c+jb0MU/9bn/9BD/Jh1zz4O/IgX+FVsNmKqy/jcRvNaZuAHL4+CH/aGvYIfNgSR19Jnn45OWI/B7xJT+3XMnYsfbUz9KP7ZvuSR7Be/l3gDI+TsXAWbgW9sFv3EH6LDxI9LFBzs/2iJBj3rWMY6TdVuxd/3JusQ2BFP8VvWNccRsHIsxkbRP/pG/bc2B7dc7RuQ1y1CTuRwYxT/wV6ZG123n+Y7xi4RvgR88DfkCfYzTfXOPng6X3T8IE6Tu6zFj9iFPQzLw38S2JDD8Q5v4OOcYxRv/q6NbQmdck6c1iV/MTn+riFs1YQvXMr/iO2p2Z+iZ8bHuYDjaK/+JbLvcW6KPr5F6Fc9Fv2DHD8ucT/dky9jl+DjM6P9r3ly/mZdfEv/aj98Ut8cfvU+LF9Twq4+j5Ivro2d3afbfP7wyZ9ilmpssFefSZ0z2abtH9HDt3ib4y/xtkbm5M+1Tvn8wZmY59Y+Bbsj7mOvYDcXVxjT61vnCLdoKQ9YkyM4h3Hu6PwPncOO1uoffsR1BGLVUv4MTjR0ifXBCl6x1y6muontLxH5ARg4V4DW8EpcAEfjBy9d9Y4e1jJIPpj6M/4Enho9H4GwdXIY6i7IOPH+HEX+YEnMwEc7DlM/eIkpXsS/US2i5JzOx9oodWifw8nj76lDbkmccdE71yfT8zWmZ3/XDyBs1OcK16+ct2JT+MKIon98m3gBu9oOyUnX5kBbk8+/vZ7wiU76bM93kP0G/hj88DmjxqTfjsOs79oET8uWdbCPRyB8i2tMnNM4s+OXfH5Dl8gBHD/SOOy3rp2ylnNGy4l3j3eNvIl1edl7ketVvuPyOc7x8qTvbNPG0fVT1xSwWfS0ruVYBuS0Q9Xvs+YjELbpMyZ6hr/xPrFb8GJfYFPXr7qY4lbbesRUToeZ365r4F8ch12/dU3D9S7fL9qP+s7ioO/RDd8JIudB8/p/32WwDvpo/x8aa75dr3H9BX3y/ZJze9cJnNuAGXjZh+BbfIZwvcY1SdfF2Dv7I8flm079jb43P+DBe13jaGMaK0L40nfRPOiTa1i2X2KGz0XsFd55+nzl+ZED9yCO2bZpdMt3iuRkta4hG+/9oLWwF+NS+yv4s363mjdi6rfxO4xxbOAd/7eWWMt3zM57aj9Y3xOjS64BOA46ztU1MfsK4wMOrjfW9wu+60e/fb/juAh+W9R9WavR0/u2/vgM53st5I9uMJfzWeY6aoztz+cn30U4T7B88RX4B5+VnPMas63wsy6gx0v1UsbXPC2dNS2fj6r/r60B77TTTjvttNNOO/2L9B21Q1HM
+  </data>
+ </layer>
+ <objectgroup name="Brueckenebene" width="80" height="44">
+  <object name="Bridge1" gid="266" x="2272" y="736"/>
+  <object name="Bridge1" gid="266" x="2240" y="736"/>
+  <object name="Bridge1" gid="266" x="2208" y="736"/>
+  <object name="Bridge1" gid="266" x="2048" y="736"/>
+  <object name="Bridge1" gid="266" x="2144" y="736"/>
+  <object name="Bridge1" gid="266" x="2176" y="736"/>
+  <object name="Bridge1" gid="266" x="2112" y="736"/>
+  <object name="Bridge1" gid="266" x="2080" y="736"/>
+  <object name="Bridge2" gid="266" x="1728" y="736"/>
+  <object name="Bridge2" gid="266" x="1632" y="736"/>
+  <object name="Bridge2" gid="266" x="1664" y="736"/>
+  <object name="Bridge2" gid="266" x="1600" y="736"/>
+  <object name="Bridge2" gid="266" x="1696" y="736"/>
+  <object name="Bridge2" gid="266" x="928" y="736"/>
+  <object name="Bridge2" gid="266" x="896" y="736"/>
+  <object name="Bridge2" gid="266" x="864" y="736"/>
+  <object name="Bridge2" gid="266" x="832" y="736"/>
+  <object name="Bridge2" gid="266" x="800" y="736"/>
+  <object name="Bridge3" gid="266" x="480" y="736"/>
+  <object name="Bridge3" gid="266" x="448" y="736"/>
+  <object name="Bridge3" gid="266" x="416" y="736"/>
+  <object name="Bridge3" gid="266" x="384" y="736"/>
+  <object name="Bridge3" gid="266" x="352" y="736"/>
+  <object name="Bridge3" gid="266" x="320" y="736"/>
+  <object name="Bridge3" gid="266" x="288" y="736"/>
+  <object name="Bridge3" gid="266" x="256" y="736"/>
+ </objectgroup>
+ <objectgroup name="Aktionsebene (Ei, Schalter, Busch, Futter)" width="80" height="44">
+  <object name="Schalter1" gid="273" x="2304" y="896">
+   <properties>
+    <property name="activate" value="false"/>
+   </properties>
+  </object>
+  <object name="Schalter2" gid="273" x="1216" y="384">
+   <properties>
+    <property name="activate" value="false"/>
+   </properties>
+  </object>
+  <object name="Schalter3" gid="273" x="192" y="544">
+   <properties>
+    <property name="activate" value="false"/>
+   </properties>
+  </object>
+  <object name="Egg" gid="261" x="1472" y="704"/>
+  <object name="Egg" gid="261" x="1184" y="768"/>
+  <object name="Egg" gid="261" x="1248" y="640"/>
+  <object name="Egg" gid="261" x="1088" y="640"/>
+  <object name="Egg" gid="261" x="1280" y="704"/>
+  <object name="Egg" gid="261" x="1344" y="800"/>
+  <object name="Egg" gid="261" x="1056" y="800"/>
+  <object name="Egg" gid="261" x="1024" y="672"/>
+  <object name="Egg" gid="261" x="1440" y="640"/>
+  <object name="Egg" gid="261" x="1216" y="1056"/>
+  <object name="Egg" gid="261" x="1440" y="1184"/>
+  <object name="Egg" gid="261" x="960" y="1120"/>
+  <object name="Egg" gid="261" x="1248" y="1088"/>
+  <object name="Egg" gid="261" x="2080" y="960"/>
+ </objectgroup>
+ <objectgroup name="Zonenebene" width="80" height="44">
+  <object name="Abgrund" type="hole" x="800" y="416" width="160" height="576"/>
+  <object name="Abrung" type="hole" x="960" y="832" width="640" height="160"/>
+  <object name="Abgrund" type="hole" x="1600" y="416" width="160" height="576"/>
+  <object name="Abrung" type="hole" x="960" y="416" width="640" height="160"/>
+  <object name="Abrung" type="hole" x="256" y="576" width="256" height="224"/>
+  <object name="Abrung" type="hole" x="2048" y="576" width="256" height="224"/>
+  <object name="Wasser" type="water" x="0" y="0" width="320" height="256"/>
+  <object name="Wasser" type="water" x="320" y="0" width="1920" height="224"/>
+  <object name="Wasser" type="water" x="320" y="1184" width="1920" height="224"/>
+  <object name="Wasser" type="water" x="2240" y="0" width="320" height="256"/>
+  <object name="Wasser" type="water" x="2240" y="1152" width="320" height="256"/>
+  <object name="Wasser" type="water" x="0" y="1152" width="320" height="256"/>
+  <object name="Nest" type="startb" x="32" y="640" width="96" height="96"/>
+  <object name="Nest" type="startw" x="2432" y="640" width="96" height="96"/>
+  <object name="Weg" type="dirt" x="1792" y="640" width="224" height="96"/>
+  <object name="Weg" type="dirt" x="544" y="640" width="224" height="96"/>
+ </objectgroup>
+ <layer name="Rederlayer" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20ND6AAAAAAAAAAAAAAAAAA4M8ANwAAAQ==
+  </data>
+ </layer>
+ <objectgroup name="Spielerebene (physikalische Zone)" width="80" height="44">
+  <object name="Baum" type="solid" x="832" y="1120" width="64" height="64"/>
+  <object name="Baum" type="solid" x="1088" y="1024" width="64" height="64"/>
+  <object name="Baum" type="solid" x="1344" y="1024" width="64" height="64"/>
+  <object name="Baum" type="solid" x="1632" y="1120" width="64" height="64"/>
+  <object name="Baum" type="solid" x="2144" y="1120" width="64" height="64"/>
+  <object name="Baum" type="solid" x="2080" y="1024" width="64" height="64"/>
+  <object name="Baum" type="solid" x="2144" y="928" width="64" height="64"/>
+  <object name="Baum" type="solid" x="2080" y="480" width="64" height="64"/>
+  <object name="Baum" type="solid" x="2144" y="384" width="64" height="64"/>
+  <object name="Baum" type="solid" x="352" y="512" width="64" height="64"/>
+  <object name="Baum" type="solid" x="352" y="320" width="64" height="64"/>
+  <object name="Baum" type="solid" x="384" y="416" width="64" height="64"/>
+  <object name="Baum" type="solid" x="384" y="896" width="64" height="64"/>
+  <object name="Baum" type="solid" x="352" y="1024" width="64" height="64"/>
+  <object name="Stein" type="solid" x="832" y="320" width="32" height="32"/>
+  <object name="Stein" type="solid" x="928" y="352" width="32" height="32"/>
+  <object name="Stein" type="solid" x="1728" y="256" width="32" height="32"/>
+  <object name="Stein" type="solid" x="2112" y="224" width="32" height="32"/>
+  <object name="Stein" type="solid" x="2112" y="256" width="32" height="32"/>
+  <object name="Stein" type="solid" x="2080" y="288" width="32" height="32"/>
+  <object name="Stein" type="solid" x="2112" y="800" width="32" height="32"/>
+  <object name="Stein" type="solid" x="2080" y="832" width="32" height="32"/>
+  <object name="Stein" type="solid" x="480" y="800" width="32" height="32"/>
+  <object name="Stein" type="solid" x="512" y="832" width="32" height="32"/>
+  <object name="Stein" type="solid" x="480" y="864" width="32" height="32"/>
+  <object name="Stein" type="solid" x="480" y="224" width="32" height="32"/>
+  <object name="Stein" type="solid" x="448" y="256" width="32" height="32"/>
+ </objectgroup>
+ <layer name="Overlayer" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJzt2c0NwjAMhuGuwM8CUBaAdgEk9p+pHzcuyC1pbGy9j2SJU5pDXlUlwwAAAFDTQXPUnDTn4L1kdNFcNaPmFryXjO6ah2bSzMF76aF3X8+P368O60ejrzYefVVu2KOv6g1jO6+mqrbr1RTtAgAAAMA+PO4nqn4Dv3n8f1r5Gzjz2bDa8Wgr89mw2qlwN9HzfFtrRz57Ly3n2+rPWnvNs39tPEO3Hv1VaPybDHeD//z+zXA3mKFjAAAAxFsArHQYHw==
+  </data>
+ </layer>
+ <layer name="Overoverlayer(je nach Bedarf)" width="80" height="44">
+  <data encoding="base64" compression="zlib">
+   eJzt18kNwDAIBEC3kKOBxOm/xlAFNmhG2j88FokxAAAA9nNEzsgVuRfPUtETeSMz8i2ehT1kdaprd7M6pbsAAAB1dP2Bs/iBoaauty9rr663r+te1NL1PmXRYwAAYHc/5PUFzQ==
+  </data>
+ </layer>
+</map>

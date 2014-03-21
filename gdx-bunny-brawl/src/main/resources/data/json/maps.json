@@ -8,5 +8,8 @@
 	"map04": "data/maps/map04.tmx",
 	"map05": "data/maps/map05.tmx",
 	"map06": "data/maps/map06.tmx",
-	"map07": "data/maps/map07.tmx"
+	"map07": "data/maps/map07.tmx", 
+	
+	"map_trololol": "data/maps/trololol.tmx", 
+	"map_thelongestyard": "data/maps/thelongestyard.tmx"
 }

@@ -35,7 +35,7 @@ public class ServerGame {
 	public static final int POSITION_ITERATIONS = 3;
 	public static final int VELOCITY_ITERATIONS = 8;
 	public static final float STEP_SIZE = 1 / 30.0f;
-	public static final int GRAVITY = 0;
+	public static final int GRAVITY = 12;
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;

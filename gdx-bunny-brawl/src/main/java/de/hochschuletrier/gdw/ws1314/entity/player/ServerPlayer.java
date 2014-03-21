@@ -386,6 +386,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case WaterZone:
                      
+                     logger.info("spieler kollision mit wasser");
                      float upperX = this.getPosition().x - WIDTH;
                      float lowerX = this.getPosition().x + WIDTH;
                      float upperY = this.getPosition().y - HEIGHT;
@@ -621,7 +622,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 	}
         
     public boolean reportFixture (Fixture fixture) {
-        
+        logger.info("report fixture aufgerufen");
         try {
             PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
             ServerEntity entity = (ServerEntity)body.getOwner();
