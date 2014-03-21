@@ -77,8 +77,9 @@ public class ClientEntityManager {
             case Projectil: 
             	e = new ClientProjectile();
             	break;
-            case Bridge:
+            case BRIDGE_HORIZONTAL_LEFT:
             	e = new ClientBridge();
+
             	break;
             case BridgeSwitch:
             	e = new ClientBridgeSwitch();

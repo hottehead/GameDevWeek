@@ -3,6 +3,14 @@
     "logo": "data/images/logo.png",
     "vase": "data/images/vase.png",
     "singleBunny": "data/images/whiteKnight_single.png",
+    "bush": "data/images/bush.png",
+    "carrot": "data/images/carrot.png",
+    "egg": "data/images/egg.png",
+    "clover": "data/images/clover.png",
+    "spinach": "data/images/spinach.png",
+    "straw": "data/images/straw.png",
+    "switch": "data/images/switch.png",
+    "contactMine": "data/images/mine.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
@@ -24,6 +32,19 @@
     "debugScoreEnemy": "data/images/dbg/scoreEnemyIcon.png",
     "debugScoreTeam": "data/images/dbg/scoreTeamIcon.png",
     "debugTooltip": "data/images/dbg/tooltip.png",
-    "debugAttackIcon": "data/images/dbg/attackIcon.png"
-    
+    "debugAttackIcon": "data/images/dbg/attackIcon.png",
+	
+	"HudEmblemKnightWhite": "data/huds/wappenKnightWhite.png",
+	"HudEmblemHunterWhite": "data/huds/wappenHunterWhite.png",
+	"HudEmblemTankWhite": "data/huds/wappenTankWhite.png",
+	"HudEmblemKnightBlack": "data/huds/wappenKnightBlack.png",
+	"HudEmblemHunterBlack": "data/huds/wappenHunterBlack.png",
+	"HudEmblemTankBlack": "data/huds/wappenTankBlack.png",
+	
+	"HudEmblemWhite": "data/huds/shield_white.png",
+	"HudEmblemBlack": "data/huds/shield_black.png",
+	
+	"HudBoostCarrot": "data/huds/boost_carrot.png", 
+	"HudBoostSpinach": "data/huds/boost_spinach.png", 
+	"HudBoostClover": "data/huds/boost_clover.png"    
 }

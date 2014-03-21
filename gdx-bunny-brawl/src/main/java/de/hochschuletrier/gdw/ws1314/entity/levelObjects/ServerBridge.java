@@ -12,6 +12,9 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author yannick
@@ -33,14 +36,18 @@ public class ServerBridge extends ServerLevelObject
 	 * }
 	 * 
 	*/
+
+
+
+    private EntityType type = EntityType.Bridge;
 	
 	public ServerBridge()
 	{
+
 	}
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize(){
 		super.initialize();
 	}
 
@@ -67,14 +74,39 @@ public class ServerBridge extends ServerLevelObject
 	@Override
 	public EntityType getEntityType()
 	{
-		return EntityType.Bridge;
+		return type;
 	}
+
+    public void setHorizontalLeft()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_LEFT;
+    }
+    public void setHorizontalMiddle()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_MIDDLE;
+    }
+    public void setHorizontalRight()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_RIGHT;
+    }
+    public void setVerticalBottom()
+    {
+        type = EntityType.BRIDGE_VERTICAL_BOTTOM;
+    }
+    public void setVerticalMiddle()
+    {
+        type = EntityType.BRIDGE_VERTICAL_MIDDLE;
+    }
+    public void setVerticalTop()
+    {
+        type = EntityType.BRIDGE_VERTICAL_TOP;
+    }
 
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
 		// TODO Auto-generated method stub
-		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
 									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
 									.fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager)

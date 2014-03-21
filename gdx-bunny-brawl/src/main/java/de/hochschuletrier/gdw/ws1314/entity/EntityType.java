@@ -11,7 +11,7 @@ public enum EntityType {
     Tank, 
     Ei, 
     Projectil, 
-    Bridge, 
+    Bridge,
     BridgeSwitch, 
     Bush,
     SwordAttack,
@@ -23,5 +23,12 @@ public enum EntityType {
     AbyssZone,
     GrassZone,
     PathZone,
-    StartZone
+    StartZone,
+    BRIDGE_HORIZONTAL_LEFT,
+    BRIDGE_HORIZONTAL_MIDDLE,
+    BRIDGE_HORIZONTAL_RIGHT,
+    BRIDGE_VERTICAL_BOTTOM,
+    BRIDGE_VERTICAL_MIDDLE,
+    BRIDGE_VERTICAL_TOP,
+    HayBale,
 }
