@@ -9,9 +9,6 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class ProjectileReplicationDatagram extends BaseDatagram{
 	public static final byte PROJETILE_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x22;
 	private long entityId;
@@ -30,6 +27,7 @@ public class ProjectileReplicationDatagram extends BaseDatagram{
 		this.xposition = xposition;
 		this.yposition = yposition;
 		this.direction = direction;
+		this.teamColor = teamColor;
 	}
 
 	public ProjectileReplicationDatagram(ServerProjectile projectile){
@@ -78,5 +76,4 @@ public class ProjectileReplicationDatagram extends BaseDatagram{
 	public TeamColor getTeamColor(){
 		return teamColor;
 	}
-
 }

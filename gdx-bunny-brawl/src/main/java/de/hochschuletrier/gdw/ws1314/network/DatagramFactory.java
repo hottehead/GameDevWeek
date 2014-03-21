@@ -3,7 +3,6 @@ package de.hochschuletrier.gdw.ws1314.network;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +11,7 @@ public class DatagramFactory implements INetDatagramFactory{
 
 	@Override
 	public INetDatagram createDatagram(byte type, short id, short param1, short param2){
-		switch (type) {
+		switch (type){
 		case ActionDatagram.ACTION_DATAGRAM:
 			return new ActionDatagram(type, id, param1, param2);
 		case ChatSendDatagram.CHAT_SEND_DATAGRAM:
@@ -48,5 +47,4 @@ public class DatagramFactory implements INetDatagramFactory{
 			throw new IllegalArgumentException("Received datagram with unknown type: " + type);
 		}
 	}
-
 }

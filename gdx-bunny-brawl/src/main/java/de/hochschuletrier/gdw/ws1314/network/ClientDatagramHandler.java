@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
+import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
@@ -8,11 +9,8 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.math.Vector2;
 
 public class ClientDatagramHandler implements DatagramHandler{
 	private static final Logger logger = LoggerFactory.getLogger(ClientDatagramHandler.class);

@@ -10,5 +10,4 @@ public class ConsoleChatListener implements ChatListener{
 	public void chatMessage(String sender, String text){
 		logger.info("{}: {}", sender, text);
 	}
-
 }
