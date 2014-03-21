@@ -67,14 +67,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void render() {
-		try{
-			TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		
-			DrawUtil.batch.draw(keyFrame, 0, 0);
-		// stage.render();
-		}catch(Exception e){
-			System.out.println("walking.getKeyFrame(stateTime) in Method render throws NullPointer");
-		}
+		stage.render();
 	}
 
 	float stateTime = 0f;
