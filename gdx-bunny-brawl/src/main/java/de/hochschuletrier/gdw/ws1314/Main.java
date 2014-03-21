@@ -179,7 +179,7 @@ public class Main extends StateBasedGame {
 			
 			@Override
 			public void callback(String msg){
-				logger.warn("[CLIENT] {}." ,msg);
+				logger.warn("{}." ,msg);
 				c_own_id  = -1;
 				s_map = "";
 				c_players = null;

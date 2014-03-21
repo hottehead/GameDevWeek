@@ -145,31 +145,55 @@ public class NetworkManager{
 			serverReception = null;
 		}
 	}
-
+	
+	/*
+	 * DisconnectCallback: wird auf Server und Clientseite aufgerufen, sobald die eigene Verbindung verloren geht.
+	 * z.B: Client disconnected daraufhin wir dieser Callback aufgerufen, damit der GameState geändert werden kann
+	 */
 	public DisconnectCallback getDisconnectCallback(){
 		return disconnectcallback;
 	}
 	
+	/*
+	 * PlayerDisconnectCallback: Serverseitig. Wenn einer oder mehrere Clients disconnecten, wird deren ID
+	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
+	 * Danach ist eine Funktion wie LobbyUpdate notwendig um diese änderung den Clients mitzutzeilen
+	 */
 	public PlayerDisconnectCallback getPlayerDisconnectCallback(){
 		return playerdisconnectcallback;
 	}
-
+	
+	/*
+	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
+	 */
 	public ClientIdCallback getClientIdCallback(){
 		return clientidcallback;
 	}
-
+	
+	/*
+	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
+	 */
 	public LobbyUpdateCallback getLobbyUpdateCallback(){
 		return lobbyupdatecallback;
 	}
 
+	/*
+	 * Serverseitig: der Client teilt seine Spielerdaten mit(Spielername, Klasse, Team und Accept)
+	 */
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
 	}
-
+	
+	/*
+	 * Serverseitig: der Client teilt einen Mapvorschlag mit
+	 */
 	public MatchUpdateCallback getMatchUpdateCallback(){
 		return matchupdatecallback;
 	}
 
+	/*
+	 * Clientseitig: der Server teilt dem Clienten den GameState mit
+	 */
 	public GameStateCallback getGameStateCallback(){
 		return gameStateCallback;
 	}
