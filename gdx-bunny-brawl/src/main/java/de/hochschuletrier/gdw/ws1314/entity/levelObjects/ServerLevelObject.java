@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 
 /**
@@ -15,6 +16,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 public abstract class ServerLevelObject extends ServerEntity
 {
 	protected boolean isVisible;
+	protected EntityStates entityState = EntityStates.NONE;
 
 	@Override
 	public void enable()
@@ -56,4 +58,7 @@ public abstract class ServerLevelObject extends ServerEntity
 	{
 		return this.isVisible;
 	}
+
+	public void setEntityState(EntityStates state){this.entityState = state;}
+	public EntityStates getEntityState(){return entityState;}
 }

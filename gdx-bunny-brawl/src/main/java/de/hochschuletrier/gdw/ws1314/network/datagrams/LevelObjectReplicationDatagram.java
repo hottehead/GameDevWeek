@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
@@ -15,22 +16,25 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 	private float xposition;
 	private float yposition;
 	private boolean visibility;
+	private EntityStates entityState;
 
 	public LevelObjectReplicationDatagram(byte type, short id, short param1, short param2){
 		super(MessageType.DELTA, type, id, param1, param2);
 	}
 
-	public LevelObjectReplicationDatagram(long entityId, EntityType type, float xposition, float yposition, boolean visibility){
+	public LevelObjectReplicationDatagram(long entityId, EntityType type, float xposition, float yposition, boolean visibility,EntityStates entityState){
 		super(MessageType.DELTA, LEVEL_OBJECT_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
 		this.entityId = entityId;
 		this.type = type;
 		this.xposition = xposition;
 		this.yposition = yposition;
 		this.visibility = visibility;
+		this.entityState = entityState;
 	}
 
 	public LevelObjectReplicationDatagram(ServerLevelObject entity){
-		this(entity.getID(), entity.getEntityType(), entity.getPosition().x, entity.getPosition().y, entity.getVisibility());
+		this(entity.getID(), entity.getEntityType(), entity.getPosition().x, entity.getPosition().y, 
+				entity.getVisibility(),entity.getEntityState());
 	}
 
 	@Override
@@ -45,6 +49,7 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 		message.putFloat(xposition);
 		message.putFloat(yposition);
 		message.putBool(visibility);
+		message.putEnum(entityState);
 	}
 
 	@Override
@@ -54,6 +59,7 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 		xposition = message.getFloat();
 		yposition = message.getFloat();
 		visibility = message.getBool();
+		entityState = message.getEnum(EntityStates.class);
 	}
 
 	public long getEntityId(){
@@ -74,5 +80,9 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 
 	public boolean getVisibility(){
 		return visibility;
+	}
+
+	public EntityStates getEntityState(){
+		return entityState;
 	}
 }

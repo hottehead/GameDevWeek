@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 
 /**
@@ -11,5 +12,5 @@ public class StatePlayerKnockback extends StatePlayerWaiting {
 	}
 
 	@Override
-	public PlayerStates getCurrentState(){return PlayerStates.KNOCKBACK;}
+	public EntityStates getCurrentState(){return EntityStates.KNOCKBACK;}
 }
