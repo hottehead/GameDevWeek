@@ -1,10 +1,16 @@
 package de.hochschuletrier.gdw.ws1314.entity;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 import java.util.Random;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 
 /**
  * Created by Jerry on 21.03.14.
@@ -40,6 +46,19 @@ public class TeamSpawnZone extends Zone {
 
     @Override
     public void initPhysics(PhysixManager manager){
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
+        .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+        .fixedRotation(true).create();
 
+        body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeBox(rect[2], rect[3])
+            .sensor(true));
+    
+        body.setGravityScale(0);
+        body.addContactListener(this);
+        setPhysicsBody(body);
     }
 }

@@ -90,6 +90,7 @@ public class ClientGame {
 		
 		stage = new GameplayStage();
 		stage.init(assets);
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
@@ -160,6 +161,8 @@ public class ClientGame {
 			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}
 		cameraFollowingBehaviour.update(delta);
+		
+		stage.setFPSCounter(delta);
 	}
 
 	public TiledMap loadMap(String filename) {

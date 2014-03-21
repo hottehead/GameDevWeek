@@ -27,12 +27,15 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
-	private final float SCL_VELOCITY = 100.0f;
+	private final float SCL_VELOCITY = 300.0f;
+	private float speed;
+	private boolean acrossable = false;
 	
 	
 	public ServerHayBale()
 	{
 		super();
+		speed = 0;
 	}
 	
 	@Override
@@ -44,11 +47,16 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact) {
 		ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
+		
+		if(otherEntity == null){
+			return;
+		}
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
 				ServerProjectile projectile = (ServerProjectile) otherEntity;
-				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector());
+				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				speed = 1;
 				break;
 			case SwordAttack:
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
@@ -58,11 +66,22 @@ public class ServerHayBale extends ServerLevelObject
 				break;
 			case WaterZone:
 				this.physicsBody.setLinearDamping(100);
+				this.acrossable = true;
+				speed = 0;
+				break;
 			case Knight:
 			case Hunter:
 			case Noob:
 			case Tank:
+				if(!acrossable){
+				ServerPlayer player2 = (ServerPlayer) otherEntity;
 				this.physicsBody.setLinearDamping(1);
+					if(speed > 0){
+						player2.applyDamage(10);
+					}
+				}
+				speed = 0;
+				break;
 			default:
 				break;
 		}
@@ -71,12 +90,30 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
+ServerEntity otherEntity = this.identifyContactFixtures(contact);
+        
+        if(otherEntity == null){
+            return;
+        }
+        switch(otherEntity.getEntityType()) {
+            case WaterZone:
+                this.physicsBody.setLinearDamping(0);
+                this.acrossable = false;
+                break;
+            default:
+                break;
+        }
 	}
 
 	@Override
 	public EntityType getEntityType()
 	{
 		return EntityType.HayBale;
+	}
+	
+	
+	public float getSpeed(){
+		return speed;
 	}
 
 	@Override
@@ -86,12 +123,17 @@ public class ServerHayBale extends ServerLevelObject
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
                 .fixedRotation(true).create();
 
-            body.createFixture(new PhysixFixtureDef(manager)
-                .density(0.5f)
-                .friction(0.0f)
-                .restitution(0.0f)
-                .shapeBox(50,50));
-
+            if(!acrossable){
+            	body.createFixture(new PhysixFixtureDef(manager)
+				.density(0.5f)
+				.friction(0.0f)
+				.restitution(0.0f)
+				.shapeBox(50,50));
+            }else{
+	            body.createFixture(new PhysixFixtureDef(manager)
+	            	.sensor(true)
+	            	.shapeBox(60,60));
+            }
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);

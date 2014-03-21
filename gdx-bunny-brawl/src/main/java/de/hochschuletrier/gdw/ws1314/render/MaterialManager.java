@@ -21,9 +21,12 @@ public class MaterialManager {
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
+		this.provideMaterial(EntityType.Tank, new MaterialInfo(
 				"knightWhiteIdleDown", 110, 110, 1, true));
-		
+
+		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
+				"hunterWhiteIdleDown", 110, 74, 1, true));
+
 		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
 				"debugArrow", 32, 32, 1, false));
 		this.provideMaterial(EntityType.Carrot, new MaterialInfo("carrot", 32,

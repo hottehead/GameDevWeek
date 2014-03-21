@@ -95,14 +95,15 @@ public class GamePreferences {
 	
 	public void putString(String key, String val) {
 		this.settingsHandler.putString(key, val);
-		if (this.getString(key) != val)
+		if (this.getString(key, null) != val)
 			throw new GdxRuntimeException("saving string failed");
 		else
 			this.settingsHandler.flush();
 	}
 	
 	private String getString(String key) {
-		return this.settingsHandler.getString(key);
+		String val = this.settingsHandler.getString(key);
+		return val;
 	}
 	
 	public String getString(String key, String defValue) {
