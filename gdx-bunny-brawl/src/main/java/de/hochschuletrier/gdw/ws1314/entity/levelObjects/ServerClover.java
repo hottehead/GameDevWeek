@@ -65,7 +65,7 @@ public class ServerClover extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
                 .fixedRotation(false).create();
 
