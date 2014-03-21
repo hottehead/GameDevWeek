@@ -190,5 +190,207 @@
         "playType" : "NORMAL",
         "columns": 5,
         "rows" : 1
+    },
+	
+	"hunterWhiteIdleUp": {
+        "filename": "data/animations/HunterWhite_IdleUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterWhiteIdleDown": {
+        "filename": "data/animations/HunterWhite_IdleDown.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"hunterWhiteIdleRight": {
+        "filename": "data/animations/HunterWhite_IdleRight.png",
+        "frames" : 2,
+        "frameDuration": [ 2.0, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterWhiteIdleLeft": {
+        "filename": "data/animations/HunterWhite_IdleLeft.png",
+        "frames" : 2,
+        "frameDuration": [ 2.0, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterWhiteWalkUp": {
+        "filename": "data/animations/HunterWhite_WalkUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"HunterWhiteWalkDown": {
+        "filename": "data/animations/HunterWhite_WalkDown.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+    "hunterWhiteWalkRight": {
+        "filename": "data/animations/HunterWhite_WalkRight.png",
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterWhiteWalkLeft": {
+        "filename": "data/animations/HunterWhite_WalkLeft.png",
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterWhiteAttackUp": {
+        "filename": "data/animations/HunterWhite_AttackUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterWhiteAttackDown": {
+        "filename": "data/animations/HunterWhite_AttackDown.png",
+        "frames" : 5,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"hunterWhiteAttackRight": {
+        "filename": "data/animations/HunterWhite_AttackRight.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterWhiteAttackLeft": {
+        "filename": "data/animations/HunterWhite_AttackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },
+	"hunterBlackIdleUp": {
+        "filename": "data/animations/HunterBlack_IdleUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterBlackIdleDown": {
+        "filename": "data/animations/HunterBlack_IdleDown.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"hunterBlackIdleRight": {
+        "filename": "data/animations/HunterBlack_IdleRight.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"hunterBlackIdleLeft": {
+        "filename": "data/animations/HunterBlack_IdleLeft.png",
+        "frames" : 2,
+        "frameDuration": [ 2.0, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterBlackWalkUp": {
+        "filename": "data/animations/HunterBlack_WalkUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterBlackWalkDown": {
+        "filename": "data/animations/HunterBlack_WalkDown.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+    "hunterBlackWalkRight": {
+        "filename": "data/animations/HunterBlack_WalkRight.png",
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterBlackWalkLeft": {
+        "filename": "data/animations/HunterBlack_WalkLeft.png",
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 2,
+        "rows" : 1
+    },
+	"hunterBlackAttackUp": {
+        "filename": "data/animations/HunterBlack_AttackUp.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterBlackAttackDown": {
+        "filename": "data/animations/HunterBlack_AttackDown.png",
+        "frames" : 5,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"hunterBlackAttackRight": {
+        "filename": "data/animations/HunterBlack_AttackRight.png",
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "playType" : "NORMAL",
+        "columns": 4,
+        "rows" : 1
+    },
+	"hunterBlackAttackLeft": {
+        "filename": "data/animations/HunterBlack_AttackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },
+	
+	"explosion": {
+        "filename": "data/images/explosion_animation.png",
+        "frames" : 6,
+        "frameDuration": [ 0.01, 0.01, 0.01, 0.01, 0.01, 0.01] ,
+        "playType" : "NORMAL",
+        "columns": 6,
+        "rows" : 1
     }
 }
