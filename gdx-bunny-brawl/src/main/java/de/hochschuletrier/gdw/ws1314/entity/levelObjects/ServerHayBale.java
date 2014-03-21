@@ -28,11 +28,13 @@ public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
 	private final float SCL_VELOCITY = 300.0f;
+	private float speed;
 	
 	
 	public ServerHayBale()
 	{
 		super();
+		speed = 0;
 	}
 	
 	@Override
@@ -54,6 +56,7 @@ public class ServerHayBale extends ServerLevelObject
 				ServerProjectile projectile = (ServerProjectile) otherEntity;
 				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				speed = 1;
 				break;
 			case SwordAttack:
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
@@ -63,11 +66,17 @@ public class ServerHayBale extends ServerLevelObject
 				break;
 			case WaterZone:
 				this.physicsBody.setLinearDamping(100);
+				speed = 0;
 			case Knight:
 			case Hunter:
 			case Noob:
 			case Tank:
+				ServerPlayer player2 = (ServerPlayer) otherEntity;
 				this.physicsBody.setLinearDamping(1);
+				if(speed > 0){
+					player2.applyDamage(10);
+				}
+				speed = 0;
 			default:
 				break;
 		}
@@ -82,6 +91,11 @@ public class ServerHayBale extends ServerLevelObject
 	public EntityType getEntityType()
 	{
 		return EntityType.HayBale;
+	}
+	
+	
+	public float getSpeed(){
+		return speed;
 	}
 
 	@Override
