@@ -86,7 +86,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
-    
+  
     private float attackBuffTimer;
     private float attackBuffDuration;
     private boolean attackBuffActive;
@@ -94,8 +94,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float healthBuffTimer;
     private float healthBuffDuration;
     private boolean healthBuffActive;
-    
-    private FacingDirection 	facingDirection;
+
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
     private boolean				movingDown;
@@ -105,6 +104,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffTimer;
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
+    
+    private float				strengthBuffDuration;	
     
     private long				droppedEggID;
     
@@ -123,7 +124,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
-    	facingDirection = FacingDirection.DOWN;
+    	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = 0.0f;
     	speedBuffActive = false;
@@ -296,7 +297,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 
     protected void moveBegin(FacingDirection dir)
     {
-    	facingDirection = desiredDirection;
+    	setFacingDirection(desiredDirection);
     	// TODO 
     	// Damp old impulse
     	// acceleration impulse to physics body
@@ -489,7 +490,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-    public FacingDirection  getFacingDirection()	{ return facingDirection; }
+    //public FacingDirection  getFacingDirection()	{ return facingDirection; }
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
@@ -584,7 +585,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
-        facingDirection = FacingDirection.DOWN;
+        setFacingDirection(FacingDirection.DOWN);
         		
         switchToState(idleState);
         
@@ -605,7 +606,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	if (currentHealth <= 0)
     		reset();
     }
-	
+    
+    public void applyResistanceBuff(float factor, float time)
+    {
+    	
+    }
+    
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
