@@ -331,11 +331,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             	 
              case Projectil:
             	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                 if (getID() == projectile.getSourceID())
-                 	return;
-                 if (getTeamColor() != projectile.getTeamColor())
-                 	applyDamage(projectile.getDamage());
-                 ServerEntityManager.getInstance().removeEntity(otherEntity);
+//                 if (getID() == projectile.getSourceID())
+//                 	return;
+            	 
+                 if (getTeamColor() != projectile.getTeamColor()){
+                	 applyDamage(projectile.getDamage());
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+                 }
 
             	 break;
              case Bridge:
@@ -408,9 +410,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
          		if (((ServerEgg)otherEntity).getID() == droppedEggID)
          			droppedEggID = -1;
          		break;
-                case Bridge:
-                    this.isOnBridge = false;
-                    break;
+         	case Bridge:
+                this.isOnBridge = false;
+                break;
+         	case ContactMine:
+         		
          }
     }
     public void preSolve(Contact contact, Manifold oldManifold) {}

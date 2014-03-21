@@ -11,6 +11,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 
 /**
  * 
@@ -19,6 +21,9 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
  */
 public class ServerContactMine extends ServerLevelObject
 {
+	private final float DURATION_TILL_EXPLOSION = 5.0f;
+	private boolean isActive = false;
+	
 	public ServerContactMine()
 	{
 		super();
@@ -33,14 +38,19 @@ public class ServerContactMine extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact)
 	{
+		ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		
+		switch(otherEntity.getEntityType()){
+			case Hunter:
+			case Knight:
+			case Tank:
+				
+		}
 	}
-
+	
 	@Override
 	public void endContact(Contact contact)
 	{
-		
-	}
-
 	@Override
 	public EntityType getEntityType()
 	{
