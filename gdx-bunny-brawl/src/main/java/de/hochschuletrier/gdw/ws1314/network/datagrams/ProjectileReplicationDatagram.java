@@ -25,7 +25,7 @@ public class ProjectileReplicationDatagram extends BaseDatagram{
 	}
 
 	public ProjectileReplicationDatagram(long entityId, float xposition, float yposition, FacingDirection direction, TeamColor teamColor){
-		super(MessageType.DELTA, PROJETILE_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.DELTA, PROJETILE_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
 		this.entityId = entityId;
 		this.xposition = xposition;
 		this.yposition = yposition;

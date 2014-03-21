@@ -19,11 +19,11 @@ public class PlayerUpdateDatagram extends BaseDatagram{
 	private boolean accept;
 
 	public PlayerUpdateDatagram(byte type, short id, short param1, short param2){
-		super(MessageType.DELTA, type, id, param1, param2);
+		super(MessageType.NORMAL, type, id, param1, param2);
 	}
 
 	public PlayerUpdateDatagram(String playerName, EntityType type, TeamColor team, boolean accept){
-		super(MessageType.DELTA, PLAYER_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.NORMAL, PLAYER_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
 		this.playerName = playerName;
 		this.type = type;
 		this.team = team;
