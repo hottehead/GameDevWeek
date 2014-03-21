@@ -4,8 +4,8 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.player.PlayerStates;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -22,14 +22,14 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 	private float armor;
 	private FacingDirection facingDirection;
 	private TeamColor teamColor;
-	private PlayerStates playerState;
+	private EntityStates entityState;
 
 	public PlayerReplicationDatagram(byte type, short id, short param1, short param2){
 		super(MessageType.DELTA, type, id, param1, param2);
 	}
 
 	public PlayerReplicationDatagram(long entityId, float xposition, float yposition, EntityType entityType, int eggs, float health, float armor,
-			FacingDirection facingDirection, TeamColor teamColor, PlayerStates playerState){
+			FacingDirection facingDirection, TeamColor teamColor, EntityStates entityState){
 		super(MessageType.DELTA, PLAYER_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
 		this.entityId = entityId;
 		this.xposition = xposition;
@@ -40,7 +40,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 		this.armor = armor;
 		this.facingDirection = facingDirection;
 		this.teamColor = teamColor;
-		this.playerState = playerState;
+		this.entityState = entityState;
 	}
 
 	public PlayerReplicationDatagram(ServerPlayer entity){
@@ -64,7 +64,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 		message.putFloat(armor);
 		message.putEnum(facingDirection);
 		message.putEnum(teamColor);
-		message.putEnum(playerState);
+		message.putEnum(entityState);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 		armor = message.getFloat();
 		facingDirection = message.getEnum(FacingDirection.class);
 		teamColor = message.getEnum(TeamColor.class);
-		playerState = message.getEnum(PlayerStates.class);
+		entityState = message.getEnum(EntityStates.class);
 	}
 
 	public long getEntityId(){
@@ -117,7 +117,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 		return teamColor;
 	}
 
-	public PlayerStates getPlayerState(){
-		return playerState;
+	public EntityStates getEntityState(){
+		return entityState;
 	}
 }
