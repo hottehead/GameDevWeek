@@ -89,7 +89,7 @@ public class NetworkManager{
 		double dgramsSentPerSecond = deltaDgramsSent /(statDT/1000.0);
 		double dgramsReceivedPerSecond = deltaDgramsReceived /(statDT/1000.0);
 		double factor=1024.0;
-		double rF=100.0;//Rounding Faactor
+		double rF=100.0;//Rounding Factor
 		logger.info("Network Statistics: ");
 		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
 				newTotalBytesSent/factor,Math.round(bytesSentPerSecond*rF)/rF,
