@@ -65,7 +65,7 @@ public class ServerGame {
          entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
          entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
          entityManager.createEntity(ServerCarrot.class, new Vector2(200, 200));
-         //entityManager.createEntity(ServerHayBale.class, new Vector2(400 , 400));
+         entityManager.createEntity(ServerHayBale.class, new Vector2(600 , 600));
 	}
 
 	public void render() {
