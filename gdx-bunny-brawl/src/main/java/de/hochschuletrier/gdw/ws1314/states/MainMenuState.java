@@ -1,6 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
@@ -23,6 +28,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private LocalMusic music;
 	private int stateChangeDuration=500;
 	private MainMenuStage stage;
+	
+	private Logger logger;
 
 	public MainMenuState() {
 	}
@@ -30,6 +37,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		logger = LoggerFactory.getLogger(MainMenuState.class);
+		
 		this.music = new LocalMusic(assetManager);
 		inputProcessor = new InputInterceptor(this) {
 			@Override
@@ -48,6 +57,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 				return isActive && mainProcessor.keyUp(keycode);
 			}
 		};
+		
 		Main.inputMultiplexer.addProcessor(inputProcessor);
 
 		stage = new MainMenuStage();
@@ -134,5 +144,45 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+	
+	
+	//private listener 
+	private class PlayClientListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Change to JoinServerState");
+			GameStates.LOBBY.init(assetManager);
+			GameStates.LOBBY.activate();
+		}
+	}
+	
+	private class PlayServerListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Change to StartServerState");
+			GameStates.STARTSERVER.init(assetManager);
+			GameStates.STARTSERVER.activate();
+		}
+	}
+	
+	private class OptionListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Change to OptionsState");
+			GameStates.OPTIONS.init(assetManager);
+			GameStates.OPTIONS.activate();
+		}
+	}
+	
+	private class CreditsListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Change to CreditsState");
+			GameStates.CREDITS.init(assetManager);
+			GameStates.CREDITS.activate();
+		}
+	}
+	
+	private class ExitListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("TODO: Exit Game");
+		}
 	}
 }

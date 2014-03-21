@@ -11,7 +11,11 @@ public enum GameStates {
 
     LOADING(new LoadGameState()),
     MAINMENU(new MainMenuState()),
-    GAMEPLAY(new GameplayState());
+    GAMEPLAY(new GameplayState()),
+    STARTSERVER(new StartServerState()),
+    LOBBY(new LobbyState()),
+    CREDITS(new CreditState()),
+    OPTIONS(new OptionState());
     private final GameState state;
 
     GameStates(GameState state) {

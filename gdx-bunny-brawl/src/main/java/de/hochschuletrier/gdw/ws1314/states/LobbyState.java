@@ -5,8 +5,28 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 
 public class LobbyState extends GameState {
 	
-	@Override
-    public void init(AssetManagerX assetManager) {
+	public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+    }
+
+    public void render() {
+    }
+
+    public void update(float delta) {
+    }
+
+    public void onEnter() {
+    }
+
+    public void onEnterComplete() {
+    }
+
+    public void onLeave() {
+    }
+
+    public void onLeaveComplete() {
+    }
+
+    public void dispose() {
     }
 }
