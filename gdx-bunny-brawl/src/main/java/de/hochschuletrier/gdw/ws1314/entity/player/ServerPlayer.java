@@ -117,7 +117,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerAttack(this);

@@ -1,6 +1,13 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
-import de.hochschuletrier.gdw.ws1314.entity.*;
+import org.slf4j.LoggerFactory;
+
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
@@ -112,7 +119,7 @@ public class ClientServerConnect {
         ServerEntityManager sem = ServerEntityManager.getInstance();
         ServerPlayer sp = (ServerPlayer)sem.getEntityById(playerID);
         if(sp != null)
-        sp.doAction(eventPlayerIntention);
+        	sp.doAction(eventPlayerIntention);
     }
 
     public void despawnEntity(long id){

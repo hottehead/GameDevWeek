@@ -97,6 +97,7 @@ public class ServerGame {
             offset += 10f;
         }
 
+
 	}
 
 	public void render() {
