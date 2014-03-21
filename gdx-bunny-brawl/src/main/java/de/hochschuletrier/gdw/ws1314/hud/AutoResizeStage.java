@@ -8,6 +8,7 @@ public abstract class AutoResizeStage extends Stage {
 	public AutoResizeStage() {
 		HudResizer.provide(this);
 	}
+	
 	public final void resize(int width, int height) {
 		this.setViewport(width, height, true);
 	}

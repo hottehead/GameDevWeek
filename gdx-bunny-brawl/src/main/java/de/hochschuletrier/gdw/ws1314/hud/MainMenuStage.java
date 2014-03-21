@@ -29,7 +29,6 @@ public class MainMenuStage extends AutoResizeStage {
 	}
 
 	public void init(AssetManagerX assetManager) {
-		//init generic stuff
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
@@ -39,6 +38,9 @@ public class MainMenuStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 		//info
+		Label playerName = new Label(Main.getInstance().gamePreferences.getString("player-name", "Spielername"), defaultSkin);
+		uiTable.add(playerName);
+		uiTable.row().padTop(20);
 		Label label = new Label("escape still works - level list not", defaultSkin);
 		uiTable.add(label);
 		uiTable.row().padTop(20);
