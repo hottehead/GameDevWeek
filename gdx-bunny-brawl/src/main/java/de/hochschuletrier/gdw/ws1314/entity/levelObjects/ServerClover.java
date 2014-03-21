@@ -21,8 +21,8 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
  */
 public class ServerClover extends ServerLevelObject
 {
-	public static final float CLOVER_ATTACK_FACTOR = 1.5f;
-	public static final float CLOVER_ATTACK_DURATION = 2.0f;
+	public static final float CLOVER_HEALTHBUFF_FACTOR = 1.5f;
+	public static final float CLOVER_HEALTHBUFF_DURATION = 2.f;
 	
 	public ServerClover()
 	{
