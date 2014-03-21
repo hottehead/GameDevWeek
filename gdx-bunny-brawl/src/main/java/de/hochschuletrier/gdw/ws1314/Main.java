@@ -21,7 +21,6 @@ import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
-import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -33,7 +32,6 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.*;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
@@ -298,10 +296,10 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void dispose() {
-		DrawUtil.batch.dispose();
-		GameStates.dispose();
+		NetworkManager.getInstance().dispose();
 		consoleView.dispose();
 		skin.dispose();
+		Gdx.app.exit();
 	}
 
 	@Override
