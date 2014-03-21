@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
@@ -37,6 +38,8 @@ public class ClientEntityManager {
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
     protected ArrayList<ClientEntityManagerListener> listeners;
+    
+    private GameInfo gameInfo = new GameInfo();
 
     private long playerEntityID = -1;
 
@@ -56,7 +59,11 @@ public class ClientEntityManager {
     	return instance;
     }
     
-    public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+
+	public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
         switch(type)
         {
@@ -208,6 +215,7 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo=new GameInfo();
     }
     
     public void provideListener(ClientEntityManagerListener l) {

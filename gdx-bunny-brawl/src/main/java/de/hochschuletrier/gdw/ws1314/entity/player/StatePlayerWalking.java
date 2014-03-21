@@ -12,7 +12,7 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * @author ElFapo
  *
  */
-public class StatePlayerWalking extends State
+public class StatePlayerWalking extends StatePlayer
 {
 	private FacingDirection movingDirection;
 	
@@ -66,6 +66,8 @@ public class StatePlayerWalking extends State
 	{
 		((ServerPlayer) getOwner()).moveEnd();
 	}
+
+	public PlayerStates getCurrentState(){return PlayerStates.WALKING;}
 
 	public void setMovingDirection(FacingDirection direction)
 	{
