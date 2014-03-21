@@ -92,10 +92,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float attackBuffTimer;
     private float attackBuffDuration;
     private boolean attackBuffActive;
-    
-    private float healthBuffTimer;
-    private float healthBuffDuration;
-    private boolean healthBuffActive;
+    private float	attackBuffFactor;
 
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
@@ -107,7 +104,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-    private float				strengthBuffDuration;	
     
     private long				droppedEggID;
     
@@ -120,7 +116,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.HUNTER);
+    	setPlayerKit(PlayerKit.TANK);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -135,9 +131,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	attackBuffTimer = 0.f;
     	attackBuffDuration = 0.f;
     	attackBuffActive = false;
-    	healthBuffTimer = 0.f;
-    	healthBuffDuration = 0.f;
-    	healthBuffActive = false;
+    	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
     	waterFixtures = new ArrayList<Fixture>();
     }
@@ -183,19 +177,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		attackBuffTimer += deltaTime;
     		if (attackBuffTimer >= attackBuffDuration)
     		{
-    			//TODO resetAttackDamage
+    			attackBuffFactor = 1.0f;
     			attackBuffActive = false;
-    		}
-    	}
-    	
-    	if (healthBuffActive)
-    	{
-    		healthBuffTimer += deltaTime;
-    		if (healthBuffTimer >= healthBuffDuration)
-    		{
-    			this.setCurrentHealth(1.f/ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-    			logger.info("Health: "+currentHealth);
-    			healthBuffActive = false;
     		}
     	}
     }
@@ -393,8 +376,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
-                	 applyHealthBuff(ServerClover.CLOVER_HEALTHBUFF_FACTOR, ServerClover.CLOVER_HEALTHBUFF_DURATION);
-                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+                	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+                	 ServerClover clover = (ServerClover) otherEntity;
+                	 ServerEntityManager.getInstance().removeEntity(clover);
+
                 	 break;
                  case WaterZone:
                      logger.info("spieler kollision mit wasser");
@@ -442,14 +427,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() == projectile.getSourceID())
-                     	break;
-                     if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() != projectile.getSourceID())
+                     //	break;
+                     //if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
+                        ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
@@ -519,6 +504,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     public PlayerKit		getPlayerKit()			{ return playerKit; }
     public TeamColor		getTeamColor()			{ return teamColor; }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
+    public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
     
     public void setPlayerKit(PlayerKit kit)
     {
@@ -550,15 +536,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	attackBuffActive = true;
     	attackBuffTimer = 0.f;
     	attackBuffDuration = duration;
-    	//TODO setAttackDamage
+    	attackBuffFactor = factor;
     }
     
-    public void applyHealthBuff(float factor, float duration)
+    public void applyHealth(float factor)
     {
-    	healthBuffActive = true;
-    	healthBuffTimer = 0.f;
-    	healthBuffDuration = duration;
-    	setCurrentHealth(factor);
+    	this.currentHealth += factor * playerKit.getBaseHealth();
+    	if (this.currentHealth > playerKit.getBaseHealth())
+    		this.currentHealth = playerKit.getBaseHealth();
     }
 
 	@Override
@@ -628,11 +613,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		reset();
     }
     
-    public void applyResistanceBuff(float factor, float time)
-    {
-    	
-    }
-    
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
@@ -654,10 +634,5 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         } catch(Exception e) {
         }
         return true;
-    }
-    
-    public void setCurrentHealth(float factor)
-    {
-    	this.currentHealth *= factor;
     }
 }
