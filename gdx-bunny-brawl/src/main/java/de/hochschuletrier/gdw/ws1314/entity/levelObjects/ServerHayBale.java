@@ -1,5 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -33,6 +36,7 @@ public class ServerHayBale extends ServerLevelObject
 	private float speed;
 	private boolean acrossable = false;
 	
+	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 	
 	public ServerHayBale()
 	{
@@ -71,6 +75,7 @@ public class ServerHayBale extends ServerLevelObject
 												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 				break;
 			case WaterZone:
+				logger.info("Ich bin im Wasser");
 				this.physicsBody.setLinearDamping(WATER_DAMPING);
 				this.acrossable = true;
 				speed = 0;
@@ -100,7 +105,7 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
-ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		ServerEntity otherEntity = this.identifyContactFixtures(contact);
         
         if(otherEntity == null){
             return;
