@@ -9,6 +9,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
@@ -58,7 +59,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 
     @Override
     public void dispose () {
-    	
+    	System.out.println("DISPOSED");
     }
     
     // GameStateCallback
@@ -213,6 +214,9 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 	private class DisconnectClick extends ClickListener {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
+			NetworkManager.getInstance().disconnectFromServer();
+			GameStates.MAINMENU.init(assetManager);
+			GameStates.MAINMENU.activate();
 		}
 		
 	}

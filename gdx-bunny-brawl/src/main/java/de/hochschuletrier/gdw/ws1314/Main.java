@@ -131,95 +131,7 @@ public class Main extends StateBasedGame {
 		GameStates.LOADING.activate();
         
 		NetworkManager.getInstance().init();
-		NetworkManager.getInstance().setClientIdCallback(new ClientIdCallback() {
-			
-			@Override
-			public void callback(int playerid) {
-				c_own_id = playerid;
-				logger.info("Own id: " + c_own_id);
-			}
-		});
 		
-		
-		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
-			
-			@Override
-			public void callback(String map) {
-				//s_map = map;
-				logger.info("New map: " + map);
-			}
-		});
-
-		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
-			
-			@Override
-			public void callback(int playerid, String playerName, EntityType type, TeamColor team,
-					boolean accept) {
-				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
-				boolean update = false;
-				for(int i = 0; i < s_players.size(); i++){
-					if(s_players.get(i) == null)
-						continue;
-					if(s_players.get(i).getPlayerId() == playerid){
-						logger.info("[SERVER] updated Player {}: {}", playerid, playerName);
-						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
-						update = true;
-						break;
-					}
-				}
-				if(!update){
-					logger.info("[SERVER] Player {} changed name to {}.", playerid, playerName);
-					s_players.add(new PlayerData(playerid, playerName, type, team, accept));
-				}
-			}
-		});
-		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
-			@Override
-			public void callback(String map, PlayerData[] players) {
-				for(int i = 0; i < players.length; i++)
-				c_players = players;
-			}
-		});
-		
-		NetworkManager.getInstance().setDisconnectCallback(new DisconnectCallback(){
-			
-			@Override
-			public void callback(String msg){
-				logger.warn("{}." ,msg);
-				c_own_id  = -1;
-				s_map = "";
-				c_players = null;
-				s_players = new ArrayList<PlayerData>();
-				if(Main.getInstance().getCurrentState()!=GameStates.MAINMENU.get()){
-					GameStates.MAINMENU.init(assetManager);
-					GameStates.MAINMENU.activate();
-				}
-			}
-		});
-		
-		NetworkManager.getInstance().setPlayerDisconnectCallback(new PlayerDisconnectCallback() {
-			
-			@Override
-			public void callback(Integer[] playerid) {
-				// TODO Auto-generated method stub
-				List<PlayerData> players = new ArrayList<PlayerData>();
-				for(int i = 0; i < s_players.size(); i++){
-					boolean inlist = true;
-					for(int j = 0; j < playerid.length; j++){
-						if(playerid[j] == s_players.get(i).getPlayerId()){
-							inlist = false;
-							break;
-						}
-					}
-					if(inlist)
-						players.add(s_players.get(i));
-				}
-				//playercount = players.size();
-				s_players = players;
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
-			}
-		});
-		 	
 		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
 			@Override
 			public void showUsage() {
@@ -251,13 +163,13 @@ public class Main extends StateBasedGame {
 				{
 					if (NetworkManager.getInstance().isServer())
 					{
-						logger.info("Changing State to Server-Mainmenu...");
+						logger.info("Changing State to Mainmenu...");
 						GameStates.MAINMENU.init(assetManager);
 						GameStates.MAINMENU.activate();
 					}
 					else if (NetworkManager.getInstance().isClient())
 					{
-						logger.info("Changing State to Client-Mainmenu...");
+						logger.info("Changing State to Mainmenu...");
 						GameStates.MAINMENU.init(assetManager);
 						GameStates.MAINMENU.activate();
 					}
@@ -266,29 +178,9 @@ public class Main extends StateBasedGame {
 						logger.info("Not yet connected...");
 					}
 				}
-				if (args.get(1).equals("sgp"))
-				{
-					ArrayList<PlayerData> list = new ArrayList<>();
-					for (int i = 1; i < 4; i++) {
-						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
-						list.add(p);
-					}
-
-					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
-					GameStates.SERVERGAMEPLAY.init(assetManager);
-					GameStates.SERVERGAMEPLAY.activate();
-					logger.info("ServerGamePlayState activated...");
-				}
 			}
 		});
 		
-	}
-
-	/**
-	 * NETWORK nur von sendLobbyUpdateCmd aus NetworkCommands nutzen !
-	 */
-	public void sendDevLobbyUpdate(){
-		NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
 	}
 
 	public void onLoadComplete() {

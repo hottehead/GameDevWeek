@@ -26,7 +26,6 @@ public class NetworkCommands{
 		Main.getInstance().console.register(disconnectCmd);
 		Main.getInstance().console.register(devConnectCmd);
 		Main.getInstance().console.register(sendDevPlayerUpdateCmd);
-		Main.getInstance().console.register(sendLobbyUpdateCmd);
 		Main.getInstance().console.register(sendMatchUpdateCmd);
 		Main.getInstance().console.register(sendPlayerUpdateCmd);
 		Main.getInstance().console.register(cheatCmd);
@@ -216,18 +215,6 @@ public class NetworkCommands{
 			catch (Exception e){
 				logger.error("[CLIENT] can't send data", e);
 			}
-		}
-	};
-
-	private ConsoleCmd sendLobbyUpdateCmd = new ConsoleCmd("sendLobbyUpdate", 0, "[SERVER][DEBUG] Post LobbyUpdate", 0){
-		@Override
-		public void showUsage(){
-			showUsage("");
-		}
-
-		@Override
-		public void execute(List<String> args){
-			Main.getInstance().sendDevLobbyUpdate();
 		}
 	};
 

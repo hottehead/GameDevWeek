@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -18,7 +19,7 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
  * Created by Sonic
  */
 
-public class ServerLobbyManager implements PlayerUpdateCallback {
+public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnectCallback {
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyManager.class);
 	
 	private HashMap<Integer, PlayerData> players;
@@ -30,6 +31,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 		this.players = new HashMap<>();
 		this.listener = new ArrayList<>();
 		NetworkManager.getInstance().setPlayerUpdateCallback(this);
+		NetworkManager.getInstance().setPlayerDisconnectCallback(this);
 	}
 	
 	public List<PlayerData> getPlayers() {
@@ -64,7 +66,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 		PlayerData pd = new PlayerData(playerid, playerName, type, team, accept);
 		this.players.put(playerid, pd);
 		
-		NetworkManager.getInstance().sendLobbyUpdate(this.map, this.players.values().toArray(new PlayerData[0]));
+		sendLobbyUpdateToClients();
 		
 		if (checkReadiness())
 		{
@@ -90,6 +92,18 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 		{
 			l.startGame();
 		}
+	}
+	
+	private void sendLobbyUpdateToClients() {
+		NetworkManager.getInstance().sendLobbyUpdate(this.map, this.players.values().toArray(new PlayerData[0]));
+	}
+
+	@Override
+	public void callback(Integer[] playerid) {
+		for (int i = 0; i < playerid.length; i++) {
+			this.players.remove(playerid[i]);
+		}
+		sendLobbyUpdateToClients();
 	}
 	
 }

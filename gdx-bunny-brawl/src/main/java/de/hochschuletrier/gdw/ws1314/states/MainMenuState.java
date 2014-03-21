@@ -81,11 +81,13 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void onEnter() {
 		inputProcessor.setActive(true);
         
-        if (this.music.isMusicPlaying())
+        if (this.music.isMusicPlaying()) {
 			//this.music.deMute();
 			this.music.setFade('i', 5000);
-        else
-        this.music.play("music-lobby-loop");
+        }
+        else {
+        	this.music.play("music-lobby-loop");
+        }
         
 		stage.getStartServerButton().addListener(this.startServerClickListener);
 		stage.getStartClientButton().addListener(this.startClientClickListener);
@@ -93,16 +95,18 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void onLeave() {
-		//this.music.mute();
-		this.music.setFade('o', this.stateChangeDuration);
+    	if (this.music.isMusicPlaying()) {
+    		this.music.setFade('o', this.stateChangeDuration);
+        }
+		
         inputProcessor.setActive(false);
+        
+        stage.getStartServerButton().removeListener(this.startServerClickListener);
+		stage.getStartClientButton().removeListener(this.startClientClickListener);
 	}
 
 	@Override
 	public void onLeaveComplete() {
-        
-        stage.getStartServerButton().removeListener(this.startServerClickListener);
-		stage.getStartClientButton().removeListener(this.startClientClickListener);
     }
 
     @Override
