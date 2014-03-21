@@ -112,9 +112,5 @@ public class MainMenuStage extends AutoResizeStage {
 		super.resize(width, height);
 		if(this.xScale >0 && this.yScale>0)
 			uiTable.setScale(this.xScale, this.yScale);
-		//		this.levelList.setSize(width, height);
-//		
-//		uiTable.invalidate();
-//		levelList.invalidate();
 	}
 }
