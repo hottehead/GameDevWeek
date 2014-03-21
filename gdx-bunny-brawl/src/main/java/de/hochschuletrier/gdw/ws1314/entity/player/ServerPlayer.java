@@ -369,7 +369,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 }
                 	 break;
             	 case ContactMine:
-                	 ServerContactMine mine = (ServerContactMine) otherEntity;
                 	 
                 	 break;
                  case Carrot:
@@ -378,13 +377,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case Spinach:
                 	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                	 ServerSpinach spinach = (ServerSpinach) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(spinach);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
                 	 applyHealthBuff(ServerClover.CLOVER_HEALTHBUFF_FACTOR, ServerClover.CLOVER_HEALTHBUFF_DURATION);
-                	 ServerClover clover = (ServerClover) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(clover);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case WaterZone:
                      
