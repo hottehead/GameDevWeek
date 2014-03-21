@@ -97,7 +97,7 @@ public class NetworkManager{
 				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
 		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
 				newTotalBytesReceived/factor,Math.round(bytesReceivedPerSecond*rF)/rF,
-				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
+				newTotalDgramsReceived,Math.round(dgramsReceivedPerSecond*rF)/rF);
 		lastStatTime=newStatTime;
 		lastTotalBytesSent=newTotalBytesSent;
 		lastTotalBytesReceived=newTotalBytesReceived;
