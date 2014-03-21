@@ -9,6 +9,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
@@ -19,12 +20,19 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class ClientLobbyState extends GameState implements GameStateCallback {
+
 	private static final Logger logger = LoggerFactory.getLogger(ClientLobbyState.class);
 
 	protected ClientLobbyManager clientLobby;
 	
 	private ClientLobbyStage stage;
 	
+	// Listener
+	private AcceptClick acceptClick;
+	private SwapTeamClick swapTeamClick;
+	private DisconnectClick disconnectClick;
+	
+	// Console Commands
 	private ConsoleCmd sendPlayerUpdate;
 	private ConsoleCmd cpAccept;
 	private ConsoleCmd cpTeam;
@@ -34,39 +42,80 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
-        this.clientLobby = new ClientLobbyManager("John");
-        
-        // TODO: Temporär nur zum localen Testen
-        if (!NetworkManager.getInstance().isClient())
-        {
+	    this.acceptClick = new AcceptClick();
+	    this.swapTeamClick = new SwapTeamClick();
+	    this.disconnectClick = new DisconnectClick();
+    }
+
+    @Override
+    public void render () {
+    	this.stage.render();
+    }
+
+    @Override
+    public void update (float delta) {
+        // TODO
+    }
+
+    @Override
+    public void dispose () {
+    	System.out.println("DISPOSED");
+    }
+    
+    // GameStateCallback
+	@Override
+	public void callback(GameStates gameStates) {
+		logger.info("GameStateChange received");
+		if (gameStates == GameStates.CLIENTGAMEPLAY)
+		{
+			gameStates.init(assetManager);
+			gameStates.activate();
+			logger.info("ClientGamePlayState activated.");
+		}
+	}
+	
+	@Override
+	public void onEnter() {
+    	super.onEnter();
+    	
+    	this.clientLobby = new ClientLobbyManager(Main.playerName);
+    	
+    	this.stage = new ClientLobbyStage(this.clientLobby);
+	    this.stage.init(assetManager);
+    	
+	    // TODO: Temporär nur zum localen Testen
+	    if (!NetworkManager.getInstance().isClient())
+	    {
 	        NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
 	        
-	        if (!NetworkManager.getInstance().isClient())
+	        if (!NetworkManager.getInstance().isClient()) {
 	        	logger.warn("Connection could not be established! Server maybe not running.");
-        }
-        
-        this.clientLobby.sendChanges();
-        
-        
-        
-        NetworkManager.getInstance().setGameStateCallback(this);
-        
-        
-        logger.info("Client-Lobby created.");
-        
-        /*
-        this.sendPlayerUpdate = new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",0) {
+	        	GameStates.MAINMENU.init(assetManager);
+	        	GameStates.MAINMENU.activate();
+	        	return;
+	        }
+	    }
+	    
+	    this.clientLobby.sendChanges();
+	    
+	    NetworkManager.getInstance().setGameStateCallback(this);
+	    
+	    logger.info("Client-Lobby entered.");
+	    
+	    /*
+	    this.sendPlayerUpdate = new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",0) {
 			@Override
 			public void execute(List<String> args) {
 				clientLobby.sendChanges();
 			}
 		};
 		*/
-		
-        this.stage = new ClientLobbyStage();
-        this.stage.init(assetManager);
-        this.stage.getStartButton().addListener(new AcceptClick());
-        
+	    
+	    // ButtonEvents
+	    this.stage.getReadyButton().addListener(this.acceptClick);
+	    this.stage.getSwapTeamButton().addListener(this.swapTeamClick);
+	    this.stage.getDisconnectButton().addListener(this.disconnectClick);
+	    
 		this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
 			@Override
 			public void execute(List<String> args) {
@@ -85,9 +134,9 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			
 			@Override
 			public void showUsage() {
-				super.showUsage("<ClassName>");
+				super.showUsage("<ClassName> => [hunter, knight, tank]");
 			}
-
+	
 			@Override
 			public void execute(List<String> args) {
 				EntityType t;
@@ -118,31 +167,33 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    @Override
-    public void render () {
-    	this.stage.render();
-    }
-
-    @Override
-    public void update (float delta) {
-        // TODO
-    }
-
-    @Override
-    public void dispose () {
-    	//Main.getInstance().console.unregister(this.sendPlayerUpdate);
-    }
-    
-    // GameStateCallback
 	@Override
-	public void callback(GameStates gameStates) {
-		logger.info("GameStateChange received");
-		if (gameStates == GameStates.CLIENTGAMEPLAY)
-		{
-			gameStates.init(assetManager);
-			gameStates.activate();
-			logger.info("ClientGamePlayState activated.");
-		}
+	public void onEnterComplete() {
+		// TODO Auto-generated method stub
+		super.onEnterComplete();
+	}
+
+	@Override
+	public void onLeave() {
+		super.onLeave();
+		
+		Main.getInstance().console.unregister(this.cpAccept);
+		Main.getInstance().console.unregister(this.cpTeam);
+		Main.getInstance().console.unregister(this.cpClass);
+		
+		// Remove ButtonListener
+		this.stage.getReadyButton().removeListener(this.acceptClick);
+		this.stage.getSwapTeamButton().removeListener(this.swapTeamClick);
+	    this.stage.getDisconnectButton().removeListener(this.disconnectClick);
+		
+		this.clientLobby = null;
+		this.stage = null;
+	}
+
+	@Override
+	public void onLeaveComplete() {
+		// TODO Auto-generated method stub
+		super.onLeaveComplete();
 	}
 	
 	private class AcceptClick extends ClickListener {
@@ -151,4 +202,22 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			clientLobby.toggleReadyState();
 		}
     }
+	
+	private class SwapTeamClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			clientLobby.swapTeam();
+		}
+		
+	}
+	
+	private class DisconnectClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			NetworkManager.getInstance().disconnectFromServer();
+			GameStates.MAINMENU.init(assetManager);
+			GameStates.MAINMENU.activate();
+		}
+		
+	}
 }

@@ -4,11 +4,8 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
-import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.EventType;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.Zone;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
@@ -53,11 +50,11 @@ public class NetworkManager{
 	private MatchUpdateCallback matchupdatecallback;
 	private GameStateCallback gameStateCallback;
 	
-	private long lastStatTime=System.currentTimeMillis();
-	private long lastTotalBytesSent=0;
-	private long lastTotalBytesReceived=0;
-	private long lastTotalDgramsSent=0;
-	private long lastTotalDgramsReceived=0;
+	private long lastStatTime = System.currentTimeMillis();
+	private long lastTotalBytesSent = 0;
+	private long lastTotalBytesReceived = 0;
+	private long lastTotalDgramsSent = 0;
+	private long lastTotalDgramsReceived = 0;
 	
 	private float ping = 0;
 	
@@ -66,8 +63,7 @@ public class NetworkManager{
 	}
 	
 	void updatePing(float newPing){
-//		ping=0.9f*ping+0.1f*newPing;
-		ping = newPing;
+		ping=0.9f*ping+0.1f*newPing;
 	}
 	
 	public void checkStats(){
@@ -108,9 +104,10 @@ public class NetworkManager{
 		else{
 			logger.info("Network Statistics:");
 		}
+
 		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
-				newTotalBytesSent/factor,Math.round(bytesSentPerSecond*rF)/rF,
-				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
+				newTotalBytesSent / factor, Math.round(bytesSentPerSecond * rF) / rF,
+				newTotalDgramsSent, Math.round(dgramsSentPerSecond * rF) / rF);
 		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
 				newTotalBytesReceived/factor,Math.round(bytesReceivedPerSecond*rF)/rF,
 				newTotalDgramsReceived,Math.round(dgramsReceivedPerSecond*rF)/rF);
@@ -231,7 +228,8 @@ public class NetworkManager{
 	public String getMyIp(){
 		try{
 			return InetAddress.getLocalHost().getHostAddress().toString();
-		}catch (Exception e){
+		}
+		catch (Exception e){
 			logger.error("NWM: error at reading local host IP, fallback to localhost\n{}", e);
 			return "127.0.0.1";
 		}
@@ -310,7 +308,7 @@ public class NetworkManager{
 
 	public void sendLobbyUpdate(String map, PlayerData[] players){
 		if(!isServer()) return;
-		for(PlayerData pd:players){
+		for(PlayerData pd : players){
 			logger.info("[SERVER] Player: " + pd.toString());
 		}
 		broadcastToClients(new LobbyUpdateDatagram(map, players));
@@ -345,7 +343,7 @@ public class NetworkManager{
 	 * @param text
 	 */
 	void receiveChat(String sender, String text){
-		for(ChatListener l:chatListeners){
+		for(ChatListener l : chatListeners){
 			l.chatMessage(sender, text);
 		}
 	}
@@ -360,7 +358,7 @@ public class NetworkManager{
 			logger.warn("[SERVER] Request to broadast datagram to clients will be ignored because of non-server context.");
 			return;
 		}
-		for(NetConnection con:serverConnections){
+		for(NetConnection con : serverConnections){
 			con.send(dgram);
 		}
 	}
@@ -412,6 +410,9 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
+			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				return;
+			}
 			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
@@ -428,24 +429,24 @@ public class NetworkManager{
 
 		if(isServer()){
 			List<NetConnection> toRemove = new ArrayList<NetConnection>();
-			for(NetConnection c:serverConnections){
+			for(NetConnection c : serverConnections){
 				if(!c.isConnected()){
 					toRemove.add(c);
 				}
 			}
 			if(toRemove.size() > 0){
 				List<Integer> ids = new ArrayList<Integer>();
-				for(NetConnection rc:toRemove){
+				for(NetConnection rc : toRemove){
 					serverConnections.remove(rc);
-					logger.info("[SERVER] {} disconnected", ((ConnectionAttachment)rc.getAttachment()).getPlayername());
-					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment)rc.getAttachment()).playername+" disconnected"));
+					logger.info("[SERVER] {} disconnected", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
+					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected"));
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
 				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
 			}
 		}
 		if(clientConnection != null){
-			if (!clientConnection.isConnected()){
+			if(!clientConnection.isConnected()){
 				clientConnection = null;
 				this.disconnectcallback.callback("Server is offline.");
 			}
@@ -490,7 +491,7 @@ public class NetworkManager{
 	}
 
 	public void setPlayerEntityId(int playerId, long entityId){
-		for(NetConnection nc:serverConnections){
+		for(NetConnection nc : serverConnections){
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
 			if(tmp.getId() == playerId){
 				tmp.setEntityId(entityId);
@@ -503,7 +504,7 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
-				for (NetConnection nc:serverConnections){
+				for(NetConnection nc : serverConnections){
 					nc.shutdown();
 				}
 				nextPlayerNumber = 1;
@@ -519,6 +520,15 @@ public class NetworkManager{
 		}
 		catch (Exception e){
 			logger.error("[SERVER] Can't Stop Server:", e);
+		}
+	}
+
+	public void dispose(){
+		if(isServer()){
+			stopServer();
+		}
+		if(isClient()){
+			disconnectFromServer();
 		}
 	}
 }

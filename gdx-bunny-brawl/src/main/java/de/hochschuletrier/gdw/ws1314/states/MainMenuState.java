@@ -31,6 +31,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     private LocalMusic music;
 	private int stateChangeDuration=500;
 	private MainMenuStage stage;
+	private StartServerClick startServerClickListener;
+	private StartClientClick startClientClickListener;
 
     public MainMenuState() {
     }
@@ -52,11 +54,12 @@ public class MainMenuState extends GameState implements InputProcessor {
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
         
-		stage = new MainMenuStage();
+
+        stage = new MainMenuStage();
 		stage.init(assetManager);
 		
-		stage.getStartServerButton().addListener(new StartServerClick());
-		stage.getStartClientButton().addListener(new StartClientClick());
+		this.startServerClickListener = new StartServerClick();
+		this.startClientClickListener = new StartClientClick();
 
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -78,28 +81,38 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void onEnter() {
 		inputProcessor.setActive(true);
         
-        if (this.music.isMusicPlaying())
+        if (this.music.isMusicPlaying()) {
 			//this.music.deMute();
 			this.music.setFade('i', 5000);
-        else
-        this.music.play("music-lobby-loop");
+        }
+        else {
+        	this.music.play("music-lobby-loop");
+        }
+        
+		stage.getStartServerButton().addListener(this.startServerClickListener);
+		stage.getStartClientButton().addListener(this.startClientClickListener);
     }
 
     @Override
     public void onLeave() {
-		//this.music.mute();
-		this.music.setFade('o', this.stateChangeDuration);
+    	if (this.music.isMusicPlaying()) {
+    		this.music.setFade('o', this.stateChangeDuration);
+        }
+		
         inputProcessor.setActive(false);
+        
+        stage.getStartServerButton().removeListener(this.startServerClickListener);
+		stage.getStartClientButton().removeListener(this.startClientClickListener);
 	}
 
 	@Override
 	public void onLeaveComplete() {
-        
     }
 
     @Override
     public void dispose() {
-		stage.dispose();
+		if (this.stage != null)
+			stage.dispose();
     }
 
     @Override
