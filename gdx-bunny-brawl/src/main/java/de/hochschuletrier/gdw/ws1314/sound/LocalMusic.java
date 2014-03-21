@@ -19,8 +19,9 @@ public class LocalMusic {
 	private Music musicHandle;
 	private boolean fading;
 	private char fadingDirection;
+	private int duration;
 	
-	private static float SystemVolume = 1.0f;
+	private static float SystemVolume = 0.9f;
 	
 	/**
 	 * Change the general volume for music
@@ -40,8 +41,10 @@ public class LocalMusic {
 		return LocalMusic.SystemVolume;
 	}
 	
-	public void setFade(char fadingDirection) {
+	public void setFade(char fadingDirection, int duration) {
+		this.duration = duration;
 		this.fading = this.fading == true ? false : true;
+		this.musicHandle.setVolume(this.fading == false ? 0.0f : LocalMusic.SystemVolume);
 		this.fadingDirection = fadingDirection;
 	}
 
@@ -57,26 +60,26 @@ public class LocalMusic {
 	
 	public void update(int duration) {
 		float delta = Gdx.graphics.getDeltaTime();
-        /*if (delta > 0.016f) {
-            delta = 0.016f;
-        }*/
+		
+		
 		if (this.fading) {
 			float volume = this.musicHandle.getVolume();
 			if (this.fadingDirection == 'i') {
-				volume += delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? LocalMusic.SystemVolume : volume;
-				this.fading = volume >= 1.0f ? false : true;
+				volume += delta * (1000.0f / this.duration);
+				volume = volume < delta * (1000.0f / this.duration) ? LocalMusic.SystemVolume : volume;
+				this.fading = volume >= LocalMusic.SystemVolume ? false : true;
 			}
 			else if (this.fadingDirection == 'o') {
-				volume -= delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? 0.0f : volume;
+				volume -= delta * (1000.0f / this.duration);
+				volume = volume < delta * (1000.0f / this.duration) ? 0.0f : volume;
+				this.fading = volume == 0.0f ? false : true;
 			}
 			
-			volume = volume > 1 ? 1 : volume;
+			volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
 			this.musicHandle.setVolume(volume);
 			System.out.println(this.musicHandle.getVolume());
 			System.out.println(this.fadingDirection);
-			System.out.println(this.fadingDirection);
+			System.out.println(this.fading);
 		}
 	}
 	

@@ -81,7 +81,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 		if (this.music.isMusicPlaying())
 			//this.music.deMute();
-			this.music.setFade('i');
+			this.music.setFade('i', 5000);
 		else
 			this.music.play("music-lobby-loop");
 	}
@@ -89,13 +89,13 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void onLeave() {
 		//this.music.mute();
-		this.music.setFade('o');
+		this.music.setFade('o', this.stateChangeDuration);
 		inputProcessor.setActive(false);
 	}
 
 	@Override
 	public void onLeaveComplete() {
-		music.setFade('o');
+
 	}
 
 	@Override
