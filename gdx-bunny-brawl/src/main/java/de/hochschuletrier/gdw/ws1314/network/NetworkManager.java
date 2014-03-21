@@ -431,7 +431,9 @@ public class NetworkManager{
 		if(clientConnection != null){
 			if(!clientConnection.isConnected()){
 				clientConnection = null;
-				this.disconnectcallback.callback("Disconnected from Server - handleDisconnects");
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.callback("Disconnected from Server - handleDisconnects");
+				}
 			}
 		}
 	}
@@ -494,7 +496,9 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
-				this.disconnectcallback.callback("[SERVER] Stopped");
+				if(this.disconnectcallback!=null){
+					this.disconnectcallback.callback("[SERVER] Stopped");
+				}
 				logger.info("[SERVER] stopped");
 			}
 			else{
