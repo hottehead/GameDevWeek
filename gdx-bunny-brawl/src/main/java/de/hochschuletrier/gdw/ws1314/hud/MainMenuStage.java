@@ -66,6 +66,8 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.add(playerNameField);
 		
+		Slider slider = new Slider(0, 100, 5, false, defaultSkin);
+		uiTable.add(slider);
 
 //		uiTable.row().padTop(20);
 //		Label label = new Label("escape still works - level list not", defaultSkin);

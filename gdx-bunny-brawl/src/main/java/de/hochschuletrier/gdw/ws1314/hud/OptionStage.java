@@ -29,7 +29,6 @@ public class OptionStage extends AutoResizeStage {
 
 	public void init(AssetManagerX assetManager) {
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
-		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output

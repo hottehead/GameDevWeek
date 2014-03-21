@@ -36,57 +36,33 @@ public class MainMenuState extends GameState implements InputProcessor {
 	public MainMenuState() {
 	}
 
-	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
 		logger = LoggerFactory.getLogger(MainMenuState.class);
 		
 		this.music = new LocalMusic(assetManager);
-		inputProcessor = new InputInterceptor(this) {
-			@Override
-			public boolean keyUp(int keycode) {
-				switch (keycode) {
-				case Keys.ESCAPE:
-					if (GameStates.GAMEPLAY.isActive()) {
-						GameStates.MAINMENU.activate(
-								 new SplitHorizontalTransition(stateChangeDuration).reverse(),
-								null);
-					} else if (GameStates.MAINMENU.isActive())
-						GameStates.GAMEPLAY.activate(
-								new SplitHorizontalTransition(stateChangeDuration), null);
-					return true;
-				}
-				return isActive && mainProcessor.keyUp(keycode);
-			}
-		};
-		
-		Main.inputMultiplexer.addProcessor(inputProcessor);
 
 		stage = new MainMenuStage();
 		stage.init(assetManager);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.optionListener = new OptionListener();
-		this.playListener = new PlayListener();
+		this.playListener = new PlayListener(); 
 	}
-
-	@Override
+	
 	public void render() {
 		stage.render();
 	}
 
-	float stateTime = 0f;
+	float stateTime = 0f; 
 
-	@Override
 	public void update(float delta) {
 		stateTime += delta;
 		music.update(stateChangeDuration);
 	}
 
-	@Override
 	public void onEnter() {
-		inputProcessor.setActive(true);
-		
-		//add listener to buttons in stage
+	    Gdx.input.setInputProcessor(stage);
+	    //add listener to buttons in stage
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getStartButton().addListener(this.playListener);
 
@@ -97,66 +73,52 @@ public class MainMenuState extends GameState implements InputProcessor {
 			this.music.play("music-lobby-loop");
 	}
 
-	@Override
 	public void onLeave() {
 		//this.music.mute();
 		this.music.setFade('o', this.stateChangeDuration);
 		
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getStartButton().removeListener(this.playListener);
-		inputProcessor.setActive(false);
+		Main.inputMultiplexer.removeProcessor(stage);
 	}
 
-	@Override
 	public void onLeaveComplete() {
-//		stage.dispose();
-
 	}
 
-	@Override
 	public void dispose() {
 	}
 
-	@Override
 	public boolean keyDown(int keycode) {
 		return false;
 	}
 
-	@Override
 	public boolean keyUp(int keycode) {
 		return false;
 	}
 
-	@Override
 	public boolean keyTyped(char character) {
 		return false;
 	}
 
-	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		return false;
 	}
 
-	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		return false;
 	}
 
-	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		return false;
 	}
 
-	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
 
-	@Override
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	
 	
 	//private listener 
 	private class PlayClientListener extends ClickListener {
