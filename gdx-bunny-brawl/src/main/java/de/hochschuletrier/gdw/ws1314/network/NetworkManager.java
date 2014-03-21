@@ -55,6 +55,8 @@ public class NetworkManager{
 	private long lastStatTime=System.currentTimeMillis();
 	private long lastTotalBytesSent=0;
 	private long lastTotalBytesReceived=0;
+	private long lastTotalDgramsSent=0;
+	private long lastTotalDgramsReceived=0;
 	
 	public void checkStats(){
 		long newStatTime=System.currentTimeMillis();
@@ -62,27 +64,44 @@ public class NetworkManager{
 		if(statDT<30000) return;
 		long newTotalBytesSent=0;
 		long newTotalBytesReceived=0;
+		long newTotalDgramsSent=0;
+		long newTotalDgramsReceived=0;
 		if(serverConnections!=null){
 			for(NetConnection con: serverConnections){
 				newTotalBytesSent+=con.getBytesSent();
 				newTotalBytesReceived+=con.getBytesReceived();
+				newTotalDgramsSent+=con.getDatagramsSent();
+				newTotalDgramsReceived+=con.getDatagramsReceived();
 			}
 		}
 		if(clientConnection!=null){
 			newTotalBytesSent+=clientConnection.getBytesSent();
 			newTotalBytesReceived+=clientConnection.getBytesReceived();
+			newTotalDgramsSent+=clientConnection.getDatagramsSent();
+			newTotalDgramsReceived+=clientConnection.getDatagramsReceived();
 		}
-		long deltaSent=newTotalBytesSent-lastTotalBytesSent;
-		long deltaReceive=newTotalBytesReceived-lastTotalBytesReceived;
-		double bytesSentPerSecond = deltaSent /(statDT/1000.0);
-		double bytesReceivedPerSecond = deltaReceive /(statDT/1000.0);
+		long deltaBytesSent=newTotalBytesSent-lastTotalBytesSent;
+		long deltaBytesReceived=newTotalBytesReceived-lastTotalBytesReceived;
+		long deltaDgramsSent=newTotalDgramsSent-lastTotalDgramsSent;
+		long deltaDgramsReceived=newTotalDgramsReceived-lastTotalDgramsReceived;
+		double bytesSentPerSecond = deltaBytesSent /(statDT/1000.0);
+		double bytesReceivedPerSecond = deltaBytesReceived /(statDT/1000.0);
+		double dgramsSentPerSecond = deltaDgramsSent /(statDT/1000.0);
+		double dgramsReceivedPerSecond = deltaDgramsReceived /(statDT/1000.0);
 		double factor=1024.0;
+		double rF=100.0;//Rounding Faactor
 		logger.info("Network Statistics: ");
-		logger.info("Sent: {} KiB, {} Byte/s",newTotalBytesSent/factor,bytesSentPerSecond);
-		logger.info("Rec: {} KiB, {} Byte/s",newTotalBytesReceived/factor,bytesReceivedPerSecond);
+		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
+				newTotalBytesSent/factor,Math.round(bytesSentPerSecond*rF)/rF,
+				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
+		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
+				newTotalBytesReceived/factor,Math.round(bytesReceivedPerSecond*rF)/rF,
+				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
 		lastStatTime=newStatTime;
 		lastTotalBytesSent=newTotalBytesSent;
 		lastTotalBytesReceived=newTotalBytesReceived;
+		lastTotalDgramsSent=newTotalDgramsSent;
+		lastTotalDgramsReceived=newTotalDgramsReceived;
 	}
 
 	private NetworkManager(){

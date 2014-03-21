@@ -63,6 +63,10 @@ public class NetConnection extends Thread {
     private long bytesSent=0;
     /** Total bytes received from this connection */
     private long bytesReceived=0;
+    /** Number of datagrams sent to this connection */
+    private long datagramsSent=0;
+    /** Number of datagrams received from this connection */
+    private long datagramsReceived=0;
     
 
     /**
@@ -247,7 +251,7 @@ public class NetConnection extends Thread {
                 messageCacheIn.set(datagram.getType(), datagram.getID(), newBase);
                 break;
         }
-
+        datagramsReceived++;
         // The datagram is ready to be received
         incomingDatagrams.add(datagram);
     }
@@ -264,6 +268,7 @@ public class NetConnection extends Thread {
 
             try {
                 while (!outgoingDatagrams.isEmpty()) {
+                	datagramsSent++;
                     INetDatagram datagram = outgoingDatagrams.poll();
                     switch (datagram.getMessageType()) {
                         case NONE:
@@ -510,6 +515,12 @@ public class NetConnection extends Thread {
 	public long getBytesReceived(){
 		return bytesReceived;
 	}
-    
-    
+
+	public long getDatagramsSent(){
+		return datagramsSent;
+	}
+
+	public long getDatagramsReceived(){
+		return datagramsReceived;
+	}
 }
