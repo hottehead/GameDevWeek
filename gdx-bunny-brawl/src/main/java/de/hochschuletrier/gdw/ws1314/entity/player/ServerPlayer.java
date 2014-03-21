@@ -3,11 +3,14 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -110,7 +113,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
     
-    private ArrayList<Fixture> waterFixtures;
+    private HashMap<Long, Fixture> waterFixtures;
     
     public ServerPlayer()
     {
@@ -133,7 +136,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	waterFixtures = new ArrayList<Fixture>();
+    	waterFixtures = new HashMap<Long, Fixture>();
     }
     
     public void enable() {}
@@ -145,14 +148,32 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public void update(float deltaTime) 
     {
         //kollision mit wasser
-        for(Fixture fix : this.waterFixtures) {
-            if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
-                if(!this.isOnBridge) {
-                    logger.info("Spieler ist im Wasser");
-                    this.reset();
-                }
-            }
+        Iterator<Long> keySetIterator = waterFixtures.keySet().iterator();
+
+        while(keySetIterator.hasNext()){
+          Long key = keySetIterator.next();
+          Fixture fix = this.waterFixtures.get(key);
+          
+          Body body = this.physicsBody.getBody();
+          Vector2 worldPos = body.getWorldCenter();
+          if(fix.testPoint(worldPos)) {
+              if(!this.isOnBridge) {
+                  logger.info("Spieler ist im Wasser");
+                  this.reset();
+              }
+          }
         }
+        
+//        for(Fixture fix : this.waterFixtures) {
+//            Body body = this.physicsBody.getBody();
+//            Vector2 worldPos = body.getWorldCenter();
+//            if(fix.testPoint(worldPos)) {
+//                if(!this.isOnBridge) {
+//                    logger.info("Spieler ist im Wasser");
+//                    this.reset();
+//                }
+//            }
+//        }
         
     	currentState.update(deltaTime);
     	
@@ -388,7 +409,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                      logger.info("spieler kollision mit wasser");
                      
                      Fixture fix = this.getCollidingFixture(contact);
-                     this.waterFixtures.add(fix);
+                     this.waterFixtures.put(otherEntity.getID(), fix);
+                     logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
                      
                 	 break;
                  case AbyssZone:
@@ -474,8 +496,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                     break;
                 case WaterZone:
                     logger.info("spieler: endContact mit wasser");
-                    Fixture fix = this.getCollidingFixture(contact);
-                    this.waterFixtures.remove(fix);
+                    this.waterFixtures.remove(otherEntity.getID());
+                    logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
                     break;
                 default:
                 	break;
