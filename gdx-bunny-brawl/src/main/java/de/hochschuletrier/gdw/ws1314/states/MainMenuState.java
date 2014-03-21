@@ -107,7 +107,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void dispose() {
-		stage.dispose();
+		if (this.stage != null)
+			stage.dispose();
     }
 
     @Override
