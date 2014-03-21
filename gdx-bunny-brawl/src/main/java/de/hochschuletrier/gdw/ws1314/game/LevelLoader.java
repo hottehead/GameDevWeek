@@ -251,15 +251,11 @@ public class LevelLoader {
 		x += width / 2;
 		y += height / 2;
 
-        if(properties == null)
+        if(properties != null)
         {
-            properties = new SafeProperties();
+            properties.setFloat("width",width);
+            properties.setFloat("height",height);
         }
-
-        
-        properties.setFloat("width",width);
-        properties.setFloat("height",height);
-        
         Zone zone;
 		TeamSpawnZone spawnZone;
         ServerEntity entity = null;
@@ -299,13 +295,13 @@ public class LevelLoader {
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamWhite();
-			gameInfo.addTeam(TeamColor.WHITE,spawnZone);
+			gameInfo.setTeamSpawnZoneWhite(spawnZone);
             break;
         case "startb":
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamBlack();
-			gameInfo.addTeam(TeamColor.BLACK,spawnZone);
+			gameInfo.setTeamSpawnZoneBlack(spawnZone);
             break;
 
 

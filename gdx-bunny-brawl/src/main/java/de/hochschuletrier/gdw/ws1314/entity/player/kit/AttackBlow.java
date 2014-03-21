@@ -15,13 +15,8 @@ public class AttackBlow extends AttackType
 {
 	public static final float 	DAMAGE = 150.0f;
     public static final float	ANGLE = (float) Math.PI / 2.0f;
-    public static final float	RANGE = 32.0f;
+    public static final float	RANGE = 20.0f;
     public static final float	WIDTH = 32.0f;
-   
-    
-    public AttackBlow()
-    {
-    }
     
     public void fire(ServerPlayer player)
     {
@@ -30,10 +25,9 @@ public class AttackBlow extends AttackType
     	pos.y += player.getFacingDirection().getDirectionVector().y;
     	
     	ServerSwordAttack attack = (ServerSwordAttack) ServerEntityManager.getInstance().createEntity(ServerSwordAttack.class, pos);
-    	attack.setDamage(DAMAGE * player.getCurrentAttackMultiplier());
+    	attack.setDamage(DAMAGE);
     	attack.setSource(player.getID());
     	attack.setSize(RANGE,  WIDTH);
     	attack.setDespawnTime(ServerPlayer.ATTACK_TIME);
     }
-
 }

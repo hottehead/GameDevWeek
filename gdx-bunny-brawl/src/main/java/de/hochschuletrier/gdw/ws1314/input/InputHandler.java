@@ -42,6 +42,9 @@ public class InputHandler implements InputProcessor
 			case (Input.Keys.E):
 				netManager.sendAction(PlayerIntention.DROP_EGG);
 				return true;
+			case (Input.Keys.F):
+			    netManager.sendAction(PlayerIntention.USE_SOMETHING);
+			    return true;
 		}
 		return false;
 	}

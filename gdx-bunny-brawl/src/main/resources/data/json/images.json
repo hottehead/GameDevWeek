@@ -46,8 +46,5 @@
 	
 	"HudBoostCarrot": "data/huds/boost_carrot.png", 
 	"HudBoostSpinach": "data/huds/boost_spinach.png", 
-	"HudBoostClover": "data/huds/boost_clover.png",
-
-	"victoryWhite": "data/huds/victoryScreenWhite.png",
-	"victoryBlack": "data/huds/victoryScreenBlack.png" 	
+	"HudBoostClover": "data/huds/boost_clover.png"    
 }
