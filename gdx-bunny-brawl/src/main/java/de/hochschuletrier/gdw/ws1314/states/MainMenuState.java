@@ -43,7 +43,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
-		walking = assetManager.getAnimation("walking");
+		walking = assetManager.getAnimation("hunterWhiteWalkRight");
         this.music = new LocalMusic(assetManager);
         inputProcessor = new InputInterceptor(this) {
             @Override
