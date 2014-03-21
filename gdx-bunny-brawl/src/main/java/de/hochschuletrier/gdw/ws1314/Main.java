@@ -33,6 +33,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.*;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
+import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ public class Main extends StateBasedGame {
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
 	public final GamePreferences gamePreferences = new GamePreferences();
+	public static MusicManager musicManager;
 
 	public final DevConsole console = new DevConsole(16);
 	private final DevConsoleView consoleView = new DevConsoleView(console);
@@ -120,6 +122,8 @@ public class Main extends StateBasedGame {
 		loadAssetLists();
 		setupGdx();
 		gamePreferences.init();
+		musicManager = MusicManager.getInstance();
+		musicManager.init(this.assetManager);
 		skin = new Skin(Gdx.files.internal("data/skins/basic.json"));
 		consoleView.init(assetManager, skin);
 		addScreenListener(consoleView);

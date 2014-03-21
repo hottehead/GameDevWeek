@@ -90,6 +90,19 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
+ServerEntity otherEntity = this.identifyContactFixtures(contact);
+        
+        if(otherEntity == null){
+            return;
+        }
+        switch(otherEntity.getEntityType()) {
+            case WaterZone:
+                this.physicsBody.setLinearDamping(0);
+                this.acrossable = false;
+                break;
+            default:
+                break;
+        }
 	}
 
 	@Override
