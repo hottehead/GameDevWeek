@@ -147,8 +147,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         //kollision mit wasser
         for(Fixture fix : this.waterFixtures) {
             if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
-                logger.info("Spieler ist im Wasser");
-                this.reset();
+                if(!this.isOnBridge) {
+                    logger.info("Spieler ist im Wasser");
+                    this.reset();
+                }
             }
         }
         
