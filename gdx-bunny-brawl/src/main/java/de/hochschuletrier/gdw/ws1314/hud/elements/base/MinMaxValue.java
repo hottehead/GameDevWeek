@@ -35,4 +35,8 @@ public class MinMaxValue {
 	public void stepValue() {
 		setValue(this.value + this.stepSize);
 	}
+	
+	public void setMaxValue(float maxValue) {
+		this.maxValue = maxValue;
+	}
 }

@@ -28,8 +28,8 @@ public class RenderObject implements Comparable<RenderObject> {
 	}
 	
 	public TextureRegion getActiveTexture() {
-		stateTime += 0.1f;
-		return material.getActiveTexture(stateTime);
+		
+		return material.getActiveTexture(entity.getStateTime());
 	}
 	
 	
