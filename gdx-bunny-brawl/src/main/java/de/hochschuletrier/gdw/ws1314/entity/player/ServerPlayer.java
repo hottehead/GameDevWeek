@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -112,8 +113,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
+    private Fixture fixtureDeathCheck;
     
-    private HashMap<Long, Fixture> waterFixtures;
+    private boolean isDead;
+    
     
     public ServerPlayer()
     {
@@ -136,7 +139,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	waterFixtures = new HashMap<Long, Fixture>();
+    	isDead = false;
     }
     
     public void enable() {}
@@ -147,33 +150,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     @Override
     public void update(float deltaTime) 
     {
-        //kollision mit wasser
-        Iterator<Long> keySetIterator = waterFixtures.keySet().iterator();
-
-        while(keySetIterator.hasNext()){
-          Long key = keySetIterator.next();
-          Fixture fix = this.waterFixtures.get(key);
-          
-          Body body = this.physicsBody.getBody();
-          Vector2 worldPos = body.getWorldCenter();
-          if(fix.testPoint(worldPos)) {
-              if(!this.isOnBridge) {
-                  logger.info("Spieler ist im Wasser");
-                  this.reset();
-              }
-          }
+        if(isDead) {
+            isDead = false;
+            this.reset();
         }
-        
-//        for(Fixture fix : this.waterFixtures) {
-//            Body body = this.physicsBody.getBody();
-//            Vector2 worldPos = body.getWorldCenter();
-//            if(fix.testPoint(worldPos)) {
-//                if(!this.isOnBridge) {
-//                    logger.info("Spieler ist im Wasser");
-//                    this.reset();
-//                }
-//            }
-//        }
         
     	currentState.update(deltaTime);
     	
@@ -405,14 +385,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 	 ServerEntityManager.getInstance().removeEntity(clover);
 
                 	 break;
-                 case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
-                     Fixture fix = this.getCollidingFixture(contact);
-                     this.waterFixtures.put(otherEntity.getID(), fix);
-                     logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
-                     
-                	 break;
                  case AbyssZone:
                 	 break;
                  case GrassZone:
@@ -440,7 +412,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 	 break;	 
         	 }
          }
-         else
+         else if(fixture == fixtureFullBody)
          {
         	 switch(otherEntity.getEntityType()) 
         	 {
@@ -468,8 +440,22 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                  default:
                 	 break;   
              }
+         } else if(fixture == fixtureDeathCheck) {
+             switch(otherEntity.getEntityType()) 
+             {
+                 case WaterZone:
+                     logger.info("spieler kollision mit wasser");
+                     
+                     this.isDead = true;
+                     
+                     break;
+                 default:
+                     break;
+             }
          }
     }
+    
+    
     public void endContact(Contact contact) 	
     {
     	ServerEntity otherEntity = this.identifyContactFixtures(contact);
@@ -494,23 +480,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
                 case Bridge:
                     this.isOnBridge = false;
                     break;
-                case WaterZone:
-                    logger.info("spieler: endContact mit wasser");
-                    this.waterFixtures.remove(otherEntity.getID());
-                    logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
-                    break;
                 default:
                 	break;
              }
   		 }
-  		 else
-  		 {
-  			switch(otherEntity.getEntityType()) 
-            {
-             	default:
-             		break;
-            }
-  		 }
+         
     }
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -586,6 +560,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
+		body1.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeCircle(HEIGHT / 4.0f, new Vector2(0, HEIGHT / 4.0f))
+            .sensor(true)
+        );
 
 		body1.setGravityScale(0);
 		body1.addContactListener(this);
@@ -594,6 +575,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		Array<Fixture> fixtures = body1.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
+		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
@@ -614,9 +596,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         		
         switchToState(idleState);
         
-        this.physicsBody.setLinearVelocity(0, 0);
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
-        this.physicsBody.setLinearVelocity(0, 0);
     }
     
     public void applyDamage(float amount)
