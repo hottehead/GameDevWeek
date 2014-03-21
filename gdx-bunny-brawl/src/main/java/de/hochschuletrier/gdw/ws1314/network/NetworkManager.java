@@ -59,7 +59,7 @@ public class NetworkManager{
 	public void checkStats(){
 		long newStatTime=System.currentTimeMillis();
 		long statDT=newStatTime-lastStatTime;
-		if(statDT<10000) return;
+		if(statDT<30000) return;
 		long newTotalBytesSent=0;
 		long newTotalBytesReceived=0;
 		if(serverConnections!=null){
@@ -78,8 +78,8 @@ public class NetworkManager{
 		double bytesReceivedPerSecond = deltaReceive /(statDT/1000.0);
 		double factor=1024.0;
 		logger.info("Network Statistics: ");
-		logger.info("Sent: {} KB, {} KB/s",newTotalBytesSent/factor,bytesSentPerSecond/factor);
-		logger.info("Rec: {} KB, {} KB/s",newTotalBytesReceived/factor,bytesReceivedPerSecond/factor);
+		logger.info("Sent: {} KiB, {} Byte/s",newTotalBytesSent/factor,bytesSentPerSecond);
+		logger.info("Rec: {} KiB, {} Byte/s",newTotalBytesReceived/factor,bytesReceivedPerSecond);
 		lastStatTime=newStatTime;
 		lastTotalBytesSent=newTotalBytesSent;
 		lastTotalBytesReceived=newTotalBytesReceived;
