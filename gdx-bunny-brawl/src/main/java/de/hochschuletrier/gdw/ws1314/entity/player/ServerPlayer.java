@@ -7,44 +7,31 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 
-
-
-
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
-import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.states.GameStates;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
