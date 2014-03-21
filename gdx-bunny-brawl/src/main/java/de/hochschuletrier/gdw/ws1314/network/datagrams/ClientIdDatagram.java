@@ -13,11 +13,11 @@ public class ClientIdDatagram extends BaseDatagram{
 	private int playerid;
 
 	public ClientIdDatagram(byte type, short id, short param1, short param2){
-		super(MessageType.DELTA, type, id, param1, param2);
+		super(MessageType.NORMAL, type, id, param1, param2);
 	}
 
 	public ClientIdDatagram(int playerid){
-		super(MessageType.DELTA, CLIENT_ID_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.NORMAL, CLIENT_ID_DATAGRAM, (short) 0, (short) 0, (short) 0);
 		this.playerid = playerid;
 	}
 

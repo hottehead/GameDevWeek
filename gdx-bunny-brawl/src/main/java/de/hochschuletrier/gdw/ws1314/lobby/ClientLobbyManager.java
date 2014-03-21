@@ -37,8 +37,6 @@ public class ClientLobbyManager implements LobbyUpdateCallback, MatchUpdateCallb
 		
 		this.playerId = 0;
 		this.myData = new PlayerData(this.playerId, playerName, EntityType.Hunter, TeamColor.WHITE, false);
-		
-		sendChanges();
 	}
 	
 	public List<PlayerData> getConnectedPlayers() {

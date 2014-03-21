@@ -44,7 +44,7 @@ public class ClientServerConnect {
             ServerEntity senty = sem.getEntityById(id);
             ClientEntity centy = cem.getEntityById(id);
             if(centy == null)            {
-                cem.createEntity(id,senty.getPosition(),senty.getEntityType());
+                centy = cem.createEntity(id,senty.getPosition(),senty.getEntityType());
                 switch(senty.getEntityType()){
                     case Noob:
                     case Hunter:
@@ -52,6 +52,15 @@ public class ClientServerConnect {
                     case Knight:
                         playerID = id;
                         cem.setPlayerEntityID(id);
+                        ServerPlayer sp = (ServerPlayer)senty;
+                        ClientPlayer cp = (ClientPlayer)centy;
+
+                        cp.setCurrentHealth(sp.getCurrentHealth());
+                        cp.setFacingDirection(sp.getFacingDirection());
+                        cp.setCurrentArmor(sp.getCurrentArmor());
+                        cp.setTeamColor(sp.getTeamColor());
+                        cp.setEggCount(sp.getCurrentEggCount());
+                        cp.setFacingDirection(sp.getFacingDirection());
                         break;
                 }
 
@@ -66,14 +75,21 @@ public class ClientServerConnect {
                     cp.setCurrentHealth(sp.getCurrentHealth());
                     cp.setFacingDirection(sp.getFacingDirection());
                     cp.setCurrentArmor(sp.getCurrentArmor());
+                    cp.setTeamColor(sp.getTeamColor());
+                    cp.setEggCount(sp.getCurrentEggCount());
+                    cp.setFacingDirection(sp.getFacingDirection());
                 }
             }
         }
 
     }
 
-    public void sendEntityEvent(long id, PlayerIntention eventPlayerIntention){
-
+    public void sendEntityEvent(long id, EventType event){
+        ClientEntityManager cem = ClientEntityManager.getInstance();
+        ClientEntity e = cem.getEntityById(id);
+        if(e != null){
+            e.doEvent(event);
+        }
     }
 
     public void sendAction(PlayerIntention eventPlayerIntention){

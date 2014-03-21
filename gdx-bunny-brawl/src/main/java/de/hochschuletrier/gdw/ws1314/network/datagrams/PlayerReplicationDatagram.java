@@ -32,7 +32,7 @@ public class PlayerReplicationDatagram extends BaseDatagram{
 
 	public PlayerReplicationDatagram(long entityId, float xposition, float yposition, EntityType entityType, int eggs, float health, float armor,
 			FacingDirection facingDirection, TeamColor teamColor){
-		super(MessageType.DELTA, PLAYER_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.DELTA, PLAYER_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
 		this.entityId = entityId;
 		this.xposition = xposition;
 		this.yposition = yposition;

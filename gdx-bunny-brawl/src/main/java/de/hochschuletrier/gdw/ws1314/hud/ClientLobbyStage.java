@@ -16,7 +16,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 
-public class MainMenuStage extends AutoResizeStage {
+public class ClientLobbyStage extends AutoResizeStage {
 	
 	private BitmapFont font;
 	private Skin defaultSkin;
@@ -24,11 +24,7 @@ public class MainMenuStage extends AutoResizeStage {
 	private LevelList levelList;
 	private TextButton startButton;
 	
-	//server-client-testing
-	private TextButton startClient;
-	private TextButton startServer;
-	
-	public MainMenuStage() {
+	public ClientLobbyStage() {
 		super();
 	}
 
@@ -43,29 +39,13 @@ public class MainMenuStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 		//info
-		Label label = new Label("escape still works - level list not", defaultSkin);
+		Label label = new Label("(=   Client Lobby Stage   =)", defaultSkin);
 		uiTable.add(label);
-		uiTable.row().padTop(20);
-		
-		//level list
-		levelList = new LevelList(defaultSkin);
-		//add levels for testing
-		levelList.addLevel("does nothing");
-		levelList.addLevel("new level");
-		uiTable.add(levelList);
-		
-		uiTable.row();
+		uiTable.row().pad(20).bottom();
 		
 		//start Button
-		startButton = new TextButton("LADEN", defaultSkin);
+		startButton = new TextButton("Waschmaschine kaufen! Jetzt!", defaultSkin);
 		uiTable.add(startButton);
-		
-		//testing server-client stuff
-		startServer = new TextButton("start Server", defaultSkin);
-		startClient = new TextButton("start Client", defaultSkin);
-		uiTable.row().padTop(20);
-		uiTable.add(startServer).row().padTop(20);
-		uiTable.add(startClient);
 	}
 
 	public void render() {		
@@ -92,13 +72,4 @@ public class MainMenuStage extends AutoResizeStage {
 	public TextButton getStartButton() {
 		return startButton;
 	}
-	
-	//for testing server-client stuff
-	public TextButton getStartClientButton() {
-		return startClient;
-	}
-	public TextButton getStartServerButton() {
-		return startServer;
-	}
-	
 }

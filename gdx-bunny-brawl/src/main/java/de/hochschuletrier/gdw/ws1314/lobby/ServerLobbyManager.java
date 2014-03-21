@@ -69,7 +69,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback {
 		if (checkReadiness())
 		{
 			// change into GameplayState
-			logger.info("All Players are ready.");
+			logger.info("All Players are ready. [PlayerCount: " + this.players.size() + "]");
 			fireStartGame();
 		}
 	}

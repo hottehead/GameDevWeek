@@ -1,36 +1,43 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
-import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
+import de.hochschuletrier.gdw.ws1314.hud.ServerLobbyStage;
 import de.hochschuletrier.gdw.ws1314.lobby.IServerLobbyListener;
 import de.hochschuletrier.gdw.ws1314.lobby.ServerLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerLobbyState extends GameState implements IServerLobbyListener {
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyState.class);
 	
 	protected ServerLobbyManager serverLobby;
 	
+	private ServerLobbyStage stage;
+	
     @Override
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
        
+        
         // TODO: Temporär nur zum localen Testen
-        NetworkManager.getInstance().listen("localhost", 666, 10);
+        if (!NetworkManager.getInstance().isServer())
+        {
+        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), 10);
+        }
         
     	serverLobby = new ServerLobbyManager();
     	serverLobby.addServerLobbyListener(this);
     	logger.info("Server-Lobby created.");
+    	
+    	this.stage = new ServerLobbyStage();
+    	this.stage.init(assetManager);
     }
 
     @Override
     public void render () {
-        // TODO
+    	this.stage.render();
     }
 
     @Override

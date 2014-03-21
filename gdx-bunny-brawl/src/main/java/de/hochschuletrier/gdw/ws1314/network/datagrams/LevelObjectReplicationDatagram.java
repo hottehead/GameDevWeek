@@ -24,7 +24,7 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 	}
 
 	public LevelObjectReplicationDatagram(long entityId, EntityType type, float xposition, float yposition, boolean visibility){
-		super(MessageType.DELTA, LEVEL_OBJECT_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.DELTA, LEVEL_OBJECT_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
 		this.entityId = entityId;
 		this.type = type;
 		this.xposition = xposition;
@@ -54,8 +54,8 @@ public class LevelObjectReplicationDatagram extends BaseDatagram{
 	public void readFromMessage(INetMessageIn message){
 		entityId = message.getLong();
 		type = message.getEnum(EntityType.class);
-		xposition = message.getLong();
-		yposition = message.getLong();
+		xposition = message.getFloat();
+		yposition = message.getFloat();
 		visibility = message.getBool();
 	}
 

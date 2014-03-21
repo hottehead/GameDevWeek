@@ -29,6 +29,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(PlayerReplicationDatagram playerReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(playerReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(playerReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning player entity {} of type {}.", playerReplicationDatagram.getEntityId(), playerReplicationDatagram.getEntityType().name());
@@ -60,6 +61,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(LevelObjectReplicationDatagram levelObjectReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(levelObjectReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(levelObjectReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning level-object entity {}.", levelObjectReplicationDatagram.getEntityId());
@@ -88,6 +90,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(ProjectileReplicationDatagram projectileReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(projectileReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(projectileReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning projectile entity {}.", projectileReplicationDatagram.getEntityId());

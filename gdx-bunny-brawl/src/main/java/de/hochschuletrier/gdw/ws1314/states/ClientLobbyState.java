@@ -1,25 +1,28 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
+import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ClientLobbyState extends GameState implements GameStateCallback {
 	private static final Logger logger = LoggerFactory.getLogger(ClientLobbyState.class);
 
 	protected ClientLobbyManager clientLobby;
+	
+	private ClientLobbyStage stage;
 	
 	private ConsoleCmd sendPlayerUpdate;
 	private ConsoleCmd cpAccept;
@@ -33,10 +36,17 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
         this.clientLobby = new ClientLobbyManager("John");
         
         // TODO: Temporär nur zum localen Testen
-        NetworkManager.getInstance().connect("localhost", 666);
+        if (!NetworkManager.getInstance().isClient())
+        {
+	        NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
+	        
+	        if (!NetworkManager.getInstance().isClient())
+	        	logger.warn("Connection could not be established! Server maybe not running.");
+        }
         
-        if (NetworkManager.getInstance().isClient())
-        	logger.warn("Connection ");
+        this.clientLobby.sendChanges();
+        
+        
         
         NetworkManager.getInstance().setGameStateCallback(this);
         
@@ -52,6 +62,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 		};
 		*/
 		
+        this.stage = new ClientLobbyStage();
+        this.stage.init(assetManager);
+        this.stage.getStartButton().addListener(new AcceptClick());
+        
 		this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
 			@Override
 			public void execute(List<String> args) {
@@ -103,7 +117,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 
     @Override
     public void render () {
-        // TODO
+    	this.stage.render();
     }
 
     @Override
@@ -127,4 +141,11 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			logger.info("ClientGamePlayState activated.");
 		}
 	}
+	
+	private class AcceptClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			clientLobby.toggleReadyState();
+		}
+    }
 }
