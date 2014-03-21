@@ -38,19 +38,34 @@ public class OptionStage extends AutoResizeStage {
 		
 
 		Label title = new Label("Optionen", defaultSkin);
-		uiTable.add(title).row().pad(50);
+		uiTable.add(title).pad(50).row();
 		
+		Label label = new Label("Sound-Optionen", defaultSkin);
+		uiTable.add(label).row();
+		
+		Table tmp = new Table();
+		uiTable.add(tmp).row();
+		label = new Label("Master", defaultSkin);	
+		tmp.add(label);
 		this.master = new Slider(0, 100, 2, false, defaultSkin);
-		uiTable.add(master).row();
+		tmp.add(master);
 		
+		tmp = new Table();
+		uiTable.add(tmp).row();
+		label = new Label("Musik", defaultSkin);
+		tmp.add(label);
 		this.music = new Slider(0, 100, 2, false, defaultSkin);
-		uiTable.add(music).row();
+		tmp.add(music);
 		
+		tmp = new Table();
+		uiTable.add(tmp).row();
+		label = new Label("Sound", defaultSkin);
+		tmp.add(label);
 		this.sound = new Slider(0, 100, 2, false, defaultSkin);
-		uiTable.add(sound).row();
+		tmp.add(sound);
 		
-		this.back = new TextButton("zurück", defaultSkin);
-		back.add(back).pad(50);
+		this.back = new TextButton("zurueck", defaultSkin);
+		uiTable.add(back).padTop(20);
 	}
 
 	public void render() {
