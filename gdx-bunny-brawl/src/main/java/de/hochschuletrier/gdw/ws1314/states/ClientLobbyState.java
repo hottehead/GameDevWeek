@@ -28,6 +28,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 	
 	// Listener
 	private AcceptClick acceptClick;
+	private SwapTeamClick swapTeamClick;
+	private DisconnectClick disconnectClick;
 	
 	// Console Commands
 	private ConsoleCmd sendPlayerUpdate;
@@ -40,6 +42,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
         super.init (assetManager);
         
 	    this.acceptClick = new AcceptClick();
+	    this.swapTeamClick = new SwapTeamClick();
+	    this.disconnectClick = new DisconnectClick();
     }
 
     @Override
@@ -68,13 +72,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			logger.info("ClientGamePlayState activated.");
 		}
 	}
-	
-	private class AcceptClick extends ClickListener {
-		@Override
-		public void clicked(InputEvent event, float x, float y) {
-			clientLobby.toggleReadyState();
-		}
-    }
 	
 	@Override
 	public void onEnter() {
@@ -113,7 +110,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 		};
 		*/
 	    
+	    // ButtonEvents
 	    this.stage.getReadyButton().addListener(this.acceptClick);
+	    this.stage.getSwapTeamButton().addListener(this.swapTeamClick);
+	    this.stage.getDisconnectButton().addListener(this.disconnectClick);
 	    
 		this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
 			@Override
@@ -180,7 +180,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 		Main.getInstance().console.unregister(this.cpTeam);
 		Main.getInstance().console.unregister(this.cpClass);
 		
+		// Remove ButtonListener
 		this.stage.getReadyButton().removeListener(this.acceptClick);
+		this.stage.getSwapTeamButton().removeListener(this.swapTeamClick);
+	    this.stage.getDisconnectButton().removeListener(this.disconnectClick);
 		
 		this.clientLobby = null;
 		this.stage = null;
@@ -190,5 +193,27 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 	public void onLeaveComplete() {
 		// TODO Auto-generated method stub
 		super.onLeaveComplete();
+	}
+	
+	private class AcceptClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			clientLobby.toggleReadyState();
+		}
+    }
+	
+	private class SwapTeamClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			clientLobby.swapTeam();
+		}
+		
+	}
+	
+	private class DisconnectClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+		}
+		
 	}
 }

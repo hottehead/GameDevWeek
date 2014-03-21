@@ -19,6 +19,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
+import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
 public class ClientLobbyStage extends AutoResizeStage {
@@ -28,9 +29,10 @@ public class ClientLobbyStage extends AutoResizeStage {
 	private ClientLobbyManager clientManager;
 	
 	private TextButton readyButton;
+	private TextButton swapTeamButton;
+	private TextButton disonnectButton;
 	
-	private Table playerList;
-	private Table witeTeamList;
+	private Table whiteTeamList;
 	private Table blackTeamList;
 	
 	public ClientLobbyStage(ClientLobbyManager manager) {
@@ -49,41 +51,74 @@ public class ClientLobbyStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 		//info
-		Label label = new Label("===   Client Lobby   ===", defaultSkin);
+		Label label = new Label("===>   Client Lobby   <===", defaultSkin);
 		uiTable.add(label);
 		uiTable.row().pad(20).bottom();
 		
-		this.playerList = new Table();
-		this.playerList.setFillParent(false);
-		this.playerList.debug(Debug.all);
-		uiTable.add(this.playerList);
+		//Player-Liste
+		Table playerList = new Table();
+		playerList.setFillParent(false);
+		playerList.debug(Debug.all);
+		playerList.top();
+		
+		Table whiteList = new Table();
+		whiteList.padRight(20);
+		whiteList.add(new Label("Team WHITE", defaultSkin)).row();
+		this.whiteTeamList = new Table();
+		whiteList.add(this.whiteTeamList);
+		
+		Table blackList = new Table();
+		blackList.top();
+		blackList.add(new Label("Team Black", defaultSkin)).row();
+		this.blackTeamList = new Table();
+		blackList.add(this.blackTeamList);
+		
+		playerList.add(whiteList);
+		playerList.add(blackList);
+		
+		uiTable.add(playerList);
 		
 		uiTable.row().pad(20);
 		
-		//start Button
-		readyButton = new TextButton("Waschmaschine kaufen! Jetzt!", defaultSkin);
-		uiTable.add(readyButton);
+		//PlayerSettings change
+		swapTeamButton = new TextButton("Swap Team", defaultSkin);
+		uiTable.add(swapTeamButton);
+		uiTable.padRight(100);
+		readyButton = new TextButton("Ready!", defaultSkin);
+		uiTable.add(readyButton).row();
+		
+		//Disconnect
+		disonnectButton = new TextButton("Disconnect", defaultSkin);
+		uiTable.add(disonnectButton);
 	}
 
 	public void render() {		
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		this.act(Gdx.graphics.getDeltaTime());
 		
-		this.playerList.reset();
-		this.playerList.add(new Label("Team WHITE", defaultSkin));
-		this.playerList.add(new Label("Team Black", defaultSkin));
+		this.whiteTeamList.reset();
 		
 		for (PlayerData p : this.clientManager.getTeamPlayers(TeamColor.WHITE))
 		{
-			this.playerList.row();
-			this.playerList.add(new Label(p.getPlayername(), defaultSkin)).padRight(20);
-			this.playerList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
-			this.playerList.add(new Label("" + p.isAccept(), defaultSkin));
+			this.whiteTeamList.row();
+			this.whiteTeamList.add(new Label(p.getPlayername(), defaultSkin)).padRight(20);
+			this.whiteTeamList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
+			this.whiteTeamList.add(new Label("" + p.isAccept(), defaultSkin));
+		}
+		
+		this.blackTeamList.reset();
+		
+		for (PlayerData p : this.clientManager.getTeamPlayers(TeamColor.BLACK))
+		{
+			this.blackTeamList.row();
+			this.blackTeamList.add(new Label(p.getPlayername(), defaultSkin)).padRight(20);
+			this.blackTeamList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
+			this.blackTeamList.add(new Label("" + p.isAccept(), defaultSkin));
 		}
 		
 		DrawUtil.batch.flush();
 		this.draw();
-		Table.drawDebug(this);
+		//Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
@@ -92,5 +127,13 @@ public class ClientLobbyStage extends AutoResizeStage {
 	
 	public TextButton getReadyButton() {
 		return readyButton;
+	}
+	
+	public TextButton getSwapTeamButton() {
+		return swapTeamButton;
+	}
+	
+	public TextButton getDisconnectButton() {
+		return this.disonnectButton;
 	}
 }

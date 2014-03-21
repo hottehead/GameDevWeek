@@ -89,7 +89,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-		Table.drawDebug(this);
+		//Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
