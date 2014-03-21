@@ -50,6 +50,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 		player.setCurrentArmor(playerReplicationDatagram.getArmor());
 		player.setFacingDirection(playerReplicationDatagram.getFacingDirection());
 		player.setTeamColor(playerReplicationDatagram.getTeamColor());
+		player.setCurrentPlayerState(playerReplicationDatagram.getEntityState());
 	}
 
 	@Override
@@ -84,6 +85,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 		else{
 			levelObject.disable();
 		}
+		levelObject.setLevelObjectState(levelObjectReplicationDatagram.getEntityState());
 	}
 
 	@Override

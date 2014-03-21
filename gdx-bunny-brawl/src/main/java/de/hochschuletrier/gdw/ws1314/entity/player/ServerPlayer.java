@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
@@ -34,7 +34,6 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 
 /**
@@ -504,7 +503,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
-	public PlayerStates 	getCurrentPlayerState() {return currentState.getCurrentState();}
+	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
     
     public void setPlayerKit(PlayerKit kit)
     {
