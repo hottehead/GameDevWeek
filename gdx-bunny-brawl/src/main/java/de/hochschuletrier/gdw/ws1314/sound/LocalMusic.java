@@ -20,7 +20,7 @@ public class LocalMusic {
 	private char fadingDirection;
 	private int duration;
 	
-	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music");
+	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 0.9f);
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume

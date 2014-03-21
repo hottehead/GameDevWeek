@@ -37,8 +37,12 @@ public class GamePreferences {
 			this.settingsHandler.flush();
 	}
 	
-	public boolean getBool(String key) {
+	private boolean getBool(String key) {
 		return this.settingsHandler.getBoolean(key);
+	}
+	
+	public boolean getBool(String key, boolean defValue) {
+		return this.settingsHandler.getBoolean(key, defValue);
 	}
 	
 	public void putInt(String key, int val) {
@@ -49,8 +53,12 @@ public class GamePreferences {
 			this.settingsHandler.flush();
 	}
 	
-	public int getInt(String key) {
+	private int getInt(String key) {
 		return this.settingsHandler.getInteger(key);
+	}
+	
+	public int getInt(String key, int defValue) {
+		return this.settingsHandler.getInteger(key, defValue);
 	}
 	
 	public void putLong(String key, long val) {
@@ -61,8 +69,12 @@ public class GamePreferences {
 			this.settingsHandler.flush();
 	}
 	
-	public long getLong(String key) {
+	private long getLong(String key) {
 		return this.settingsHandler.getLong(key);
+	}
+	
+	public long getLong(String key, long defValue) {
+		return this.settingsHandler.getLong(key, defValue);
 	}
 	
 	public void putFloat(String key, float val) {
@@ -73,8 +85,12 @@ public class GamePreferences {
 			this.settingsHandler.flush();
 	}
 	
-	public float getFloat(String key) {
+	private float getFloat(String key) {
 		return this.settingsHandler.getFloat(key);
+	}
+	
+	public float getFloat(String key, float defValue) {
+		return this.settingsHandler.getFloat(key, defValue);
 	}
 	
 	public void putString(String key, String val) {
@@ -85,8 +101,12 @@ public class GamePreferences {
 			this.settingsHandler.flush();
 	}
 	
-	public String getString(String key) {
+	private String getString(String key) {
 		return this.settingsHandler.getString(key);
+	}
+	
+	public String getString(String key, String defValue) {
+		return this.settingsHandler.getString(key, defValue);
 	}
 	
 	public void saveToFile() {
