@@ -5,13 +5,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +22,13 @@ import java.util.List;
  */
 public class Zone extends ServerEntity
 {
-	private EntityType currentZone;
-    private List<Point> poligonPoints;
+
+	protected EntityType currentZone;
+    private ArrayList<Point> poligonPoints;
 
     public void setPoligonPoints(List<Point> poligonPoints)
     {
-        this.poligonPoints = poligonPoints;
+        this.poligonPoints = (ArrayList)poligonPoints;
     }
 
 	public void setWaterZone()
