@@ -28,7 +28,6 @@ public class RenderObject implements Comparable<RenderObject> {
 	}
 	
 	public TextureRegion getActiveTexture() {
-		
 		return material.getActiveTexture(entity.getStateTime());
 	}
 	

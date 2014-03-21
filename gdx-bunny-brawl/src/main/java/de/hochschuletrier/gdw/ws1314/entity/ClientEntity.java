@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+
 /**
  * 
  * @author ElFapo
@@ -9,21 +11,25 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class ClientEntity
 {
-	private float 		stateTime;
-	private Vector2 	position;
-	private long 		id;
+	private float 			stateTime;
+	private Vector2 		position;
+	private FacingDirection direction;
+	private long 			id;
 	
 	public ClientEntity()
 	{
 		this.position = new Vector2(0.0f, 0.0f);
 		this.id = -1l;
 		this.stateTime = 0.0f;
+		this.direction = FacingDirection.NONE;
 	}
 
 	public Vector2 getPosition() 				{ return this.position; }
+	public FacingDirection getFacingDirection()	{ return this.direction; }
 	public long getID()							{ return id; }
 	
 	public void setPosition(Vector2 position)	{ this.position = position; }
+	public void setFacingDirection(FacingDirection direction)	{ this.direction = direction; }
 	public void setID(long id)					{ this.id = id; }
 	
 	public abstract EntityType getEntityType();
