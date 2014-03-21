@@ -48,6 +48,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 
 	public static final float BRAKING = 5.0f;
 	public static final float COLLISION_DAMPING = 10.0f;
+	
+	public static final float KNOCKBACK_IMPULSE = 100.0f;
 
 	public static final float DENSITY = 0.0f;
     public static final float FRICTION = 0.0f;
@@ -103,7 +105,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.HUNTER);
+    	setPlayerKit(PlayerKit.TANK);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -297,7 +299,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     }
     
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
-    public void beginContact(Contact contact) 	{
+    public void beginContact(Contact contact) 	
+    {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
          
@@ -385,22 +388,27 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                      if (getID() == projectile.getSourceID())
-                     	return;
+                     	break;
                      if (getTeamColor() != projectile.getTeamColor())
+                     {
                      	applyDamage(projectile.getDamage());
+                     	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
+                     }
                      ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     if(attack.getTeamColor() != this.teamColor) 
+                     //if(attack.getTeamColor() != this.teamColor) 
+                     if (attack.getSourceID() != getID())
                      {
-                         this.applyDamage(attack.getDamage());
+                         applyDamage(attack.getDamage());
+                         applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
                      }
                 	 break;
                  default:
-                	 break;
-        	 }      
+                	 break;   
+             }
          }
     }
     public void endContact(Contact contact) 	
@@ -491,15 +499,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
-				.groupIndex((short) 1)
 				);
 		body1.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
-				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f, new Vector2(0.0f, - HEIGHT / 4.0f), 0.0f)
+				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
-				.groupIndex((short) 2)
 				);
 
 		body1.setGravityScale(0);
@@ -520,13 +526,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 		currentState.init();
 	}
 
-    public void reset(){
-        physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+    public void reset()
+    {
+        
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
         facingDirection = FacingDirection.DOWN;
         		
         switchToState(idleState);
+        
+        ServerEntityManager.getInstance().removeEntity(this);
     }
     
     public void applyDamage(float amount)
@@ -544,12 +553,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		reset();
     }
 	
-	protected void applyKnockback()
+	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
 		switchToState(knockbackState);
-		
-		// TODO Calculate KnockbackImpulse
+		physicsBody.setLinearDamping(BRAKING);
+		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
 	}
         
     public boolean reportFixture (Fixture fixture) {
