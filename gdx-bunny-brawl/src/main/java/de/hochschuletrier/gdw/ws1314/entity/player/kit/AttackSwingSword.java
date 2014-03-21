@@ -16,6 +16,7 @@ public class AttackSwingSword extends AttackType
     public static final float 	DAMAGE = 50.0f;
     public static final float	ANGLE = (float) Math.PI / 2.0f;
     public static final float	RANGE = 32.0f;
+    public static final float	WIDTH = 20.0f;
     
     public void fire(ServerPlayer player)
     {
@@ -26,7 +27,7 @@ public class AttackSwingSword extends AttackType
     	ServerSwordAttack attack = (ServerSwordAttack) ServerEntityManager.getInstance().createEntity(ServerSwordAttack.class, pos);
     	attack.setDamage(DAMAGE);
     	attack.setSource(player.getID());
-    	attack.setSize(RANGE,  ANGLE);
+    	attack.setSize(RANGE,  WIDTH);
     	attack.setDespawnTime(ServerPlayer.ATTACK_TIME);
     }
 

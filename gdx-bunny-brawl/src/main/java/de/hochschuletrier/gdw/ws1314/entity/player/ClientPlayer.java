@@ -62,8 +62,10 @@ public class ClientPlayer extends ClientEntity
     public ClientPlayer() {
     	
     }
-    
+
+	@Override
     public void update(float delta) {
+		super.update(delta);
     }
     
     @Override

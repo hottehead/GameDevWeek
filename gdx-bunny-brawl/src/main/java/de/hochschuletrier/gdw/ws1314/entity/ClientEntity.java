@@ -31,7 +31,9 @@ public abstract class ClientEntity
 	public abstract void enable();
 	public abstract void disable();
     public abstract void dispose();
-    public abstract void update(float delta);
+    public void update(float delta){
+		stateTime += delta;
+	}
     public abstract void doEvent(EventType event);
 	
 	public abstract void render();
