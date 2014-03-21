@@ -59,7 +59,7 @@ public class MainMenuStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 		Label playerNameLabel = new Label("Player name: ", defaultSkin);
-		uiTable.add(playerNameLabel);		
+		uiTable.add(playerNameLabel);
 		playerNameField = new TextField(Main.getInstance().gamePreferences.getString("player-name", "Fluffly Bunny"), defaultSkin);
 		playerNameField.setMaxLength(12);
 		
