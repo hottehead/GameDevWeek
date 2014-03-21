@@ -39,9 +39,9 @@
 	"HudEmblemTankWhite": "data/huds/wappenTankWhite.png",
 	"HudEmblemKnightBlack": "data/huds/wappenKnightBlack.png",
 	"HudEmblemHunterBlack": "data/huds/wappenHunterBlack.png",
-	"HudEmblemTankBlack": "data/huds/wappenTankBlack.png"
+	"HudEmblemTankBlack": "data/huds/wappenTankBlack.png",
 	
-	"HudEmblemWhite": "data/huds/shield_white.png"
+	"HudEmblemWhite": "data/huds/shield_white.png",
 	"HudEmblemBlack": "data/huds/shield_black.png"
 	
 
