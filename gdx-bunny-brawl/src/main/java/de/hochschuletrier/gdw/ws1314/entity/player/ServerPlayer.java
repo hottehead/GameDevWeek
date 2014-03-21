@@ -45,7 +45,7 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener, QueryCallback
+public class ServerPlayer extends ServerEntity implements IStateListener
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
@@ -390,12 +390,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                      Fixture fix = this.getCollidingFixture(contact);
                      this.waterFixtures.add(fix);
                      
-                     //float upperX = this.getPosition().x - WIDTH;
-                     //float lowerX = this.getPosition().x + WIDTH;
-                     //float upperY = this.getPosition().y - HEIGHT;
-                     //float lowerY = this.getPosition().y + HEIGHT;
-                     //this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
-                     
                 	 break;
                  case AbyssZone:
                 	 break;
@@ -626,18 +620,4 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
 	}
         
-    public boolean reportFixture (Fixture fixture) {
-        logger.info("report fixture aufgerufen");
-        try {
-            PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
-            ServerEntity entity = (ServerEntity)body.getOwner();
-            
-            if(entity.getEntityType() == EntityType.WaterZone && this.isOnBridge) {
-                this.reset();
-                return false;
-            }
-        } catch(Exception e) {
-        }
-        return true;
-    }
 }
