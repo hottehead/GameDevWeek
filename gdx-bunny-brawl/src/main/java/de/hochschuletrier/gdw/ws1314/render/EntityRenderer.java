@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 
 public class EntityRenderer extends Pool<RenderObject> implements
 		ClientEntityManagerListener {
@@ -25,6 +26,11 @@ public class EntityRenderer extends Pool<RenderObject> implements
 //		Collections.sort(renderList);
 
 		for (RenderObject obj : this.renderList) {
+			float rot = obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees;
+			if(obj.entity instanceof ClientPlayer) {
+				obj.entity.activeAction = EventType.WALK_LEFT;
+				rot = 0;
+			}
 			Material activeMat = obj.getActiveMaterial();
 			Vector2 pos = obj.entity.getPosition();
 			if(activeMat!=null) {
@@ -32,18 +38,19 @@ public class EntityRenderer extends Pool<RenderObject> implements
 			float dh = activeMat.height * 0.5f;
 			float dw = activeMat.width * 0.5f;
 			
+			
+			
 			TextureRegion texPtr = obj.getActiveTexture();
 			DrawUtil.batch.draw(texPtr, pos.x - dw, pos.y + dh, dw, -dh,
 						activeMat.width, -activeMat.height, 1, 1,
-						obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees);
+						rot);
 			}
 			else {
 				Material m = MaterialManager.dbgMaterialAtlas.get(EventType.ANY);
 				
 				
 				DrawUtil.batch.draw(m.texture, pos.x - m.width*0.5f, pos.y + m.height*0.5f , m.width*0.5f, -m.height*0.5f,
-						m.width, -m.height, 1, 1,
-						obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees);
+						m.width, -m.height, 1, 1, 0);
 			}
 		}
 	}
