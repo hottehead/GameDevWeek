@@ -249,11 +249,6 @@
   <object type="water" x="2240" y="1184" width="96" height="96"/>
   <object type="water" x="2272" y="192" width="64" height="992"/>
   <object type="water" x="2240" y="192" width="32" height="32"/>
-<<<<<<< HEAD
-=======
-  <object x="704" y="1024"/>
-  <object x="704" y="1056" width="32"/>
->>>>>>> f8113d551ea6ad9ffce69c78cbd3602aab6c3f70
  </objectgroup>
  <objectgroup name="RenderEbene" width="75" height="50">
   <properties>
