@@ -1,11 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.*;
-
-import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.preferences.*;
+import com.badlogic.gdx.audio.Music;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
 
 /**
  * Class for handling the music in GameplayState
