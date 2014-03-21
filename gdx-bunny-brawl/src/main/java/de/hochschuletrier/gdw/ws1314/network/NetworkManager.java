@@ -431,7 +431,7 @@ public class NetworkManager{
 		if(clientConnection != null){
 			if(!clientConnection.isConnected()){
 				clientConnection = null;
-				this.disconnectcallback.callback("Server is offline.");
+				this.disconnectcallback.callback("Disconnected from Server - handleDisconnects");
 			}
 		}
 	}
