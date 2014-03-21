@@ -12,6 +12,7 @@ import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
+import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class ClientLobbyState extends GameState implements GameStateCallback {
+public class ClientLobbyState extends GameState implements GameStateCallback, DisconnectCallback {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClientLobbyState.class);
 
@@ -99,6 +100,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 	    this.clientLobby.sendChanges();
 	    
 	    NetworkManager.getInstance().setGameStateCallback(this);
+	    NetworkManager.getInstance().setDisconnectCallback(this);
 	    
 	    logger.info("Client-Lobby entered.");
 	    
@@ -219,5 +221,12 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 			GameStates.MAINMENU.activate();
 		}
 		
+	}
+	
+	@Override
+	public void callback(String msg) {
+		logger.warn(msg);
+		GameStates.MAINMENU.init(assetManager);
+		GameStates.MAINMENU.activate();
 	}
 }

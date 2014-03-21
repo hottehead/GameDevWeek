@@ -13,7 +13,8 @@ public enum GameStates {
     SERVERLOBBY (new ServerLobbyState ()),
     CLIENTLOBBY (new ClientLobbyState ()),
     SERVERGAMEPLAY (new ServerGamePlayState()),
-    CLIENTGAMEPLAY (new ClientGamePlayState());
+    CLIENTGAMEPLAY (new ClientGamePlayState()),
+    DUALGAMEPLAY (new DualGamePlayState());
     private final GameState state;
 
     GameStates (GameState state) {

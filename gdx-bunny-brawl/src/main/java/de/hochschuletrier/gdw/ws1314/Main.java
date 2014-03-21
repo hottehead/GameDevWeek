@@ -21,6 +21,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -186,8 +187,10 @@ public class Main extends StateBasedGame {
 	}
 
 	public void onLoadComplete() {
-		GameStates.MAINMENU.init(assetManager);
-		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
+		GameStates.DUALGAMEPLAY.init(assetManager);
+		GameStates.DUALGAMEPLAY.activate();
+		//GameStates.MAINMENU.init(assetManager);
+		//GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override
