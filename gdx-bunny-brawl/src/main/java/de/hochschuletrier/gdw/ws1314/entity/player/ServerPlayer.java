@@ -10,7 +10,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
 
 
 
@@ -21,11 +23,13 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -37,6 +41,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener
+public class ServerPlayer extends ServerEntity implements IStateListener, QueryCallback
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
@@ -65,6 +70,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	public static final float HEIGHT = 32.0f;
 	
 	public static final float EGG_CARRY_SPEED_PENALTY = 0.15f;
+
+        private boolean isOnBridge = false;
 
 
     private PlayerInfo	playerInfo;
@@ -339,6 +346,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	 * if(!bridge.getVisibility()){
             		 this.physicsBody.setPosition(0, 0);
             	 }*/
+                 
+                 this.isOnBridge = true;
             	 break;
              case BridgeSwitch:	
             	 break;
@@ -365,6 +374,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              case Clover:
             	 break;
              case WaterZone:
+                 
+                 float upperX = this.getPosition().x - 28;
+                 float lowerX = this.getPosition().x + 28;
+                 float upperY = this.getPosition().y - 28;
+                 float lowerY = this.getPosition().y + 28;
+                 this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
+                 
             	 break;
              case AbyssZone:
             	 break;
@@ -392,6 +408,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
          		if (((ServerEgg)otherEntity).getID() == droppedEggID)
          			droppedEggID = -1;
          		break;
+                case Bridge:
+                    this.isOnBridge = false;
+                    break;
          }
     }
     public void preSolve(Contact contact, Manifold oldManifold) {}
@@ -492,4 +511,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 		
 		// TODO Calculate KnockbackImpulse
 	}
+        
+        public boolean reportFixture (Fixture fixture) {
+            
+            try {
+                PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
+                ServerEntity entity = (ServerEntity)body.getOwner();
+                
+                if(entity.getEntityType() == EntityType.WaterZone && this.isOnBridge) {
+                    this.reset();
+                    return false;
+                }
+            } catch(Exception e) {
+            }
+            return true;
+        }
 }
