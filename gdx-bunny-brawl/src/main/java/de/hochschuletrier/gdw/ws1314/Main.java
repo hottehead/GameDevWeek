@@ -33,6 +33,8 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.*;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.hud.HudResizer;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -194,6 +196,7 @@ public class Main extends StateBasedGame {
 	@Override
 	public void dispose() {
 		NetworkManager.getInstance().dispose();
+		GameStates.dispose();
 		consoleView.dispose();
 		skin.dispose();
 		Gdx.app.exit();
@@ -229,8 +232,10 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.gl.glViewport(0, 0, width, height);
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
+		HudResizer.resize(width, height);
 	}
 
 	@Override
