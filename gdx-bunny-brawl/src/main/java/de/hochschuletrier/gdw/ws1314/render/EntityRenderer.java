@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
-import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 
 public class EntityRenderer extends Pool<RenderObject> implements
 		ClientEntityManagerListener {
@@ -30,17 +29,9 @@ public class EntityRenderer extends Pool<RenderObject> implements
 			float dw = obj.material.width * 0.5f;
 
 			
-			if(obj.entity instanceof ClientProjectile) {
-				ClientProjectile eProj = (ClientProjectile)obj.entity;
-				DrawUtil.batch.draw(obj.getActiveTexture(), pos.x-dw,  pos.y-dh
-						+ obj.material.height, 0, 0, obj.material.width, -obj.material.height, 1, 1, eProj.getFacingDirection().getAngle());
-			}
-			else {
-				DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh
-						+ obj.material.height, obj.material.width,
-						-obj.material.height);
 			
-			}
+			DrawUtil.batch.draw(obj.getActiveTexture(), pos.x-dw,  pos.y-dh
+					+ obj.material.height, 0, 0, obj.material.width, -obj.material.height, 1, 1, obj.entity.getFacingDirection().getAngle());
 		}
 	}
 

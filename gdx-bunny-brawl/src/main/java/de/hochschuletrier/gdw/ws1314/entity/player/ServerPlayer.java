@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -104,7 +105,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
