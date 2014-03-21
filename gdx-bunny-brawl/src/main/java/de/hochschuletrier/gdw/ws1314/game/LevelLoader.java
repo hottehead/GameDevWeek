@@ -287,13 +287,13 @@ public class LevelLoader {
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamWhite();
-			gameInfo.addTeam(TeamColor.WHITE,spawnZone);
+			gameInfo.setTeamSpawnZoneWhite(spawnZone);
             break;
         case "startb":
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamBlack();
-			gameInfo.addTeam(TeamColor.BLACK,spawnZone);
+			gameInfo.setTeamSpawnZoneBlack(spawnZone);
             break;
 
 

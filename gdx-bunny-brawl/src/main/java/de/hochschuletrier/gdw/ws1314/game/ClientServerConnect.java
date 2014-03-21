@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import org.slf4j.Logger;
@@ -62,6 +64,13 @@ public class ClientServerConnect {
                         cp.setEggCount(sp.getCurrentEggCount());
                         cp.setFacingDirection(sp.getFacingDirection());
                         break;
+					case Projectil:
+						ServerProjectile serverProjectile = (ServerProjectile)senty;
+						ClientProjectile clientProjectile = (ClientProjectile)centy;
+
+						clientProjectile.setFacingDirection(serverProjectile.getFacingDirection());
+						clientProjectile.setTeamColor(serverProjectile.getTeamColor());
+						break;
                 }
 
             }
@@ -78,7 +87,13 @@ public class ClientServerConnect {
                     cp.setTeamColor(sp.getTeamColor());
                     cp.setEggCount(sp.getCurrentEggCount());
                     cp.setFacingDirection(sp.getFacingDirection());
-                }
+                } else if(senty instanceof ServerProjectile) {
+					ServerProjectile serverProjectile = (ServerProjectile)senty;
+					ClientProjectile clientProjectile = (ClientProjectile)centy;
+
+					clientProjectile.setFacingDirection(serverProjectile.getFacingDirection());
+					clientProjectile.setTeamColor(serverProjectile.getTeamColor());
+				}
             }
         }
 

@@ -53,6 +53,14 @@ public class ClientPlayer extends ClientEntity
     public void doEvent(EventType event) {
     	if (Main.getInstance().getCurrentState().equals(GameStates.GAMEPLAY))
     		LocalSound.getInstance().playSoundByAction(event, this);
+
+		logger.info("Event: {}",event.name());
+
+		/*if(event == EventType.WALK_LEFT){
+			facingDirection = FacingDirection.LEFT;
+			logger.info("angle: {}",facingDirection.getAngle());
+		}*/
+
     }
     
     public void enable() {}

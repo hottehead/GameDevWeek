@@ -2,6 +2,9 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -269,11 +272,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	else
         		desiredDirection = FacingDirection.DOWN;
         }
-        else if (movingLeft)
+        else if (movingLeft){
         	desiredDirection = FacingDirection.LEFT;
+			ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_LEFT);
+		}
         else if (movingRight)
         	desiredDirection = FacingDirection.RIGHT;    	
-        
+
+
         // Player intended movement
         if (desiredDirection != FacingDirection.NONE)
         {
