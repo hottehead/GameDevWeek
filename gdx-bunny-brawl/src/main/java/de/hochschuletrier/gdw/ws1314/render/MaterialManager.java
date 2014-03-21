@@ -21,7 +21,7 @@ public class MaterialManager {
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
+		this.provideMaterial(EntityType.Knight, new MaterialInfo(
 				"knightWhiteIdleDown", 110, 110, 1, true));
 		
 		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
