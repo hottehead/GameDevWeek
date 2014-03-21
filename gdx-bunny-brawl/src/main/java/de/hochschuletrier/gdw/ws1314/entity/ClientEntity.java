@@ -12,7 +12,6 @@ public abstract class ClientEntity
 	private float 		stateTime;
 	private Vector2 	position;
 	private long 		id;
-	private float 		stateTime;
 	
 	public ClientEntity()
 	{
@@ -23,7 +22,6 @@ public abstract class ClientEntity
 
 	public Vector2 getPosition() 				{ return this.position; }
 	public long getID()							{ return id; }
-	public float getStateTime(){return stateTime;}
 	
 	public void setPosition(Vector2 position)	{ this.position = position; }
 	public void setID(long id)					{ this.id = id; }
