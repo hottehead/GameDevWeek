@@ -31,6 +31,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	
 	private Logger logger;
 	private OptionListener optionListener;
+	private ExitListener exitlistener;
 	private PlayListener playListener; //testing
 
 	public MainMenuState() {
@@ -47,6 +48,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.optionListener = new OptionListener();
 		this.playListener = new PlayListener(); 
+		this.exitlistener = new ExitListener();
 	}
 	
 	public void render() {
@@ -65,6 +67,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	    //add listener to buttons in stage
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getStartButton().addListener(this.playListener);
+		stage.getExitButton().addListener(this.exitlistener);
 
 		if (this.music.isMusicPlaying())
 			//this.music.deMute();
@@ -79,6 +82,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getStartButton().removeListener(this.playListener);
+		stage.getExitButton().removeListener(this.exitlistener);
 		Main.inputMultiplexer.removeProcessor(stage);
 	}
 
@@ -155,7 +159,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	
 	private class ExitListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
-			logger.info("TODO: Exit Game");
+			Gdx.app.exit();
 		}
 	}
 	
