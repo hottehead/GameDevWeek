@@ -163,7 +163,7 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
+        stage.getViewport().update(width, height, true);
     	adjustHeight();
         logList.invalidateHierarchy();
     }
