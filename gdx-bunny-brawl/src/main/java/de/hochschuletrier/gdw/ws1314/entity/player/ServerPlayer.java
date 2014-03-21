@@ -116,7 +116,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -429,13 +429,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID() )
-                     //if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() == projectile.getSourceID())
+                     	break;
+                     if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                        ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
