@@ -27,7 +27,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
-	private final float SCL_VELOCITY = 2.0f;
+	private final float SCL_VELOCITY = 100.0f;
 	
 	
 	public ServerHayBale()
@@ -64,7 +64,12 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-				this.physicsBody.setLinearDamping(100);
+				//ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
+				ServerPlayer player2 = (ServerPlayer) otherEntity;
+				this.physicsBody.setLinearDamping(1);
+				this.physicsBody.applyImpulse(	player2.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+												player2.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				//this.physicsBody.setLinearDamping(100);
 			default:
 				break;
 		}
