@@ -1,14 +1,14 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
-import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 
 public class EntityRenderer extends Pool<RenderObject> implements
 		ClientEntityManagerListener {
@@ -21,29 +21,37 @@ public class EntityRenderer extends Pool<RenderObject> implements
 		materials = materialManager;
 	}
 
-	float app = 0;
 	public void draw() {
-		app = app + 0.1f;
-		Collections.sort(renderList);
+//		Collections.sort(renderList);
 
 		for (RenderObject obj : this.renderList) {
+			Material activeMat = obj.getActiveMaterial();
 			Vector2 pos = obj.entity.getPosition();
+			if(activeMat!=null) {
 
-			float dh = obj.material.height * 0.5f;
-			float dw = obj.material.width * 0.5f;
-			if(obj.entity instanceof ClientPlayer) {
-				System.out.println(obj.entity.getFacingDirection().getDirectionVector());
+			float dh = activeMat.height * 0.5f;
+			float dw = activeMat.width * 0.5f;
+			
+			TextureRegion texPtr = obj.getActiveTexture();
+			DrawUtil.batch.draw(texPtr, pos.x - dw, pos.y + dh, dw, -dh,
+						activeMat.width, -activeMat.height, 1, 1,
+						obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees);
 			}
-			DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh, dw, dh,
-					obj.material.width, obj.material.height, 1, 1,
-					MathUtils.PI*0.5f + obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees);
+			else {
+				Material m = MaterialManager.dbgMaterialAtlas.get(EventType.ANY);
+				
+				
+				DrawUtil.batch.draw(m.texture, pos.x - m.width*0.5f, pos.y + m.height*0.5f , m.width*0.5f, -m.height*0.5f,
+						m.width, -m.height, 1, 1,
+						obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees);
+			}
 		}
 	}
 
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
 		RenderObject renderObj = this.fetch();
-		renderObj.material = materials.fetch(entity.getEntityType());
+		renderObj.materialAtlas = materials.fetch(entity.getEntityType());
 		renderObj.entity = entity;
 		this.renderList.add(renderObj);
 	}

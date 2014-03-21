@@ -27,7 +27,6 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
@@ -116,7 +115,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);

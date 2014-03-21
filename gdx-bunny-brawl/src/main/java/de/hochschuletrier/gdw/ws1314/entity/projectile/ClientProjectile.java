@@ -18,14 +18,14 @@ public class ClientProjectile extends ClientEntity {
 	
 	public ClientProjectile() {
 		super();
-		this.facingDirection = FacingDirection.UP;
+		this.direction = FacingDirection.UP;
 	}
 
 	public FacingDirection getFacingDirection() {
-		return facingDirection;
+		return direction;
 	}
 	public void setFacingDirection(FacingDirection facingDirection) {
-		this.facingDirection = facingDirection;
+		this.direction = facingDirection;
 	}
 
 	public TeamColor getTeamColor() {
@@ -39,28 +39,28 @@ public class ClientProjectile extends ClientEntity {
     public void doEvent(EventType event) {
 		switch (event){
 			case WALK_UP:
-				facingDirection = FacingDirection.UP;
+				direction = FacingDirection.UP;
 				break;
 			case WALK_UP_LEFT:
-				facingDirection = FacingDirection.UP_LEFT;
+				direction = FacingDirection.UP_LEFT;
 				break;
 			case WALK_LEFT:
-				facingDirection = FacingDirection.LEFT;
+				direction = FacingDirection.LEFT;
 				break;
 			case WALK_DOWN_LEFT:
-				facingDirection = FacingDirection.DOWN_LEFT;
+				direction = FacingDirection.DOWN_LEFT;
 				break;
 			case WALK_DOWN:
-				facingDirection = FacingDirection.DOWN;
+				direction = FacingDirection.DOWN;
 				break;
 			case WALK_DOWN_RIGHT:
-				facingDirection = FacingDirection.DOWN_RIGHT;
+				direction = FacingDirection.DOWN_RIGHT;
 				break;
 			case WALK_RIGHT:
-				facingDirection = FacingDirection.RIGHT;
+				direction = FacingDirection.RIGHT;
 				break;
 			case WALK_UP_RIGHT:
-				facingDirection = FacingDirection.UP_RIGHT;
+				direction = FacingDirection.UP_RIGHT;
 				break;
 
 		}

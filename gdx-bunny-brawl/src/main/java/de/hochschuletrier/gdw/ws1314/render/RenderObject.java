@@ -1,19 +1,22 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 
 public class RenderObject implements Comparable<RenderObject> {
 
 	protected ClientEntity entity;
-	protected Material material;
+	protected HashMap<EventType, Material> materialAtlas;
 	float stateTime;
 	
-	public RenderObject(Material material, ClientEntity entity) {
+	public RenderObject(HashMap<EventType, Material> material, ClientEntity entity) {
 		this.entity = entity;
-		this.material = material;
+		this.materialAtlas = material;
 		stateTime = 0;
 	}
 	
@@ -24,12 +27,24 @@ public class RenderObject implements Comparable<RenderObject> {
 	
 	@Override
 	public int compareTo(RenderObject o) {
-		return material.compareTo(o.material);
+		Material activeMaterialThis = materialAtlas.get(entity.activeAction);
+		Material activeMaterialOther= o.materialAtlas.get(entity.activeAction);
+		return activeMaterialThis.compareTo(activeMaterialOther);
+	}
+	
+	public Material getActiveMaterial() {
+		if(materialAtlas!=null) {
+			if(materialAtlas.containsKey(entity.activeAction)) {
+				return materialAtlas.get(entity.activeAction);
+			}
+			if(materialAtlas.containsKey(EventType.ANY)) {
+				return materialAtlas.get(EventType.ANY);
+			}
+		}
+		return null; // no entry found use debug
 	}
 	
 	public TextureRegion getActiveTexture() {
-		return material.getActiveTexture(entity.getStateTime());
+		return materialAtlas.get(entity.activeAction).getActiveTexture(entity.getStateTime());
 	}
-	
-	
 }

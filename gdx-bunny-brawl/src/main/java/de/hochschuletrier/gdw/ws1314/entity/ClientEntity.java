@@ -11,9 +11,10 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
  */
 public abstract class ClientEntity
 {
+	public EventType 		activeAction = EventType.IDLE;
 	private float 			stateTime;
 	private Vector2 		position;
-	private FacingDirection direction;
+	protected FacingDirection direction;
 	private long 			id;
 	
 	public ClientEntity()
@@ -21,7 +22,7 @@ public abstract class ClientEntity
 		this.position = new Vector2(0.0f, 0.0f);
 		this.id = -1l;
 		this.stateTime = 0.0f;
-		this.direction = FacingDirection.NONE;
+		this.direction = FacingDirection.RIGHT;
 	}
 
 	public Vector2 getPosition() 				{ return this.position; }
@@ -40,6 +41,10 @@ public abstract class ClientEntity
     public void update(float delta){
 		stateTime += delta;
 	}
+    public void enterNewState() {
+    	stateTime = 0.0f;
+    }
+    
     public abstract void doEvent(EventType event);
 	
 	public abstract void render();

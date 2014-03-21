@@ -53,6 +53,8 @@ public class ClientPlayer extends ClientEntity
     public void doEvent(EventType event) {
     	if (Main.getInstance().getCurrentState().equals(GameStates.GAMEPLAY))
     		LocalSound.getInstance().playSoundByAction(event, this);
+    	
+   		this.activeAction = event; 
     }
     
     public void enable() {}
