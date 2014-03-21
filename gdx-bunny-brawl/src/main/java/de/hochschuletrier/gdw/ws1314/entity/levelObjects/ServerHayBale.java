@@ -46,11 +46,7 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact) {
 		ServerEntity otherEntity = this.identifyContactFixtures(contact);
-		if(otherEntity == null) {
-            return;
-        }
-        
-        
+
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
 				ServerProjectile projectile = (ServerProjectile) otherEntity;
