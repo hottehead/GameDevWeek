@@ -45,6 +45,7 @@ public class NetworkManager{
 
 	private int nextPlayerNumber = 1;
 
+	private DisconnectCallback disconnectcallback;
 	private PlayerDisconnectCallback playerdisconnectcallback;
 	private ClientIdCallback clientidcallback;
 	private LobbyUpdateCallback lobbyupdatecallback;
@@ -126,6 +127,10 @@ public class NetworkManager{
 		}
 	}
 
+	public DisconnectCallback getDisconnectCallback(){
+		return disconnectcallback;
+	}
+	
 	public PlayerDisconnectCallback getPlayerDisconnectCallback(){
 		return playerdisconnectcallback;
 	}
@@ -171,6 +176,10 @@ public class NetworkManager{
 			logger.error("NWM: error at reading local host IP, fallback to localhost\n{}", e);
 			return "127.0.0.1";
 		}
+	}
+	
+	public void setDisconnectCallback(DisconnectCallback callback){
+		this.disconnectcallback = callback;
 	}
 
 	public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
@@ -300,7 +309,7 @@ public class NetworkManager{
 	public void disconnectFromServer(){
 		if(isClient()){
 			clientConnection.shutdown();
-			clientConnection = null;
+			//clientConnection = null;
 			logger.info("[CLIENT] disconnected from server.");
 		}
 	}
@@ -356,6 +365,7 @@ public class NetworkManager{
 	}
 
 	private void handleDisconnects(){
+
 		if(isServer()){
 			List<NetConnection> toRemove = new ArrayList<NetConnection>();
 			for(NetConnection c:serverConnections){
@@ -374,8 +384,11 @@ public class NetworkManager{
 				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
 			}
 		}
-		if(isClient()){
-
+		if(clientConnection != null){
+			if (!clientConnection.isConnected()){
+				clientConnection = null;
+				this.disconnectcallback.callback("Server is offline.");
+			}
 		}
 	}
 
@@ -395,7 +408,6 @@ public class NetworkManager{
 
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
-
 		DatagramHandler handler = serverDgramHandler;
 
 		Iterator<NetConnection> it = serverConnections.iterator();
@@ -434,11 +446,15 @@ public class NetworkManager{
 				for (NetConnection nc:serverConnections){
 					nc.shutdown();
 				}
+				nextPlayerNumber = 1;
+				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
+				serverReception = null;
+				this.disconnectcallback.callback("[SERVER] Stopped");
 				logger.info("[SERVER] stopped");
 			}
 			else{
-				logger.warn("[SERVER] Can't stop, i'm not a Server.");
+				logger.warn("[CLIENT] Can't stop, i'm not a Server.");
 			}
 		}
 		catch (Exception e){

@@ -175,6 +175,20 @@ public class Main extends StateBasedGame {
 			}
 		});
 		
+		NetworkManager.getInstance().setDisconnectCallback(new DisconnectCallback(){
+			
+			@Override
+			public void callback(String msg){
+				logger.warn("[CLIENT] {}." ,msg);
+				c_own_id  = -1;
+				s_map = "";
+				c_players = null;
+				s_players = new ArrayList<PlayerData>();
+				GameStates.MAINMENU.init(assetManager);
+				GameStates.MAINMENU.activate();
+			}
+		});
+		
 		NetworkManager.getInstance().setPlayerDisconnectCallback(new PlayerDisconnectCallback() {
 			
 			@Override
@@ -219,6 +233,25 @@ public class Main extends StateBasedGame {
 						logger.info("Changing State to Client-Lobby...");
 						GameStates.CLIENTLOBBY.init(assetManager);
 						GameStates.CLIENTLOBBY.activate();
+					}
+					else
+					{
+						logger.info("Not yet connected...");
+					}
+				}
+				if (args.get(1).equals("main"))
+				{
+					if (NetworkManager.getInstance().isServer())
+					{
+						logger.info("Changing State to Server-Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
+					}
+					else if (NetworkManager.getInstance().isClient())
+					{
+						logger.info("Changing State to Client-Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
 					}
 					else
 					{
