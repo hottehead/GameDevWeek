@@ -30,10 +30,10 @@ public class EntityRenderer extends Pool<RenderObject> implements
 			float dw = obj.material.width * 0.5f;
 
 			if(obj.entity instanceof ClientProjectile) {
-			ClientProjectile eProj = (ClientProjectile)obj.entity;
-			DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh
-					+ obj.material.height, pos.x - dw, pos.y - dh
-					+ obj.material.height, obj.material.width, obj.material.height, 1, 1, eProj.getFacingDirection().getAngle());
+				ClientProjectile eProj = (ClientProjectile)obj.entity;
+				DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh
+						+ obj.material.height, pos.x - dw, pos.y - dh
+						+ obj.material.height, obj.material.width, obj.material.height, 1, 1, eProj.getFacingDirection().getAngle());
 			}
 			else {
 				DrawUtil.batch.draw(obj.getActiveTexture(), pos.x - dw, pos.y - dh
