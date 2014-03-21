@@ -305,7 +305,7 @@
         "rows" : 1
     },
 	"hunterBlackIdleRight": {
-        "filename": "data/animations/HunterBlack_idleRight.png",
+        "filename": "data/animations/HunterBlack_IdleRight.png",
         "frames" : 3,
         "frameDuration": [ 2.0, 0.1, 0.5 ] ,
         "playType" : "LOOP_PINGPONG",
@@ -353,7 +353,7 @@
         "rows" : 1
     },
 	"hunterBlackAttackUp": {
-        "filename": "data/animations/HuntertBlack_AttackUp.png",
+        "filename": "data/animations/HunterBlack_AttackUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
