@@ -53,11 +53,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-    public static final float FRICTION = 0;
 	public static final float BRAKING = 5.0f;
 
-
-	public static final float RESTITUTION = 0;
+	public static final float DENSITY = 0.0f;
+    public static final float FRICTION = 0.0f;
+	public static final float RESTITUTION = 0.0f;
 	public static final float KNOCKBACK_TIME = 0.8f;
 	public static final float ATTACK_TIME = 0.18f;
 	
@@ -436,9 +436,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 	{
 				// TODO Auto-generated method stub
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(28));
+				.position(properties.getFloat("x"), properties.getFloat("y"))
+				.fixedRotation(false)
+				.gravityScale(0.0f)
+				.create();
+		body.createFixture(new PhysixFixtureDef(manager)
+				.density(DENSITY)
+				.friction(FRICTION)
+				.restitution(RESTITUTION)
+				.shapeCircle(28)
+				);
 
 		body.setGravityScale(0);
 		body.addContactListener(this);
