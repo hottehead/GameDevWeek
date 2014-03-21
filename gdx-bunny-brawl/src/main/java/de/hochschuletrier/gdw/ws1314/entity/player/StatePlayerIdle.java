@@ -9,14 +9,17 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * @author ElFapo
  *
  */
-public class StatePlayerIdle extends State
+public class StatePlayerIdle extends StatePlayer
 {
 	public StatePlayerIdle(IStateListener owner)
 	{
 		super(owner);
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
+	public PlayerStates getCurrentState(){return PlayerStates.IDLE;}
+
 	@Override
 	public void update(float dt)
 	{

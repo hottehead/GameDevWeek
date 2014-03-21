@@ -30,6 +30,7 @@ public class ClientPlayer extends ClientEntity
     private PlayerKit		playerKit;
     private PlayerData		playerData;
     private TeamColor		teamColor;
+	private PlayerStates	playerState;
     
     public int 				getEggCount() 		{ return eggCount; }
     public float 			getCurrentHealth() 	{ return currentHealth; }
@@ -39,6 +40,7 @@ public class ClientPlayer extends ClientEntity
     public PlayerData 		getPlayerInfo() 	{ return playerData; }
     public EntityType getEntityType() 			{ return playerKit.getEntityType(); }
     public TeamColor		getTeamColor()		{ return teamColor; }
+	public PlayerStates 	getCurrentPlayerState() {return playerState;}
     
     
     public void setCurrentHealth(float currentHealth) 				{ this.currentHealth = currentHealth; }
@@ -48,6 +50,7 @@ public class ClientPlayer extends ClientEntity
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
     public void setPlayerInfo(PlayerData playerData)				{ this.playerData = playerData; }
     public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
+	public void setCurrentPlayerState(PlayerStates state) {this.playerState = state;}
 
     @Override
     public void doEvent(EventType event) {
