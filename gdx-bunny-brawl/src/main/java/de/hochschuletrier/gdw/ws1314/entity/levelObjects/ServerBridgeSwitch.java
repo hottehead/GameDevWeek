@@ -16,6 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 
@@ -61,19 +62,16 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	            case SwordAttack:
 	            case Projectil:
 	            	ServerProjectile projectile = (ServerProjectile) otherEntity;
-	            	try{
-                        for(Long targetID : targetIDs) {
-                            ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-                            if (bridge.getVisibility()) {
-                                ServerEntityManager.getInstance().removeEntity(bridge);
-                            }
-                            bridge.setVisibility(!bridge.getVisibility());
+                    for(Long targetID : targetIDs) {
+                        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
+                        if (bridge.getVisibility()) {
+                            ServerEntityManager.getInstance().removeEntity(bridge);
+                            
                         }
-	            	}catch(NullPointerException e){
-	            		System.out.println("targetID für ServerBridgeSwitch ist noch nicht richtig gesetzt");
-	            		logger.info("targetID für ServerBridgeSwitch ist noch nicht richtig gesetzt");
-	            	}
-	            	ServerEntityManager.getInstance().removeEntity(projectile);
+                        bridge.setVisibility(!bridge.getVisibility());
+                    }
+            	
+	            	//ServerEntityManager.getInstance().removeEntity(projectile);
 	                break;
 	            default:
 	                break;
@@ -112,7 +110,7 @@ public class ServerBridgeSwitch extends ServerLevelObject
 		body.createFixture(new PhysixFixtureDef(manager)
 									.density(0.5f).friction(0.0f)
 									.restitution(0.0f).shapeBox(50,50)
-                                                                        .sensor(true));
+                                    .sensor(true));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);
