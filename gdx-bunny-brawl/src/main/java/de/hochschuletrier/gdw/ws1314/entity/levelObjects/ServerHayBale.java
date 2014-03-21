@@ -53,10 +53,8 @@ public class ServerHayBale extends ServerLevelObject
 			case SwordAttack:
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
 				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-				this.physicsBody.setLinearDamping(1);
 				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
-				
 				break;
 			case WaterZone:
 				this.physicsBody.setLinearDamping(100);
@@ -64,12 +62,7 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-				//ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
-				ServerPlayer player2 = (ServerPlayer) otherEntity;
 				this.physicsBody.setLinearDamping(1);
-				this.physicsBody.applyImpulse(	player2.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-												player2.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
-				//this.physicsBody.setLinearDamping(100);
 			default:
 				break;
 		}
