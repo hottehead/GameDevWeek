@@ -48,7 +48,6 @@ public class DevConsole {
         register(wait_f);
         register(exec_f);
         register(echo_f);
-        register(quit_f);
 
         register(listCVars_f);
         register(toggle_f);
@@ -619,14 +618,6 @@ public class DevConsole {
         @Override
         public void execute(List<String> args) {
             logger.info(StringUtils.untokenize(args, 1, -1, false));
-        }
-    };
-
-    private final ConsoleCmd quit_f = new ConsoleCmd("quit", CCmdFlags.SYSTEM, "Exit without questions.") {
-
-        @Override
-        public void execute(List<String> args) {
-            System.exit(-1); // fixme?
         }
     };
 
