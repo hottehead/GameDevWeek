@@ -94,10 +94,12 @@ public class ServerMineExplosion extends ServerLevelObject{
 		}
 		
 		switch(otherEntity.getEntityType()) {
-			case BridgeSwitch:
-			case Bush:
-				ServerEntityManager.getInstance().removeEntity(this);
-				
+			case Hunter:
+			case Tank:
+			case Knight:
+			case Noob:
+				ServerPlayer player = (ServerPlayer) otherEntity;
+				player.applyDamage(damage);
 				break;
 			default:
 				break;
