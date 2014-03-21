@@ -16,7 +16,7 @@ public class OptionState extends GameState {
 	
 	public void init(AssetManagerX assetManager) {
         super.init(assetManager);
-        logger = LoggerFactory.getLogger(MainMenuState.class);
+        logger = LoggerFactory.getLogger(OptionState.class);
         
         stage = new OptionStage();
         stage.init(assetManager);

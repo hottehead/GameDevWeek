@@ -79,9 +79,10 @@ public class MainMenuStage extends AutoResizeStage {
 //		uiTable.add(levelList);
 //		
 //		uiTable.row();
-//		
-//		//start Button
+		
+		//start Button
 		startButton = new TextButton("LADEN", defaultSkin);
+		uiTable.add(startButton).row();
 		
 		uiTable.row().padTop(20);
 		
@@ -105,7 +106,6 @@ public class MainMenuStage extends AutoResizeStage {
 		tmpTable.add(credits).pad(5);
 		tmpTable.add(exit).pad(5);
 		
-		uiTable.add(startButton);
 	}
 
 	public void render() {		

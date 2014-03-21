@@ -62,6 +62,7 @@ public class OptionStage extends AutoResizeStage {
 		Table.drawDebug(this);
 	}
 	
+	//getter for 
 	public Slider getMasterSlider() {
 		return master;
 	}
@@ -77,7 +78,4 @@ public class OptionStage extends AutoResizeStage {
 	public TextButton getBackButton() {
 		return back;
 	}
-	
-	//getter for 
-
 }
