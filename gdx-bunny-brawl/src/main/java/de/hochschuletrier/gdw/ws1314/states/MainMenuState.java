@@ -9,7 +9,6 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
-import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
@@ -19,7 +18,6 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
  */
 public class MainMenuState extends GameState implements InputProcessor {
 
-	private DemoShader demoShader;
 	InputInterceptor inputProcessor;
 	private LocalMusic music;
 	private int stateChangeDuration=500;
@@ -93,7 +91,6 @@ public class MainMenuState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
 	}
 
 	@Override

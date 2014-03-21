@@ -25,7 +25,7 @@ public class MaterialManager {
 				"knightWhiteIdleDown", 110, 110, 1, true));
 
 		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
-				"hunterWhiteIdleDown", 110, 110, 1, true));
+				"hunterWhiteIdleDown", 110, 74, 1, true));
 
 		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
 				"debugArrow", 32, 32, 1, false));
