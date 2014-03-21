@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
 
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.preferences.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
 /**
