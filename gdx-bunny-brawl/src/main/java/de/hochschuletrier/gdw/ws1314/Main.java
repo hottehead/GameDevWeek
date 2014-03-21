@@ -21,6 +21,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -32,6 +33,8 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.*;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
 import org.slf4j.Logger;
@@ -51,6 +54,7 @@ public class Main extends StateBasedGame {
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
+	public final GamePreferences gamePreferences = new GamePreferences();
 
 	public final DevConsole console = new DevConsole(16);
 	private final DevConsoleView consoleView = new DevConsoleView(console);
@@ -116,6 +120,7 @@ public class Main extends StateBasedGame {
 		DrawUtil.init();
 		loadAssetLists();
 		setupGdx();
+		gamePreferences.init();
 		skin = new Skin(Gdx.files.internal("data/skins/basic.json"));
 		consoleView.init(assetManager, skin);
 		addScreenListener(consoleView);
@@ -184,8 +189,10 @@ public class Main extends StateBasedGame {
 				s_map = "";
 				c_players = null;
 				s_players = new ArrayList<PlayerData>();
-				GameStates.MAINMENU.init(assetManager);
-				GameStates.MAINMENU.activate();
+				if(Main.getInstance().getCurrentState()!=GameStates.MAINMENU.get()){
+					GameStates.MAINMENU.init(assetManager);
+					GameStates.MAINMENU.activate();
+				}
 			}
 		});
 		

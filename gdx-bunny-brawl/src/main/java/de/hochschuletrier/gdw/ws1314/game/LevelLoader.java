@@ -19,13 +19,11 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +40,9 @@ public class LevelLoader {
 	private static HashMap<String, String> classToPath = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
+    private static HashMap<Integer,ArrayList<Long>> bridgeSwitchIDs = new HashMap<>();
+    private static HashMap<Integer,ArrayList<Long>> bridgeIDs = new HashMap<>();
+
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager) {
 		LevelLoader.map = map;
@@ -49,6 +50,8 @@ public class LevelLoader {
 		LevelLoader.entityManager = entityManager;
 		LevelLoader.physicsManager = physicsManager;
 		entityManager.Clear();
+        bridgeSwitchIDs.clear();
+        bridgeIDs.clear();
 		physicsManager.reset();
 		try {
 			classes = ClassUtils
@@ -76,7 +79,30 @@ public class LevelLoader {
 				loadObjectLayer(layer);
 			}
 		}
+
+        connectBridges();
 	}
+
+    private static void connectBridges(){
+        for(Map.Entry<Integer,ArrayList<Long>> bswitch : bridgeSwitchIDs.entrySet() )
+        {
+            if(!bridgeIDs.containsKey(bswitch.getKey())) {
+                logger.warn("Zu Switch{} gibt es keine Bridge.");
+                continue;
+            }
+
+            for(Long bswitchID : bswitch.getValue()){
+                ServerBridgeSwitch sbswitch = (ServerBridgeSwitch)entityManager.getEntityById(bswitchID);
+                for(Long bridgeID : bridgeIDs.get(bswitch.getKey()))
+                {
+                    sbswitch.addTargetID(bridgeID);
+                }
+            }
+
+
+        }
+
+    }
 
 	private static void loadObjectLayer(Layer layer) {
 		for (LayerObject object : layer.getObjects()) {
@@ -225,12 +251,13 @@ public class LevelLoader {
         ServerEntity entity = null;
 		switch (type) {
 		case "solid":
+		
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
 					.position(x, y).create();
 			body.createFixture(new PhysixFixtureDef(physicsManager).density(0.5f)
 					.friction(0.5f).restitution(0.4f).shapeBox(width, height));
 			break;
-        case "water":
+		case "water":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
             zone.setWaterZone();
             break;
@@ -285,6 +312,11 @@ public class LevelLoader {
         Vector2 pos = new Vector2(x,y);
 
 		ServerEntity entity = null;
+        ServerBridge bridge = null;
+
+
+
+
 		switch (type) {
 		case "solid":
 			PhysixBody body = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
@@ -305,18 +337,35 @@ public class LevelLoader {
                 entityManager.createEntity(ServerSpinach.class,pos,properties);
                 break;
             case  "bridge_horizontal_left":
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setHorizontalLeft();
+                break;
             case  "bridge_horizontal_middle":
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setHorizontalMiddle();
+                break;
+            case  "bridge_horizontal_right":
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setHorizontalRight();
+                break;
             case  "bridge_vertical_bottom":
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setVerticalBottom();
+                break;
             case  "bridge_vertical_middle":
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setVerticalMiddle();
+                break;
             case  "bridge_vertical_top":
-                properties.setString("img",type);
-                entityManager.createEntity(ServerBridge.class,pos,properties);
+                bridge = createServerBridge(name, pos, properties);
+                bridge.setVerticalTop();
                 break;
             case  "bush":
                 entityManager.createEntity(ServerBush.class,pos,properties);
                 break;
             case  "switch":
-                entityManager.createEntity(ServerBridgeSwitch.class,pos,properties);
+                ServerBridgeSwitch bswitch = entityManager.createEntity(ServerBridgeSwitch.class,pos,properties);
+                addSwitchID(name,bswitch);
                 break;
 		}
 
@@ -327,6 +376,61 @@ public class LevelLoader {
 			 */
 		}
 	}
+
+    private static ServerBridge createServerBridge(String name, Vector2 pos, SafeProperties properties) {
+        ServerBridge bridge;
+        bridge = entityManager.createEntity(ServerBridge.class,pos,properties);
+        addBridgeID(name,bridge);
+        return bridge;
+    }
+
+    private static void addBridgeID(String name,ServerBridge enty){
+        Integer id = new Integer(getIDinString(name));
+        if(id.intValue() < 0){
+            logger.warn("Eine Bridge hat keine ID im Namen");
+            return;
+        }
+
+        if(!bridgeIDs.containsKey(id))
+            bridgeIDs.put(id,new ArrayList<Long>());
+
+        bridgeIDs.get(id).add(enty.getID());
+
+    }
+
+    private static void addSwitchID(String name,ServerBridgeSwitch enty){
+        Integer id = new Integer(getIDinString(name));
+        if(id.intValue() < 0){
+            logger.warn("Ein Switch hat keine ID im Namen");
+            return;
+        }
+
+        if(!bridgeIDs.containsKey(id))
+            bridgeIDs.put(id,new ArrayList<Long>());
+
+        bridgeIDs.get(id).add(enty.getID());
+
+    }
+
+
+    /**
+     *
+     * @param name
+     * @return returns first Intiger in string. -1 if nothing found.
+     */
+    private static int getIDinString(String name)
+    {
+        if(name == null)
+            return -1;
+
+        Pattern MY_PATTERN = Pattern.compile("\\d+");
+        Matcher m = MY_PATTERN.matcher(name);
+        while (m.find()) {
+            String s = m.group(0);
+            return Integer.parseInt(s);
+        }
+        return -1;
+    }
 
 	/**
 	 * Currently no plan for use

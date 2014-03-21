@@ -21,6 +21,9 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
  */
 public class ServerSpinach extends ServerLevelObject
 {
+	public static final float SPINACH_ATTACKBUFF_FACTOR = 1.5f;
+	public static final float SPINACH_ATTACKBUFF_DURATION = 2.f;
+	
 	public ServerSpinach()
 	{
 		super();
@@ -34,18 +37,6 @@ public class ServerSpinach extends ServerLevelObject
 	
 	@Override
 	public void beginContact(Contact contact) {
-//            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-//
-//            switch(otherEntity.getEntityType()) {
-//                case Tank:
-//                case Hunter:
-//                case Knight:
-//                case Noob:
-//                    ServerEntityManager.getInstance().removeEntity(this);
-//                    break;
-//                default:
-//                    break;
-//            }
 	}
 
 	@Override
@@ -62,9 +53,9 @@ public class ServerSpinach extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-                .fixedRotation(false).create();
+                .fixedRotation(true).create();
 
             body.createFixture(new PhysixFixtureDef(manager)
                 .density(0.5f)

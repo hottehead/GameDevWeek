@@ -4,13 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
@@ -26,7 +26,6 @@ public class GameplayStage extends AutoResizeStage {
 	private DynamicTextElement fpsCounter;
 
 	private HealthBar healthBar;
-	private float accum = 0;
 	private VisualBox classIcon;
 	
 	private VisualBox buff1, buff2, buff3;
@@ -36,9 +35,12 @@ public class GameplayStage extends AutoResizeStage {
 	private VisualBox scoreTeamIcon, scoreEnemyIcon;
 	private MinMaxValue scoreTeam, scoreEnemy;
 	private final int maxScore = 100;
+	
+	ClientPlayer visualDataEntity;
 
 	public GameplayStage() {
 		super();
+		visualDataEntity = null;
 	}
 	
 	public void init(AssetManagerX assetManager) {
@@ -58,7 +60,7 @@ public class GameplayStage extends AutoResizeStage {
 		
 		//healthbar
 		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 300, 40);
+		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 250, 40);
 		healthBar.setDecimalSpace(2);
 		
 		//class icon
@@ -67,9 +69,9 @@ public class GameplayStage extends AutoResizeStage {
 		classIcon = new BoxOffsetDecorator(classIcon, decor);
 		
 		//buffs
-		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 300, Gdx.graphics.getHeight()-80, 20, 20);
-		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 330, Gdx.graphics.getHeight()-80, 20, 20);
-		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 360, Gdx.graphics.getHeight()-80, 20, 20);
+		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 250, Gdx.graphics.getHeight()-80, 20, 20);
+		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 280, Gdx.graphics.getHeight()-80, 20, 20);
+		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 310, Gdx.graphics.getHeight()-80, 20, 20);
 		
 		//action icons
 		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"), (Gdx.graphics.getWidth()*.5f)-50, Gdx.graphics.getHeight()-80, 60, 60);
@@ -128,12 +130,10 @@ public class GameplayStage extends AutoResizeStage {
 	//for testing the healthbar
 	//can be deleted after connecting the ui with the gamelogic
 	public void step() {
-		if (healthBar.get().getValueFactor() != 0) {
-			advanceHealthbar();
-		}
-		else {
-			resetHealthbar();
-			advanceScoreOwnTeam();
+		if(visualDataEntity!=null) {
+			this.healthBar.get().setMaxValue(visualDataEntity.getPlayerKit().getBaseHealth());
+			this.healthBar.get().setValue(visualDataEntity.getCurrentHealth());
+			
 		}
 	}
 	
@@ -148,12 +148,9 @@ public class GameplayStage extends AutoResizeStage {
 	public void advanceScoreEnemeyTeam() {
 		scoreEnemy.stepValue();
 	}
-	
-	public void advanceHealthbar() {
-		healthBar.get().stepValue();
+
+	public void setDisplayedPlayer(ClientPlayer playerEntity) {
+		visualDataEntity = playerEntity;
 	}
 	
-	public void resetHealthbar() {
-		healthBar.reset();
-	}
 }

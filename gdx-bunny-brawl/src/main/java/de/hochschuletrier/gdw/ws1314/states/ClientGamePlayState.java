@@ -9,7 +9,6 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
-import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 
@@ -25,7 +24,7 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 	private LocalMusic stateMusic;
 	private LocalSound stateSound;
 	
-	private GameplayStage stage;
+	
 
 
 	public ClientGamePlayState() {
@@ -41,8 +40,7 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 
 		Main.inputMultiplexer.addProcessor(this);
 		
-		stage = new GameplayStage();
-		stage.init(assetManager);
+		
 	}
 
 	public void render() {
@@ -50,9 +48,6 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 		// game.render();
 		tmpGame.render();
 		
-		DrawUtil.startRenderToScreen();
-		stage.render();
-		DrawUtil.endRenderToScreen();
                 
 		//TODO: Jemand der weis woher das kommt bitte fixen, hier war nach dem Merge zwischen integration_test/network_gameplay und master ein Build-Fehler.
                 //game.getManager().render();
@@ -61,20 +56,20 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 	@Override
 	public void update(float delta) {
 		tmpGame.update(delta);
-		stage.setFPSCounter(delta);
-		stage.step();
 		fpsCalc.addFrame();
+		
+		
+		
+		
 		
 		
 		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
-		
-		stage.step();
-		
 	}
 
 	@Override
 	public void onEnter() {
+
 	}
 
 	@Override
@@ -83,6 +78,7 @@ public class ClientGamePlayState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
+		//stage.dispose();
 	}
 
 	@Override

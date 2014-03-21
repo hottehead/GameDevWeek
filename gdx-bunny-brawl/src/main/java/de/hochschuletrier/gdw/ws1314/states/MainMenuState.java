@@ -8,16 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
-import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
-import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
@@ -28,11 +27,9 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 public class MainMenuState extends GameState implements InputProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(MainMenuState.class);
 	
-    private DemoShader demoShader;
     InputInterceptor inputProcessor;
     private LocalMusic music;
-	AnimationExtended walking;
-
+	private int stateChangeDuration=500;
 	private MainMenuStage stage;
 
     public MainMenuState() {
@@ -41,13 +38,12 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
-		walking = assetManager.getAnimation("walking");
         this.music = new LocalMusic(assetManager);
         inputProcessor = new InputInterceptor(this) {
             @Override
             public boolean keyUp(int keycode) {
                 switch (keycode) {
-                    case Keys.ESCAPE:
+                    case Keys.ESCAPE:                    	
                     	//Wird aktuelle nicht benutzt (laut Jerry)
                         return true;
                 }
@@ -61,32 +57,49 @@ public class MainMenuState extends GameState implements InputProcessor {
 		
 		stage.getStartServerButton().addListener(new StartServerClick());
 		stage.getStartClientButton().addListener(new StartClientClick());
+
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
     public void render() {
 		stage.render();
+	}
+
+	float stateTime = 0f;
+
+	@Override
+	public void update(float delta) {
+		stateTime += delta;
+		music.update(stateChangeDuration);
     }
 
     @Override
     public void onEnter() {
-        inputProcessor.setActive(false);
+		inputProcessor.setActive(true);
         
         if (this.music.isMusicPlaying())
-        	this.music.deMute();
+			//this.music.deMute();
+			this.music.setFade('i', 5000);
         else
         this.music.play("music-lobby-loop");
     }
 
     @Override
     public void onLeave() {
-    	this.music.mute();
+		//this.music.mute();
+		this.music.setFade('o', this.stateChangeDuration);
         inputProcessor.setActive(false);
+	}
+
+	@Override
+	public void onLeaveComplete() {
         
     }
 
     @Override
     public void dispose() {
+		stage.dispose();
     }
 
     @Override
@@ -106,7 +119,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return true;
+		return false;
     }
 
     @Override

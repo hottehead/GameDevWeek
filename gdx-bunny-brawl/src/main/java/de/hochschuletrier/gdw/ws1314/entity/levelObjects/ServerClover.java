@@ -21,6 +21,9 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
  */
 public class ServerClover extends ServerLevelObject
 {
+	public static final float CLOVER_HEALTHBUFF_FACTOR = 1.5f;
+	public static final float CLOVER_HEALTHBUFF_DURATION = 2.f;
+	
 	public ServerClover()
 	{
 		super();
@@ -62,7 +65,7 @@ public class ServerClover extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
                 .fixedRotation(false).create();
 

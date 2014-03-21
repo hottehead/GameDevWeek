@@ -9,6 +9,8 @@ import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.Gdx;
+
 public class ServerLobbyState extends GameState implements IServerLobbyListener {
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyState.class);
 	
@@ -33,6 +35,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener 
     	
     	this.stage = new ServerLobbyStage();
     	this.stage.init(assetManager);
+
+    	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
