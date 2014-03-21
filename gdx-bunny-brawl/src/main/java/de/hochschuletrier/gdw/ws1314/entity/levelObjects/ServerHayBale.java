@@ -27,7 +27,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
-	private final float SCL_VELOCITY = 100.0f;
+	private final float SCL_VELOCITY = 300.0f;
 	
 	
 	public ServerHayBale()
@@ -44,11 +44,16 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact) {
 		ServerEntity otherEntity = this.identifyContactFixtures(contact);
-
+		if(otherEntity == null) {
+            return;
+        }
+        
+        
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
 				ServerProjectile projectile = (ServerProjectile) otherEntity;
-				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector());
+				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 				break;
 			case SwordAttack:
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
