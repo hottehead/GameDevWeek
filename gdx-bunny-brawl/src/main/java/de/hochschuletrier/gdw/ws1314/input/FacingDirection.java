@@ -28,7 +28,9 @@ public enum FacingDirection
 	private FacingDirection(float x, float y)
 	{
 		direction = new Vector2(x, y);
-		angle = direction.getAngleRad();
+		angle = direction.x == 0.0f && 
+				direction.y == 0.0f ? 0.0f 
+						: direction.getAngleRad();
 	}
 	
 	public Vector2 getDirectionVector()
