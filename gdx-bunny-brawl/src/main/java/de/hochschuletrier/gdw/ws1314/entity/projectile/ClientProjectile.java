@@ -58,6 +58,7 @@ public class ClientProjectile extends ClientEntity {
 
 	@Override
 	public void update(float delta) {
+		super.update(delta);
 	}
 
 	@Override
