@@ -158,33 +158,6 @@ public class ServerProjectile extends ServerEntity {
             ServerEntityManager.getInstance().removeEntity(this);
         }
 
-		switch (getFacingDirection())
-		{
-			case UP:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP);
-				break;
-			case UP_RIGHT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP_RIGHT);
-				break;
-			case UP_LEFT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP_LEFT);
-				break;
-			case DOWN:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN);
-				break;
-			case DOWN_RIGHT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN_RIGHT);
-				break;
-			case DOWN_LEFT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN_LEFT);
-				break;
-			case RIGHT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_LEFT);
-				break;
-			case LEFT:
-				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_RIGHT);
-				break;
-		}
 	}
 
 	@Override
