@@ -27,6 +27,7 @@ public class MainMenuStage extends AutoResizeStage {
 	private LevelList levelList;
 	private TextButton startButton;
 	private TextField playerNameField;
+	private Table uiTable;
 	
 	public MainMenuStage() {
 		super();
@@ -42,15 +43,19 @@ public class MainMenuStage extends AutoResizeStage {
 		}
 		return super.keyDown(keyCode);
 	}
+	
+	AssetManagerX assetManager;
 
 	public void init(AssetManagerX assetManager) {
+		this.assetManager = assetManager;
+		
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
-		Table uiTable = new Table();
+		uiTable = new Table();
+		
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output
 		this.addActor(uiTable);
-		font = assetManager.getFont("verdana", 24);
 		
 		Label playerNameLabel = new Label("Player name: ", defaultSkin);
 		uiTable.add(playerNameLabel);		
@@ -77,7 +82,7 @@ public class MainMenuStage extends AutoResizeStage {
 		uiTable.add(startButton);
 	}
 
-	public void render() {		
+	public void render() {
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		this.act(Gdx.graphics.getDeltaTime());
 		
@@ -100,5 +105,16 @@ public class MainMenuStage extends AutoResizeStage {
 	
 	public TextButton getStartButton() {
 		return startButton;
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		if(this.xScale >0 && this.yScale>0)
+			uiTable.setScale(this.xScale, this.yScale);
+		//		this.levelList.setSize(width, height);
+//		
+//		uiTable.invalidate();
+//		levelList.invalidate();
 	}
 }

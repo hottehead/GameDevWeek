@@ -28,6 +28,7 @@ import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
+import de.hochschuletrier.gdw.ws1314.hud.HudResizer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
@@ -40,7 +41,7 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
 public class Main extends StateBasedGame {
 
 	public static final int WINDOW_WIDTH = 1024;
-	public static final int WINDOW_HEIGHT = 512;
+	public static final int WINDOW_HEIGHT = 768;
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
@@ -159,8 +160,10 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.gl.glViewport(0, 0, width, height);
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
+		HudResizer.resize(width, height);
 	}
 
 	@Override
