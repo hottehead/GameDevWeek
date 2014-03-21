@@ -1,4 +1,4 @@
-#version 130
+#version 120
 
 uniform sampler2D u_prevStep;
 uniform sampler2D u_texture;

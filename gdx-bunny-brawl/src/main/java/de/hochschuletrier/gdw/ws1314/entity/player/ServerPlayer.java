@@ -104,7 +104,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -336,14 +336,15 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case Carrot:
                 	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
-                	 ServerCarrot carrot = (ServerCarrot) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(carrot);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
 
 
                 	 break;
                  case Spinach:
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case WaterZone:
                      
