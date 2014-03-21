@@ -2,22 +2,16 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
+import de.hochschuletrier.gdw.ws1314.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
@@ -40,7 +34,6 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -49,8 +42,7 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener
-{
+public class ServerPlayer extends ServerEntity implements IStateListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
@@ -82,12 +74,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     private int 		currentEggCount;
     
-    private StatePlayerWaiting 	 attackState;
+    private StatePlayerAttack 	 attackState;
     private StatePlayerIdle		 idleState;
-    private StatePlayerWaiting 	 knockbackState;
+    private StatePlayerKnockback knockbackState;
     private StatePlayerWalking	 walkingState;
     
-    private State				 currentState;
+    private StatePlayer			 currentState;
     
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
@@ -126,9 +118,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
-    	attackState = new StatePlayerWaiting(this);
+    	attackState = new StatePlayerAttack(this);
     	idleState = new StatePlayerIdle(this);
-    	knockbackState = new StatePlayerWaiting(this);
+    	knockbackState = new StatePlayerKnockback(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
     	setFacingDirection(FacingDirection.DOWN);
@@ -221,7 +213,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-            	if (currentState == idleState || currentState == walkingState)
+            	if (currentState.equals(idleState) || currentState.equals(walkingState))
             	{
             		attackCooldown = playerKit.getFirstAttackCooldown();
             		attackCooldownTimer = 0.0f;
@@ -235,7 +227,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-        		if (currentState == idleState || currentState == walkingState)
+        		if (currentState.equals(idleState) || currentState.equals(walkingState))
             	{
             		attackCooldown = playerKit.getSecondAttackCooldown();
             		attackCooldownTimer = 0.0f;
@@ -246,7 +238,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	}
                 break;
             case DROP_EGG:
-        		if (currentState == idleState || currentState == walkingState)
+        		if (currentState.equals(idleState) || currentState.equals(walkingState))
         			dropEgg();
         		break;
             case USE_SOMETHING:
@@ -286,7 +278,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         if (desiredDirection != FacingDirection.NONE)
         {
         	walkingState.setMovingDirection(desiredDirection);
-            if (currentState == idleState || currentState == walkingState)
+            if (currentState.equals(idleState) || currentState.equals(walkingState))
             	switchToState(walkingState);
 
         	attackState.setWaitFinishedState(walkingState);
@@ -295,7 +287,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         // Not intended movement
         else
         {
-        	if (currentState == walkingState)
+        	if (currentState.equals(walkingState))
         		switchToState(idleState);
 
         	attackState.setWaitFinishedState(idleState);
@@ -508,6 +500,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     public TeamColor		getTeamColor()			{ return teamColor; }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
+	public PlayerStates 	getCurrentPlayerState() {return currentState.getCurrentState();}
     
     public void setPlayerKit(PlayerKit kit)
     {
@@ -589,12 +582,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	walkingState.setPhysixBody(physicsBody);
 	}
 
-	@Override
-	public void switchToState(State state)
+	public void switchToState(StatePlayer state)
 	{
+
 		currentState.exit();
 		currentState = state;
 		currentState.init();
+	}
+
+
+	@Override
+	public void switchToState(State state)
+	{
+		switchToState((StatePlayer)state);
 	}
 
     public void reset()

@@ -1,6 +1,5 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
@@ -14,6 +13,8 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -67,6 +68,7 @@ public class ClientServerConnect {
                         cp.setTeamColor(sp.getTeamColor());
                         cp.setEggCount(sp.getCurrentEggCount());
                         cp.setFacingDirection(sp.getFacingDirection());
+						cp.setCurrentPlayerState(sp.getCurrentPlayerState());
                         break;
 					case Projectil:
 						ServerProjectile serverProjectile = (ServerProjectile)senty;
@@ -74,6 +76,7 @@ public class ClientServerConnect {
 
 						clientProjectile.setFacingDirection(serverProjectile.getFacingDirection());
 						clientProjectile.setTeamColor(serverProjectile.getTeamColor());
+
 						break;
                 }
 
@@ -91,6 +94,7 @@ public class ClientServerConnect {
                     cp.setTeamColor(sp.getTeamColor());
                     cp.setEggCount(sp.getCurrentEggCount());
                     cp.setFacingDirection(sp.getFacingDirection());
+					cp.setCurrentPlayerState(sp.getCurrentPlayerState());
                 } else if(senty instanceof ServerProjectile) {
 					ServerProjectile serverProjectile = (ServerProjectile)senty;
 					ClientProjectile clientProjectile = (ClientProjectile)centy;
