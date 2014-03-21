@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -28,11 +29,11 @@ public class MainMenuStage extends AutoResizeStage {
 	private TextField playerNameField;
 	
 	//buttons
-	TextButton playServer;
-	TextButton playClient;
-	TextButton options; 
-	TextButton credits;
-	TextButton exit;
+	private TextButton playServer;
+	private TextButton playClient;
+	private TextButton options; 
+	private TextButton credits;
+	private TextButton exit;
 	
 	public MainMenuStage() {
 		super();
@@ -65,7 +66,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.add(playerNameField);
 		
-		
+
 //		uiTable.row().padTop(20);
 //		Label label = new Label("escape still works - level list not", defaultSkin);
 //		uiTable.add(label);
