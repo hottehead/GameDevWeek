@@ -5,9 +5,9 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
+ * Reads preferences from and writes them to file.
  * 
  * @author MikO
- *
  */
 public class GamePreferences {	
 	private Preferences settingsHandler;
