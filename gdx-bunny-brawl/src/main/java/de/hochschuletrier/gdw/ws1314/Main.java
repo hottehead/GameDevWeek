@@ -21,6 +21,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -188,8 +189,10 @@ public class Main extends StateBasedGame {
 				s_map = "";
 				c_players = null;
 				s_players = new ArrayList<PlayerData>();
-				GameStates.MAINMENU.init(assetManager);
-				GameStates.MAINMENU.activate();
+				if(Main.getInstance().getCurrentState()!=GameStates.MAINMENU.get()){
+					GameStates.MAINMENU.init(assetManager);
+					GameStates.MAINMENU.activate();
+				}
 			}
 		});
 		
