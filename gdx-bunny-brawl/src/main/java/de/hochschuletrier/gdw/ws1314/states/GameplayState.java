@@ -10,7 +10,6 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
-import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 
@@ -28,7 +27,7 @@ public class GameplayState extends GameState implements InputProcessor {
 	private LocalMusic stateMusic;
 	private LocalSound stateSound;
 	
-	private GameplayStage stage;
+	
 
 
 	public GameplayState() {
@@ -47,8 +46,7 @@ public class GameplayState extends GameState implements InputProcessor {
 
 		Main.inputMultiplexer.addProcessor(this);
 		
-		stage = new GameplayStage();
-		stage.init(assetManager);
+		
 	}
 	
 	public void render() {
@@ -56,9 +54,6 @@ public class GameplayState extends GameState implements InputProcessor {
 		// game.render();
 		tmpGame.render();
 		
-		DrawUtil.startRenderToScreen();
-		stage.render();
-		DrawUtil.endRenderToScreen();
                 
 		game.getManager().render();
 	}
@@ -68,16 +63,15 @@ public class GameplayState extends GameState implements InputProcessor {
         csc.update();
 		game.update(delta);
 		tmpGame.update(delta);
-		stage.setFPSCounter(delta);
-		stage.step();
 		fpsCalc.addFrame();
+		
+		
+		
+		
 		
 		
 		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
-		
-		stage.step();
-		
 	}
 
 	@Override
@@ -90,7 +84,6 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
 	}
 
 	@Override
