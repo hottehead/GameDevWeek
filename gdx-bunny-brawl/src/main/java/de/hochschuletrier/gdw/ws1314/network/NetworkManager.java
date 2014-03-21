@@ -358,7 +358,7 @@ public class NetworkManager{
 			}
 
 			if(!connection.isConnected()){
-				logger.info("[SERVER] {} disconnected.", ((PlayerData) connection.getAttachment()).getPlayername());
+				logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) connection.getAttachment()).getPlayername());
 				it.remove();
 			}
 		}
