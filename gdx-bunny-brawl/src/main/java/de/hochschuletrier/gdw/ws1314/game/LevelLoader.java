@@ -60,7 +60,7 @@ public class LevelLoader {
         bridgeIDs.clear();
 		physicsManager.reset();
 
-		gameInfo = gameInfo;
+		LevelLoader.gameInfo = gameInfo;
 
 		try {
 			classes = ClassUtils
