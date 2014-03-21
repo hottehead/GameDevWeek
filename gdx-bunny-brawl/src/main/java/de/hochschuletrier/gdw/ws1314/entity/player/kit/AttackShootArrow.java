@@ -35,7 +35,8 @@ public class AttackShootArrow extends AttackType
     	projectile.setSource(player.getID());
     	projectile.setHitCircleRadius(ARROW_HITCIRCLE_RADIUS);
     	projectile.setPhysicalParameters(ARROW_VELOCITY, ARROW_FLIGHT_DISTANCE, ARROW_DESPAWN_TIME);
-    	projectile.setDamage(DAMAGE);
+    	projectile.setDamage(DAMAGE * player.getCurrentAttackMultiplier());
     }
+
 
 }
