@@ -51,6 +51,8 @@ public class ServerContactMine extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
+		
+	}
 	@Override
 	public EntityType getEntityType()
 	{
@@ -66,7 +68,6 @@ public class ServerContactMine extends ServerLevelObject
 		body.createFixture(new PhysixFixtureDef(manager)
 									.density(0.5f).friction(0.0f).sensor(true)
 									.restitution(0.0f).shapeBox(10,10));
-
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
