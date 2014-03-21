@@ -401,7 +401,7 @@ public class LevelLoader {
     private static void addSwitchID(String name,ServerBridgeSwitch enty){
         Integer id = new Integer(getIDinString(name));
         if(id.intValue() < 0){
-            logger.warn("Eine Bridge hat keine ID im Namen");
+            logger.warn("Ein Switch hat keine ID im Namen");
             return;
         }
 

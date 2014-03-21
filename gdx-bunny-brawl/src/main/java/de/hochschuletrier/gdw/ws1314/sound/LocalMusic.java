@@ -1,11 +1,10 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
-import org.lwjgl.Sys;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.math.Interpolation;
 
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.preferences.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
 /**
@@ -19,9 +18,9 @@ public class LocalMusic {
 	private Music musicHandle;
 	private boolean fading;
 	private char fadingDirection;
+	private int duration;
 	
-	private static float SystemVolume = 1.0f;
-	
+	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 0.9f);
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume
@@ -30,6 +29,7 @@ public class LocalMusic {
 	 */
 	public static void setSystemVolume(float systemVolume) {
 		LocalMusic.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat("volume-music", systemVolume);
 	}
 	
 	/**
@@ -40,8 +40,10 @@ public class LocalMusic {
 		return LocalMusic.SystemVolume;
 	}
 	
-	public void setFade(char fadingDirection) {
+	public void setFade(char fadingDirection, int duration) {
+		this.duration = duration;
 		this.fading = this.fading == true ? false : true;
+		this.musicHandle.setVolume(this.fading == false ? 0.0f : LocalMusic.SystemVolume);
 		this.fadingDirection = fadingDirection;
 	}
 
@@ -53,30 +55,31 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
+		System.out.println(LocalMusic.SystemVolume);
 	}
 	
 	public void update(int duration) {
 		float delta = Gdx.graphics.getDeltaTime();
-        if (delta > 0.016f) {
-            delta = 0.016f;
-        }
+		
+		
 		if (this.fading) {
 			float volume = this.musicHandle.getVolume();
 			if (this.fadingDirection == 'i') {
-				volume += delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? LocalMusic.SystemVolume : volume;
-				this.fading = volume >= 1.0f ? false : true;
+				volume += delta * (1000.0f / this.duration);
+				volume = volume < delta * (1000.0f / this.duration) ? LocalMusic.SystemVolume : volume;
+				this.fading = volume >= LocalMusic.SystemVolume ? false : true;
 			}
 			else if (this.fadingDirection == 'o') {
-				volume -= delta * (1000.0f / duration);
-				volume = volume < delta * (1000.0f / duration) ? 0.0f : volume;
+				volume -= delta * (1000.0f / this.duration);
+				volume = volume < delta * (1000.0f / this.duration) ? 0.0f : volume;
+				this.fading = volume == 0.0f ? false : true;
 			}
 			
-			volume = volume > 1 ? 1 : volume;
+			volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
 			this.musicHandle.setVolume(volume);
 			System.out.println(this.musicHandle.getVolume());
 			System.out.println(this.fadingDirection);
-			System.out.println(this.fadingDirection);
+			System.out.println(this.fading);
 		}
 	}
 	

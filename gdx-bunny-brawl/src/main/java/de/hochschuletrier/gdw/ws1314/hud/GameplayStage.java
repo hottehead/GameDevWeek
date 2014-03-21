@@ -4,13 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
@@ -36,9 +36,12 @@ public class GameplayStage extends AutoResizeStage {
 	private VisualBox scoreTeamIcon, scoreEnemyIcon;
 	private MinMaxValue scoreTeam, scoreEnemy;
 	private final int maxScore = 100;
+	
+	ClientPlayer visualDataEntity;
 
 	public GameplayStage() {
 		super();
+		visualDataEntity = null;
 	}
 	
 	public void init(AssetManagerX assetManager) {
@@ -128,12 +131,10 @@ public class GameplayStage extends AutoResizeStage {
 	//for testing the healthbar
 	//can be deleted after connecting the ui with the gamelogic
 	public void step() {
-		if (healthBar.get().getValueFactor() != 0) {
-			advanceHealthbar();
-		}
-		else {
-			resetHealthbar();
-			advanceScoreOwnTeam();
+		if(visualDataEntity!=null) {
+			this.healthBar.get().setMaxValue(visualDataEntity.getPlayerKit().getBaseHealth());
+			this.healthBar.get().setValue(visualDataEntity.getCurrentHealth());
+			
 		}
 	}
 	
@@ -148,12 +149,9 @@ public class GameplayStage extends AutoResizeStage {
 	public void advanceScoreEnemeyTeam() {
 		scoreEnemy.stepValue();
 	}
-	
-	public void advanceHealthbar() {
-		healthBar.get().stepValue();
+
+	public void setDisplayedPlayer(ClientPlayer playerEntity) {
+		visualDataEntity = playerEntity;
 	}
 	
-	public void resetHealthbar() {
-		healthBar.reset();
-	}
 }

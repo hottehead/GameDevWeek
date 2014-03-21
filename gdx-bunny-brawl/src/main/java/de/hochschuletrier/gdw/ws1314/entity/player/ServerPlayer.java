@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -339,6 +338,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
                 	 ServerCarrot carrot = (ServerCarrot) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(carrot);
+
 
                 	 break;
                  case Spinach:

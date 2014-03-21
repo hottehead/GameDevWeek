@@ -37,8 +37,8 @@ public abstract class ClientLevelObject extends ClientEntity
 	}
 
 	@Override
-	public void update(float delta)
-	{
+	public void update(float delta){
+		super.update(delta);
 	}
 
 	@Override

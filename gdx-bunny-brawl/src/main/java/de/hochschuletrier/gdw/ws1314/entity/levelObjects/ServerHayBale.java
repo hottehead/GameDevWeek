@@ -13,18 +13,23 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 
 /**
  * 
  * @author yannick
  *
  */
-public class ServerClover extends ServerLevelObject
+
+// Added Carrot Constants by ElFapo
+public class ServerHayBale extends ServerLevelObject
 {
-	public static final float CLOVER_ATTACK_FACTOR = 1.5f;
-	public static final float CLOVER_ATTACK_DURATION = 2.0f;
+	private final float DURATION_TIME_IN_WATER = 10.0f;
 	
-	public ServerClover()
+	
+	public ServerHayBale()
 	{
 		super();
 	}
@@ -37,18 +42,24 @@ public class ServerClover extends ServerLevelObject
 	
 	@Override
 	public void beginContact(Contact contact) {
-//            ServerEntity otherEntity = this.identifyContactFixtures(contact);
-//
-//        switch(otherEntity.getEntityType()) {
-//            case Tank:
-//            case Hunter:
-//            case Knight:
-//            case Noob:
-//                ServerEntityManager.getInstance().removeEntity(this);
-//                break;
-//            default:
-//                break;
-//        }
+		ServerEntity otherEntity = this.identifyContactFixtures(contact);
+
+		switch(otherEntity.getEntityType()) {
+			case Projectil:
+				ServerProjectile projectile = (ServerProjectile) otherEntity;
+				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector());
+				break;
+			case SwordAttack:
+				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
+				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
+				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x *3,
+												player.getFacingDirection().getDirectionVector().y*3);
+				break;
+			case WaterZone:
+				this.physicsBody.setLinearDamping(100);
+			default:
+				break;
+		}
 	}
 
 	@Override
@@ -59,7 +70,7 @@ public class ServerClover extends ServerLevelObject
 	@Override
 	public EntityType getEntityType()
 	{
-		return EntityType.Clover;
+		return EntityType.Carrot;
 	}
 
 	@Override
