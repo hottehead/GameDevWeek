@@ -55,11 +55,13 @@ public class ServerHayBale extends ServerLevelObject
 		}
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
-				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
-				ServerProjectile projectile = (ServerProjectile) otherEntity;
-				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
-				speed = 1;
+				if(!acrossable){
+					this.physicsBody.setLinearDamping(NORMAL_DAMPING);
+					ServerProjectile projectile = (ServerProjectile) otherEntity;
+					this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+												  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+					speed = 1;
+				}
 				break;
 			case SwordAttack:
 				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
