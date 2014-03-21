@@ -1,9 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
+import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramHandler;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 
-public interface DatagramHandler {
+//public interface DatagramHandler {
+public interface DatagramHandler extends INetDatagramHandler {
 
 	void handle(ChatSendDatagram chatDatagram, NetConnection connection);
 

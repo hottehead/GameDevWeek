@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -10,7 +11,7 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 /**
  * Created by albsi on 17.03.14.
  */
-public class ProjectileReplicationDatagram extends BaseDatagram {
+public class ProjectileReplicationDatagram extends NetDatagram {
     public static final byte PROJETILE_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x22;
     private long id;
     private float xposition;
@@ -27,11 +28,6 @@ public class ProjectileReplicationDatagram extends BaseDatagram {
         this.xposition = xposition;
         this.yposition = yposition;
         this.direction = direction;
-    }
-
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
     }
 
     @Override

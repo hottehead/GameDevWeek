@@ -2,11 +2,12 @@ package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-public class ChatDeliverDatagram extends BaseDatagram {
+public class ChatDeliverDatagram extends NetDatagram {
     public static final byte CHAT_DELIVER_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x01;
     private String sender;
     private String text;
@@ -31,11 +32,6 @@ public class ChatDeliverDatagram extends BaseDatagram {
     public void readFromMessage (INetMessageIn message) {
         sender = message.getString ();
         text = message.getString ();
-    }
-
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
     }
 
     public String getSender () {

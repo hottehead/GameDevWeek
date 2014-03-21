@@ -5,11 +5,11 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagramDistributor;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,12 +36,12 @@ public class NetworkManager {
 	private NetReception serverReception=null;
 	private INetDatagramFactory datagramFactory=new DatagramFactory();
 	
-	private ServerGameDatagramHandler serverGameDgramHandler = new ServerGameDatagramHandler();
-	private ServerLobbyDatagramHandler serverLobbyDgramHandler = new ServerLobbyDatagramHandler();
-	private ClientGameDatagramHandler clientGameDgramHandler = new ClientGameDatagramHandler();
-	private ClientLobbyDatagramHandler clientLobbyDgramHandler = new ClientLobbyDatagramHandler();
+    private NetDatagramDistributor serverGameDgramDistributor = new NetDatagramDistributor(new ServerGameDatagramHandler());
+	private NetDatagramDistributor serverLobbyDgramDistributor = new NetDatagramDistributor(new ServerLobbyDatagramHandler());
+	private NetDatagramDistributor clientGameDgramDistributor = new NetDatagramDistributor(new ClientGameDatagramHandler());
+	private NetDatagramDistributor clientLobbyDgramDistributor = new NetDatagramDistributor(new ClientLobbyDatagramHandler());
 	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
-	
+    
 	private int nextPlayerNumber = 1;
 
 	private NetworkManager(){}
@@ -150,7 +151,7 @@ public class NetworkManager {
 	 * Wird innerhalb der server-seitigen NEtzwerklogik verwendet, um Pakete an alle Clients zu schicken.
 	 * @param dgram
 	 */
-	void broadcastToClients(BaseDatagram dgram){
+	void broadcastToClients(INetDatagram dgram){
 		if(!isServer()){
 			logger.warn("Request to broadast datagram to clients will be ignored because of non-server context.");
 			return;
@@ -193,36 +194,31 @@ public class NetworkManager {
 		}
 	}
 	
+	private void handleDatagrams(NetConnection connection, NetDatagramDistributor distributor){
+		connection.sendPendingDatagrams();
+		while(connection.hasIncoming()){
+			INetDatagram dgram = connection.receive();
+            try {
+                distributor.handle(dgram, connection);
+            } catch (InvocationTargetException e) {
+                logger.error("Exception thrown by handle method", e);
+            }
+		}
+	}
+	
 	private void handleDatagramsClient(){
 		if(!isClient()) return;
-		
-		DatagramHandler handler=clientGameDgramHandler;
-		
-		clientConnection.sendPendingDatagrams();
-		while(clientConnection.hasIncoming()){
-			INetDatagram dgram = clientConnection.receive();
-			if(dgram instanceof BaseDatagram){
-				((BaseDatagram) dgram).handle(handler, clientConnection);
-			}
-		}
+        
+        handleDatagrams(clientConnection, clientGameDgramDistributor);
 	}
 	
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
 		
-		DatagramHandler handler=serverGameDgramHandler;
-		
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while (it.hasNext()) {
 			NetConnection connection = it.next();
-			connection.sendPendingDatagrams();
-			
-			while(connection.hasIncoming()){
-				INetDatagram dgram = connection.receive();
-				if(dgram instanceof BaseDatagram){
-					((BaseDatagram) dgram).handle(handler, connection);
-				}
-			}
+            handleDatagrams(connection, serverGameDgramDistributor);
 			
 			if (!connection.isConnected()) {
 				logger.info("Client disconnected.");

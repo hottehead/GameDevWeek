@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
@@ -10,7 +11,7 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 /**
  * Created by albsi on 17.03.14.
  */
-public class LobbyUpdateDatagram extends BaseDatagram {
+public class LobbyUpdateDatagram extends NetDatagram {
     public static final byte LOBBY_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x10;
     
     public class PlayerData {
@@ -51,11 +52,6 @@ public class LobbyUpdateDatagram extends BaseDatagram {
     	this.map = map;
     	this.playercount = players.length;
     	this.players = players;
-    }
-
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
     }
 
     @Override

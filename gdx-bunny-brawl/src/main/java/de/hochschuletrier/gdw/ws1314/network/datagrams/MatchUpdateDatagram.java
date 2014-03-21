@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
@@ -9,7 +10,7 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 /**
  * Created by albsi on 17.03.14.
  */
-public class MatchUpdateDatagram extends BaseDatagram {
+public class MatchUpdateDatagram extends NetDatagram {
     public static final byte MATCH_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x11;
     private String map;
 
@@ -20,11 +21,6 @@ public class MatchUpdateDatagram extends BaseDatagram {
     public MatchUpdateDatagram (String map) {
         super (MessageType.DELTA, MATCH_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
         this.map = map;
-    }
-
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.hochschuletrier.gdw.ws1314.network.datagrams;
 
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
+import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
@@ -10,7 +11,7 @@ import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 /**
  * Created by albsi on 17.03.14.
  */
-public class LevelObjectReplicationDatagram extends BaseDatagram {
+public class LevelObjectReplicationDatagram extends NetDatagram {
     public static final byte LEVEL_OBJECT_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x21;
     private long id;
     private EntityType type;
@@ -29,11 +30,6 @@ public class LevelObjectReplicationDatagram extends BaseDatagram {
         this.xposition = xposition;
         this.yposition = yposition;
         this.status = status;
-    }
-
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
     }
 
     @Override
