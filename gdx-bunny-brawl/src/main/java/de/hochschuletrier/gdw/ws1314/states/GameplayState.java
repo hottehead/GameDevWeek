@@ -76,7 +76,6 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public void onEnter() {
-
 	}
 
 	@Override

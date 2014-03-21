@@ -55,6 +55,12 @@ public class ClientPlayer extends ClientEntity
     		LocalSound.getInstance().playSoundByAction(event, this);
     	
    		this.activeAction = event; 
+
+		/*if(event == EventType.WALK_LEFT){
+			facingDirection = FacingDirection.LEFT;
+			logger.info("angle: {}",facingDirection.getAngle());
+		}*/
+
     }
     
     public void enable() {}

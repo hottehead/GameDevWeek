@@ -3,12 +3,16 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -25,6 +29,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -44,7 +49,7 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener, QueryCallback
+public class ServerPlayer extends ServerEntity implements IStateListener
 {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
@@ -108,8 +113,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
+    private Fixture fixtureDeathCheck;
     
-    private ArrayList<Fixture> waterFixtures;
+    private boolean isDead;
+    private ServerBridgeSwitch currentBridgeSwitch;
+    
     
     public ServerPlayer()
     {
@@ -132,7 +140,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	waterFixtures = new ArrayList<Fixture>();
+    	isDead = false;
     }
     
     public void enable() {}
@@ -143,11 +151,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     @Override
     public void update(float deltaTime) 
     {
-        //kollision mit wasser
-        for(Fixture fix : this.waterFixtures) {
-            if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
-                logger.info("Spieler ist im Wasser");
-            }
+        if(isDead) {
+            isDead = false;
+            this.reset();
         }
         
     	currentState.update(deltaTime);
@@ -242,6 +248,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             case DROP_EGG:
         		if (currentState == idleState || currentState == walkingState)
         			dropEgg();
+        		break;
+            case USE_SOMETHING:
+                if(this.currentBridgeSwitch != null) {
+                    this.currentBridgeSwitch.pushSwitch();
+                }
+                break;
+            default:
+                break;
         }
         
         desiredDirection = FacingDirection.NONE;
@@ -380,19 +394,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 ServerEntityManager.getInstance().removeEntity(clover);
 
                 	 break;
-                 case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
-                     Fixture fix = this.getCollidingFixture(contact);
-                     this.waterFixtures.add(fix);
-                     
-                     //float upperX = this.getPosition().x - WIDTH;
-                     //float lowerX = this.getPosition().x + WIDTH;
-                     //float upperY = this.getPosition().y - HEIGHT;
-                     //float lowerY = this.getPosition().y + HEIGHT;
-                     //this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
-                     
-                	 break;
                  case AbyssZone:
                 	 break;
                  case GrassZone:
@@ -413,6 +414,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                      this.isOnBridge = true;
                 	 break;
                  case BridgeSwitch:	
+                     this.currentBridgeSwitch = (ServerBridgeSwitch)otherEntity;
                 	 break;
                  case Bush:
                 	 break;
@@ -420,7 +422,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;	 
         	 }
          }
-         else
+         else if(fixture == fixtureFullBody)
          {
         	 switch(otherEntity.getEntityType()) 
         	 {
@@ -448,8 +450,22 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                  default:
                 	 break;   
              }
+         } else if(fixture == fixtureDeathCheck) {
+             switch(otherEntity.getEntityType()) 
+             {
+                 case WaterZone:
+                     logger.info("spieler kollision mit wasser");
+                     
+                     this.isDead = true;
+                     
+                     break;
+                 default:
+                     break;
+             }
          }
     }
+    
+    
     public void endContact(Contact contact) 	
     {
     	ServerEntity otherEntity = this.identifyContactFixtures(contact);
@@ -474,23 +490,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 case Bridge:
                     this.isOnBridge = false;
                     break;
-                case WaterZone:
-                    logger.info("spieler: endContact mit wasser");
-                    Fixture fix = this.getCollidingFixture(contact);
-                    this.waterFixtures.remove(fix);
-                    break;
                 default:
                 	break;
              }
   		 }
-  		 else
-  		 {
-  			switch(otherEntity.getEntityType()) 
-            {
-             	default:
-             		break;
-            }
-  		 }
+         
     }
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -566,6 +570,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
+		body1.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeCircle(HEIGHT / 4.0f, new Vector2(0, HEIGHT / 4.0f))
+            .sensor(true)
+        );
 
 		body1.setGravityScale(0);
 		body1.addContactListener(this);
@@ -574,6 +585,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 		Array<Fixture> fixtures = body1.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
+		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
@@ -594,7 +606,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         		
         switchToState(idleState);
         
-        ServerEntityManager.getInstance().removeEntity(this);
+        this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }
     
     public void applyDamage(float amount)
@@ -620,18 +632,4 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
 	}
         
-    public boolean reportFixture (Fixture fixture) {
-        logger.info("report fixture aufgerufen");
-        try {
-            PhysixBody body = (PhysixBody)fixture.getBody().getUserData();
-            ServerEntity entity = (ServerEntity)body.getOwner();
-            
-            if(entity.getEntityType() == EntityType.WaterZone && this.isOnBridge) {
-                this.reset();
-                return false;
-            }
-        } catch(Exception e) {
-        }
-        return true;
-    }
 }
