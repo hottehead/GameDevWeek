@@ -30,6 +30,8 @@ public class ClientLobbyStage extends AutoResizeStage {
 	private TextButton readyButton;
 	
 	private Table playerList;
+	private Table witeTeamList;
+	private Table blackTeamList;
 	
 	public ClientLobbyStage(ClientLobbyManager manager) {
 		super();
