@@ -90,6 +90,7 @@ public class ClientGame {
 		
 		stage = new GameplayStage();
 		stage.init(assets);
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
