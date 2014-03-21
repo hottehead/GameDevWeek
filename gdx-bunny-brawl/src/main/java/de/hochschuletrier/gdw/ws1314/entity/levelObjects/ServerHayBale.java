@@ -27,7 +27,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
-	private final float SCL_VELOCITY = 100.0f;
+	private final float SCL_VELOCITY = 2.0f;
 	
 	
 	public ServerHayBale()
@@ -53,10 +53,17 @@ public class ServerHayBale extends ServerLevelObject
 			case SwordAttack:
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
 				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
+				this.physicsBody.setLinearDamping(1);
 				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				
 				break;
 			case WaterZone:
+				this.physicsBody.setLinearDamping(100);
+			case Knight:
+			case Hunter:
+			case Noob:
+			case Tank:
 				this.physicsBody.setLinearDamping(100);
 			default:
 				break;
@@ -79,14 +86,13 @@ public class ServerHayBale extends ServerLevelObject
 	{
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-                .fixedRotation(false).create();
+                .fixedRotation(true).create();
 
             body.createFixture(new PhysixFixtureDef(manager)
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapeBox(50,50)
-                .sensor(true));
+                .shapeBox(50,50));
 
             body.setGravityScale(0);
             body.addContactListener(this);
