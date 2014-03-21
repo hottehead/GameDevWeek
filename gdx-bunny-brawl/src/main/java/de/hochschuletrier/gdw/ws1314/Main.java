@@ -41,7 +41,7 @@ import de.hochschuletrier.gdw.ws1314.states.GameStates;
 public class Main extends StateBasedGame {
 
 	public static final int WINDOW_WIDTH = 1024;
-	public static final int WINDOW_HEIGHT = 768;
+	public static final int WINDOW_HEIGHT = 512;
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
