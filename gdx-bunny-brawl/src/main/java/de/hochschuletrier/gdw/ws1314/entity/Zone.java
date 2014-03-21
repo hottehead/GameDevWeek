@@ -5,14 +5,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
-
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.Point;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +22,13 @@ import java.util.List;
  */
 public class Zone extends ServerEntity
 {
-	private EntityType currentZone;
+
+	protected EntityType currentZone;
     private ArrayList<Point> poligonPoints;
 
-    public void setPoligonPoints(ArrayList<Point> poligonPoints)
+    public void setPoligonPoints(List<Point> poligonPoints)
     {
-        this.poligonPoints = poligonPoints;
+        this.poligonPoints = (ArrayList)poligonPoints;
     }
 
 	public void setWaterZone()
@@ -109,38 +110,19 @@ public class Zone extends ServerEntity
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            if(this.poligonPoints != null && this.poligonPoints.size() > 2) {
-                PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
                 .fixedRotation(false).create();
 
-                body.createFixture(new PhysixFixtureDef(manager)
-                .density(0.5f)
-                .friction(0.0f)
-                .restitution(0.0f)
-                .shapePolygon(poligonPoints)
-                .sensor(true));
-
-                body.setGravityScale(0);
-                body.addContactListener(this);
-                setPhysicsBody(body);
-            } else {
-                
-                PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
-                .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-                .fixedRotation(false).create();
-
-                body.createFixture(new PhysixFixtureDef(manager)
+            body.createFixture(new PhysixFixtureDef(manager)
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
                 .shapeBox(this.properties.getFloat("width"), this.properties.getFloat("height"))
                 .sensor(true));
 
-                body.setGravityScale(0);
-                body.addContactListener(this);
-                setPhysicsBody(body);
-            }
-            
+            body.setGravityScale(0);
+            body.addContactListener(this);
+            setPhysicsBody(body);
 	}
 }

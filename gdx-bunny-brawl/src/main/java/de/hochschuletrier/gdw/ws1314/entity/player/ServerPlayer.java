@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,10 +92,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float attackBuffTimer;
     private float attackBuffDuration;
     private boolean attackBuffActive;
-    
-    private float healthBuffTimer;
-    private float healthBuffDuration;
-    private boolean healthBuffActive;
+    private float	attackBuffFactor;
 
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
@@ -105,18 +104,19 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-    private float				strengthBuffDuration;	
     
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
     
+    private ArrayList<Fixture> waterFixtures;
+    
     public ServerPlayer()
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.HUNTER);
+    	setPlayerKit(PlayerKit.TANK);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -131,10 +131,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	attackBuffTimer = 0.f;
     	attackBuffDuration = 0.f;
     	attackBuffActive = false;
-    	healthBuffTimer = 0.f;
-    	healthBuffDuration = 0.f;
-    	healthBuffActive = false;
+    	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
+    	waterFixtures = new ArrayList<Fixture>();
     }
     
     public void enable() {}
@@ -145,6 +144,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     @Override
     public void update(float deltaTime) 
     {
+        //kollision mit wasser
+        for(Fixture fix : this.waterFixtures) {
+            if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
+                logger.info("Spieler ist im Wasser");
+            }
+        }
+        
     	currentState.update(deltaTime);
     	
     	if (!attackAvailable)
@@ -171,19 +177,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		attackBuffTimer += deltaTime;
     		if (attackBuffTimer >= attackBuffDuration)
     		{
-    			//TODO resetAttackDamage
+    			attackBuffFactor = 1.0f;
     			attackBuffActive = false;
-    		}
-    	}
-    	
-    	if (healthBuffActive)
-    	{
-    		healthBuffTimer += deltaTime;
-    		if (healthBuffTimer >= healthBuffDuration)
-    		{
-    			this.setCurrentHealth(1.f/ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-    			logger.info("Health: "+currentHealth);
-    			healthBuffActive = false;
     		}
     	}
     }
@@ -381,17 +376,22 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
-                	 applyHealthBuff(ServerClover.CLOVER_HEALTHBUFF_FACTOR, ServerClover.CLOVER_HEALTHBUFF_DURATION);
-                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+                	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+                	 ServerClover clover = (ServerClover) otherEntity;
+                	 ServerEntityManager.getInstance().removeEntity(clover);
+
                 	 break;
                  case WaterZone:
-                     
                      logger.info("spieler kollision mit wasser");
-                     float upperX = this.getPosition().x - WIDTH;
-                     float lowerX = this.getPosition().x + WIDTH;
-                     float upperY = this.getPosition().y - HEIGHT;
-                     float lowerY = this.getPosition().y + HEIGHT;
-                     this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
+                     
+                     Fixture fix = this.getCollidingFixture(contact);
+                     this.waterFixtures.add(fix);
+                     
+                     //float upperX = this.getPosition().x - WIDTH;
+                     //float lowerX = this.getPosition().x + WIDTH;
+                     //float upperY = this.getPosition().y - HEIGHT;
+                     //float lowerY = this.getPosition().y + HEIGHT;
+                     //this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
                      
                 	 break;
                  case AbyssZone:
@@ -427,14 +427,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() == projectile.getSourceID())
-                     	break;
-                     if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() != projectile.getSourceID())
+                     //	break;
+                     //if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
+                        ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
@@ -475,6 +475,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 case Bridge:
                     this.isOnBridge = false;
                     break;
+                case WaterZone:
+                    logger.info("spieler: endContact mit wasser");
+                    Fixture fix = this.getCollidingFixture(contact);
+                    this.waterFixtures.remove(fix);
+                    break;
                 default:
                 	break;
              }
@@ -499,6 +504,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     public PlayerKit		getPlayerKit()			{ return playerKit; }
     public TeamColor		getTeamColor()			{ return teamColor; }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
+    public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
     
     public void setPlayerKit(PlayerKit kit)
     {
@@ -530,15 +536,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	attackBuffActive = true;
     	attackBuffTimer = 0.f;
     	attackBuffDuration = duration;
-    	//TODO setAttackDamage
+    	attackBuffFactor = factor;
     }
     
-    public void applyHealthBuff(float factor, float duration)
+    public void applyHealth(float factor)
     {
-    	healthBuffActive = true;
-    	healthBuffTimer = 0.f;
-    	healthBuffDuration = duration;
-    	setCurrentHealth(factor);
+    	this.currentHealth += factor * playerKit.getBaseHealth();
+    	if (this.currentHealth > playerKit.getBaseHealth())
+    		this.currentHealth = playerKit.getBaseHealth();
     }
 
 	@Override
@@ -608,11 +613,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		reset();
     }
     
-    public void applyResistanceBuff(float factor, float time)
-    {
-    	
-    }
-    
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
@@ -634,10 +634,5 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         } catch(Exception e) {
         }
         return true;
-    }
-    
-    public void setCurrentHealth(float factor)
-    {
-    	this.currentHealth *= factor;
     }
 }
