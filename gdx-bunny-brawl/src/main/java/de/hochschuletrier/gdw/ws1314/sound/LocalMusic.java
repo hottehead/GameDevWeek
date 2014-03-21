@@ -20,6 +20,7 @@ public class LocalMusic {
 	private char fadingDirection;
 	private int duration;
 	
+	// FIXME (if music's not playing as should)
 	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 0.9f);
 	/**
 	 * Change the general volume for music
@@ -28,8 +29,7 @@ public class LocalMusic {
 	 * @param systemVolume
 	 */
 	public static void setSystemVolume(float systemVolume) {
-		LocalMusic.SystemVolume = systemVolume;
-		Main.getInstance().gamePreferences.putFloat("volume-music", systemVolume);
+		LocalMusic.SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 1.0f);
 	}
 	
 	/**
