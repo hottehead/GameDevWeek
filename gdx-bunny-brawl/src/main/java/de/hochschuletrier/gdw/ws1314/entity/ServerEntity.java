@@ -3,9 +3,10 @@ package de.hochschuletrier.gdw.ws1314.entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 
+import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
@@ -82,6 +83,21 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
             
         }
         
+        return null;
+    }
+    
+    protected Fixture getCollidingFixture(Contact contact) {
+    	Fixture fixtureA = contact.getFixtureA();
+    	Fixture fixtureB = contact.getFixtureB();
+    	PhysixBody bodyA = (PhysixBody)fixtureA.getBody().getUserData();
+        PhysixBody bodyB = (PhysixBody)fixtureB.getBody().getUserData();
+        ServerEntity entityA = (ServerEntity)bodyA.getOwner();
+        ServerEntity entityB = (ServerEntity)bodyB.getOwner();
+        
+        if (entityA != null && entityA.getID() == this.getID())
+        	return fixtureA;
+        if (entityB != null && entityB.getID() == this.getID())
+        	return fixtureB;
         return null;
     }
     
