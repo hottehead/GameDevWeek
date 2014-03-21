@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.projectile;
 
+import de.hochschuletrier.gdw.ws1314.entity.*;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +15,6 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
@@ -159,6 +157,34 @@ public class ServerProjectile extends ServerEntity {
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
+
+		switch (getFacingDirection())
+		{
+			case UP:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP);
+				break;
+			case UP_RIGHT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP_RIGHT);
+				break;
+			case UP_LEFT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_UP_LEFT);
+				break;
+			case DOWN:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN);
+				break;
+			case DOWN_RIGHT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN_RIGHT);
+				break;
+			case DOWN_LEFT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_DOWN_LEFT);
+				break;
+			case RIGHT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_LEFT);
+				break;
+			case LEFT:
+				ClientServerConnect.getInstance().sendEntityEvent(getID(), EventType.WALK_RIGHT);
+				break;
+		}
 	}
 
 	@Override

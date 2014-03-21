@@ -1,10 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.projectile;
 
-import com.badlogic.gdx.math.Vector2;
-
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
-import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityState;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
@@ -41,6 +37,35 @@ public class ClientProjectile extends ClientEntity {
 
     @Override
     public void doEvent(EventType event) {
+		switch (event){
+			case WALK_UP:
+				facingDirection = FacingDirection.UP;
+				break;
+			case WALK_UP_LEFT:
+				facingDirection = FacingDirection.UP_LEFT;
+				break;
+			case WALK_LEFT:
+				facingDirection = FacingDirection.LEFT;
+				break;
+			case WALK_DOWN_LEFT:
+				facingDirection = FacingDirection.DOWN_LEFT;
+				break;
+			case WALK_DOWN:
+				facingDirection = FacingDirection.DOWN;
+				break;
+			case WALK_DOWN_RIGHT:
+				facingDirection = FacingDirection.DOWN_RIGHT;
+				break;
+			case WALK_RIGHT:
+				facingDirection = FacingDirection.RIGHT;
+				break;
+			case WALK_UP_RIGHT:
+				facingDirection = FacingDirection.UP_RIGHT;
+				break;
+
+		}
+
+
 
     }
 
