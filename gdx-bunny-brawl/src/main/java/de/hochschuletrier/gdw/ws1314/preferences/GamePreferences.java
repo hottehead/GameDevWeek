@@ -102,7 +102,8 @@ public class GamePreferences {
 	}
 	
 	private String getString(String key) {
-		String val = this.settingsHandler.getString(key, defaultValue);
+		String val = this.settingsHandler.getString(key);
+		return val;
 	}
 	
 	public String getString(String key, String defValue) {
