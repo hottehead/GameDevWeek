@@ -256,6 +256,7 @@ public class LevelLoader {
             properties.setFloat("width",width);
             properties.setFloat("height",height);
         }
+
         Zone zone;
 		TeamSpawnZone spawnZone;
         ServerEntity entity = null;
