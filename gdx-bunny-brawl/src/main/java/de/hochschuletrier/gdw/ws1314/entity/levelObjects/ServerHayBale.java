@@ -47,6 +47,7 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact) {
 		ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		
 		if(otherEntity == null){
 			return;
 		}
@@ -67,6 +68,7 @@ public class ServerHayBale extends ServerLevelObject
 				this.physicsBody.setLinearDamping(100);
 				this.acrossable = true;
 				speed = 0;
+				break;
 			case Knight:
 			case Hunter:
 			case Noob:

@@ -37,7 +37,7 @@ public class ServerProjectile extends ServerEntity {
     // VARIABLES
     private long sourceID;
 
-    private FacingDirection facingDirection;
+    //private FacingDirection facingDirection;
     private TeamColor 		teamColor;
     private Vector2 		originPosition;
     private float 			velocity;
@@ -57,7 +57,7 @@ public class ServerProjectile extends ServerEntity {
             
             sourceID = -1;
             this.teamColor = TeamColor.BOTH;
-            this.facingDirection = FacingDirection.NONE;
+            setFacingDirection(FacingDirection.NONE);
             this.originPosition = FacingDirection.NONE.getDirectionVector();
             this.velocity = 0.0f;
             this.flightDistance = 0.0f;
@@ -91,12 +91,8 @@ public class ServerProjectile extends ServerEntity {
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
         this.teamColor = player.getTeamColor();
-        this.facingDirection = player.getFacingDirection();
+        setFacingDirection(player.getFacingDirection());
         this.originPosition = player.getPosition();
-	}
-
-	public FacingDirection getFacingDirection() {
-		return this.facingDirection;
 	}
 
 	public TeamColor getTeamColor() {
@@ -177,7 +173,7 @@ public class ServerProjectile extends ServerEntity {
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                     .position(this.originPosition)
                     .fixedRotation(true)
-                    .angle(facingDirection.getAngle())
+                    .angle(getFacingDirection().getAngle())
                     .bullet(true)
                     .create();
             
@@ -193,8 +189,8 @@ public class ServerProjectile extends ServerEntity {
 
             setPhysicsBody(body);
 
-            Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
-                                        facingDirection.getDirectionVector().y * velocity);
+            Vector2 vel = new Vector2(	getFacingDirection().getDirectionVector().x * velocity,
+            							getFacingDirection().getDirectionVector().y * velocity);
             physicsBody.setLinearVelocity(vel);
 
             physicsInitialized = true;

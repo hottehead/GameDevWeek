@@ -34,7 +34,6 @@ public class ServerSwordAttack extends ServerEntity {
     //========================================
     // VARIABLES
     private long sourceID;
-    private FacingDirection facingDirection;
     private TeamColor teamColor;
     private Vector2 originPosition;
     private float damage;
@@ -54,7 +53,7 @@ public class ServerSwordAttack extends ServerEntity {
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
         this.teamColor = player.getTeamColor();
-        this.facingDirection = player.getFacingDirection();
+        setFacingDirection(player.getFacingDirection());
         this.originPosition = player.getPosition();
     }
     
@@ -149,7 +148,7 @@ public class ServerSwordAttack extends ServerEntity {
         PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
                 .position(this.originPosition)
                 .fixedRotation(true)
-                .angle(facingDirection.getAngle() - (float) Math.PI / 2.0f)
+                .angle(getFacingDirection().getAngle() - (float) Math.PI / 2.0f)
                 .create();
         
         body.createFixture(new PhysixFixtureDef(manager)
@@ -176,9 +175,4 @@ public class ServerSwordAttack extends ServerEntity {
     public void reset(){
 
     }
-
-	public FacingDirection getFacingDirection()
-	{
-		return facingDirection;
-	}
 }

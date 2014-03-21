@@ -86,7 +86,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
-    
+  
     private float attackBuffTimer;
     private float attackBuffDuration;
     private boolean attackBuffActive;
@@ -94,8 +94,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float healthBuffTimer;
     private float healthBuffDuration;
     private boolean healthBuffActive;
-    
-    private FacingDirection 	facingDirection;
+
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
     private boolean				movingDown;
@@ -106,6 +105,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
+    private float				strengthBuffDuration;	
+    
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
@@ -115,7 +116,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -123,7 +124,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	knockbackState = new StatePlayerWaiting(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
-    	facingDirection = FacingDirection.DOWN;
+    	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = 0.0f;
     	speedBuffActive = false;
@@ -296,7 +297,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 
     protected void moveBegin(FacingDirection dir)
     {
-    	facingDirection = desiredDirection;
+    	setFacingDirection(desiredDirection);
     	// TODO 
     	// Damp old impulse
     	// acceleration impulse to physics body
@@ -369,7 +370,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 }
                 	 break;
             	 case ContactMine:
-                	 ServerContactMine mine = (ServerContactMine) otherEntity;
                 	 
                 	 break;
                  case Carrot:
@@ -378,13 +378,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 	 break;
                  case Spinach:
                 	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                	 ServerSpinach spinach = (ServerSpinach) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(spinach);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case Clover:
                 	 applyHealthBuff(ServerClover.CLOVER_HEALTHBUFF_FACTOR, ServerClover.CLOVER_HEALTHBUFF_DURATION);
-                	 ServerClover clover = (ServerClover) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(clover);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  case WaterZone:
                      
@@ -428,13 +426,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID() )
-                     //if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() == projectile.getSourceID())
+                     	break;
+                     if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                        ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
@@ -491,7 +490,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-    public FacingDirection  getFacingDirection()	{ return facingDirection; }
+    //public FacingDirection  getFacingDirection()	{ return facingDirection; }
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
@@ -586,7 +585,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
-        facingDirection = FacingDirection.DOWN;
+        setFacingDirection(FacingDirection.DOWN);
         		
         switchToState(idleState);
         
@@ -607,7 +606,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	if (currentHealth <= 0)
     		reset();
     }
-	
+    
+    public void applyResistanceBuff(float factor, float time)
+    {
+    	
+    }
+    
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
