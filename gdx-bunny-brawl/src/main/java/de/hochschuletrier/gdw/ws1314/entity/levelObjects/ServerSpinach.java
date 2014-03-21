@@ -21,8 +21,8 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
  */
 public class ServerSpinach extends ServerLevelObject
 {
-	public static final float SPINACH_ATTACK_FACTOR = 1.5f;
-	public static final float SPINACH_ATTACK_DURATION = 2.0f;
+	public static final float SPINACH_ATTACKBUFF_FACTOR = 1.5f;
+	public static final float SPINACH_ATTACKBUFF_DURATION = 2.f;
 	
 	public ServerSpinach()
 	{
