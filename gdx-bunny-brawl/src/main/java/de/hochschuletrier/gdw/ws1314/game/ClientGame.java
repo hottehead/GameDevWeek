@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -18,15 +17,14 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
-import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
 import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
 import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
@@ -47,8 +45,8 @@ public class ClientGame {
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
-
-	private OrthographicCamera sceneCamera;
+	
+	private GameplayStage stage;
 
 	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
@@ -87,24 +85,17 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 		
-		sceneCamera = new OrthographicCamera(width, height);
-		sceneCamera.setToOrtho(true, width, height);
+//			System.out.println(l.getName());
+//		}
 		
-
+		stage = new GameplayStage();
+		stage.init(assets);
 	}
 
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 
-		// materialManager.provideMaterial(ClientPlayer.class,
-		// new MaterialInfo("debugTeam", 32, 32, 1));
-		materialManager.provideMaterial(ClientPlayer.class, new MaterialInfo(
-				"singleBunny", 110, 110, 1));
-		materialManager.provideMaterial(ClientProjectile.class,
-				new MaterialInfo("debugArrow", 16, 16, 1));
-		materialManager.provideMaterial(ClientCarrot.class, new MaterialInfo(
-				"debugCarrot", 32, 32, 0));
-
+		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
 
@@ -147,6 +138,11 @@ public class ClientGame {
 		DrawUtil.endRenderToScreen();
 
 		sceneToTexture.swap();
+		
+		DrawUtil.startRenderToScreen();
+		stage.render();
+		DrawUtil.endRenderToScreen();
+
 	}
 
 	public void update(float delta) {
@@ -155,8 +151,13 @@ public class ClientGame {
 
 		long playerId = entityManager.getPlayerEntityID();
 		if (playerId != -1) {
-			cameraFollowingBehaviour.setFollowingEntity(entityManager
-					.getEntityById(playerId));
+			ClientEntity playerEntity = entityManager
+					.getEntityById(playerId);
+			if(playerEntity instanceof ClientPlayer) {
+				stage.setDisplayedPlayer((ClientPlayer)playerEntity);
+				
+			}
+			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}
 		cameraFollowingBehaviour.update(delta);
 	}
