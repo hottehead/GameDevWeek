@@ -10,6 +10,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixEntity;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 /**
  * 
@@ -20,10 +21,13 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
 {
 	private long 	id = -1;
     protected SafeProperties properties;
+    
+    private FacingDirection facingDirection;
 	
 	public ServerEntity()
 	{
 		super();
+		facingDirection = FacingDirection.NONE;
 	}
 
     protected void setId(long id)
@@ -109,4 +113,12 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
     public void postSolve(Contact contact, ContactImpulse impulse) {
     }
     
+    
+    public FacingDirection getFacingDirection() {
+    	return facingDirection;
+    }
+    
+    public void setFacingDirection(FacingDirection direction) {
+    	this.facingDirection = direction;
+    }
 }
