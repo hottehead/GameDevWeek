@@ -13,9 +13,11 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
@@ -28,9 +30,9 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 //
 // Modified by ElFapo
-    
-public class ServerProjectile extends ServerEntity {
 
+public class ServerProjectile extends ServerEntity {
+    
     //==================================================
     // VARIABLES
     private long sourceID;
@@ -52,7 +54,7 @@ public class ServerProjectile extends ServerEntity {
     //==================================================
     public ServerProjectile() {
             super();
-
+            
             sourceID = -1;
             this.teamColor = TeamColor.BOTH;
             this.facingDirection = FacingDirection.NONE;
@@ -84,15 +86,15 @@ public class ServerProjectile extends ServerEntity {
 	}
 	
 	public void setSource(long sourceID) {
-            this.sourceID = sourceID;
+		this.sourceID = sourceID;
 
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
-            this.teamColor = player.getTeamColor();
-            this.facingDirection = player.getFacingDirection();
-            this.originPosition = player.getPosition();
-    }
-	
+        this.teamColor = player.getTeamColor();
+        this.facingDirection = player.getFacingDirection();
+        this.originPosition = player.getPosition();
+	}
+
 	public FacingDirection getFacingDirection() {
 		return this.facingDirection;
 	}
@@ -126,10 +128,10 @@ public class ServerProjectile extends ServerEntity {
             }
             
             switch(otherEntity.getEntityType()) {
-                case Tank:
-                case Hunter:
-                case Knight:
-                case Noob:
+            	case BridgeSwitch:
+            	case Bush:
+            			ServerEntityManager.getInstance().removeEntity(this);
+            			
                     break;
                 default:
                     break;
@@ -157,9 +159,9 @@ public class ServerProjectile extends ServerEntity {
 		
         Vector2 pos = this.physicsBody.getPosition().cpy();
         float distance = pos.sub(originPosition).len();
-            if(distance > this.flightDistance) {
-                ServerEntityManager.getInstance().removeEntity(this);
-            }
+        if(distance > this.flightDistance) {
+            ServerEntityManager.getInstance().removeEntity(this);
+        }
 	}
 
 	@Override
@@ -170,7 +172,7 @@ public class ServerProjectile extends ServerEntity {
 	@Override
 	public void initPhysics(PhysixManager manager){
             this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
-            
+                
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                     .position(this.originPosition)
                     .fixedRotation(true)
@@ -183,12 +185,12 @@ public class ServerProjectile extends ServerEntity {
                     .restitution(0.0f)
                     .shapeCircle(hitCircleRadius)
                     .sensor(true));
-
+            
             body.setGravityScale(0);
             body.addContactListener(this);
-            
+
             setPhysicsBody(body);
-	
+
             Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
                                         facingDirection.getDirectionVector().y * velocity);
             physicsBody.setLinearVelocity(vel);

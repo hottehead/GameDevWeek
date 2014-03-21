@@ -7,18 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
-
-
-
-
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
+import com.badlogic.gdx.utils.Array;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -28,11 +22,9 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
-import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
@@ -41,10 +33,7 @@ import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.State;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.states.GameStates;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -58,11 +47,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-    public static final float FRICTION = 0;
 	public static final float	BRAKING = 5.0f;
+	public static final float COLLISION_DAMPING = 10.0f;
 
-
-	public static final float RESTITUTION = 0;
+	public static final float DENSITY = 0.0f;
+    public static final float FRICTION = 0.0f;
+	public static final float RESTITUTION = 0.0f;
 	public static final float KNOCKBACK_TIME = 0.8f;
 	public static final float ATTACK_TIME = 0.18f;
 
@@ -106,6 +96,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private boolean				speedBuffActive;
     
     private long				droppedEggID;
+    
+    private Fixture				fixtureLowerBody;
+    private Fixture				fixtureFullBody;
     
     public ServerPlayer()
     {
@@ -309,18 +302,26 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	{
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	 Fixture fixture = this.getCollidingFixture(contact);
          
          if(otherEntity == null) {
              return;
          }
          
-         switch(otherEntity.getEntityType()) {
+         if (fixture == null)
+         {
+        	 
+         }
+         else if (fixture == fixtureLowerBody)
+         {
+        	 switch(otherEntity.getEntityType())
+        	 {
              case Tank:
              case Hunter:
              case Knight:
              case Noob:
             	 ServerPlayer player = (ServerPlayer) otherEntity;
-            	 player.physicsBody.setLinearDamping(10);
+                	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -329,37 +330,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             	 this.currentEggCount++;
             	 }
-            	 break;
-            	
-             case Projectil:
-            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                 if (getID() == projectile.getSourceID())
-                 	return;
-                 if (getTeamColor() != projectile.getTeamColor())
-                 	applyDamage(projectile.getDamage());
-                 ServerEntityManager.getInstance().removeEntity(otherEntity);
-
-            	 break;
-             case Bridge: 		
-            	 ServerBridge bridge = (ServerBridge) otherEntity;
-            	/*  Von Fabio Gimmillaro
-            	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
-            	 *  Nur zum Test:
-            	 * if(!bridge.getVisibility()){
-            		 this.physicsBody.setPosition(0, 0);
-            	  }*/
-                 
-                 this.isOnBridge = true;
-            	 break;
-             case BridgeSwitch:	
-            	 break;
-             case Bush:			
-            	 break;
-             case SwordAttack:
-                 ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                 if(attack.getTeamColor() != this.teamColor) {
-                     this.applyDamage(attack.getDamage());
-                 }
             	 break;
              case ContactMine:
             	 ServerContactMine mine = (ServerContactMine) otherEntity;
@@ -370,6 +340,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             	 ServerCarrot carrot = (ServerCarrot) otherEntity;
             	 ServerEntityManager.getInstance().removeEntity(carrot);
 
+
             	 break;
              case Spinach:
             	 break;
@@ -377,10 +348,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             	 break;
              case WaterZone:
                  
-                 float upperX = this.getPosition().x - 28;
-                 float lowerX = this.getPosition().x + 28;
-                 float upperY = this.getPosition().y - 28;
-                 float lowerY = this.getPosition().y + 28;
+                     float upperX = this.getPosition().x - WIDTH;
+                     float lowerX = this.getPosition().x + WIDTH;
+                     float upperY = this.getPosition().y - HEIGHT;
+                     float lowerY = this.getPosition().y + HEIGHT;
                  this.physicsBody.getBody().getWorld().QueryAABB(this, lowerX, lowerY, upperX, upperY);
                  
             	 break;
@@ -392,18 +363,65 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             	 break;
              case StartZone:
             	 break;
+                 case Bridge:
+                	 ServerBridge bridge = (ServerBridge) otherEntity;
+                	/*  Von Fabio Gimmillaro
+                	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
+                	 *  Nur zum Test:
+                	 * if(!bridge.getVisibility()){
+                		 this.physicsBody.setPosition(0, 0);
+                	 }*/
+                     
+                     this.isOnBridge = true;
+                	 break;
+                 case BridgeSwitch:	
+                	 break;
+                 case Bush:
+                	 break;
              default:
             	 break;
+        	 }
+         }
+         else
+         {
+        	 switch(otherEntity.getEntityType()) 
+        	 {
+                 case Projectil:
+                	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+                     if (getID() == projectile.getSourceID())
+                     	return;
+                     if (getTeamColor() != projectile.getTeamColor())
+                     	applyDamage(projectile.getDamage());
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
+                	 break;
                  
+                 case SwordAttack:
+                     ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
+                     if(attack.getTeamColor() != this.teamColor) 
+                     {
+                         this.applyDamage(attack.getDamage());
+                     }
+                	 break;
+                 default:
+                	 break;
+        	 }      
          }
     }
     public void endContact(Contact contact) 	
     {
     	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	Fixture fixture = getCollidingFixture(contact);
          
          if(otherEntity == null)
              return;
          
+
+         if (fixture == null)
+         {
+        	 
+         }
+         else if (fixture == fixtureLowerBody)
+  		 {
          switch(otherEntity.getEntityType()) 
          {
          	case Ei:
@@ -413,6 +431,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
                 case Bridge:
                     this.isOnBridge = false;
                     break;
+                default:
+                	break;
+             }
+  		 }
+  		 else
+  		 {
+  			switch(otherEntity.getEntityType()) 
+            {
+             	default:
+             		break;
+            }
          }
     }
     public void preSolve(Contact contact, Manifold oldManifold) {}
@@ -452,14 +481,34 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 	public void initPhysics(PhysixManager manager)
 	{
 		// TODO Auto-generated method stub
-		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeCircle(28));
+		PhysixBody body1 = new PhysixBodyDef(BodyType.DynamicBody, manager)
+				.position(properties.getFloat("x"), properties.getFloat("y"))
+				.fixedRotation(false)
+				.gravityScale(0.0f)
+				.create();
+		body1.createFixture(new PhysixFixtureDef(manager)
+				.density(DENSITY)
+				.friction(FRICTION)
+				.restitution(RESTITUTION)
+				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
+				.groupIndex((short) 1)
+				);
+		body1.createFixture(new PhysixFixtureDef(manager)
+				.density(DENSITY)
+				.friction(FRICTION)
+				.restitution(RESTITUTION)
+				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f, new Vector2(0.0f, - HEIGHT / 4.0f), 0.0f)
+				.sensor(true)
+				.groupIndex((short) 2)
+				);
 
-		body.setGravityScale(0);
-		body.addContactListener(this);
-		setPhysicsBody(body);
+		body1.setGravityScale(0);
+		body1.addContactListener(this);
+		setPhysicsBody(body1);
+
+		Array<Fixture> fixtures = body1.getBody().getFixtureList();
+		fixtureLowerBody = fixtures.get(0);
+		fixtureFullBody = fixtures.get(1);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
