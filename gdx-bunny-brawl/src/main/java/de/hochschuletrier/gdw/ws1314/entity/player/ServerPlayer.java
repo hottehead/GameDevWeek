@@ -105,7 +105,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-    private float				strengthBuffDuration;	
+    private float				strengthBuffDuration;
     
     private long				droppedEggID;
     
