@@ -30,6 +30,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private MainMenuStage stage;
 	
 	private Logger logger;
+	private OptionListener optionListener;
+	private PlayListener playListener; //testing
 
 	public MainMenuState() {
 	}
@@ -63,6 +65,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 		stage = new MainMenuStage();
 		stage.init(assetManager);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.optionListener = new OptionListener();
+		this.playListener = new PlayListener();
 	}
 
 	@Override
@@ -81,6 +85,10 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void onEnter() {
 		inputProcessor.setActive(true);
+		
+		//add listener to buttons in stage
+		stage.getOptionsButton().addListener(this.optionListener);
+		stage.getStartButton().addListener(this.playListener);
 
 		if (this.music.isMusicPlaying())
 			//this.music.deMute();
@@ -93,17 +101,20 @@ public class MainMenuState extends GameState implements InputProcessor {
 	public void onLeave() {
 		//this.music.mute();
 		this.music.setFade('o', this.stateChangeDuration);
+		
+		stage.getOptionsButton().removeListener(this.optionListener);
+		stage.getStartButton().removeListener(this.playListener);
 		inputProcessor.setActive(false);
 	}
 
 	@Override
 	public void onLeaveComplete() {
+//		stage.dispose();
 
 	}
 
 	@Override
 	public void dispose() {
-		stage.dispose();
 	}
 
 	@Override
@@ -166,7 +177,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	
 	private class OptionListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
-			logger.info("Change to OptionsState");
+			logger.info("Change to OptionState");
 			GameStates.OPTIONS.init(assetManager);
 			GameStates.OPTIONS.activate();
 		}
@@ -183,6 +194,19 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private class ExitListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("TODO: Exit Game");
+		}
+	}
+	
+	private class PlayListener extends ClickListener {
+		public void clicked(InputEvent event, float x, float y) {
+			logger.info("Change to GamplayState - for testing purpose");
+			if (GameStates.GAMEPLAY.isActive()) {
+				GameStates.MAINMENU.activate(
+						 new SplitHorizontalTransition(stateChangeDuration).reverse(),
+						null);
+			} else if (GameStates.MAINMENU.isActive())
+				GameStates.GAMEPLAY.activate(
+						new SplitHorizontalTransition(stateChangeDuration), null);
 		}
 	}
 }
