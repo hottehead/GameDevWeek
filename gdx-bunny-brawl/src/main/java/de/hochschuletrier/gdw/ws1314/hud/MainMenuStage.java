@@ -31,6 +31,7 @@ public class MainMenuStage extends AutoResizeStage {
 	//server-client-testing
 	private TextButton startClient;
 	private TextButton startServer;
+	private TextButton startBoth;
 	
 	public MainMenuStage() {
 		super();
@@ -79,9 +80,11 @@ public class MainMenuStage extends AutoResizeStage {
 		//testing server-client stuff
 		startServer = new TextButton("start Server", defaultSkin);
 		startClient = new TextButton("start Client", defaultSkin);
+		startBoth = new TextButton("Start Forever Alone", defaultSkin);
 		uiTable.row().padTop(20);
 		uiTable.add(startServer).row().padTop(20);
-		uiTable.add(startClient);
+		uiTable.add(startClient).row().padTop(20);
+		uiTable.add(startBoth);
 	}
 
 	public void render() {		
@@ -111,6 +114,9 @@ public class MainMenuStage extends AutoResizeStage {
 	}
 	public TextButton getStartServerButton() {
 		return startServer;
+	}
+	public TextButton getStartForeverAloneButton() {
+		return startBoth;
 	}
 	
 }

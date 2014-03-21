@@ -33,6 +33,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private MainMenuStage stage;
 	private StartServerClick startServerClickListener;
 	private StartClientClick startClientClickListener;
+	private StartForeverAloneClick startForeverAloneListener;
 
     public MainMenuState() {
     }
@@ -60,6 +61,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		
 		this.startServerClickListener = new StartServerClick();
 		this.startClientClickListener = new StartClientClick();
+		this.startForeverAloneListener = new StartForeverAloneClick();
 
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -90,6 +92,7 @@ public class MainMenuState extends GameState implements InputProcessor {
         
 		stage.getStartServerButton().addListener(this.startServerClickListener);
 		stage.getStartClientButton().addListener(this.startClientClickListener);
+		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
     }
 
     @Override
@@ -102,6 +105,7 @@ public class MainMenuState extends GameState implements InputProcessor {
         
         stage.getStartServerButton().removeListener(this.startServerClickListener);
 		stage.getStartClientButton().removeListener(this.startClientClickListener);
+		stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
 	}
 
 	@Override
@@ -169,6 +173,14 @@ public class MainMenuState extends GameState implements InputProcessor {
 			logger.info("Changing State to Client-Lobby...");
 			GameStates.CLIENTLOBBY.init(assetManager);
 			GameStates.CLIENTLOBBY.activate();
+		}
+    }
+    
+    private class StartForeverAloneClick extends ClickListener {
+		@Override
+		public void clicked(InputEvent event, float x, float y) {
+			GameStates.DUALGAMEPLAY.init(assetManager);
+			GameStates.DUALGAMEPLAY.activate();
 		}
     }
 }

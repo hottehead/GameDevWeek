@@ -187,10 +187,8 @@ public class Main extends StateBasedGame {
 	}
 
 	public void onLoadComplete() {
-		GameStates.DUALGAMEPLAY.init(assetManager);
-		GameStates.DUALGAMEPLAY.activate();
-		//GameStates.MAINMENU.init(assetManager);
-		//GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
+		GameStates.MAINMENU.init(assetManager);
+		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override

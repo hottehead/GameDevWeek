@@ -447,7 +447,9 @@ public class NetworkManager{
 					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
-				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+				if (this.playerdisconnectcallback != null) {
+					playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+				}
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
