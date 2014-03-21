@@ -85,6 +85,8 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 		
+//			System.out.println(l.getName());
+//		}
 		
 		stage = new GameplayStage();
 		stage.init(assets);
@@ -93,6 +95,7 @@ public class ClientGame {
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 
+		
 		entityRenderer = new EntityRenderer(materialManager);
 		entityManager.provideListener(entityRenderer);
 
@@ -107,6 +110,7 @@ public class ClientGame {
 		System.out.println(advShader.getLog());
 	}
 
+	float fadeIn = 0.25f;
 
 	public void render() {
 		sceneToTexture.begin();
@@ -138,9 +142,11 @@ public class ClientGame {
 		DrawUtil.startRenderToScreen();
 		stage.render();
 		DrawUtil.endRenderToScreen();
+
 	}
 
 	public void update(float delta) {
+		// fadeIn = Math.min(fadeIn + delta/100.0f, 1);
 		entityManager.update(delta);
 
 		long playerId = entityManager.getPlayerEntityID();
@@ -154,6 +160,8 @@ public class ClientGame {
 			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}
 		cameraFollowingBehaviour.update(delta);
+		
+		stage.setFPSCounter(delta);
 	}
 
 	public TiledMap loadMap(String filename) {
