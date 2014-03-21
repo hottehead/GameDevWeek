@@ -43,6 +43,19 @@ public class ClientLobbyManager implements LobbyUpdateCallback, MatchUpdateCallb
 		return new ArrayList<PlayerData>(this.connectedPlayers.values());
 	}
 	
+	public List<PlayerData> getTeamPlayers(TeamColor team)
+	{
+		ArrayList<PlayerData> teamPlayers = new ArrayList<>();
+		
+		for (PlayerData p : this.connectedPlayers.values())
+		{
+			if (p.getTeam() == team)
+				teamPlayers.add(p);
+		}
+		
+		return teamPlayers;
+	}
+	
 	public String getMap() {
 		return map;
 	}

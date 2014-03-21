@@ -56,6 +56,7 @@ public class Main extends StateBasedGame {
 	private final DevConsoleView consoleView = new DevConsoleView(console);
 	private Skin skin;
 	public static final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	public static final String playerName = "Long John " + (int) (Math.random() * 100.0);
 
 	public static Main getInstance() {
 		if (instance == null) {

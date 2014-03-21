@@ -34,6 +34,8 @@ public class MainMenuState extends GameState implements InputProcessor {
 	AnimationExtended walking;
 
 	private MainMenuStage stage;
+	private StartServerClick startServerClickListener;
+	private StartClientClick startClientClickListener;
 
     public MainMenuState() {
     }
@@ -56,11 +58,12 @@ public class MainMenuState extends GameState implements InputProcessor {
         };
         Main.inputMultiplexer.addProcessor(inputProcessor);
         
-		stage = new MainMenuStage();
+
+        stage = new MainMenuStage();
 		stage.init(assetManager);
 		
-		stage.getStartServerButton().addListener(new StartServerClick());
-		stage.getStartClientButton().addListener(new StartClientClick());
+		this.startServerClickListener = new StartServerClick();
+		this.startClientClickListener = new StartClientClick();
     }
 
     @Override
@@ -76,6 +79,9 @@ public class MainMenuState extends GameState implements InputProcessor {
         	this.music.deMute();
         else
         this.music.play("music-lobby-loop");
+        
+		stage.getStartServerButton().addListener(this.startServerClickListener);
+		stage.getStartClientButton().addListener(this.startClientClickListener);
     }
 
     @Override
@@ -83,6 +89,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     	this.music.mute();
         inputProcessor.setActive(false);
         
+        stage.getStartServerButton().removeListener(this.startServerClickListener);
+		stage.getStartClientButton().removeListener(this.startClientClickListener);
     }
 
     @Override
