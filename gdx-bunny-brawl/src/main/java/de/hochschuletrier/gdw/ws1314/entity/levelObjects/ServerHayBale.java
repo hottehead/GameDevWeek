@@ -121,7 +121,6 @@ public class ServerHayBale extends ServerLevelObject
 	            	.sensor(true)
 	            	.shapeBox(60,60));
             }
-            
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);
