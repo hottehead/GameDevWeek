@@ -69,7 +69,7 @@ public class NetworkManager{
 	public void checkStats(){
 		long newStatTime=System.currentTimeMillis();
 		long statDT=newStatTime-lastStatTime;
-		if(statDT<30000) return;
+		if(statDT<60000) return;
 		long newTotalBytesSent=0;
 		long newTotalBytesReceived=0;
 		long newTotalDgramsSent=0;
@@ -130,6 +130,13 @@ public class NetworkManager{
 			logger.warn("[CLIENT] Ignoring new connect command because we are already connected.");
 			return;
 		}
+		if(port < 1024){
+			logger.warn("port must higher or equal 1024");
+			return;
+		}else if(port > 65535){
+			logger.warn("port must lower or equal 65535");
+			return;
+		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
 			if(clientConnection.isAccepted()) logger.info("[CLIENT] connected to server {}:{}", ip, port);
@@ -144,7 +151,7 @@ public class NetworkManager{
 			logger.warn("[SERVER] Ignoring new listen command because we are already a server.");
 			return;
 		}
-		serverConnections = new ArrayList<NetConnection>();
+		serverConnections = new ArrayList<>();
 		try{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
 
@@ -159,7 +166,7 @@ public class NetworkManager{
 		}
 	}
 	
-	/*
+	/**
 	 * DisconnectCallback: wird auf Server und Clientseite aufgerufen, sobald die eigene Verbindung verloren geht.
 	 * z.B: Client disconnected daraufhin wir dieser Callback aufgerufen, damit der GameState geändert werden kann
 	 */
@@ -167,7 +174,7 @@ public class NetworkManager{
 		return disconnectcallback;
 	}
 	
-	/*
+	/**
 	 * PlayerDisconnectCallback: Serverseitig. Wenn einer oder mehrere Clients disconnecten, wird deren ID
 	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
 	 * Danach ist eine Funktion wie LobbyUpdate notwendig um diese änderung den Clients mitzutzeilen
@@ -176,35 +183,35 @@ public class NetworkManager{
 		return playerdisconnectcallback;
 	}
 	
-	/*
+	/**
 	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
 	 */
 	public ClientIdCallback getClientIdCallback(){
 		return clientidcallback;
 	}
 	
-	/*
+	/**
 	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
 	 */
 	public LobbyUpdateCallback getLobbyUpdateCallback(){
 		return lobbyupdatecallback;
 	}
 
-	/*
+	/**
 	 * Serverseitig: der Client teilt seine Spielerdaten mit(Spielername, Klasse, Team und Accept)
 	 */
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
 	}
 	
-	/*
+	/**
 	 * Serverseitig: der Client teilt einen Mapvorschlag mit
 	 */
 	public MatchUpdateCallback getMatchUpdateCallback(){
 		return matchupdatecallback;
 	}
 
-	/*
+	/**
 	 * Clientseitig: der Server teilt dem Clienten den GameState mit
 	 */
 	public GameStateCallback getGameStateCallback(){
@@ -366,8 +373,6 @@ public class NetworkManager{
 	public void disconnectFromServer(){
 		if(isClient()){
 			clientConnection.shutdown();
-			//clientConnection = null;
-			logger.info("[CLIENT] disconnected from server.");
 		}
 	}
 
@@ -410,10 +415,10 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
+			NetConnection connection = serverReception.getNextNewConnection();
 			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
 				return;
 			}
-			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
@@ -428,29 +433,28 @@ public class NetworkManager{
 	private void handleDisconnects(){
 
 		if(isServer()){
-			List<NetConnection> toRemove = new ArrayList<NetConnection>();
+			List<NetConnection> toRemove = new ArrayList<>();
 			for(NetConnection c : serverConnections){
 				if(!c.isConnected()){
 					toRemove.add(c);
 				}
 			}
 			if(toRemove.size() > 0){
-				List<Integer> ids = new ArrayList<Integer>();
+				List<Integer> ids = new ArrayList<>();
 				for(NetConnection rc : toRemove){
 					serverConnections.remove(rc);
-					logger.info("[SERVER] {} disconnected", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
-					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected"));
+					logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
+					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
 				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
 			}
 		}
-		if(clientConnection != null){
-			if(!clientConnection.isConnected()){
-				clientConnection = null;
-				if(this.disconnectcallback != null){
-					this.disconnectcallback.callback("Disconnected from Server - handleDisconnects");
-				}
+		if(clientConnection != null && !clientConnection.isConnected()){
+			logger.info("[CLIENT] Disconnected from Server.");
+			clientConnection = null;
+			if(this.disconnectcallback != null){
+				this.disconnectcallback.callback("[SERVER] Disconnected from Server.");
 			}
 		}
 	}

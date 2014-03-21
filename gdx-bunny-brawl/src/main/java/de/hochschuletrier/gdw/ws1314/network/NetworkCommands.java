@@ -38,7 +38,7 @@ public class NetworkCommands{
 
 		@Override
 		public void showUsage(){
-			showUsage("<ip> <port>");
+			showUsage("<ip> <port> (port 1024 - 65535 allowed)");
 		}
 
 		@Override
