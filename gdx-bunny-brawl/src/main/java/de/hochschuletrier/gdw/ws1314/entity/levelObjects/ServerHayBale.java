@@ -28,6 +28,8 @@ public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
 	private final float SCL_VELOCITY = 300.0f;
+	private final float NORMAL_DAMPING = 1.0f;
+	private final float WATER_DAMPING = 100.0f;
 	private float speed;
 	private boolean acrossable = false;
 	
@@ -53,19 +55,21 @@ public class ServerHayBale extends ServerLevelObject
 		}
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
+				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 				ServerProjectile projectile = (ServerProjectile) otherEntity;
 				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 				speed = 1;
 				break;
 			case SwordAttack:
+				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
 				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
 				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 				break;
 			case WaterZone:
-				this.physicsBody.setLinearDamping(100);
+				this.physicsBody.setLinearDamping(WATER_DAMPING);
 				this.acrossable = true;
 				speed = 0;
 				break;
@@ -73,16 +77,20 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
+				
 				if(!acrossable){
 				ServerPlayer player2 = (ServerPlayer) otherEntity;
 				this.physicsBody.setLinearDamping(1);
 					if(speed > 0){
 						player2.applyDamage(10);
 					}
+				}else{
+					this.physicsBody.setLinearDamping(WATER_DAMPING);
 				}
 				speed = 0;
 				break;
-			default:
+			default: 
+				this.acrossable = false;
 				break;
 		}
 	}
@@ -109,7 +117,7 @@ public class ServerHayBale extends ServerLevelObject
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                 .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
                 .fixedRotation(true).create();
-
+            body.setLinearDamping(NORMAL_DAMPING);
             if(!acrossable){
             	body.createFixture(new PhysixFixtureDef(manager)
 				.density(0.5f)
