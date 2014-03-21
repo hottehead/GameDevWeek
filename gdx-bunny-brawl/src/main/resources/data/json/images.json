@@ -32,6 +32,13 @@
     "debugScoreEnemy": "data/images/dbg/scoreEnemyIcon.png",
     "debugScoreTeam": "data/images/dbg/scoreTeamIcon.png",
     "debugTooltip": "data/images/dbg/tooltip.png",
-    "debugAttackIcon": "data/images/dbg/attackIcon.png"
+    "debugAttackIcon": "data/images/dbg/attackIcon.png",
+	
+	"emblemKnightWhite": "data/images/wappenKnightWhite.png",
+	"emblemHunterWhite": "data/images/wappenHunterWhite.png",
+	"emblemTankWhite": "data/images/wappenTankWhite.png",
+	"emblemKnightBlack": "data/images/wappenKnightBlack.png",
+	"emblemHunterBlack": "data/images/wappenHunterBlack.png",
+	"emblemTankBlack": "data/images/wappenTankBlack.png"
     
 }
