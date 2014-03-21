@@ -216,7 +216,7 @@ public class NetworkManager{
 	}
 
 	public void despawnEntity(long id){
-		if(!isClient()) return;
+		if(!isServer()) return;
 		broadcastToClients(new DespawnDatagram(id));
 	}
 
