@@ -60,7 +60,6 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-		 entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
 		 entityManager.createEntity(ServerPlayer.class, new Vector2(500,250f));
          entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
          entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));

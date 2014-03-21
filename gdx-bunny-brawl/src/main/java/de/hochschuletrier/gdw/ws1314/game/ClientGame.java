@@ -95,9 +95,9 @@ public class ClientGame {
 
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
-
-		
 		entityRenderer = new EntityRenderer(materialManager);
+		
+		
 		entityManager.provideListener(entityRenderer);
 
 		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888,

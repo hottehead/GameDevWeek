@@ -28,7 +28,7 @@ public class MaterialManager {
 				"hunterWhiteIdleDown", 110, 74, 1, true));
 
 		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", 32, 32, 1, false));
+				"debugArrow", 64, 64, 1, false));
 		this.provideMaterial(EntityType.Carrot, new MaterialInfo("carrot", 32,
 				32, -1, false));
 		this.provideMaterial(EntityType.Ei, new MaterialInfo("egg", 32, 32, -1,
