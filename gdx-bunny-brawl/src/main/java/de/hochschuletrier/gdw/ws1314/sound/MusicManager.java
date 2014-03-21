@@ -37,4 +37,11 @@ public class MusicManager {
 		else
 			return null;
 	}
+	
+	public void stopAllStreams() {
+		for (GameStates state : GameStates.values()) {
+			if (this.musicStreamsList.get(state).isMusicPlaying())
+				this.musicStreamsList.get(state).stop();
+		}		
+	}
 }

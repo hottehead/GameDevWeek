@@ -30,7 +30,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		this.music = new LocalMusic(assetManager);
+		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
 		inputProcessor = new InputInterceptor(this) {
 			@Override
 			public boolean keyUp(int keycode) {
@@ -82,7 +82,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void onLeave() {
 		//this.music.mute();
-		this.music.setFade('o', this.stateChangeDuration);
+		//this.music.setFade('o', this.stateChangeDuration);
 		inputProcessor.setActive(false);
 	}
 
