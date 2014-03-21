@@ -17,6 +17,34 @@ public class ClientBridge extends ClientLevelObject
 		super();
 	}
 
+    private EntityType type = EntityType.Bridge;
+
+    public void setHorizontalLeft()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_LEFT;
+    }
+    public void setHorizontalMiddle()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_MIDDLE;
+    }
+    public void setHorizontalRight()
+    {
+        type = EntityType.BRIDGE_HORIZONTAL_RIGHT;
+    }
+    public void setVerticalBottom()
+    {
+        type = EntityType.BRIDGE_VERTICAL_BOTTOM;
+    }
+    public void setVerticalMiddle()
+    {
+        type = EntityType.BRIDGE_VERTICAL_MIDDLE;
+    }
+    public void setVerticalTop()
+    {
+        type = EntityType.BRIDGE_VERTICAL_TOP;
+    }
+
+
     @Override
     public void doEvent(EventType event) {
 
@@ -25,6 +53,6 @@ public class ClientBridge extends ClientLevelObject
 	@Override
 	public EntityType getEntityType()
 	{
-		return EntityType.Bridge;
+		return type;
 	}
 }
