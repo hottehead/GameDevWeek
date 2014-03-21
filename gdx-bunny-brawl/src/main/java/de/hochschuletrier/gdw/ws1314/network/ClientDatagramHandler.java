@@ -159,7 +159,13 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(EntityIDDatagram entityIDDatagram, NetConnection connection){
-		// TODO Auto-generated method stub
 		ClientEntityManager.getInstance().setPlayerEntityID(entityIDDatagram.getEntityId());
+	}
+
+	@Override
+	public void handle(PingDatagram pingDatagram, NetConnection connection){
+		long curTime = System.currentTimeMillis();
+		float ping = curTime - pingDatagram.getTimestamp();
+		NetworkManager.getInstance().updatePing(ping);
 	}
 }

@@ -59,6 +59,17 @@ public class NetworkManager{
 	private long lastTotalDgramsSent=0;
 	private long lastTotalDgramsReceived=0;
 	
+	private float ping = 0;
+	
+	public float getPing(){
+		return ping;
+	}
+	
+	void updatePing(float newPing){
+//		ping=0.9f*ping+0.1f*newPing;
+		ping = newPing;
+	}
+	
 	public void checkStats(){
 		long newStatTime=System.currentTimeMillis();
 		long statDT=newStatTime-lastStatTime;
@@ -91,7 +102,12 @@ public class NetworkManager{
 		double dgramsReceivedPerSecond = deltaDgramsReceived /(statDT/1000.0);
 		double factor=1024.0;
 		double rF=100.0;//Rounding Factor
-		logger.info("Network Statistics: ");
+		if(isClient()){
+			logger.info("Network Statistics: Ping {} ms",ping);
+		}
+		else{
+			logger.info("Network Statistics:");
+		}
 		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
 				newTotalBytesSent/factor,Math.round(bytesSentPerSecond*rF)/rF,
 				newTotalDgramsSent,Math.round(dgramsSentPerSecond*rF)/rF);
@@ -369,6 +385,7 @@ public class NetworkManager{
 		handleDatagramsClient();
 		handleDatagramsServer();
 		checkStats();
+		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
 	}
 
 	private void replicateServerEntities(){
