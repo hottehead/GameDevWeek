@@ -148,6 +148,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         for(Fixture fix : this.waterFixtures) {
             if(fix.testPoint(this.physicsBody.getBody().getPosition())) {
                 logger.info("Spieler ist im Wasser");
+                this.reset();
             }
         }
         
@@ -595,7 +596,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         		
         switchToState(idleState);
         
-        ServerEntityManager.getInstance().removeEntity(this);
+        this.physicsBody.setLinearVelocity(0, 0);
+        this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
+        this.physicsBody.setLinearVelocity(0, 0);
     }
     
     public void applyDamage(float amount)
