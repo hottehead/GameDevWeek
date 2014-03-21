@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -23,8 +24,10 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
@@ -86,7 +89,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
     
-    private FacingDirection 	facingDirection;
+    private float attackBuffTimer;
+    private float attackBuffDuration;
+    private boolean attackBuffActive;
+    
+    private float healthBuffTimer;
+    private float healthBuffDuration;
+    private boolean healthBuffActive;
+
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
     private boolean				movingDown;
@@ -97,6 +107,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
+    private float				strengthBuffDuration;	
+    
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
@@ -106,7 +118,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
     	attackState = new StatePlayerWaiting(this);
@@ -115,11 +127,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
+
     	desiredDirection = FacingDirection.NONE;
-    	facingDirection = FacingDirection.DOWN;
+    	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = 0.0f;
     	speedBuffActive = false;
+    	attackBuffTimer = 0.f;
+    	attackBuffDuration = 0.f;
+    	attackBuffActive = false;
+    	healthBuffTimer = 0.f;
+    	healthBuffDuration = 0.f;
+    	healthBuffActive = false;
     	droppedEggID = -1l;
     }
     
@@ -149,6 +168,27 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		{
     			walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
     			speedBuffActive = false;
+    		}
+    	}
+    	
+    	if (attackBuffActive)
+    	{
+    		attackBuffTimer += deltaTime;
+    		if (attackBuffTimer >= attackBuffDuration)
+    		{
+    			//TODO resetAttackDamage
+    			attackBuffActive = false;
+    		}
+    	}
+    	
+    	if (healthBuffActive)
+    	{
+    		healthBuffTimer += deltaTime;
+    		if (healthBuffTimer >= healthBuffDuration)
+    		{
+    			this.setCurrentHealth(1.f/ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+    			logger.info("Health: "+currentHealth);
+    			healthBuffActive = false;
     		}
     	}
     }
@@ -262,7 +302,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
 
     protected void moveBegin(FacingDirection dir)
     {
-    	facingDirection = desiredDirection;
+    	setFacingDirection(desiredDirection);
     	// TODO 
     	// Damp old impulse
     	// acceleration impulse to physics body
@@ -335,19 +375,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             	 }
             	 break;
              case ContactMine:
-            	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
-
-
             	 break;
              case Spinach:
+                	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
                      ServerEntityManager.getInstance().removeEntity(otherEntity);
             	 break;
              case Clover:
+                	 applyHealthBuff(ServerClover.CLOVER_HEALTHBUFF_FACTOR, ServerClover.CLOVER_HEALTHBUFF_DURATION);
                      ServerEntityManager.getInstance().removeEntity(otherEntity);
             	 break;
              case WaterZone:
@@ -392,13 +431,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID() )
-                     //if (getTeamColor() != projectile.getTeamColor())
+                     if (getID() == projectile.getSourceID())
+                     	break;
+                     if (getTeamColor() != projectile.getTeamColor())
                      {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
                 	 break;
                  
                  case SwordAttack:
@@ -455,8 +495,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-
-    public FacingDirection  getFacingDirection()	{ return facingDirection; }
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
@@ -485,10 +523,25 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     	walkingState.setSpeedFactor(factor);
     }
 
+    public void applyAttackBuff(float factor, float duration)
+    {
+    	attackBuffActive = true;
+    	attackBuffTimer = 0.f;
+    	attackBuffDuration = duration;
+    	//TODO setAttackDamage
+    }
+    
+    public void applyHealthBuff(float factor, float duration)
+    {
+    	healthBuffActive = true;
+    	healthBuffTimer = 0.f;
+    	healthBuffDuration = duration;
+    	setCurrentHealth(factor);
+    }
+
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		// TODO Auto-generated method stub
 		PhysixBody body1 = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(properties.getFloat("x"), properties.getFloat("y"))
 				.fixedRotation(false)
@@ -531,7 +584,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
         
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
-        facingDirection = FacingDirection.DOWN;
+        setFacingDirection(FacingDirection.DOWN);
         		
         switchToState(idleState);
         
@@ -553,6 +606,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
     		reset();
     }
 	
+    public void applyResistanceBuff(float factor, float time)
+    {
+    	
+    }
+    
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
@@ -575,4 +633,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener, QueryC
             }
             return true;
         }
+    
+    public void setCurrentHealth(float factor)
+    {
+    	this.currentHealth *= factor;
+    }
 }

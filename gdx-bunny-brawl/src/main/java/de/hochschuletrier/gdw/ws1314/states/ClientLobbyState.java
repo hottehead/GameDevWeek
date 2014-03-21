@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
@@ -113,6 +114,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback {
 		Main.getInstance().console.register(this.cpTeam);
 		Main.getInstance().console.register(this.cpClass);
 		//Main.getInstance().console.register(this.sendPlayerUpdate);
+		
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override

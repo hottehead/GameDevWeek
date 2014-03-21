@@ -3,11 +3,13 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -23,6 +25,7 @@ public class MainMenuStage extends AutoResizeStage {
 	
 	private LevelList levelList;
 	private TextButton startButton;
+	private TextField playerNameField;
 	
 	//server-client-testing
 	private TextButton startClient;
@@ -32,8 +35,18 @@ public class MainMenuStage extends AutoResizeStage {
 		super();
 	}
 
+	@Override
+	public boolean keyDown(int keyCode) {
+		if(keyCode == Keys.ENTER) {
+			if(playerNameField.getText()!="") {
+				Main.getInstance().gamePreferences.putString("player-name", playerNameField.getText());
+			}
+			return true;
+		}
+		return super.keyDown(keyCode);
+	}
+
 	public void init(AssetManagerX assetManager) {
-		//init generic stuff
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
@@ -42,7 +55,13 @@ public class MainMenuStage extends AutoResizeStage {
 		this.addActor(uiTable);
 		font = assetManager.getFont("verdana", 24);
 		
-		//info
+		Label playerNameLabel = new Label("Player name: ", defaultSkin);
+		uiTable.add(playerNameLabel);		
+		playerNameField = new TextField(Main.getInstance().gamePreferences.getString("player-name", "Fluffly Bunny"), defaultSkin);
+		playerNameField.setMaxLength(12);
+		
+		uiTable.add(playerNameField);
+		uiTable.row().padTop(20);
 		Label label = new Label("escape still works - level list not", defaultSkin);
 		uiTable.add(label);
 		uiTable.row().padTop(20);
@@ -74,7 +93,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-//		Table.drawDebug(this);
+		Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
