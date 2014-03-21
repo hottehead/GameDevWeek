@@ -97,10 +97,8 @@ public class ServerEntityManager {
         boolean listChanged = false;
         ClientServerConnect netManager = ClientServerConnect.getInstance();
         while (!removalQueue.isEmpty()) {
-        	
             listChanged = true;
             ServerEntity e = removalQueue.poll();
-            System.out.println(e.getEntityType());
             e.dispose(physManager);
             entityList.remove(e);
             entityListMap.remove(e.getID());
