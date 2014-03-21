@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -12,5 +13,5 @@ public abstract class StatePlayer extends State {
 		super(owner);
 	}
 
-	public abstract PlayerStates getCurrentState();
+	public abstract EntityStates getCurrentState();
 }

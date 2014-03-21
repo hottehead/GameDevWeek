@@ -1,8 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
-import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -18,7 +17,7 @@ public class StatePlayerIdle extends StatePlayer
 	}
 
 	@Override
-	public PlayerStates getCurrentState(){return PlayerStates.IDLE;}
+	public EntityStates getCurrentState(){return EntityStates.IDLE;}
 
 	@Override
 	public void update(float dt)

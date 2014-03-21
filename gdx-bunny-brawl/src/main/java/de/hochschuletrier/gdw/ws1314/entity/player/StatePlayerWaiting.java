@@ -1,7 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -47,7 +47,7 @@ public class StatePlayerWaiting extends StatePlayer
 		((ServerPlayer) getOwner()).moveEnd();
 	}
 
-	public PlayerStates getCurrentState(){return PlayerStates.WAITING;}
+	public EntityStates getCurrentState(){return EntityStates.WAITING;}
 
 	public void setWaitFinishedState(StatePlayer state)
 	{
