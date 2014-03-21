@@ -104,11 +104,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-<<<<<<< HEAD
-    private float				strengthBuffDuration;
-=======
->>>>>>> branch 'master' of https://github.com/hottehead/GameDevWeek.git
-    
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
@@ -186,19 +181,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     		{
     			attackBuffFactor = 1.0f;
     			attackBuffActive = false;
-<<<<<<< HEAD
-    		}
-    	}
-    	
-    	if (healthBuffActive)
-    	{
-    		healthBuffTimer += deltaTime;
-    		if (healthBuffTimer >= healthBuffDuration)
-    		{
-    			this.setCurrentHealth(1.f/ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-    			healthBuffActive = false;
-=======
->>>>>>> branch 'master' of https://github.com/hottehead/GameDevWeek.git
     		}
     	}
     }
