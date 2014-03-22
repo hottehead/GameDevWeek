@@ -489,7 +489,7 @@ public class LevelLoader {
 				int y = layerObject.getY();
 
 				boolean b = l.getBooleanProperty("solid", false);
-				System.out.println(b);
+				
 				if (b) {
 					Primitive p = layerObject.getPrimitive();
 					if (p == Primitive.POINT) {

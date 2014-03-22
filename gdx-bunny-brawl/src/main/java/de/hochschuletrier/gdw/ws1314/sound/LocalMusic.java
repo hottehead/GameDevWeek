@@ -56,7 +56,6 @@ public class LocalMusic {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
 		this.fading = false;
-		System.out.println(LocalMusic.SystemVolume);
 	}
 	
 	public void update(int duration) {
