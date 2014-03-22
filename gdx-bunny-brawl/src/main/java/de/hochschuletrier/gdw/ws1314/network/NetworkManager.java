@@ -119,18 +119,27 @@ public class NetworkManager{
 		return instance;
 	}
 
+	private boolean isPortOk(int port){
+		if(port < 1024){
+			logger.warn("port must higher or equal 1024");
+			return false;
+		}
+		else if(port > 65535){
+			logger.warn("port must lower or equal 65535");
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
 	public void connect(String ip, int port){
 		if(isClient()){
 			logger.warn("[CLIENT] Ignoring new connect command because we are already connected.");
 			return;
 		}
-		if(port < 1024){
-			logger.warn("port must higher or equal 1024");
-			return;
-		}
-		else if(port > 65535){
-			logger.warn("port must lower or equal 65535");
-			return;
+		if(!isPortOk(port)){
+			throw new IllegalArgumentException("Port out of allowed range 1024 - 65535");
 		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
@@ -146,12 +155,14 @@ public class NetworkManager{
 			logger.warn("[SERVER] Ignoring new listen command because we are already a server.");
 			return;
 		}
+		if(!isPortOk(port)){
+			throw new IllegalArgumentException("Port out of allowed range 1024 - 65535");
+		}
 		serverConnections = new ArrayList<>();
 		try{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
-
 			if(serverReception.isRunning()){
-				logger.info("[SERVER] is running and listening at {}:{}", getMyIp(), port);
+				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
 		}
 		catch (IOException e){
@@ -448,7 +459,6 @@ public class NetworkManager{
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
-			logger.info("[CLIENT] Disconnected from Server.");
 			clientConnection = null;
 			if(this.disconnectcallback != null){
 				this.disconnectcallback.callback("[SERVER] Disconnected from Server.");
@@ -456,36 +466,28 @@ public class NetworkManager{
 		}
 	}
 
-	private void handleDatagramsClient(){
-		if(!isClient()) return;
-
-		DatagramHandler handler = clientDgramHandler;
-
-		clientConnection.sendPendingDatagrams();
-		while(clientConnection.hasIncoming()){
-			INetDatagram dgram = clientConnection.receive();
+	private void handleDatagrams(DatagramHandler handler, NetConnection connection) {
+		connection.sendPendingDatagrams();
+		while(connection.hasIncoming()){
+			INetDatagram dgram = connection.receive();
 			if(dgram instanceof BaseDatagram){
-				((BaseDatagram) dgram).handle(handler, clientConnection);
+				((BaseDatagram) dgram).handle(handler, connection);
 			}
 		}
 	}
 
+	private void handleDatagramsClient(){
+		if(!isClient()) return;
+		handleDatagrams(clientDgramHandler, clientConnection);
+	}
+
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
-		DatagramHandler handler = serverDgramHandler;
-
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while(it.hasNext()){
 			NetConnection connection = it.next();
-			connection.sendPendingDatagrams();
-
-			while(connection.hasIncoming()){
-				INetDatagram dgram = connection.receive();
-				if(dgram instanceof BaseDatagram){
-					((BaseDatagram) dgram).handle(handler, connection);
-				}
-			}
-
+			handleDatagrams(serverDgramHandler, connection);
+			
 			if(!connection.isConnected()){
 				logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) connection.getAttachment()).getPlayername());
 				it.remove();

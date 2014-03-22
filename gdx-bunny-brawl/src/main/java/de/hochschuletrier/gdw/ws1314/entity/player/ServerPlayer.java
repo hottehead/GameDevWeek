@@ -4,6 +4,7 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
@@ -109,7 +111,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private Fixture fixtureDeathCheck;
     
     private boolean isDead;
-    private ServerBridgeSwitch currentBridgeSwitch;
+    private int collidingBridgePartsCount;
     
     
     public ServerPlayer()
@@ -137,6 +139,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
     	isDead = false;
+    	collidingBridgePartsCount = 0;
     }
     
     public void enable() {}
@@ -245,11 +248,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         		if (currentState.equals(idleState) || currentState.equals(walkingState))
         			dropEgg();
         		break;
-            case USE_SOMETHING:
-                if(this.currentBridgeSwitch != null) {
-                    this.currentBridgeSwitch.pushSwitch();
-                }
-                break;
             default:
                 break;
         }
@@ -398,28 +396,30 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 break;
              case StartZone:
             	 break;
-                 case Bridge:
-                	 ServerBridge bridge = (ServerBridge) otherEntity;
-                	/*  Von Fabio Gimmillaro
-                	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
-                	 *  Nur zum Test:
-                	 * if(!bridge.getVisibility()){
-                		 this.physicsBody.setPosition(0, 0);
-                	 }*/
-                     
+             case HayBale:
+                 ServerHayBale ball = (ServerHayBale)otherEntity;
+                 if(ball.isCrossable()) {
                      this.isOnBridge = true;
-                	 break;
-                 case BridgeSwitch:	
-                     this.currentBridgeSwitch = (ServerBridgeSwitch)otherEntity;
-                	 break;
-                 case Bush:
-                	 break;
+                     collidingBridgePartsCount++;
+                 } else {
+                   this.physicsBody.setLinearDamping(1);
+                       if(ball.getSpeed() > 0){
+                           this.applyDamage(ball.getVelocity().len());
+                       }
+                   }
+                 break;
+             case Bridge:
+                 this.isOnBridge = true;
+                 collidingBridgePartsCount++;
+                 break;
+             case BridgeSwitch:	
+                 break;
+             case Bush:
+                 break;
              default:
             	 break;
         	 }
-         }
-         else if(fixture == fixtureFullBody)
-         {
+         } else if(fixture == fixtureFullBody) {
         	 switch(otherEntity.getEntityType()) 
         	 {
                  case Projectil:
@@ -449,11 +449,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) 
              {
+                 case AbyssZone:
                  case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
-                     this.isDead = true;
-                     
+                     if(!isOnBridge) {
+                         this.isDead = true;
+                     }
                      break;
                  default:
                      break;
@@ -477,14 +477,26 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          }
          else if (fixture == fixtureLowerBody)
   		 {
-         switch(otherEntity.getEntityType()) 
-         {
-         	case Ei:
-         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-         			droppedEggID = -1;
-         		break;
+             switch(otherEntity.getEntityType()) 
+             {
+             	case Ei:
+             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+             			droppedEggID = -1;
+             		break;
+             	case HayBale:
+             	   ServerHayBale ball = (ServerHayBale)otherEntity;
+                   if(ball.isCrossable()) {
+                       collidingBridgePartsCount--;
+                       if(collidingBridgePartsCount <= 0) {
+                           this.isOnBridge = false;
+                       }
+                   }
+                   break;
                 case Bridge:
-                    this.isOnBridge = false;
+                    collidingBridgePartsCount--;
+                    if(collidingBridgePartsCount <= 0) {
+                        this.isOnBridge = false;
+                    }
                     break;
                 default:
                 	break;

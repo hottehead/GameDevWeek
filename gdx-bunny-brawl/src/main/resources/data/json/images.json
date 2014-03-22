@@ -11,6 +11,7 @@
     "straw": "data/images/straw.png",
     "switch": "data/images/switch.png",
     "contactMine": "data/images/mine.png",
+	"arrow": "data/images/arrow.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
@@ -33,6 +34,7 @@
     "debugScoreTeam": "data/images/dbg/scoreTeamIcon.png",
     "debugTooltip": "data/images/dbg/tooltip.png",
     "debugAttackIcon": "data/images/dbg/attackIcon.png",
+	
 	
 	"HudEmblemKnightWhite": "data/huds/wappenKnightWhite.png",
 	"HudEmblemHunterWhite": "data/huds/wappenHunterWhite.png",
