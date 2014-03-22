@@ -1,3 +1,4 @@
+
 package de.hochschuletrier.gdw.ws1314.entity;
 
 import java.util.ArrayList;
@@ -5,19 +6,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridge;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientContactMine;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
@@ -36,6 +31,8 @@ public class ClientEntityManager {
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
     protected ArrayList<ClientEntityManagerListener> listeners;
+    
+    private GameInfo gameInfo = new GameInfo();
 
     private long playerEntityID = -1;
 
@@ -55,7 +52,11 @@ public class ClientEntityManager {
     	return instance;
     }
     
-    public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+
+	public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
         switch(type)
         {
@@ -78,8 +79,28 @@ public class ClientEntityManager {
             	e = new ClientProjectile();
             	break;
             case BRIDGE_HORIZONTAL_LEFT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalLeft();
+				break;
+            case BRIDGE_HORIZONTAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalMiddle();
+				break;
+            case BRIDGE_HORIZONTAL_RIGHT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalRight();
+				break;
+            case BRIDGE_VERTICAL_BOTTOM:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalBottom();
+				break;
+            case BRIDGE_VERTICAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalMiddle();
+				break;
+            case BRIDGE_VERTICAL_TOP:
             	e = new ClientBridge();
-
+				((ClientBridge)e).setVerticalTop();
             	break;
             case BridgeSwitch:
             	e = new ClientBridgeSwitch();
@@ -99,6 +120,9 @@ public class ClientEntityManager {
             case Clover:
             	e = new ClientClover();
             	break;
+			case HayBale:
+				e = new ClientHayBale();
+				break;
 			default:
 				break;
         }
@@ -174,7 +198,15 @@ public class ClientEntityManager {
         return listChanged;
     }
 
-
+    public boolean isPendingSpawn(long entityId){
+    	for(ClientEntity e: insertionQueue){
+    		if(e.getID()==entityId){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public ClientEntity getEntityById(long id) {
         Long lid = new Long(id);
         if(entityListMap.containsKey(lid))
@@ -199,6 +231,7 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo=new GameInfo();
     }
     
     public void provideListener(ClientEntityManagerListener l) {

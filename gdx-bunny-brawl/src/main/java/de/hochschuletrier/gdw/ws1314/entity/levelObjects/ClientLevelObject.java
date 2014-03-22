@@ -1,9 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
-import com.badlogic.gdx.math.Vector2;
-
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
-import de.hochschuletrier.gdw.ws1314.entity.EntityState;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 
 /**
  * 
@@ -13,6 +11,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityState;
 public abstract class ClientLevelObject extends ClientEntity
 {
 	protected boolean isVisible;
+	protected EntityStates entityState;
 	
 	public ClientLevelObject()
 	{
@@ -46,4 +45,11 @@ public abstract class ClientLevelObject extends ClientEntity
 	{
 	}
 
+	public EntityStates getLevelObjectState(){return entityState;}
+	public void setLevelObjectState(EntityStates state){
+		if(entityState != state)
+			enterNewState();
+
+			entityState = state;
+	}
 }

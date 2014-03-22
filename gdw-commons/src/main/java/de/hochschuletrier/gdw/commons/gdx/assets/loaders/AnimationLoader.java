@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,19 +23,11 @@ public class AnimationLoader extends
 		super(resolver);
 		// TODO Auto-generated constructor stub
 	}
-    
-    public enum PlayType {
-        NORMAL,
-        REVERSED,
-        LOOP,
-        LOOP_REVERSED,
-        LOOP_PINGPONG,
-        LOOP_RANDOM;
-    }
 
-	static public class AnimationParameter extends AssetLoaderParametersX<Animation> {
+	static public class AnimationParameter extends
+			AssetLoaderParametersX<Animation> {
 		public Float frameDuration = 100.0f;
-		public PlayType playType = PlayType.NORMAL;
+		public PlayMode playType = PlayMode.NORMAL;
 		public Integer rows = 1;
 		public Integer columns = 1;
 		public Integer frames = 1;
@@ -58,12 +51,11 @@ public class AnimationLoader extends
 	}
 
 	@Override
-	public void loadAsync(AssetManager manager, String fileName, FileHandle file,
-			AnimationParameter parameter) {
+	public void loadAsync(AssetManager manager, String fileName,
+			FileHandle file, AnimationParameter parameter) {
 		// TODO Auto-generated method stub
 
 	}
-
 
 	@Override
 	public Animation loadSync(AssetManager manager, String fileName, FileHandle file,
@@ -83,14 +75,13 @@ public class AnimationLoader extends
 		}
         
 		Animation animation = new Animation(parameter.frameDuration, frames);
-        int playMode = (parameter.playType == null) ? 0 : parameter.playType.ordinal();
-		animation.setPlayMode(playMode);
+		animation.setPlayMode(parameter.playType);
 		return animation;
 	}
 
 	@Override
-	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file,
-			AnimationParameter parameter) {
+	public Array<AssetDescriptor> getDependencies(String fileName,
+			FileHandle file, AnimationParameter parameter) {
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 		TextureLoader.TextureParameter params = new TextureParameter();
 		params.format = parameter.format;

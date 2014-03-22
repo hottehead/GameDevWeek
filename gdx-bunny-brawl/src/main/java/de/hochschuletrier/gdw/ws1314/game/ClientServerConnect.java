@@ -1,11 +1,18 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
-import com.badlogic.gdx.math.Vector2;
-import de.hochschuletrier.gdw.ws1314.entity.*;
+import org.slf4j.LoggerFactory;
+
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +68,16 @@ public class ClientServerConnect {
                         cp.setTeamColor(sp.getTeamColor());
                         cp.setEggCount(sp.getCurrentEggCount());
                         cp.setFacingDirection(sp.getFacingDirection());
+						cp.setCurrentPlayerState(sp.getCurrentPlayerState());
                         break;
+					case Projectil:
+						ServerProjectile serverProjectile = (ServerProjectile)senty;
+						ClientProjectile clientProjectile = (ClientProjectile)centy;
+
+						clientProjectile.setFacingDirection(serverProjectile.getFacingDirection());
+						clientProjectile.setTeamColor(serverProjectile.getTeamColor());
+
+						break;
                 }
 
             }
@@ -78,7 +94,14 @@ public class ClientServerConnect {
                     cp.setTeamColor(sp.getTeamColor());
                     cp.setEggCount(sp.getCurrentEggCount());
                     cp.setFacingDirection(sp.getFacingDirection());
-                }
+					cp.setCurrentPlayerState(sp.getCurrentPlayerState());
+                } else if(senty instanceof ServerProjectile) {
+					ServerProjectile serverProjectile = (ServerProjectile)senty;
+					ClientProjectile clientProjectile = (ClientProjectile)centy;
+
+					clientProjectile.setFacingDirection(serverProjectile.getFacingDirection());
+					clientProjectile.setTeamColor(serverProjectile.getTeamColor());
+				}
             }
         }
 
@@ -96,7 +119,7 @@ public class ClientServerConnect {
         ServerEntityManager sem = ServerEntityManager.getInstance();
         ServerPlayer sp = (ServerPlayer)sem.getEntityById(playerID);
         if(sp != null)
-        sp.doAction(eventPlayerIntention);
+        	sp.doAction(eventPlayerIntention);
     }
 
     public void despawnEntity(long id){

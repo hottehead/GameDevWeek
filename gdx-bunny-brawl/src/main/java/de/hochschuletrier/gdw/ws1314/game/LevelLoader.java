@@ -273,6 +273,14 @@ public class LevelLoader {
 		case "water":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
             zone.setWaterZone();
+			PhysixBody bodyWater = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
+											.position(x, y).create();
+			bodyWater.createFixture(new PhysixFixtureDef(physicsManager)
+											.density(0.5f)
+											.sensor(true)
+											.friction(0.5f)
+											.restitution(0.4f)
+											.shapeBox(width, height));
             break;
         case "hgrass":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
@@ -290,13 +298,13 @@ public class LevelLoader {
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamWhite();
-			gameInfo.addTeam(TeamColor.WHITE,spawnZone);
+			gameInfo.setTeamSpawnZoneWhite(spawnZone);
             break;
         case "startb":
 			spawnZone = entityManager.createEntity(TeamSpawnZone.class,new Vector2(x,y),properties );
 			spawnZone.setRect(x,y,width,height);
 			spawnZone.setTeamBlack();
-			gameInfo.addTeam(TeamColor.BLACK,spawnZone);
+			gameInfo.setTeamSpawnZoneBlack(spawnZone);
             break;
 
 
@@ -489,7 +497,7 @@ public class LevelLoader {
 				int y = layerObject.getY();
 
 				boolean b = l.getBooleanProperty("solid", false);
-				System.out.println(b);
+				
 				if (b) {
 					Primitive p = layerObject.getPrimitive();
 					if (p == Primitive.POINT) {

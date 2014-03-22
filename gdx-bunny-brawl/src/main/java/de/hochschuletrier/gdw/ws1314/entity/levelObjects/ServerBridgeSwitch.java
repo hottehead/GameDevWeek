@@ -38,11 +38,13 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs = new ArrayList<Long>();
 	}
 	
-	// Note: Switch pushing must be solved by collision reaction
-//	public void pushSwitch()
-//	{
-//		//bridge.setVisibility(!bridge.getVisibility());
-//	}
+	public void pushSwitch()
+	{
+	    for(long id : targetIDs) {
+	        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(id);
+	        bridge.setVisibility(!bridge.getVisibility());
+	    }
+	}
 
 	public void initialize()
 	{
@@ -61,17 +63,10 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	        switch(otherEntity.getEntityType()) {
 	            case SwordAttack:
 	            case Projectil:
-	            	ServerProjectile projectile = (ServerProjectile) otherEntity;
                     for(Long targetID : targetIDs) {
                         ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-                        if (bridge.getVisibility()) {
-                            ServerEntityManager.getInstance().removeEntity(bridge);
-                            
-                        }
                         bridge.setVisibility(!bridge.getVisibility());
                     }
-            	
-	            	//ServerEntityManager.getInstance().removeEntity(projectile);
 	                break;
 	            default:
 	                break;
@@ -117,4 +112,10 @@ public class ServerBridgeSwitch extends ServerLevelObject
 		setPhysicsBody(body);
 		
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
 }

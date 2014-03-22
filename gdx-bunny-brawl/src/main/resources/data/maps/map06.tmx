@@ -224,7 +224,7 @@
   <object gid="271" x="1600" y="928"/>
   <object gid="271" x="256" y="1408"/>
  </objectgroup>
- <objectgroup name="Zonenebene" width="75" height="50" visible="0">
+ <objectgroup name="Zonenebene" width="75" height="50">
   <object type="hole" x="32" y="96" width="640" height="64"/>
   <object type="hole" x="32" y="160" width="640" height="64"/>
   <object type="hole" x="672" y="160" width="64" height="64"/>
@@ -411,7 +411,7 @@
    <property name="renterEntities" value="true"/>
   </properties>
  </objectgroup>
- <objectgroup name="Spielerebene (physikalische Zone)" width="75" height="50" visible="0">
+ <objectgroup name="Spielerebene (physikalische Zone)" width="75" height="50">
   <object type="solid" x="0" y="0" width="2400" height="96"/>
   <object type="solid" x="0" y="96" width="32" height="1504"/>
   <object type="solid" x="32" y="1568" width="2368" height="32"/>
@@ -442,6 +442,21 @@
   <object type="solid" x="736" y="704" width="64" height="64"/>
   <object type="solid" x="672" y="864" width="64" height="64"/>
   <object type="solid" x="576" y="960" width="64" height="64"/>
+  <object type="solid" x="672" y="858" width="61" height="6"/>
+  <object type="solid" x="737" y="698" width="61" height="6"/>
+  <object type="solid" x="1058" y="155" width="61" height="6"/>
+  <object type="solid" x="962" y="218" width="61" height="6"/>
+  <object type="solid" x="801" y="156" width="61" height="6"/>
+  <object type="solid" x="642" y="1465" width="61" height="6"/>
+  <object type="solid" x="897" y="1337" width="61" height="6"/>
+  <object type="solid" x="705" y="1242" width="61" height="6"/>
+  <object type="solid" x="577" y="953" width="61" height="6"/>
+  <object type="solid" x="704" y="1464" width="61" height="6"/>
+  <object type="solid" x="2209" y="186" width="61" height="6"/>
+  <object type="solid" x="1696" y="249" width="61" height="6"/>
+  <object type="solid" x="1952" y="1177" width="61" height="6"/>
+  <object type="solid" x="1729" y="1400" width="61" height="6"/>
+  <object type="solid" x="1216" y="1464" width="61" height="6"/>
  </objectgroup>
  <layer name="Overlayer" width="75" height="50">
   <data encoding="base64" compression="zlib">

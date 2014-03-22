@@ -3,7 +3,6 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +16,14 @@ import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
+import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
 /**
  * 
@@ -39,23 +40,30 @@ public class ServerGame {
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
+
 	private ServerPlayer player = new ServerPlayer();
     private long eggid = 0;
+    private List<PlayerData> playerDatas;
 	private GameInfo gameInfo;
 
-	public ServerGame() {
+	public ServerGame( List<PlayerData> playerDatas) {
 		entityManager = ServerEntityManager.getInstance();
         entityManager.setPhysixManager(manager);
-		netManager = ClientServerConnect.getInstance();
+		netManager = NetworkManager.getInstance();
+		this.playerDatas = playerDatas;
+		//loadSolids();
+
     }
 
 
-	public void init(AssetManagerX assets) {
-		gameInfo = new GameInfo();
+	public void init(AssetManagerX assets, String mapName) {
+		gameInfo = entityManager.getGameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		TiledMap map = assets.getTiledMap("dummy_fin_map2");
+
+		TiledMap map = assets.getTiledMap(mapName);
+
 		LevelLoader.load(map, entityManager, manager, gameInfo);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
@@ -63,12 +71,35 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-		 entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
-		 entityManager.createEntity(ServerPlayer.class, new Vector2(500,250f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
-         entityManager.createEntity(ServerCarrot.class, new Vector2(200, 200));
-         entityManager.createEntity(ServerHayBale.class, new Vector2(600 , 600));
+
+        for(PlayerData playerData : playerDatas ){
+
+            Point startpoint = gameInfo.getASpawnPoint(playerData.getTeam());
+
+            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(startpoint.x,startpoint.y));
+
+            switch(playerData.getType())
+            {
+                case Noob:
+                    sp.setPlayerKit(PlayerKit.NOOB);
+                    break;
+                case Knight:
+                    sp.setPlayerKit(PlayerKit.KNIGHT);
+                    break;
+                case Hunter:
+                    sp.setPlayerKit(PlayerKit.HUNTER);
+                    break;
+                case Tank:
+                    break;
+            }
+
+        
+            sp.setPlayerData(playerData);
+            netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
+
+        }
+
+
 	}
 
 	public void render() {

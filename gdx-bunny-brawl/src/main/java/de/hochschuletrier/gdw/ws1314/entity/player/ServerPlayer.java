@@ -2,44 +2,39 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
+import de.hochschuletrier.gdw.ws1314.state.State;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -48,50 +43,48 @@ import de.hochschuletrier.gdw.ws1314.state.State;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener
-{
+public class ServerPlayer extends ServerEntity implements IStateListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-	public static final float BRAKING = 5.0f;
+	public static final float	BRAKING = 5.0f;
 	public static final float COLLISION_DAMPING = 10.0f;
-	
+
 	public static final float KNOCKBACK_IMPULSE = 100.0f;
 
 	public static final float DENSITY = 0.0f;
     public static final float FRICTION = 0.0f;
 	public static final float RESTITUTION = 0.0f;
 	public static final float KNOCKBACK_TIME = 0.8f;
-	public static final float ATTACK_TIME = 0.18f;
-	
+	public static final float ATTACK_TIME = 1.5f;
+
 	public static final float WIDTH = 32.0f;
 	public static final float HEIGHT = 32.0f;
-	
+
 	public static final float EGG_CARRY_SPEED_PENALTY = 0.15f;
 
-    private boolean isOnBridge = false;
+        private boolean isOnBridge = false;
 
 
-    private PlayerInfo	playerInfo;
+    private PlayerData	playerData;
     private PlayerKit 	playerKit;
-    private TeamColor	teamColor;
     
     private float		currentHealth;
     private float		currentArmor;
     
     private int 		currentEggCount;
     
-    private StatePlayerWaiting 	 attackState;
+    private StatePlayerAttack 	 attackState;
     private StatePlayerIdle		 idleState;
-    private StatePlayerWaiting 	 knockbackState;
+    private StatePlayerKnockback knockbackState;
     private StatePlayerWalking	 walkingState;
     
-    private State				 currentState;
+    private StatePlayer			 currentState;
     
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
-  
+    
     private float attackBuffTimer;
     private float attackBuffDuration;
     private boolean attackBuffActive;
@@ -111,21 +104,27 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
+    private Fixture fixtureDeathCheck;
     
-    private HashMap<Long, Fixture> waterFixtures;
+    private boolean isDead;
+    private int collidingBridgePartsCount;
+    
     
     public ServerPlayer()
     {
     	super();
     	
-    	setPlayerKit(PlayerKit.TANK);
+    	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
-    	attackState = new StatePlayerWaiting(this);
+    	attackState = new StatePlayerAttack(this);
     	idleState = new StatePlayerIdle(this);
-    	knockbackState = new StatePlayerWaiting(this);
+    	knockbackState = new StatePlayerKnockback(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
+
+
+    	desiredDirection = FacingDirection.NONE;
     	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = 0.0f;
@@ -135,7 +134,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	waterFixtures = new HashMap<Long, Fixture>();
+    	isDead = false;
+    	collidingBridgePartsCount = 0;
     }
     
     public void enable() {}
@@ -146,33 +146,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     @Override
     public void update(float deltaTime) 
     {
-        //kollision mit wasser
-        Iterator<Long> keySetIterator = waterFixtures.keySet().iterator();
-
-        while(keySetIterator.hasNext()){
-          Long key = keySetIterator.next();
-          Fixture fix = this.waterFixtures.get(key);
-          
-          Body body = this.physicsBody.getBody();
-          Vector2 worldPos = body.getWorldCenter();
-          if(fix.testPoint(worldPos)) {
-              if(!this.isOnBridge) {
-                  logger.info("Spieler ist im Wasser");
-                  this.reset();
-              }
-          }
+        if(isDead) {
+            isDead = false;
+            this.reset();
         }
-        
-//        for(Fixture fix : this.waterFixtures) {
-//            Body body = this.physicsBody.getBody();
-//            Vector2 worldPos = body.getWorldCenter();
-//            if(fix.testPoint(worldPos)) {
-//                if(!this.isOnBridge) {
-//                    logger.info("Spieler ist im Wasser");
-//                    this.reset();
-//                }
-//            }
-//        }
         
     	currentState.update(deltaTime);
     	
@@ -239,7 +216,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-            	if (currentState == idleState || currentState == walkingState)
+            	if (currentState.equals(idleState) || currentState.equals(walkingState))
             	{
             		attackCooldown = playerKit.getFirstAttackCooldown();
             		attackCooldownTimer = 0.0f;
@@ -253,7 +230,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-        		if (currentState == idleState || currentState == walkingState)
+        		if (currentState.equals(idleState) || currentState.equals(walkingState))
             	{
             		attackCooldown = playerKit.getSecondAttackCooldown();
             		attackCooldownTimer = 0.0f;
@@ -264,8 +241,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	}
                 break;
             case DROP_EGG:
-        		if (currentState == idleState || currentState == walkingState)
+        		if (currentState.equals(idleState) || currentState.equals(walkingState))
         			dropEgg();
+        		break;
+            default:
+                break;
         }
         
         desiredDirection = FacingDirection.NONE;
@@ -296,7 +276,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         if (desiredDirection != FacingDirection.NONE)
         {
         	walkingState.setMovingDirection(desiredDirection);
-            if (currentState == idleState || currentState == walkingState)
+            if (currentState.equals(idleState) || currentState.equals(walkingState))
             	switchToState(walkingState);
 
         	attackState.setWaitFinishedState(walkingState);
@@ -305,7 +285,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         // Not intended movement
         else
         {
-        	if (currentState == walkingState)
+        	if (currentState.equals(walkingState))
         		switchToState(idleState);
 
         	attackState.setWaitFinishedState(idleState);
@@ -316,16 +296,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     protected void moveBegin(FacingDirection dir)
     {
     	setFacingDirection(desiredDirection);
-    	// TODO 
-    	// Damp old impulse
-    	// acceleration impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
 
-    	moveEnd();
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	moveEnd();
 
     }
     
@@ -348,13 +321,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     {
     	if (currentEggCount > 0)
     	{
-    		currentEggCount--;
+    	currentEggCount--;
     		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
     		droppedEggID = egg.getID();
     	}
     }
     
-    // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	
     {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
@@ -364,165 +336,139 @@ public class ServerPlayer extends ServerEntity implements IStateListener
              return;
          }
          
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-         {
-        	 switch(otherEntity.getEntityType())
-        	 {
-            	 case Tank:
-                 case Hunter:
-                 case Knight:
-                 case Noob: 
-                	 ServerPlayer player = (ServerPlayer) otherEntity;
-                	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
-                     break;
-            	 case Ei:
-                	 ServerEgg egg = (ServerEgg) otherEntity;
-                	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
-                	 {
-                		 ServerEntityManager.getInstance().removeEntity(otherEntity);
-                		 this.currentEggCount++;
-                	 }
-                	 break;
-            	 case ContactMine:
-                	 
-                	 break;
-                 case Carrot:
-                	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
+         if(fixture == fixtureLowerBody) {
+        	 switch(otherEntity.getEntityType()) {
+             case Tank:
+             case Hunter:
+             case Knight:
+             case Noob:
+            	 ServerPlayer player = (ServerPlayer) otherEntity;
+            	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
+                 break;
+             case Ei:			
+            	 ServerEgg egg = (ServerEgg) otherEntity;
+            	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 {
+            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
+            	 this.currentEggCount++;
+            	 }
+            	 break;
+             case ContactMine:
+            	 
+            	 break;
+             case Carrot:
+            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
-                	 break;
-                 case Spinach:
+            	 break;
+             case Spinach:
                 	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
-                	 break;
-                 case Clover:
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
+            	 break;
+             case Clover:
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
-
-                	 break;
-                 case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
-                     Fixture fix = this.getCollidingFixture(contact);
-                     this.waterFixtures.put(otherEntity.getID(), fix);
-                     logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
-                     
-                	 break;
-                 case AbyssZone:
-                	 break;
-                 case GrassZone:
-                	 break;
-                 case PathZone:
-                	 break;
-                 case StartZone:
-                	 break;
-                 case Bridge:
-                	 ServerBridge bridge = (ServerBridge) otherEntity;
-                	/*  Von Fabio Gimmillaro
-                	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
-                	 *  Nur zum Test:
-                	 * if(!bridge.getVisibility()){
-                		 this.physicsBody.setPosition(0, 0);
-                	 }*/
-                     
+            	 break;
+             case HayBale:
+                 ServerHayBale ball = (ServerHayBale)otherEntity;
+                 if(ball.isCrossable()) {
                      this.isOnBridge = true;
-                	 break;
-                 case BridgeSwitch:	
-                	 break;
-                 case Bush:
-                	 break;
-                 default:
-                	 break;	 
+                     collidingBridgePartsCount++;
+                 } else {
+                   this.physicsBody.setLinearDamping(1);
+                       if(ball.getSpeed() > 0){
+                           this.applyDamage(ball.getVelocity().len());
+                       }
+                 }
+                 break;
+             case Bridge:
+                 this.isOnBridge = true;
+                 collidingBridgePartsCount++;
+                 break;
+             default:
+            	 break;
         	 }
-         }
-         else
-         {
-        	 switch(otherEntity.getEntityType()) 
-        	 {
+         } else if(fixture == fixtureFullBody) {
+        	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID())
-                     //	break;
-                     //if (getTeamColor() != projectile.getTeamColor())
-                     {
+                     if (getID() != projectile.getSourceID()) {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                        ServerEntityManager.getInstance().removeEntity(otherEntity);
+                     	ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
                 	 break;
-                 
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     //if(attack.getTeamColor() != this.teamColor) 
-                     if (attack.getSourceID() != getID())
-                     {
+                     if (attack.getSourceID() != getID()) {
                          applyDamage(attack.getDamage());
                          applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
                      }
                 	 break;
                  default:
-                	 break;   
+                	 break;
+        	 }      
+         } else if(fixture == fixtureDeathCheck) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     if(!isOnBridge) {
+                         this.isDead = true;
+                     }
+                     break;
+                 default:
+                     break;
              }
          }
     }
-    public void endContact(Contact contact) 	
-    {
-    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-    	Fixture fixture = getCollidingFixture(contact);
-         
-         if(otherEntity == null)
-             return;
-         
-
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-  		 {
-             switch(otherEntity.getEntityType()) 
-             {
-             	case Ei:
-             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-             			droppedEggID = -1;
-             		break;
-                case Bridge:
+    
+    
+public void endContact(Contact contact) {
+	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+	Fixture fixture = getCollidingFixture(contact);
+     
+     if(otherEntity == null)
+         return;
+     
+     if (fixture == fixtureLowerBody) {
+         switch(otherEntity.getEntityType()) {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+         	case HayBale:
+         	   ServerHayBale ball = (ServerHayBale)otherEntity;
+               if(ball.isCrossable()) {
+                   collidingBridgePartsCount--;
+                   if(collidingBridgePartsCount <= 0) {
+                       this.isOnBridge = false;
+                   }
+               }
+               break;
+            case Bridge:
+                collidingBridgePartsCount--;
+                if(collidingBridgePartsCount <= 0) {
                     this.isOnBridge = false;
-                    break;
-                case WaterZone:
-                    logger.info("spieler: endContact mit wasser");
-                    this.waterFixtures.remove(otherEntity.getID());
-                    logger.info("anzahl an waterFixtures: " + this.waterFixtures.size());
-                    break;
-                default:
-                	break;
-             }
-  		 }
-  		 else
-  		 {
-  			switch(otherEntity.getEntityType()) 
-            {
-             	default:
-             		break;
-            }
-  		 }
-    }
+                }
+                break;
+            default:
+            	break;
+         }
+	 }
+}
+
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-    //public FacingDirection  getFacingDirection()	{ return facingDirection; }
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
-    public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
+    public PlayerData		getPlayerInfo()			{ return playerData; }
     public PlayerKit		getPlayerKit()			{ return playerKit; }
-    public TeamColor		getTeamColor()			{ return teamColor; }
+    public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
+	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
     
     public void setPlayerKit(PlayerKit kit)
     {
@@ -531,16 +477,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	currentArmor = kit.getBaseArmor();
     }
     
-    public void setPlayerInfo(PlayerInfo info)
+    public void setPlayerData(PlayerData pd)
     {
-    	playerInfo = info;
+    	playerData = pd;
     }
-    
-    public void setTeamColor(TeamColor color)
-    {
-    	teamColor = color;
-    }
-    
+
     public void applySpeedBuff(float factor, float duration)
     {
     	speedBuffActive = true;
@@ -548,7 +489,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	speedBuffDuration = duration;
     	walkingState.setSpeedFactor(factor);
     }
-    
+
     public void applyAttackBuff(float factor, float duration)
     {
     	attackBuffActive = true;
@@ -585,23 +526,39 @@ public class ServerPlayer extends ServerEntity implements IStateListener
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
+		body1.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeCircle(HEIGHT / 4.0f, new Vector2(0, HEIGHT / 4.0f))
+            .sensor(true)
+        );
 
 		body1.setGravityScale(0);
 		body1.addContactListener(this);
+		body1.setLinearDamping(BRAKING);
 		setPhysicsBody(body1);
 
 		Array<Fixture> fixtures = body1.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
+		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
+
+	public void switchToState(StatePlayer state)
+	{
+
+		currentState.exit();
+		currentState = state;
+		currentState.init();
+	}
+	
 
 	@Override
 	public void switchToState(State state)
 	{
-		currentState.exit();
-		currentState = state;
-		currentState.init();
+		switchToState((StatePlayer)state);
 	}
 
     public void reset()
@@ -613,11 +570,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         		
         switchToState(idleState);
         
-        this.physicsBody.setLinearVelocity(0, 0);
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
-        this.physicsBody.setLinearVelocity(0, 0);
     }
-    
+	
     public void applyDamage(float amount)
     {
     	amount -= currentArmor;
@@ -632,7 +587,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     	if (currentHealth <= 0)
     		reset();
     }
-    
+	
 	protected void applyKnockback(FacingDirection direction, float impulse)
 	{
 		knockbackState.setWaitTime(KNOCKBACK_TIME);

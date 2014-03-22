@@ -11,6 +11,7 @@
     "straw": "data/images/straw.png",
     "switch": "data/images/switch.png",
     "contactMine": "data/images/mine.png",
+	"arrow": "data/images/arrow.png",
 
 
     "debugBush": "data/images/dbg/bush.png",
@@ -34,6 +35,7 @@
     "debugTooltip": "data/images/dbg/tooltip.png",
     "debugAttackIcon": "data/images/dbg/attackIcon.png",
 	
+	
 	"HudEmblemKnightWhite": "data/huds/wappenKnightWhite.png",
 	"HudEmblemHunterWhite": "data/huds/wappenHunterWhite.png",
 	"HudEmblemTankWhite": "data/huds/wappenTankWhite.png",
@@ -46,8 +48,5 @@
 	
 	"HudBoostCarrot": "data/huds/boost_carrot.png", 
 	"HudBoostSpinach": "data/huds/boost_spinach.png", 
-	"HudBoostClover": "data/huds/boost_clover.png",
-
-	"victoryWhite": "data/huds/victoryScreenWhite.png",
-	"victoryBlack": "data/huds/victoryScreenBlack.png" 	
+	"HudBoostClover": "data/huds/boost_clover.png"    
 }

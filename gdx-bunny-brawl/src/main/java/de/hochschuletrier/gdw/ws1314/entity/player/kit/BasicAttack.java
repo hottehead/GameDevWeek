@@ -9,5 +9,4 @@ public class BasicAttack extends AttackType
     {
     }
 
-
 }

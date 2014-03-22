@@ -11,10 +11,9 @@ public enum PlayerKit
 {
 	//		TYPE				VELO	EGG HEALTH		ARMOR	COOLDOWNS	ATTACKS
     NOOB(  EntityType.Noob, 	100.0f, 1, 	 10.0f, 	0.0f, 	0.5f, 0.5f, new BasicAttack(), new BasicAttack()),
-    
-    HUNTER(EntityType.Hunter, 	110.0f, 1, 	150.0f, 	0.0f, 	0.6f, 0.5f, new AttackShootArrow(), new BasicAttack()),
+    HUNTER(EntityType.Hunter, 	120.0f, 1, 	200.0f, 	0.0f, 	0.6f, 0.5f, new AttackShootArrow(), new BasicAttack()),
     KNIGHT(EntityType.Knight, 	100.0f, 1, 	300.0f, 	0.0f, 	0.2f, 0.5f, new AttackSwingSword(), new BasicAttack()),
-    TANK(  EntityType.Tank, 	90.0f,  3,  500.0f,		0.0f,	0.4f, 0.5f, new AttackBlow(), new BasicAttack());
+    TANK(  EntityType.Tank, 	40.0f,  3,  1000.0f,	0.0f,	0.4f, 0.5f, new AttackBlow(), new BasicAttack());
     
     private final float 	maxVelocity;
     private final int 		maxEggCount;

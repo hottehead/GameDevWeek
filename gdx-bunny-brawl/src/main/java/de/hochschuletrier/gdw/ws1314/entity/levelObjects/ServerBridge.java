@@ -125,4 +125,10 @@ public class ServerBridge extends ServerLevelObject
 	public void setVisiblity(boolean b){
 		isVisible = b;
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
 }
