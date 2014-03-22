@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import java.util.ArrayList;
+
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -416,6 +418,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
+                     Array<Contact> contacts = this.physicsBody.getBody().getWorld().getContactList();
+                     
                      if(!isOnBridge) {
                          this.isDead = true;
                      }
@@ -427,39 +431,39 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     }
     
     
-public void endContact(Contact contact) {
-	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-	Fixture fixture = getCollidingFixture(contact);
-     
-     if(otherEntity == null)
-         return;
-     
-     if (fixture == fixtureLowerBody) {
-         switch(otherEntity.getEntityType()) {
-         	case Ei:
-         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-         			droppedEggID = -1;
-         		break;
-         	case HayBale:
-         	   ServerHayBale ball = (ServerHayBale)otherEntity;
-               if(ball.isCrossable()) {
-                   collidingBridgePartsCount--;
-                   if(collidingBridgePartsCount <= 0) {
-                       this.isOnBridge = false;
+    public void endContact(Contact contact) {
+    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	Fixture fixture = getCollidingFixture(contact);
+         
+         if(otherEntity == null)
+             return;
+         
+         if (fixture == fixtureLowerBody) {
+             switch(otherEntity.getEntityType()) {
+             	case Ei:
+             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+             			droppedEggID = -1;
+             		break;
+             	case HayBale:
+             	   ServerHayBale ball = (ServerHayBale)otherEntity;
+                   if(ball.isCrossable()) {
+                       collidingBridgePartsCount--;
+                       if(collidingBridgePartsCount <= 0) {
+                           this.isOnBridge = false;
+                       }
                    }
-               }
-               break;
-            case Bridge:
-                collidingBridgePartsCount--;
-                if(collidingBridgePartsCount <= 0) {
-                    this.isOnBridge = false;
-                }
-                break;
-            default:
-            	break;
-         }
-	 }
-}
+                   break;
+                case Bridge:
+                    collidingBridgePartsCount--;
+                    if(collidingBridgePartsCount <= 0) {
+                        this.isOnBridge = false;
+                    }
+                    break;
+                default:
+                	break;
+             }
+    	 }
+    }
 
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -530,7 +534,7 @@ public void endContact(Contact contact) {
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 16.0f))
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 4.0f))
             .sensor(true));
 
 		body.setGravityScale(0);
