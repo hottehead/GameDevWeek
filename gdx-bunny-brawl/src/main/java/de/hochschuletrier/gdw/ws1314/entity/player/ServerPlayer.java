@@ -84,6 +84,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
+    private boolean do1Attack;
+    private boolean do2Attack;
     
     private float attackBuffTimer;
     private float attackBuffDuration;
@@ -160,6 +162,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	if (attackCooldownTimer > attackCooldown)
         	{
         		attackAvailable = true;
+        		
+        		if(do1Attack) {
+        		    doFirstAttack();
+        		    do1Attack = false;
+        		} else if(do2Attack) {
+        		    doSecondAttack();
+        		    do2Attack = false;
+        		}
         	}
     	}
     	
@@ -224,7 +234,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doFirstAttack();
+            		do1Attack = true;
             	}
                 break;
             case ATTACK_2:
@@ -238,7 +248,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doSecondAttack();
+            		do2Attack = true;
             	}
                 break;
             case DROP_EGG:
