@@ -337,6 +337,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	currentEggCount--;
     		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
     		droppedEggID = egg.getID();
+			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_DROP);
     	}
     }
     
@@ -364,6 +365,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 {
             		 ServerEntityManager.getInstance().removeEntity(otherEntity);
             	 this.currentEggCount++;
+					 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_PICKUP);
             	 }
             	 break;
              case ContactMine:
@@ -372,15 +374,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
                 	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Spinach:
                 	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
                      ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Clover:
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
+				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
@@ -397,6 +402,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case Bridge:
                  this.isOnBridge = true;
                  collidingBridgePartsCount++;
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  break;
              case GrassZone:
                  NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_GRASS);
@@ -609,6 +615,7 @@ public void endContact(Contact contact) {
 		switchToState(knockbackState);
 		physicsBody.setLinearDamping(BRAKING);
 		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
+		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
 	}
 	
 	private void deactivateSpeedBuff() {

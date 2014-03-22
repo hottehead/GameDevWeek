@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +56,12 @@ public class ServerBridgeSwitch extends ServerLevelObject
     public void addTargetID(Long id){
         targetIDs.add(id);
     }
+
+	@Override
+	public void setVisibility(boolean b) {
+		super.setVisibility(b);
+		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
+	}
 
 	@Override
 	public void beginContact(Contact contact)
