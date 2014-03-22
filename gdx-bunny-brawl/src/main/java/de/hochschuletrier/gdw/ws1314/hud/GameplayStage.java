@@ -28,7 +28,7 @@ public class GameplayStage extends AutoResizeStage {
 	private HealthBar healthBar;
 	private VisualBox classIcon;
 	StaticTextElement classIconText;
-	
+
 	private VisualBox buff1, buff2, buff3;
 
 	private VisualBox attackIcon, layEggIcon;
@@ -55,7 +55,6 @@ public class GameplayStage extends AutoResizeStage {
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		this.addActor(uiTable);
 		font = assetManager.getFont("verdana", 24);
-		
 
 		// FPS counter
 		fpsValue = new MinMaxValue(0, 1000, -1);
@@ -69,7 +68,8 @@ public class GameplayStage extends AutoResizeStage {
 		healthBar.setDecimalSpace(2);
 
 		// class icon
-		classIcon = new VisualBox(assetManager.getTexture("HudEmblemKnightWhite"), 20,
+		classIcon = new VisualBox(
+				assetManager.getTexture("HudEmblemKnightWhite"), 20,
 				Gdx.graphics.getHeight() - 80, 60, 60);
 		classIconText = new StaticTextElement(font, "Klasse",
 				this.classIcon.getWidth() * .5f, -14);
@@ -110,7 +110,8 @@ public class GameplayStage extends AutoResizeStage {
 		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, textScore);
 		classIconText = new StaticTextElement(font, "Team 1",
 				this.scoreTeamIcon.getWidth() * .5f, -14);
-		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, classIconText);
+		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon,
+				classIconText);
 
 		scoreEnemyIcon = new VisualBox(
 				assetManager.getTexture("debugScoreEnemy"),
@@ -122,7 +123,8 @@ public class GameplayStage extends AutoResizeStage {
 		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, textScore);
 		classIconText = new StaticTextElement(font, "Team 2",
 				this.scoreEnemyIcon.getWidth() * .5f, -14);
-		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, classIconText);
+		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon,
+				classIconText);
 	}
 
 	public void render() {
@@ -175,50 +177,50 @@ public class GameplayStage extends AutoResizeStage {
 
 	@SuppressWarnings("incomplete-switch")
 	public void setDisplayedPlayer(ClientPlayer playerEntity) {
-		// if (this.visualDataEntity != playerEntity) {
-		visualDataEntity = playerEntity;
-		switch (playerEntity.getTeamColor()) {
-		case WHITE:
-			switch (playerEntity.getEntityType()) {
-			case Knight:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemKnightWhite"));
+		if (this.visualDataEntity != playerEntity) {
+			visualDataEntity = playerEntity;
+			switch (playerEntity.getTeamColor()) {
+			case WHITE:
+				switch (playerEntity.getEntityType()) {
+				case Knight:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemKnightWhite"));
+					break;
+				case Tank:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemTankWhite"));
+					break;
+				case Hunter:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemHunterWhite"));
+					break;
+				default:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemHunterBlack"));
+					break;
+				}
 				break;
-			case Tank:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemTankWhite"));
-				break;
-			case Hunter:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemHunterWhite"));
-				break;
-			default:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemHunterBlack"));
+			case BLACK:
+				switch (playerEntity.getEntityType()) {
+				case Knight:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemKnightBlack"));
+					break;
+				case Tank:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemTankBlack"));
+					break;
+				case Hunter:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemHunterBlack"));
+					break;
+				default:
+					this.classIcon.setTexture(assetManager
+							.getTexture("HudEmblemHunterBlack"));
+					break;
+				}
 				break;
 			}
-			break;
-		case BLACK:
-			switch (playerEntity.getEntityType()) {
-			case Knight:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemKnightBlack"));
-				break;
-			case Tank:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemTankBlack"));
-				break;
-			case Hunter:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemHunterBlack"));
-				break;
-			default:
-				this.classIcon.setTexture(assetManager
-						.getTexture("HudEmblemHunterBlack"));
-				break;
-			}
-			break;
-		// }
 		}
 	}
 
