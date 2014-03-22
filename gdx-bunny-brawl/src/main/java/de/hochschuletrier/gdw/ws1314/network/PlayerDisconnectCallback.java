@@ -6,5 +6,5 @@ public interface PlayerDisconnectCallback{
 	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
 	 * Danach ist eine Funktion wie LobbyUpdate notwendig um diese änderung den Clients mitzutzeilen
 	 */
-	public void callback(Integer[] playerid);
+	public void playerDisconnectCallback(Integer[] playerid);
 }

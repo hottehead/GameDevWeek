@@ -1,18 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.InputProcessor;
-
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
@@ -21,8 +14,14 @@ import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Menu state
@@ -43,7 +42,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
     private List<PlayerData> playerDatas = null;
     
-    private String mapName = "map01";
+    private String mapName;
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
@@ -89,6 +88,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		isServerInitialized = false;
 		isClientInitialized = false;
 		
+		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
+		
 		this.playerDatas = new ArrayList<>();
 		
 		NetworkManager.getInstance().setClientIdCallback(this);
@@ -109,7 +110,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	}
 
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.warn(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
@@ -121,10 +122,12 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	}
 
 	@Override
-	public void callback(int playerid) {
-		logger.info("PlayerID received");
-		PlayerData p = new PlayerData(playerid, "Long John", EntityType.Hunter, TeamColor.WHITE, true);
+	public void clientIdCallback(int playerid) {
+		PlayerData p = new PlayerData(playerid, Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"), EntityType.Hunter, TeamColor.WHITE, true);
+	
+		ClientEntityManager.getInstance().setPlayerData(p);
 		this.playerDatas.add(p);
+		
 		internalServerInit();
 		internalClientInit();
 	}
@@ -135,7 +138,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
         }
 		
 		serverGame = new ServerGame(playerDatas);
-		serverGame.init(assetManager, mapName);
+		serverGame.init(assetManager, this.mapName);
 		
 		isServerInitialized = true;
 	}

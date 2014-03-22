@@ -37,7 +37,7 @@ public class ServerDatagramHandler implements DatagramHandler{
 		NetworkManager
 				.getInstance()
 				.getPlayerUpdateCallback()
-				.callback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(),
+				.playerUpdateCallback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(),
 						playerUpdateDatagram.isAccept());
 	}
 
@@ -80,7 +80,7 @@ public class ServerDatagramHandler implements DatagramHandler{
 	@Override
 	public void handle(MatchUpdateDatagram matchUpdateDatagram, NetConnection connection){
 		// connection.setAttachment(matchUpdateDatagram);
-		NetworkManager.getInstance().getMatchUpdateCallback().callback(matchUpdateDatagram.getMap());
+		NetworkManager.getInstance().getMatchUpdateCallback().matchUpateCallback(matchUpdateDatagram.getMap());
 	}
 
 	@Override
