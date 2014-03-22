@@ -31,13 +31,14 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 10.0f;
+	private final float DURATION_TIME_IN_WATER = 10000.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 1.0f;
 	private final float WATER_DAMPING = 100.0f;
 	
 	private float speed;
-	private boolean acrossable = false;
+	private boolean acrossable;
+	private float lifetime;
 	
 	private Fixture fixtureWaterCollCheck;
 	private Fixture fixtureMain;
@@ -48,6 +49,8 @@ public class ServerHayBale extends ServerLevelObject
 	{
 		super();
 		speed = 0;
+		lifetime = 0;
+		acrossable = false;
 	}
 	
 	@Override
@@ -91,7 +94,8 @@ public class ServerHayBale extends ServerLevelObject
 		    switch(otherEntity.getEntityType()) {
 		        case WaterZone:
                     if(fixture == fixtureWaterCollCheck) {
-                        this.physicsBody.setLinearDamping(WATER_DAMPING);
+                        this.physicsBody.setLinearVelocity(new Vector2());
+                        this.fixtureMain.setSensor(true);
                         this.acrossable = true;
                         speed = 0;
                     }
@@ -152,7 +156,8 @@ public class ServerHayBale extends ServerLevelObject
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeCircle(5));
+            .shapeCircle(5)
+            .sensor(true));
         
         body.setGravityScale(0);
         body.addContactListener(this);
@@ -169,7 +174,12 @@ public class ServerHayBale extends ServerLevelObject
 
     @Override
     public void update(float deltaTime) {
-        
+        if(acrossable) {
+            lifetime += deltaTime;
+            if(lifetime > DURATION_TIME_IN_WATER) {
+                ServerEntityManager.getInstance().removeEntity(this);
+            }
+        }
     }
 
 }
