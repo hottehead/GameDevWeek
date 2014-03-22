@@ -84,6 +84,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
+    private boolean do1Attack;
+    private boolean do2Attack;
     
     private float attackBuffTimer;
     private float attackBuffDuration;
@@ -159,6 +161,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	if (attackCooldownTimer > attackCooldown)
         	{
         		attackAvailable = true;
+        		
+        		if(do1Attack) {
+        		    doFirstAttack();
+        		    do1Attack = false;
+        		} else if(do2Attack) {
+        		    doSecondAttack();
+        		    do2Attack = false;
+        		}
         	}
     	}
     	
@@ -223,7 +233,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doFirstAttack();
+            		do1Attack = true;
             	}
                 break;
             case ATTACK_2:
@@ -237,7 +247,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doSecondAttack();
+            		do2Attack = true;
             	}
                 break;
             case DROP_EGG:
@@ -508,25 +518,25 @@ public void endContact(Contact contact) {
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		PhysixBody body1 = new PhysixBodyDef(BodyType.DynamicBody, manager)
+		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(properties.getFloat("x"), properties.getFloat("y"))
 				.fixedRotation(false)
 				.gravityScale(0.0f)
 				.create();
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
@@ -534,12 +544,12 @@ public void endContact(Contact contact) {
             .sensor(true)
         );
 
-		body1.setGravityScale(0);
-		body1.addContactListener(this);
-		body1.setLinearDamping(BRAKING);
-		setPhysicsBody(body1);
+		body.setGravityScale(0);
+		body.addContactListener(this);
+		body.setLinearDamping(BRAKING);
+		setPhysicsBody(body);
 
-		Array<Fixture> fixtures = body1.getBody().getFixtureList();
+		Array<Fixture> fixtures = body.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
 		fixtureDeathCheck = fixtures.get(2);

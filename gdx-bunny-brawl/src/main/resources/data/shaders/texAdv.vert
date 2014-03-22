@@ -4,7 +4,6 @@ attribute vec4 a_position;
 attribute vec2 a_texCoord0;
 attribute vec4 a_color;
 
-uniform sampler2D u_prevStep;
 uniform sampler2D u_texture;
 uniform mat4 u_projTrans;
 

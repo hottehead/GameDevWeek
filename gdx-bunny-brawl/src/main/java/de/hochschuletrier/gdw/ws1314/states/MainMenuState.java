@@ -62,7 +62,7 @@ public class MainMenuState extends GameState {
 	@Override
 	public void update(float delta) {
 		stateTime += delta;
-		music.update(stateChangeDuration);
+		music.update();
     }
 
     @Override
@@ -82,8 +82,8 @@ public class MainMenuState extends GameState {
     @Override
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', this.stateChangeDuration);
-        }
+    		this.music.setFade('o', 2000);
+    	}
 		
         stage.getStartServerButton().removeListener(this.startServerClickListener);
 		stage.getStartClientButton().removeListener(this.startClientClickListener);
