@@ -359,8 +359,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 ServerEgg egg = (ServerEgg) otherEntity;
             	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
             	 {
-            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
-            	 this.currentEggCount++;
+            		 if(egg.getVisibility()){
+	            		 this.currentEggCount++;
+            		 }
             	 }
             	 break;
              case ContactMine:

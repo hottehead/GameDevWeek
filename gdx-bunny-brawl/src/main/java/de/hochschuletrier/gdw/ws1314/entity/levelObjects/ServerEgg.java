@@ -41,7 +41,21 @@ public class ServerEgg extends ServerLevelObject
 
     @Override
     public void beginContact(Contact contact) {
-        
+    	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	 
+    	 switch(otherEntity.getEntityType()){
+    	 	case Hunter:
+    	 	case Noob:
+    	 	case Tank:
+    	 	case Knight:
+    	 		ServerPlayer player = (ServerPlayer) otherEntity;
+    	 		System.out.println("Ich bin da");
+    	 		System.out.println(getVisibility());
+    	 		if(player.getCurrentEggCount() < player.getPlayerKit().getMaxEggCount()){
+    	 			this.setVisibility(false);
+    	 		}
+    	 		System.out.println(this.getVisibility());
+    	 }
     }
 
     @Override

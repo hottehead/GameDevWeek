@@ -1,5 +1,17 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
@@ -9,10 +21,10 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
+import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
@@ -20,16 +32,14 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.TeamSpawnZone;
 import de.hochschuletrier.gdw.ws1314.entity.Zone;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBush;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -46,6 +56,7 @@ public class LevelLoader {
 
     private static HashMap<Integer,ArrayList<Long>> bridgeSwitchIDs = new HashMap<>();
     private static HashMap<Integer,ArrayList<Long>> bridgeIDs = new HashMap<>();
+    private static HashMap<Integer,ArrayList<Long>> contactMineIDs = new HashMap<>();
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager, GameInfo gameInfo) {
@@ -58,6 +69,7 @@ public class LevelLoader {
 		entityManager.Clear();
         bridgeSwitchIDs.clear();
         bridgeIDs.clear();
+        contactMineIDs.clear();
 		physicsManager.reset();
 
 		LevelLoader.gameInfo = gameInfo;
@@ -92,7 +104,7 @@ public class LevelLoader {
         connectBridges();
 	}
 
-    private static void connectBridges(){
+	private static void connectBridges(){
         for(Map.Entry<Integer,ArrayList<Long>> bswitch : bridgeSwitchIDs.entrySet() )
         {
             if(!bridgeIDs.containsKey(bswitch.getKey())) {
@@ -112,6 +124,7 @@ public class LevelLoader {
         }
 
     }
+	
 
 	private static void loadObjectLayer(Layer layer) {
 		for (LayerObject object : layer.getObjects()) {
@@ -394,6 +407,8 @@ public class LevelLoader {
                 ServerBridgeSwitch bswitch = entityManager.createEntity(ServerBridgeSwitch.class,pos,properties);
                 addSwitchID(name,bswitch);
                 break;
+            case "mine":
+            	ServerContactMine cMine = entityManager.createEntity(ServerContactMine.class, pos, properties);
 		}
 
 		if (entity != null) {
