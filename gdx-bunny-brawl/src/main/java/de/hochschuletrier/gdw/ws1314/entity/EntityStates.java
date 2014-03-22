@@ -11,3 +11,4 @@ public enum EntityStates {
 	WALKING,
 	WAITING
 }
+

@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
@@ -31,13 +29,13 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 10.0f;
+	private final float DURATION_TIME_IN_WATER = 10000.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 1.0f;
-	private final float WATER_DAMPING = 100.0f;
 	
 	private float speed;
-	private boolean acrossable = false;
+	private boolean acrossable;
+	private float lifetime;
 	
 	private Fixture fixtureWaterCollCheck;
 	private Fixture fixtureMain;
@@ -48,6 +46,8 @@ public class ServerHayBale extends ServerLevelObject
 	{
 		super();
 		speed = 0;
+		lifetime = 0;
+		acrossable = false;
 	}
 	
 	@Override
@@ -69,7 +69,6 @@ public class ServerHayBale extends ServerLevelObject
 		    switch(otherEntity.getEntityType()) {
 	            case Projectil:
 	                if(!acrossable){
-	                    this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 	                    ServerProjectile projectile = (ServerProjectile) otherEntity;
 	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
@@ -77,11 +76,12 @@ public class ServerHayBale extends ServerLevelObject
 	                }
 	                break;
 	            case SwordAttack:
-	                this.physicsBody.setLinearDamping(NORMAL_DAMPING);
-	                ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
-	                ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-	                this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
-	                                                player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+	                if(!acrossable) {
+	                    ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
+	                    ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
+	                    this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
+	                                                    player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+	                }
 	                break;
 	            default: 
 	                this.acrossable = false;
@@ -91,7 +91,8 @@ public class ServerHayBale extends ServerLevelObject
 		    switch(otherEntity.getEntityType()) {
 		        case WaterZone:
                     if(fixture == fixtureWaterCollCheck) {
-                        this.physicsBody.setLinearDamping(WATER_DAMPING);
+                        this.physicsBody.setLinearVelocity(new Vector2());
+                        this.fixtureMain.setSensor(true);
                         this.acrossable = true;
                         speed = 0;
                     }
@@ -107,20 +108,6 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
-		ServerEntity otherEntity = this.identifyContactFixtures(contact);
-        
-        if(otherEntity == null){
-            return;
-        }
-        
-        switch(otherEntity.getEntityType()) {
-            case WaterZone:
-//                this.physicsBody.setLinearDamping(0);
-//                this.acrossable = false;
-                break;
-            default:
-                break;
-        }
 	}
 
 	@Override
@@ -152,10 +139,12 @@ public class ServerHayBale extends ServerLevelObject
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeCircle(5));
+            .shapeCircle(5)
+            .sensor(true));
         
         body.setGravityScale(0);
         body.addContactListener(this);
+        body.setLinearDamping(NORMAL_DAMPING);
         setPhysicsBody(body);
         
         Array<Fixture> fixtures = body.getBody().getFixtureList();
@@ -169,7 +158,12 @@ public class ServerHayBale extends ServerLevelObject
 
     @Override
     public void update(float deltaTime) {
-        
+        if(acrossable) {
+            lifetime += deltaTime;
+            if(lifetime > DURATION_TIME_IN_WATER) {
+                ServerEntityManager.getInstance().removeEntity(this);
+            }
+        }
     }
 
 }
