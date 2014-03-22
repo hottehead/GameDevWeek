@@ -1,5 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -28,9 +31,12 @@ public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
 	private final float SCL_VELOCITY = 300.0f;
+	private final float NORMAL_DAMPING = 1.0f;
+	private final float WATER_DAMPING = 100.0f;
 	private float speed;
 	private boolean acrossable = false;
 	
+	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 	
 	public ServerHayBale()
 	{
@@ -53,19 +59,24 @@ public class ServerHayBale extends ServerLevelObject
 		}
 		switch(otherEntity.getEntityType()) {
 			case Projectil:
-				ServerProjectile projectile = (ServerProjectile) otherEntity;
-				this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-											  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
-				speed = 1;
+				if(!acrossable){
+					this.physicsBody.setLinearDamping(NORMAL_DAMPING);
+					ServerProjectile projectile = (ServerProjectile) otherEntity;
+					this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+												  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+					speed = 1;
+				}
 				break;
 			case SwordAttack:
+				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
 				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
+												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
 				break;
 			case WaterZone:
-				this.physicsBody.setLinearDamping(100);
+				logger.info("Ich bin im Wasser");
+				this.physicsBody.setLinearDamping(WATER_DAMPING);
 				this.acrossable = true;
 				speed = 0;
 				break;
@@ -73,16 +84,10 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-//				if(!acrossable){
-//				ServerPlayer player2 = (ServerPlayer) otherEntity;
-//				this.physicsBody.setLinearDamping(1);
-//					if(speed > 0){
-//						player2.applyDamage(10);
-//					}
-//				}
-//				speed = 0;
+
 				break;
-			default:
+			default: 
+				this.acrossable = false;
 				break;
 		}
 	}
@@ -90,11 +95,12 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
-	    ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		ServerEntity otherEntity = this.identifyContactFixtures(contact);
         
         if(otherEntity == null){
             return;
         }
+        
         switch(otherEntity.getEntityType()) {
             case WaterZone:
                 this.physicsBody.setLinearDamping(0);
@@ -119,24 +125,20 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
-                .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-                .fixedRotation(true).create();
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
+            .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+            .fixedRotation(true).create();
 
-            if(!acrossable){
-            	body.createFixture(new PhysixFixtureDef(manager)
-				.density(0.5f)
-				.friction(0.0f)
-				.restitution(0.0f)
-				.shapeBox(50,50));
-            }else{
-	            body.createFixture(new PhysixFixtureDef(manager)
-	            	.sensor(true)
-	            	.shapeBox(60,60));
-            }
-            body.setGravityScale(0);
-            body.addContactListener(this);
-            setPhysicsBody(body);
+        
+    	body.createFixture(new PhysixFixtureDef(manager)
+		    .density(0.5f)
+		    .friction(0.0f)
+		    .restitution(0.0f)
+		    .shapeBox(50,50));
+        
+        body.setGravityScale(0);
+        body.addContactListener(this);
+        setPhysicsBody(body);
 	}
 	
 	public boolean isCrossable() {

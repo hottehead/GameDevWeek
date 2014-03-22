@@ -403,7 +403,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  if(ball.isCrossable()) {
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
-                 }
+                 } else {
+                   this.physicsBody.setLinearDamping(1);
+                       if(ball.getSpeed() > 0){
+                           this.applyDamage(ball.getVelocity().len());
+                       }
+                   }
                  break;
              case Bridge:
                  this.isOnBridge = true;
@@ -416,9 +421,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              default:
             	 break;
         	 }
-         }
-         else if(fixture == fixtureFullBody)
-         {
+         } else if(fixture == fixtureFullBody) {
         	 switch(otherEntity.getEntityType()) 
         	 {
                  case Projectil:
