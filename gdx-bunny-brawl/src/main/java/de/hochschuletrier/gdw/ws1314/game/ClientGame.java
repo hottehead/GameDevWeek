@@ -163,6 +163,7 @@ public class ClientGame {
 		cameraFollowingBehaviour.update(delta);
 		
 		stage.setFPSCounter(delta);
+		stage.step();
 	}
 
 	public TiledMap loadMap(String filename) {
