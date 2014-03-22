@@ -1,9 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
-
-import java.util.ArrayList;
-
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -117,6 +114,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private boolean isDead;
     private int collidingBridgePartsCount;
     private float deathfreeze;
+    private boolean isInDeadZone;
+    
+    Vector2 dir = new Vector2(0,0);
     
     
     public ServerPlayer()
@@ -146,6 +146,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	isDead = false;
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
+    	isInDeadZone = false;
     }
     
     public void enable() {}
@@ -166,6 +167,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearVelocity(new Vector2());
             this.physicsBody.setLinearDamping(2000);
             return;
+        }
+        if(!this.isOnBridge && this.isInDeadZone) {
+            this.isDead = true;
+            this.isOnBridge = false;
+            this.isInDeadZone = false;
         }
         
     	currentState.update(deltaTime);
@@ -202,8 +208,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
 
-    //NOT FINAL! CHANGE AS NEEDED
-    Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent) {
         switch (intent){
             case MOVE_UP_ON:
@@ -308,8 +312,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     protected void moveBegin(FacingDirection dir) {
     	setFacingDirection(desiredDirection);
 
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+//    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+//		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
     }
     
@@ -400,9 +404,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case BRIDGE_VERTICAL_TOP:
                  ServerBridge b = (ServerBridge)otherEntity;
                  if(b.getVisibility()) {
+                     if(!this.isOnBridge) {
+                         NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                     }
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
-    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  }
                  break;
              case GrassZone:
@@ -436,10 +442,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
-                 case WaterZone:                     
-                     if(!isOnBridge) {
-                         this.isDead = true;
-                     }
+                 case WaterZone:
+                     this.isInDeadZone = true;
+//                     if(!isOnBridge) {
+//                         this.isDead = true;
+//                     }
                      break;
                  default:
                      break;
@@ -480,11 +487,23 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                     collidingBridgePartsCount--;
                     if(collidingBridgePartsCount <= 0) {
                         this.isOnBridge = false;
+//                        if(this.isInDeadZone) {
+//                            this.isDead = true;
+//                        }
                     }
                     break;
                 default:
                 	break;
              }
+    	 } else if(fixture == fixtureDeathCheck) {
+    	     switch(otherEntity.getEntityType()) {
+    	         case AbyssZone:
+    	         case WaterZone:
+    	             this.isInDeadZone = false;
+    	             break;
+    	         default:
+    	             break;
+    	     }
     	 }
     }
 
