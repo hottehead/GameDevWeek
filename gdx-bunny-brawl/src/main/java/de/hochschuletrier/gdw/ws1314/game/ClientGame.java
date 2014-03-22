@@ -20,9 +20,11 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -53,9 +55,13 @@ public class ClientGame {
 	private TextureAdvection advShader;
 
 	private GameplayStage stage;
+        private int scoreBlack;
+        private int scoreWhite;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
+                scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
+                scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
 		netManager = NetworkManager.getInstance();
 		
 		inputHandler = new InputHandler();
@@ -164,6 +170,14 @@ public class ClientGame {
 		
 		stage.setFPSCounter(delta);
 		stage.step();
+                if (scoreBlack < entityManager.getGameInfo().getTeamPointsBlack()) {
+                    stage.advanceScoreOwnTeam();
+                    scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
+                }
+                if (scoreWhite < entityManager.getGameInfo().getTeamPointsWhite()) {
+                    stage.advanceScoreEnemeyTeam();
+                    scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
+                }
 	}
 
 	public TiledMap loadMap(String filename) {
