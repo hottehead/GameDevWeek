@@ -65,23 +65,6 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.add(playerNameField);
 		
-		Slider slider = new Slider(0, 100, 5, false, defaultSkin);
-		uiTable.add(slider);
-
-//		uiTable.row().padTop(20);
-//		Label label = new Label("escape still works - level list not", defaultSkin);
-//		uiTable.add(label);
-//		uiTable.row().padTop(20);
-		
-//		//level list
-//		levelList = new LevelList(defaultSkin);
-//		//add levels for testing
-//		levelList.addLevel("does nothing");
-//		levelList.addLevel("new level");
-//		uiTable.add(levelList);
-//		
-//		uiTable.row();
-		
 		//start Button
 		startButton = new TextButton("LADEN", defaultSkin);
 		uiTable.add(startButton).row();
@@ -137,7 +120,7 @@ public class MainMenuStage extends AutoResizeStage {
 	}
 	
 	public TextButton getPlayServerButton() {
-		return playClient;
+		return playServer;
 	}
 	
 	public TextButton getOptionsButton() {

@@ -32,6 +32,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private Logger logger;
 	private OptionListener optionListener;
 	private ExitListener exitlistener;
+	private PlayServerListener playServerListener;
 	private PlayListener playListener; //testing
 
 	public MainMenuState() {
@@ -49,6 +50,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		this.optionListener = new OptionListener();
 		this.playListener = new PlayListener(); 
 		this.exitlistener = new ExitListener();
+		this.playServerListener = new PlayServerListener();
 	}
 	
 	public void render() {
@@ -68,6 +70,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getStartButton().addListener(this.playListener);
 		stage.getExitButton().addListener(this.exitlistener);
+		stage.getPlayServerButton().addListener(this.playServerListener);
 
 		if (this.music.isMusicPlaying())
 			//this.music.deMute();
@@ -80,6 +83,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 		//this.music.mute();
 		this.music.setFade('o', this.stateChangeDuration);
 		
+		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getStartButton().removeListener(this.playListener);
 		stage.getExitButton().removeListener(this.exitlistener);
