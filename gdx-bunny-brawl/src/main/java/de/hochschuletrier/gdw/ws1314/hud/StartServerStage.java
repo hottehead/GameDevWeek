@@ -15,7 +15,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
-import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
+import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 
 public class StartServerStage extends AutoResizeStage {
 	Skin defaultSkin;
@@ -76,7 +76,7 @@ public class StartServerStage extends AutoResizeStage {
 		return startServer;
 	}
 
-	public LevelListElement getSelectedLevel() {
+	public ListElement getSelectedLevel() {
 		return levelList.getSelected();
 	}
 
