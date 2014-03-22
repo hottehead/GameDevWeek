@@ -89,12 +89,32 @@ public class ServerBridge extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
+	    int width, height;
+	    switch(this.type) {
+	        case BRIDGE_HORIZONTAL_LEFT:
+	        case BRIDGE_HORIZONTAL_RIGHT:
+	        case BRIDGE_HORIZONTAL_MIDDLE:
+	            width = 32;
+	            height = 96;
+	            break;
+	        case BRIDGE_VERTICAL_BOTTOM:
+	        case BRIDGE_VERTICAL_MIDDLE:
+	        case BRIDGE_VERTICAL_TOP:
+	            width = 96;
+	            height = 32;
+	            break;
+	        default:
+	            width = 100;
+	            height = 200;
+	            break;
+	    }
+	    
 		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
 									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
 									.fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager)
 									.density(0.5f).friction(0.0f)
-									.restitution(0.0f).sensor(true).shapeBox(100, 200));
+									.restitution(0.0f).sensor(true).shapeBox(width, height));
 		
 		body.setGravityScale(0);
 		body.addContactListener(this);
