@@ -11,6 +11,8 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +125,11 @@ public class ServerBridge extends ServerLevelObject
 		return isVisible;
 	}
 	public void setVisiblity(boolean b){
+		if(isVisible)	{
+			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.BRIDGE_IN);
+		} else{
+			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.BRIDGE_OUT);
+		}
 		isVisible = b;
 	}
 
