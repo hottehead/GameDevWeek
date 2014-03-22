@@ -125,7 +125,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public ServerPlayer()
     {
     	super();
-    	
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
@@ -135,7 +134,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-
+    	pickedUpEggs = new ArrayList<Long>();
     	desiredDirection = FacingDirection.NONE;
     	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
