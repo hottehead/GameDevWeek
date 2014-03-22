@@ -63,11 +63,11 @@ public class DrawUtil {
 
 	public static void setViewport(float width, float height) {
 		camera.setToOrtho(true, width, height);
-//		camera.position.set(width / 2, height / 2, 0);
+		camera.position.set(width / 2, height / 2, 0);
 		camera.update(true);
 		
 		screenSpace.setToOrtho(true, width, height);
-//		screenSpace.position.set(width * 0.5f, height * 0.5f, 0);
+		screenSpace.position.set(width * 0.5f, height * 0.5f, 0);
 		screenSpace.update(true);
 	}
 
