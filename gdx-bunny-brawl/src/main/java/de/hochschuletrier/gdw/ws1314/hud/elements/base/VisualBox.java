@@ -25,5 +25,9 @@ public class VisualBox extends VisualElement {
 	public void draw() {
 		HudRendering.drawElement(texture, positionX, positionY, width, height);
 	}
+	
+	public void setTexture(Texture tex) {
+		texture = tex;
+	}
 
 }

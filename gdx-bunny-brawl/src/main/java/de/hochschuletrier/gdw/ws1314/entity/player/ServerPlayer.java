@@ -26,6 +26,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -391,9 +392,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  }
                  break;
              case Bridge:
-                 this.isOnBridge = true;
-                 collidingBridgePartsCount++;
-				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+             case BRIDGE_HORIZONTAL_LEFT:
+             case BRIDGE_HORIZONTAL_MIDDLE:
+             case BRIDGE_HORIZONTAL_RIGHT:
+             case BRIDGE_VERTICAL_BOTTOM:
+             case BRIDGE_VERTICAL_MIDDLE:
+             case BRIDGE_VERTICAL_TOP:
+                 ServerBridge b = (ServerBridge)otherEntity;
+                 if(b.getVisibility()) {
+                     this.isOnBridge = true;
+                     collidingBridgePartsCount++;
+    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                 }
                  break;
              case GrassZone:
                  NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_GRASS);
@@ -426,9 +436,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
-                 case WaterZone:
-                     Array<Contact> contacts = this.physicsBody.getBody().getWorld().getContactList();
-                     
+                 case WaterZone:                     
                      if(!isOnBridge) {
                          this.isDead = true;
                      }
@@ -463,6 +471,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                    }
                    break;
                 case Bridge:
+                case BRIDGE_HORIZONTAL_LEFT:
+                case BRIDGE_HORIZONTAL_MIDDLE:
+                case BRIDGE_HORIZONTAL_RIGHT:
+                case BRIDGE_VERTICAL_BOTTOM:
+                case BRIDGE_VERTICAL_MIDDLE:
+                case BRIDGE_VERTICAL_TOP:
                     collidingBridgePartsCount--;
                     if(collidingBridgePartsCount <= 0) {
                         this.isOnBridge = false;

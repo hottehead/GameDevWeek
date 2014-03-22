@@ -116,7 +116,7 @@ public class ServerBridge extends ServerLevelObject
 									.fixedRotation(false).create();
 		body.createFixture(new PhysixFixtureDef(manager)
 									.density(0.5f).friction(0.0f)
-									.restitution(0.0f).sensor(true).shapeBox(100,200));
+									.restitution(0.0f).sensor(true).shapeBox(100, 200));
 		
 		body.setGravityScale(0);
 		body.addContactListener(this);

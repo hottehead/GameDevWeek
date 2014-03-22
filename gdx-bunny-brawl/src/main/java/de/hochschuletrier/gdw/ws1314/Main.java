@@ -1,11 +1,5 @@
 package de.hochschuletrier.gdw.ws1314;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -19,7 +13,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
@@ -41,6 +34,11 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -61,6 +59,8 @@ public class Main extends StateBasedGame {
 	private Skin skin;
 	public static final InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	public static final String playerName = "Long John " + (int) (Math.random() * 100.0);
+	public static boolean startAsServer = false;
+	public static int port = 0;
 
 	public static Main getInstance() {
 		if (instance == null) {
@@ -245,11 +245,21 @@ public class Main extends StateBasedGame {
 
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "LibGDX Test";
+		cfg.title = "Bunny Brawl - GameDevWeek WS 2013/14";
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
-		
+		for(String s:args){ //start as server console argument: -server[:port]
+			if(s.toLowerCase().contains("-server".toLowerCase())){
+				startAsServer = true;
+				if(s.toLowerCase().contains(":".toLowerCase())){
+					String [] split = s.split("[:]");
+					if(split.length > 1){
+						port = Integer.parseInt(split[1]);
+					}
+				}
+			}
+		}
 		new LwjglApplication(getInstance(), cfg);
 	}
 }
