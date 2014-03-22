@@ -298,18 +298,18 @@
     },
 	"hunterBlackIdleDown": {
         "filename": "data/animations/HunterBlack_IdleDown.png",
-        "frames" : 3,
-        "frameDuration": [ 2.0, 0.2, 0.2 ] ,
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 3,
+        "columns": 4,
         "rows" : 1
     },
 	"hunterBlackIdleRight": {
         "filename": "data/animations/HunterBlack_IdleRight.png",
-        "frames" : 3,
-        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "frames" : 2,
+        "frameDuration": [ 2.0, 0.5 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 3,
+        "columns": 2,
         "rows" : 1
     },
 	"hunterBlackIdleLeft": {

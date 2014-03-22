@@ -42,8 +42,11 @@ public class MaterialManager {
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.WHITE), new KnightMaterialDef().get());
-		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.WHITE), new HunterMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.WHITE), new KnightMaterialDef(TeamColor.WHITE).get());
+		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.WHITE), new HunterMaterialDef(TeamColor.WHITE).get());
+		
+		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.BLACK), new KnightMaterialDef(TeamColor.BLACK).get());
+		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.BLACK), new HunterMaterialDef(TeamColor.BLACK).get());
 		
 		this.provideMaterials(new RenderType(EntityType.Projectil), new ArrowMaterialDef().get());
 

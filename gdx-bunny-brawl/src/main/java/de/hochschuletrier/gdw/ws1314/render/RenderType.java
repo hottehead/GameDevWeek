@@ -34,8 +34,8 @@ public class RenderType {
 		}
 	}
 	
-	public RenderType(EntityType entityType, TeamColor facing) {
-		setType(entityType, facing);
+	public RenderType(EntityType entityType, TeamColor teamColor) {
+		setType(entityType, teamColor);
 	}
 	
 	public RenderType(EntityType type) {
