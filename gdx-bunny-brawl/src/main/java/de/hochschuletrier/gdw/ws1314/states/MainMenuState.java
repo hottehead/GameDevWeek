@@ -28,6 +28,9 @@ public class MainMenuState extends GameState {
 	private ExitListener exitlistener;
 	private PlayServerListener playServerListener;
 	private PlayClientListener playClientListener;
+	
+	//test
+	private StartServerAndPlayListener startServerAndPlayListener;
 
     public MainMenuState() {
     }
@@ -47,6 +50,7 @@ public class MainMenuState extends GameState {
 		this.exitlistener = new ExitListener();
 		this.playServerListener = new PlayServerListener();
 		this.playClientListener = new PlayClientListener();
+        startServerAndPlayListener = new StartServerAndPlayListener();
 	}
 	
     public void render() {
@@ -77,13 +81,15 @@ public class MainMenuState extends GameState {
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
 		stage.getPlayClientButton().addListener(this.playClientListener);
+		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
 	}
 
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
     		this.music.setFade('o', 2500);
     	}
-    	
+
+    	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
     	stage.getPlayClientButton().removeListener(this.playClientListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
@@ -170,4 +176,13 @@ public class MainMenuState extends GameState {
 			Gdx.app.exit();
 		}
 	}
+	
+	//test	
+	private class StartServerAndPlayListener extends ClickListener {
+    	public void clicked(InputEvent event, float x, float y) {
+    		logger.warn("Changing to DualGameplayState - to be removed");
+			GameStates.DUALGAMEPLAY.init(assetManager);
+			GameStates.DUALGAMEPLAY.activate();
+    	}
+    }
 }
