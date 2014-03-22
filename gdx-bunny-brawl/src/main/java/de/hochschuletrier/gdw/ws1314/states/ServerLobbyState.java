@@ -64,6 +64,10 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
     	this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 
     	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		if(!NetworkManager.getInstance().isServer()){
+			onLeave();
+		}
 	}
 
 	@Override
