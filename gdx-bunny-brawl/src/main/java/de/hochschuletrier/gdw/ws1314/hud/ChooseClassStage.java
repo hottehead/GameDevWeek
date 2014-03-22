@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -35,10 +36,11 @@ public class ChooseClassStage extends AutoResizeStage {
 		this.addActor(uiTable);
 		font = assetManager.getFont("verdana", 24);
 		
-//		Label label = new Label();
-		
 		Label label = new Label("Waehle eine Klasse", defaultSkin);
 		uiTable.add(label);
+		
+		ButtonGroup group = new ButtonGroup(null);
+//		ImageButton classHunter = new ImageButton
 	}
 
 	public void render() {
