@@ -108,7 +108,7 @@ public class LocalSound2 {
 					return "speech-general-fall_" + random;
 				}
 			case DESTROY:
-				return "speech-tank-yeay_3speech-tank-yeay_3";
+				return "speech-tank-yeay_3";
 			case EGG_PICKUP:
 				if(entity.getEntityType() == EntityType.Tank) {
 					int random = this.random(1, 3);
