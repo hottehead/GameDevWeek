@@ -78,16 +78,9 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
-<<<<<<< HEAD
-		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		//if (this.stateMusic.isMusicPlaying())
-			//this.stateMusic.update();
-			
-=======
 			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
 		}
 		
->>>>>>> 697e41db8ecb2a9e1062cfcc2ab918c082f81725
 		if (isClientInitialized) {
 			clientGame.update(delta);
 			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
@@ -95,7 +88,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		}
 		
 		fpsCalc.addFrame();
-	}}
+	}
 
 	@Override
 	public void onEnter() {
