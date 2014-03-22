@@ -23,11 +23,18 @@ public class OptionStage extends AutoResizeStage {
 	private Slider master, music, sound;
 	private TextButton back;
 	
+	private boolean isInited = false;
+	
 	public OptionStage() {
 		super();
 	}
 
 	public void init(AssetManagerX assetManager) {
+		if (isInited)
+			return;
+		else
+			isInited = !isInited;
+			
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
@@ -76,7 +83,12 @@ public class OptionStage extends AutoResizeStage {
 		Table.drawDebug(this);
 	}
 	
-	//getter for 
+	public void clear() {
+		super.clear();
+		isInited = false;
+	}
+	
+	//getter for sound slider
 	public Slider getMasterSlider() {
 		return master;
 	}
