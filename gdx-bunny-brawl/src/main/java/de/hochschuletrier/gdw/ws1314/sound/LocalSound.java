@@ -118,8 +118,10 @@ public class LocalSound {
 			case HIT_BY_ATTACK_1:
 			case HIT_BY_ATTACK_2:
 				return "speech-general-nom_1";
+			case ATTACK_1:
+				return "weapons-arrow-shot";
 			default:
-				return null;	
+				return null;
 		}
 		
 	}

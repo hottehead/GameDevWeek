@@ -1,11 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.audio.Music;
 
-import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.preferences.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 /**
  * Class for handling the music in GameplayState
@@ -21,7 +21,7 @@ public class LocalMusic {
 	private int duration;
 	
 	// FIXME (if music's not playing as should)
-	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 0.9f);
+	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeMusic, 0.9f);
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume
@@ -29,7 +29,8 @@ public class LocalMusic {
 	 * @param systemVolume
 	 */
 	public static void setSystemVolume(float systemVolume) {
-		LocalMusic.SystemVolume = Main.getInstance().gamePreferences.getFloat("volume-music", 1.0f);
+		LocalMusic.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeMusic, systemVolume);
 	}
 	
 	/**
@@ -43,7 +44,6 @@ public class LocalMusic {
 	public void setFade(char fadingDirection, int duration) {
 		this.duration = duration;
 		this.fading = this.fading == true ? false : true;
-		this.musicHandle.setVolume(this.fading == false ? 0.0f : LocalMusic.SystemVolume);
 		this.fadingDirection = fadingDirection;
 	}
 
@@ -55,13 +55,12 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
+		this.fading = false;
 		System.out.println(LocalMusic.SystemVolume);
 	}
 	
 	public void update(int duration) {
 		float delta = Gdx.graphics.getDeltaTime();
-		
-		
 		if (this.fading) {
 			float volume = this.musicHandle.getVolume();
 			if (this.fadingDirection == 'i') {
@@ -77,9 +76,9 @@ public class LocalMusic {
 			
 			volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
 			this.musicHandle.setVolume(volume);
-			System.out.println(this.musicHandle.getVolume());
+			/*System.out.println(this.musicHandle.getVolume());
 			System.out.println(this.fadingDirection);
-			System.out.println(this.fading);
+			System.out.println(this.fading);*/
 		}
 	}
 	

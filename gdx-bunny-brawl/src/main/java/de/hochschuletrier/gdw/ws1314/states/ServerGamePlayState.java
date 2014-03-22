@@ -1,82 +1,70 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
 import com.badlogic.gdx.InputProcessor;
-
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.game.ClientGame;
-import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
-import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
-import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import de.hochschuletrier.gdw.ws1314.hud.ServerGamePlayStage;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Menu state
  * 
  * @author Santo Pfingsten
  */
-public class GameplayState extends GameState implements InputProcessor {
+public class ServerGamePlayState extends GameState implements InputProcessor {
 
-    private ClientServerConnect csc;
+    private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
 	private ServerGame game;
-	private ClientGame tmpGame;
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
-	private LocalMusic stateMusic;
-	private LocalSound stateSound;
-	
-	
 
+    private List<PlayerData> playerDatas = null;
+    
+    private ServerGamePlayStage stage;
+    
 
-	public GameplayState() {
-        csc = ClientServerConnect.getInstance();
+	public ServerGamePlayState() {
 	}
 
+    public void setPlayerDatas(List<PlayerData> playerDatas) {
+        this.playerDatas = playerDatas;
+    }
+
+    @Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		game = new ServerGame();
+		game = new ServerGame(playerDatas);
 		game.init(assetManager);
-		tmpGame = new ClientGame();
-		tmpGame.init(assetManager);
-		stateMusic = new LocalMusic(assetManager);
-		stateSound = LocalSound.getInstance();
-		stateSound.init(assetManager);
-
 		Main.inputMultiplexer.addProcessor(this);
 		
-		
+		this.stage = new ServerGamePlayStage();
+		this.stage.init(assetManager);
 	}
-	
+
+	@Override
 	public void render() {
-		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
-		// game.render();
-		tmpGame.render();
-		
-                
-		game.getManager().render();
+        DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
+        this.stage.render();
 	}
 
 	@Override
 	public void update(float delta) {
-        csc.update();
 		game.update(delta);
-		tmpGame.update(delta);
 		fpsCalc.addFrame();
-		
-		
-		
-		
-		
-		
-		//TODO: @Eppi connect ui to gamelogic
-		//debug healthbar till connected to gamelogic
 	}
 
 	@Override
 	public void onEnter() {
-
+        if(playerDatas == null || playerDatas.size() == 0) {
+            logger.warn("playerDatas sind Leer. Bitte setPlayerDatas aufrufen.");
+        }
 	}
 
 	@Override
@@ -85,7 +73,6 @@ public class GameplayState extends GameState implements InputProcessor {
 
 	@Override
 	public void dispose() {
-		//stage.dispose();
 	}
 
 	@Override

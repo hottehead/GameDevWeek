@@ -4,26 +4,19 @@ import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.commons.netcode.datagram.NetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.NetEventDatagram;
-import de.hochschuletrier.gdw.commons.netcode.message.INetMessageInternal;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessage;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageAllocator;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageCache;
-import de.hochschuletrier.gdw.commons.netcode.message.NetMessageDelta;
+import de.hochschuletrier.gdw.commons.netcode.message.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.StandardSocketOptions;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A NetConnection represents a connection from server to client or vice versa.
@@ -66,6 +59,16 @@ public class NetConnection extends Thread {
     private final NetMessageCache messageCacheOut = new NetMessageCache();
     /** Set to true so outgoing datagrams can be queued */
     private boolean accepted;
+    
+    /** Total bytes sent to this connection */
+    private AtomicLong bytesSent=new AtomicLong(0);
+    /** Total bytes received from this connection */
+    private AtomicLong bytesReceived=new AtomicLong(0);
+    /** Number of datagrams sent to this connection */
+    private AtomicLong datagramsSent=new AtomicLong(0);
+    /** Number of datagrams received from this connection */
+    private AtomicLong datagramsReceived=new AtomicLong(0);
+    
 
     /**
      * Create a connection to a client.
@@ -153,7 +156,7 @@ public class NetConnection extends Thread {
                 // Read the datagram header into the buffer.
                 headerIn.clear();
                 while (headerIn.hasRemaining()) {
-                    channel.read(headerIn);
+                    bytesReceived.addAndGet(channel.read(headerIn));
                 }
 
                 // Get the values
@@ -170,6 +173,8 @@ public class NetConnection extends Thread {
                 else if (type != INetDatagram.Type.KEEP_ALIVE) {
                     handleDatagram(type, id, param1, param2);
                 }
+			}catch (java.nio.channels.AsynchronousCloseException e){
+				//
             } catch (IOException e) {
                 logger.error("Failed reading NetDatagram", e);
                 // During a shutdown, we don't record exceptions
@@ -218,7 +223,7 @@ public class NetConnection extends Thread {
                 // Normal message, param1 contains the message size.
                 msg = NetMessageAllocator.createMessage();
                 msg.prepareReading(param1, 0);
-                msg.readFromSocket(channel);
+                bytesReceived.addAndGet(msg.readFromSocket(channel));
 
                 // Let the datagram read its data
                 datagram.readFromMessage(msg);
@@ -237,7 +242,7 @@ public class NetConnection extends Thread {
 
                 // Read both the message and the delta bits from the channel
                 deltaMsg.prepareReading(param1, param2);
-                deltaMsg.readFromSocket(channel);
+                bytesReceived.addAndGet(deltaMsg.readFromSocket(channel));
 
                 // Let the datagram read its data
                 datagram.readFromMessage(deltaMsg);
@@ -247,7 +252,7 @@ public class NetConnection extends Thread {
                 messageCacheIn.set(datagram.getType(), datagram.getID(), newBase);
                 break;
         }
-
+        datagramsReceived.incrementAndGet();
         // The datagram is ready to be received
         incomingDatagrams.add(datagram);
     }
@@ -264,6 +269,7 @@ public class NetConnection extends Thread {
 
             try {
                 while (!outgoingDatagrams.isEmpty()) {
+                	datagramsSent.incrementAndGet();
                     INetDatagram datagram = outgoingDatagrams.poll();
                     switch (datagram.getMessageType()) {
                         case NONE:
@@ -282,7 +288,7 @@ public class NetConnection extends Thread {
                 }
             } catch (IOException e) {
                 logger.error("Failed sending NetDatagram", e);
-                
+
                 // An exception causes a disconnect right now, maybe want to change that ?
                 if (disconnectException == null) {
                     disconnectException = e;
@@ -310,7 +316,7 @@ public class NetConnection extends Thread {
         headerOut.flip();
 
         while (headerOut.hasRemaining()) {
-            channel.write(headerOut);
+            bytesSent.addAndGet(channel.write(headerOut));
         }
     }
 
@@ -371,7 +377,7 @@ public class NetConnection extends Thread {
      */
     private void sendMessage(INetMessageInternal msg) throws IOException {
         msg.prepareWriting();
-        msg.writeToSocket(channel);
+        bytesSent.addAndGet(msg.writeToSocket(channel));
         msg.free();
     }
 
@@ -383,7 +389,9 @@ public class NetConnection extends Thread {
             if (!shutdown) {
                 try {
                     sendHeader(NetDatagram.Type.DISCONNECT, (short) 0, (short) 0, (short) 0);
-                } catch (IOException e) {
+                } catch (java.nio.channels.AsynchronousCloseException e) {
+					return;
+				} catch (IOException e) {
                     logger.error("Failed sending disconnect", e);
                     // doesn't matter if the disconnect event does not get send
                 }
@@ -494,4 +502,32 @@ public class NetConnection extends Thread {
     public boolean isAccepted() {
         return accepted;
     }
+
+    /**
+     * @return Number of bytes sent to the connection.
+     */
+	public long getBytesSent(){
+		return bytesSent.get();
+	}
+
+	/**
+	 * @return Number of bytes received from the connection.
+	 */
+	public long getBytesReceived(){
+		return bytesReceived.get();
+	}
+
+	/**
+	 * @return Number of datagrams sent to the connection.
+	 */
+	public long getDatagramsSent(){
+		return datagramsSent.get();
+	}
+
+	/**
+	 * @return Number of datagrams received from the connection.
+	 */
+	public long getDatagramsReceived(){
+		return datagramsReceived.get();
+	}
 }

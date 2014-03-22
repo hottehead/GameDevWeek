@@ -4,73 +4,85 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
-public class LevelObjectReplicationDatagram extends BaseDatagram {
-    public static final byte LEVEL_OBJECT_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x21;
-    private long id;
-    private EntityType type;
-    private float xposition;
-    private float yposition;
-    private boolean status;
+public class LevelObjectReplicationDatagram extends BaseDatagram{
+	public static final byte LEVEL_OBJECT_REPLICATION_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x21;
+	private long entityId;
+	private EntityType type;
+	private float xposition;
+	private float yposition;
+	private boolean visibility;
+	private EntityStates entityState;
 
-    public LevelObjectReplicationDatagram (byte type, short id, short param1, short param2) {
-        super (MessageType.DELTA, type, id, param1, param2);
-    }
+	public LevelObjectReplicationDatagram(byte type, short id, short param1, short param2){
+		super(MessageType.DELTA, type, id, param1, param2);
+	}
 
-    public LevelObjectReplicationDatagram (long id, EntityType type, float xposition, float yposition, boolean status) {
-        super (MessageType.DELTA, LEVEL_OBJECT_REPLICATION_DATAGRAM, (short) 0, (short) 0, (short) 0);
-        this.id = id;
-        this.type = type;
-        this.xposition = xposition;
-        this.yposition = yposition;
-        this.status = status;
-    }
+	public LevelObjectReplicationDatagram(long entityId, EntityType type, float xposition, float yposition, boolean visibility,EntityStates entityState){
+		super(MessageType.DELTA, LEVEL_OBJECT_REPLICATION_DATAGRAM, (short) entityId, (short) 0, (short) 0);
+		this.entityId = entityId;
+		this.type = type;
+		this.xposition = xposition;
+		this.yposition = yposition;
+		this.visibility = visibility;
+		this.entityState = entityState;
+	}
 
-    @Override
-    public void handle (DatagramHandler handler, NetConnection connection) {
-        handler.handle (this, connection);
-    }
+	public LevelObjectReplicationDatagram(ServerLevelObject entity){
+		this(entity.getID(), entity.getEntityType(), entity.getPosition().x, entity.getPosition().y, 
+				entity.getVisibility(),entity.getEntityState());
+	}
 
-    @Override
-    public void writeToMessage (INetMessageOut message) {
-        message.putLong (id);
-        message.putEnum (type);
-        message.putFloat (xposition);
-        message.putFloat (yposition);
-        message.putBool (status);
-    }
+	@Override
+	public void handle(DatagramHandler handler, NetConnection connection){
+		handler.handle(this, connection);
+	}
 
-    @Override
-    public void readFromMessage (INetMessageIn message) {
-        id = message.getLong ();
-        type = message.getEnum (EntityType.class);
-        xposition = message.getLong ();
-        yposition = message.getLong ();
-        status = message.getBool ();
-    }
+	@Override
+	public void writeToMessage(INetMessageOut message){
+		message.putLong(entityId);
+		message.putEnum(type);
+		message.putFloat(xposition);
+		message.putFloat(yposition);
+		message.putBool(visibility);
+		message.putEnum(entityState);
+	}
 
-    public long getId () {
-        return id;
-    }
+	@Override
+	public void readFromMessage(INetMessageIn message){
+		entityId = message.getLong();
+		type = message.getEnum(EntityType.class);
+		xposition = message.getFloat();
+		yposition = message.getFloat();
+		visibility = message.getBool();
+		entityState = message.getEnum(EntityStates.class);
+	}
 
-    public EntityType getEntityType () {
-        return type;
-    }
+	public long getEntityId(){
+		return entityId;
+	}
 
-    public float getXposition () {
-        return xposition;
-    }
+	public EntityType getEntityType(){
+		return type;
+	}
 
-    public float getYposition () {
-        return yposition;
-    }
+	public float getXposition(){
+		return xposition;
+	}
 
-    public boolean isStatus () {
-        return status;
-    }
+	public float getYposition(){
+		return yposition;
+	}
+
+	public boolean getVisibility(){
+		return visibility;
+	}
+
+	public EntityStates getEntityState(){
+		return entityState;
+	}
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 /**
  * 
@@ -12,11 +13,11 @@ import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
  */
 public class InputHandler implements InputProcessor
 {
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
 	
 	public InputHandler()
 	{
-		netManager = ClientServerConnect.getInstance();
+		netManager = NetworkManager.getInstance();
 	}
 	
 	@Override
@@ -42,6 +43,9 @@ public class InputHandler implements InputProcessor
 			case (Input.Keys.E):
 				netManager.sendAction(PlayerIntention.DROP_EGG);
 				return true;
+			case (Input.Keys.F):
+			    netManager.sendAction(PlayerIntention.USE_SOMETHING);
+			    return true;
 		}
 		return false;
 	}
