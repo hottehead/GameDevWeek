@@ -11,16 +11,9 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * 
@@ -61,24 +54,7 @@ public class ServerEgg extends ServerLevelObject
 
     @Override
     public void beginContact(Contact contact) {
-    	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 
-    	 if(otherEntity == null){
-    		 return;
-    	 }
-    	 switch(otherEntity.getEntityType()){
-    	 	case Hunter:
-    	 	case Noob:
-    	 	case Tank:
-    	 	case Knight:
-    	 		ServerPlayer player = (ServerPlayer) otherEntity;
-    	 		System.out.println("Ich bin da");
-    	 		System.out.println(getVisibility());
-    	 		if(player.getCurrentEggCount() < player.getPlayerKit().getMaxEggCount()){
-    	 			this.setVisibility(false);
-    	 		}
-    	 		System.out.println(this.getVisibility());
-    	 }
     }
 
     @Override
@@ -102,7 +78,7 @@ public class ServerEgg extends ServerLevelObject
                                 .density(0.5f)
                                 .friction(0.0f)
                                 .restitution(0.0f)
-                                .shapeCircle(16));
+                                .shapeCircle(12));
 
 
 

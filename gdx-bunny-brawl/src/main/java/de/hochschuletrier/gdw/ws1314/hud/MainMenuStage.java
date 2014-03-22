@@ -69,7 +69,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.add(playerNameField);
 		uiTable.row().padTop(20);
-		Label label = new Label("Welcome to the League of Bunny Brwallllll!!!111!!1111", defaultSkin);
+		Label label = new Label("Welcome to the League of Bunny Brawllllll!!!111!!1111", defaultSkin);
 		uiTable.add(label);
 		uiTable.row().padTop(20);
 		

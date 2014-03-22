@@ -53,10 +53,13 @@ public class EntityRenderer extends Pool<RenderObject> implements
 		}
 	}
 
+	RenderType fetchStore = new RenderType();
+	
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
+		fetchStore.setByEntity(entity);;
 		RenderObject renderObj = this.fetch();
-		renderObj.materialAtlas = materials.fetch(entity.getEntityType());
+		renderObj.materialAtlas = materials.fetch(fetchStore);
 		renderObj.entity = entity;
 		this.renderList.add(renderObj);
 	}
