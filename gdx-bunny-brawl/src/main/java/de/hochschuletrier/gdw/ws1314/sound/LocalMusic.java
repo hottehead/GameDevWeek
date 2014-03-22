@@ -18,7 +18,7 @@ import de.hochschuletrier.gdw.ws1314.states.MainMenuState;
  * @author MikO
  */
 public class LocalMusic {
-	private static final Logger logger = LoggerFactory.getLogger(LocalMusic.class);
+	public static final Logger logger = LoggerFactory.getLogger(LocalMusic.class);
 	
 	private AssetManagerX assetManager;
 	private Music musicHandle;
@@ -62,6 +62,10 @@ public class LocalMusic {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
 		this.fading = false;
+	}
+	
+	public void setVolume(float volume) {
+		this.musicHandle.setVolume(volume);
 	}
 	
 	public char getFadingDirection() { return this.fadingDirection; }

@@ -62,6 +62,9 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		this.stateMusic = Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY);
+		this.stateMusic.play("music-gameplay-loop");
+		this.stateMusic.setVolume(0.1f);
 	}
 
 	public void render() {
@@ -75,10 +78,13 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (isServerInitialized) {
 			serverGame.update(delta);
 		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		}
+		this.stateMusic.update();
+}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+			this.stateMusic.update();
 		}
 		
 		fpsCalc.addFrame();
@@ -88,6 +94,12 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void onEnter() {
 		isServerInitialized = false;
 		isClientInitialized = false;
+		if (this.stateMusic.isMusicPlaying()) {
+			this.stateMusic.setFade('i', 2500);
+		}
+		else {
+			this.stateMusic.setFade('i', 2500);
+		}
 		
 		this.playerDatas = new ArrayList<>();
 		
@@ -99,6 +111,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	@Override
 	public void onLeave() {
 		NetworkManager.getInstance().setClientIdCallback(null);
+		if (this.stateMusic.isMusicPlaying())
+			this.stateMusic.setFade('o', 2500);
 		
 		clientGame = null;
 		serverGame = null;
