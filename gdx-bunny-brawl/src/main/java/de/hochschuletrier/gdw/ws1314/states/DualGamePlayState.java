@@ -61,23 +61,30 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		this.stateMusic = Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY);
+		this.stateMusic.play("music-gameplay-loop");
+		this.stateMusic.setVolume(0.5f);
+		this.stateMusic.logger.info("gp state music fading on init? >> " + this.stateMusic.getFading());
 	}
 
 	public void render() {
 		if (!isClientInitialized) return;
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		clientGame.render();
+		this.serverGame.getManager().render();
 	}
 
 	@Override
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
-		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
 		}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+			this.stateMusic.update();
 		}
 		
 		fpsCalc.addFrame();
@@ -87,6 +94,11 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void onEnter() {
 		isServerInitialized = false;
 		isClientInitialized = false;
+		if (this.stateMusic.isMusicPlaying()) 
+			this.stateMusic.setFade('i', 2500);
+		
+		stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);
 		
 		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		
@@ -100,6 +112,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	@Override
 	public void onLeave() {
 		NetworkManager.getInstance().setClientIdCallback(null);
+		if (this.stateMusic.isMusicPlaying())
+			//this.stateMusic.setFade('o', 2500);
 		
 		clientGame = null;
 		serverGame = null;

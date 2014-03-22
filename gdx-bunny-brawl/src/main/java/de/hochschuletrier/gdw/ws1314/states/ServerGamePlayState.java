@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -28,7 +29,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class ServerGamePlayState extends GameState implements InputProcessor, DisconnectCallback, GameInfoListener {
+public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
     
 	private ServerGame game;
@@ -94,12 +95,12 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
         game = new ServerGame(playerDatas);
 		game.init(assetManager, this.mapName);
 		
-		Main.inputMultiplexer.addProcessor(this);
-		
 		this.stage = new ServerGamePlayStage();
 		this.stage.init(assetManager);
 		
 		this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
+		
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -110,56 +111,12 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
 		
 		this.stage.getDisconnectButton().removeListener(this.disconnectClickListener);
 		
-		Main.inputMultiplexer.removeProcessor(this);
-		
 		this.stage = null;
 		this.game = null;
 	}
 
 	@Override
 	public void dispose() {
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-        //tmpGame.keyDown(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-        //tmpGame.keyUp(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
 	}
 	
 	private class DisconnectClick extends ClickListener {
