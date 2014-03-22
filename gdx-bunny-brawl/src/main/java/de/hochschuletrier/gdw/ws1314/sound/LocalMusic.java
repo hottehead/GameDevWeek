@@ -1,11 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
+import de.hochschuletrier.gdw.ws1314.states.MainMenuState;
 
 /**
  * Class for handling the music in GameplayState
@@ -14,6 +18,8 @@ import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
  * @author MikO
  */
 public class LocalMusic {
+	private static final Logger logger = LoggerFactory.getLogger(LocalMusic.class);
+	
 	private AssetManagerX assetManager;
 	private Music musicHandle;
 	private boolean fading;
@@ -56,10 +62,12 @@ public class LocalMusic {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
 		this.fading = false;
-		System.out.println(LocalMusic.SystemVolume);
 	}
 	
-	public void update(int duration) {
+	public char getFadingDirection() { return this.fadingDirection; }
+	public boolean getFading() { return this.fading; }
+	
+	public void update() {
 		float delta = Gdx.graphics.getDeltaTime();
 		if (this.fading) {
 			float volume = this.musicHandle.getVolume();

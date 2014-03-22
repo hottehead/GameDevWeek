@@ -76,7 +76,7 @@ public class MainMenuState extends GameState implements InputProcessor {
 	@Override
 	public void update(float delta) {
 		stateTime += delta;
-		music.update(stateChangeDuration);
+		music.update();
     }
 
     @Override
@@ -98,8 +98,8 @@ public class MainMenuState extends GameState implements InputProcessor {
     @Override
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', this.stateChangeDuration);
-        }
+    		this.music.setFade('o', 2000);
+    	}
 		
         inputProcessor.setActive(false);
         

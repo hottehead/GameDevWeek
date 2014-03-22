@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.InputProcessor;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -81,6 +82,7 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
+		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
 		}
 		
 		if (isClientInitialized) {
@@ -92,8 +94,7 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 
 	@Override
 	public void onEnter() {
-		
-	}
+}
 
 	@Override
 	public void onLeave() {
