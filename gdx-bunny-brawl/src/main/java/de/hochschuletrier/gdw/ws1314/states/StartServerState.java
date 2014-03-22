@@ -18,12 +18,16 @@ public class StartServerState extends GameState {
 	private StartServerStage stage;
 	
 	private BackListener backListener;
+	private StartServerListener startServerListener;
+	private StartServerAndPlayListener startServerAndPlayListener;
 	
 	public void init(AssetManagerX assetManager) {
         super.init(assetManager);
         logger = LoggerFactory.getLogger(OptionState.class);
         
         backListener = new BackListener();
+        startServerListener = new StartServerListener();
+        startServerAndPlayListener = new StartServerAndPlayListener();
         
         stage = new StartServerStage();
         stage.init(assetManager);
@@ -40,12 +44,16 @@ public class StartServerState extends GameState {
     public void onEnter() {
 	    Gdx.input.setInputProcessor(stage);
 		stage.getBackButton().addListener(backListener);
+		stage.getStartServerButton().addListener(startServerListener);
+		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
     }
 
     public void onEnterComplete() {
     }
 
     public void onLeave() {
+    	stage.getStartServerButton().removeListener(startServerListener);
+    	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
     }
@@ -60,6 +68,18 @@ public class StartServerState extends GameState {
     	public void clicked(InputEvent event, float x, float y) {
     		logger.info("Change state to MainMenuState");
     		GameStates.MAINMENU.activate();
+    	}
+    }
+	
+	private class StartServerListener extends ClickListener {
+    	public void clicked(InputEvent event, float x, float y) {
+    		logger.info("TODO: Change state to ServerGameplay");
+    	}
+    }
+	
+	private class StartServerAndPlayListener extends ClickListener {
+    	public void clicked(InputEvent event, float x, float y) {
+    		logger.info("TODO: change state to dualgameplay");
     	}
     }
 }
