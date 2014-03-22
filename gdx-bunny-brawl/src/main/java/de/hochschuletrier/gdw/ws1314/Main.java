@@ -1,56 +1,56 @@
 package de.hochschuletrier.gdw.ws1314;
 
-import org.lwjgl.opengl.GL11;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
+import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.devcon.DevConsole;
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
+import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
+import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.network.*;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.hud.HudResizer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
  * @author Santo Pfingsten
  */
 public class Main extends StateBasedGame {
-
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	public static final int WINDOW_WIDTH = 1024;
 	public static final int WINDOW_HEIGHT = 512;
 
@@ -63,6 +63,7 @@ public class Main extends StateBasedGame {
 	private final DevConsoleView consoleView = new DevConsoleView(console);
 	private Skin skin;
 	public static final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	public static final String playerName = "Long John " + (int) (Math.random() * 100.0);
 
 	public static Main getInstance() {
 		if (instance == null) {
@@ -108,8 +109,17 @@ public class Main extends StateBasedGame {
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
+	public int c_own_id;
+	public String s_map = "";
+	public PlayerData[] c_players;
+	public List<PlayerData> s_players = new ArrayList<PlayerData>();
+	
+	//public int playercount = 0;
+	
+	
 	@Override
 	public void create() {
+		//s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
 		loadAssetLists();
@@ -124,22 +134,72 @@ public class Main extends StateBasedGame {
 
 		GameStates.LOADING.init(assetManager);
 		GameStates.LOADING.activate();
-
+        
 		NetworkManager.getInstance().init();
+		
+		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
+			@Override
+			public void showUsage() {
+				showUsage("<GameplayStateName>");
+			}
+			
+			@Override
+			public void execute(List<String> args) {
+				if (args.get(1).equals("lobby"))
+				{
+					if (NetworkManager.getInstance().isServer())
+					{
+						logger.info("Changing State to Server-Lobby...");
+						GameStates.SERVERLOBBY.init(assetManager);
+						GameStates.SERVERLOBBY.activate();
+					}
+					else if (NetworkManager.getInstance().isClient())
+					{
+						logger.info("Changing State to Client-Lobby...");
+						GameStates.CLIENTLOBBY.init(assetManager);
+						GameStates.CLIENTLOBBY.activate();
+					}
+					else
+					{
+						logger.info("Not yet connected...");
+					}
+				}
+				if (args.get(1).equals("main"))
+				{
+					if (NetworkManager.getInstance().isServer())
+					{
+						logger.info("Changing State to Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
+					}
+					else if (NetworkManager.getInstance().isClient())
+					{
+						logger.info("Changing State to Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
+					}
+					else
+					{
+						logger.info("Not yet connected...");
+					}
+				}
+			}
+		});
+		
 	}
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
-		GameStates.GAMEPLAY.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override
 	public void dispose() {
-		DrawUtil.batch.dispose();
+		NetworkManager.getInstance().dispose();
 		GameStates.dispose();
 		consoleView.dispose();
 		skin.dispose();
+		Gdx.app.exit();
 	}
 
 	@Override
@@ -166,14 +226,16 @@ public class Main extends StateBasedGame {
 			consoleView.update(delta);
 		}
 		console.executeCmdQueue();
-
-		NetworkManager.getInstance().update();
+        
+    	NetworkManager.getInstance().update();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.gl.glViewport(0, 0, width, height);
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
+		HudResizer.resize(width, height);
 	}
 
 	@Override

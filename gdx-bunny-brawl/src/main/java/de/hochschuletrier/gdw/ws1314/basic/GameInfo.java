@@ -26,6 +26,7 @@ public class GameInfo extends Observable {
 
 
 	public Point getASpawnPoint(TeamColor team)	{
+
 		switch(team){
 			case BLACK:
 				return TeamSpawnZoneBlack.getRandomPointInZone();

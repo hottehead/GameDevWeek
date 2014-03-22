@@ -3,6 +3,9 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +42,20 @@ public class ServerGame {
 	public static final int BOX2D_SCALE = 40;
 	PhysixManager manager = new PhysixManager(BOX2D_SCALE, 0, GRAVITY);
 	private ServerEntityManager entityManager;
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
+
 	private ServerPlayer player = new ServerPlayer();
     private long eggid = 0;
+    private List<PlayerData> playerDatas;
 	private GameInfo gameInfo;
 
-	public ServerGame() {
+	public ServerGame( List<PlayerData> playerDatas) {
 		entityManager = ServerEntityManager.getInstance();
         entityManager.setPhysixManager(manager);
-		netManager = ClientServerConnect.getInstance();
+		netManager = NetworkManager.getInstance();
+		this.playerDatas = playerDatas;
+		//loadSolids();
+
     }
 
 
@@ -63,12 +71,33 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-		 entityManager.createEntity(ServerPlayer.class, new Vector2(250f,250f));
-		 entityManager.createEntity(ServerPlayer.class, new Vector2(500,250f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(100f,100f));
-         entityManager.createEntity(ServerEgg.class, new Vector2(50, 50));
-         entityManager.createEntity(ServerCarrot.class, new Vector2(200, 200));
-         entityManager.createEntity(ServerHayBale.class, new Vector2(600 , 600));
+
+        float offset = 0f;
+        for(PlayerData playerData : playerDatas ){
+            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(0f,0f+offset));
+
+            switch(playerData.getType())
+            {
+                case Noob:
+                    sp.setPlayerKit(PlayerKit.NOOB);
+                    break;
+                case Knight:
+                    sp.setPlayerKit(PlayerKit.KNIGHT);
+                    break;
+                case Hunter:
+                    sp.setPlayerKit(PlayerKit.HUNTER);
+                    break;
+                case Tank:
+                    break;
+            }
+
+        
+            sp.setPlayerData(playerData);
+            netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
+            offset += 10f;
+        }
+
+
 	}
 
 	public void render() {

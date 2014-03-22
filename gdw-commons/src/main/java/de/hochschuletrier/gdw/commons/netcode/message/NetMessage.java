@@ -96,7 +96,11 @@ public class NetMessage implements INetMessageInternal {
     
     @Override
     public <T> T getEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[buffer.getInt()];
+    	if(!getBool()){
+    		getInt();
+    		return null;
+    	}
+    	else return clazz.getEnumConstants()[getInt()];
     }
 
     @Override
@@ -154,7 +158,8 @@ public class NetMessage implements INetMessageInternal {
 
     @Override
     public void putEnum(Enum value) {
-        putInt(value.ordinal());
+    	putBool(value!=null);
+        putInt(value!=null?value.ordinal():-1);
     }
 
     @Override
@@ -186,18 +191,22 @@ public class NetMessage implements INetMessageInternal {
     }
 
     @Override
-    public void readFromSocket(SocketChannel channel) throws IOException {
+    public int readFromSocket(SocketChannel channel) throws IOException {
+    	int bytesReceived=0;
         while (buffer.hasRemaining()) {
-            channel.read(buffer);
+            bytesReceived+=channel.read(buffer);
         }
 
         buffer.flip();
+        return bytesReceived;
     }
 
     @Override
-    public void writeToSocket(SocketChannel channel) throws IOException {
+    public int writeToSocket(SocketChannel channel) throws IOException {
+    	int bytesSent=0;
         while (buffer.hasRemaining()) {
-            channel.write(buffer);
+            bytesSent+=channel.write(buffer);
         }
+        return bytesSent;
     }
 }

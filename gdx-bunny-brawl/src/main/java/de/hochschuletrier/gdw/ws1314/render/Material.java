@@ -52,9 +52,7 @@ public class Material implements Comparable<Material> {
 	public TextureRegion getActiveTexture(float stateTime) {
 		if(isAnimation) {
 			TextureRegion animationTex = animation.getKeyFrame(stateTime);
-			animationTex.flip(false, true);
-			return animation.getKeyFrame(stateTime);
-			
+			return animation.getKeyFrame(stateTime);	
 		}
 		else {
 			return texture;

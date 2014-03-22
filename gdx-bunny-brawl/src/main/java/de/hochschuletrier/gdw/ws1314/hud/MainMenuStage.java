@@ -25,8 +25,14 @@ public class MainMenuStage extends AutoResizeStage {
 	private Skin defaultSkin;
 	
 	private LevelList levelList;
-	private TextButton startButton;
+	
 	private TextField playerNameField;
+	private Table uiTable;
+	
+	//server-client-testing
+	private TextButton startClient;
+	private TextButton startServer;
+	private TextButton startBoth;
 	
 	public MainMenuStage() {
 		super();
@@ -43,14 +49,18 @@ public class MainMenuStage extends AutoResizeStage {
 		return super.keyDown(keyCode);
 	}
 
+	AssetManagerX assetManager;
+
 	public void init(AssetManagerX assetManager) {
+		this.assetManager = assetManager;
+		
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
-		Table uiTable = new Table();
+		uiTable = new Table();
+		
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output
 		this.addActor(uiTable);
-		font = assetManager.getFont("verdana", 24);
 		
 		Label playerNameLabel = new Label("Player name: ", defaultSkin);
 		uiTable.add(playerNameLabel);		
@@ -72,9 +82,14 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.row();
 		
-		//start Button
-		startButton = new TextButton("LADEN", defaultSkin);
-		uiTable.add(startButton);
+		//testing server-client stuff
+		startServer = new TextButton("start Server", defaultSkin);
+		startClient = new TextButton("start Client", defaultSkin);
+		startBoth = new TextButton("Start Forever Alone", defaultSkin);
+		uiTable.row().padTop(20);
+		uiTable.add(startServer).row().padTop(20);
+		uiTable.add(startClient).row().padTop(20);
+		uiTable.add(startBoth);
 	}
 
 	public void render() {		
@@ -83,7 +98,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-		Table.drawDebug(this);
+		//Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
@@ -98,7 +113,21 @@ public class MainMenuStage extends AutoResizeStage {
 		return levelList.getSelected();
 	}
 	
-	public TextButton getStartButton() {
-		return startButton;
+	//for testing server-client stuff
+	public TextButton getStartClientButton() {
+		return startClient;
+	}
+	public TextButton getStartServerButton() {
+		return startServer;
+	}
+	public TextButton getStartForeverAloneButton() {
+		return startBoth;
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		if(this.xScale >0 && this.yScale>0)
+			uiTable.setScale(this.xScale, this.yScale);
 	}
 }

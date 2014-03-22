@@ -4,7 +4,8 @@ package de.hochschuletrier.gdw.ws1314.entity;
  * Created by Jerry on 20.03.14.
  */
 public enum EventType {
-    WALK_UP,
+	IDLE,
+	WALK_UP,
     WALK_UP_LEFT,
     WALK_LEFT,
 	WALK_DOWN_LEFT,
@@ -25,5 +26,8 @@ public enum EventType {
     DIE_ABYSS,
     DIE_PLAYER,
     EGG_PICKUP,
-    EGG_DROP
+    EGG_DROP,
+    
+    
+    ANY
 }

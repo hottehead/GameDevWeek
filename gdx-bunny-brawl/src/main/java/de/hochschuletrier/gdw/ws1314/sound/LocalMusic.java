@@ -1,11 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.*;
+import com.badlogic.gdx.audio.Music;
 
+import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
-import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
 /**
  * Class for handling the music in GameplayState
@@ -29,7 +29,8 @@ public class LocalMusic {
 	 * @param systemVolume
 	 */
 	public static void setSystemVolume(float systemVolume) {
-		LocalMusic.SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeMusic, 1.0f);
+		LocalMusic.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeMusic, systemVolume);
 	}
 	
 	/**

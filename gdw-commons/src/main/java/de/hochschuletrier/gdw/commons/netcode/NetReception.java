@@ -1,14 +1,15 @@
 package de.hochschuletrier.gdw.commons.netcode;
 
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A reception waits for clients to connect
@@ -66,7 +67,9 @@ public class NetReception extends Thread {
                 } else {
                     ch.close();
                 }
-            } catch (IOException e) {
+            } catch (java.nio.channels.AsynchronousCloseException e) {
+				return;
+			} catch (IOException e) {
                 logger.error("Failed to accept connection", e);
                 if (!shutdown) {
                     //TODO: what to do here ?
