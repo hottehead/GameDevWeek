@@ -36,11 +36,6 @@ public abstract class ServerLevelObject extends ServerEntity
 		this.isVisible = true;
 	}
 
-	@Override
-	public void update(float deltaTime)
-	{
-	}
-
     @Override
     public void reset()
     {

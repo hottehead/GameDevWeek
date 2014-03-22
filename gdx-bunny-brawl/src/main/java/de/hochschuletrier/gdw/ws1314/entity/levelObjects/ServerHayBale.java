@@ -7,7 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
@@ -33,8 +35,12 @@ public class ServerHayBale extends ServerLevelObject
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 1.0f;
 	private final float WATER_DAMPING = 100.0f;
+	
 	private float speed;
 	private boolean acrossable = false;
+	
+	private Fixture fixtureWaterCollCheck;
+	private Fixture fixtureMain;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 	
@@ -53,43 +59,49 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void beginContact(Contact contact) {
 		ServerEntity otherEntity = this.identifyContactFixtures(contact);
+		Fixture fixture = this.getCollidingFixture(contact);
 		
 		if(otherEntity == null){
 			return;
 		}
-		switch(otherEntity.getEntityType()) {
-			case Projectil:
-				if(!acrossable){
-					this.physicsBody.setLinearDamping(NORMAL_DAMPING);
-					ServerProjectile projectile = (ServerProjectile) otherEntity;
-					this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-												  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
-					speed = 1;
-				}
-				break;
-			case SwordAttack:
-				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
-				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
-				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
-												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
-				break;
-			case WaterZone:
-				logger.info("Ich bin im Wasser");
-				this.physicsBody.setLinearDamping(WATER_DAMPING);
-				this.acrossable = true;
-				speed = 0;
-				break;
-			case Knight:
-			case Hunter:
-			case Noob:
-			case Tank:
-
-				break;
-			default: 
-				this.acrossable = false;
-				break;
+		
+		if(fixture == fixtureMain) {
+		    switch(otherEntity.getEntityType()) {
+	            case Projectil:
+	                if(!acrossable){
+	                    this.physicsBody.setLinearDamping(NORMAL_DAMPING);
+	                    ServerProjectile projectile = (ServerProjectile) otherEntity;
+	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
+	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+	                    speed = 1;
+	                }
+	                break;
+	            case SwordAttack:
+	                this.physicsBody.setLinearDamping(NORMAL_DAMPING);
+	                ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
+	                ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
+	                this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
+	                                                player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+	                break;
+	            default: 
+	                this.acrossable = false;
+	                break;
+	        }
+		} else if(fixture == fixtureWaterCollCheck) {
+		    switch(otherEntity.getEntityType()) {
+		        case WaterZone:
+                    if(fixture == fixtureWaterCollCheck) {
+                        this.physicsBody.setLinearDamping(WATER_DAMPING);
+                        this.acrossable = true;
+                        speed = 0;
+                    }
+                    break;
+		        default: 
+                    this.acrossable = false;
+                    break;
+		    }
 		}
+		
 	}
 
 	@Override
@@ -103,8 +115,8 @@ public class ServerHayBale extends ServerLevelObject
         
         switch(otherEntity.getEntityType()) {
             case WaterZone:
-                this.physicsBody.setLinearDamping(0);
-                this.acrossable = false;
+//                this.physicsBody.setLinearDamping(0);
+//                this.acrossable = false;
                 break;
             default:
                 break;
@@ -135,14 +147,29 @@ public class ServerHayBale extends ServerLevelObject
 		    .friction(0.0f)
 		    .restitution(0.0f)
 		    .shapeBox(50,50));
+    	
+    	body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeCircle(5));
         
         body.setGravityScale(0);
         body.addContactListener(this);
         setPhysicsBody(body);
+        
+        Array<Fixture> fixtures = body.getBody().getFixtureList();
+        fixtureMain = fixtures.get(0);
+        fixtureWaterCollCheck = fixtures.get(1);
 	}
 	
 	public boolean isCrossable() {
 	    return this.acrossable;
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        
+    }
 
 }
