@@ -16,6 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.hud.elements.ChatWindow;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
@@ -41,10 +42,12 @@ public class ClientLobbyStage extends AutoResizeStage {
 	}
 
 	public void init(AssetManagerX assetManager) {
+		
 		//init generic stuff
 		initSkin(assetManager);
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
+		uiTable.debug(Debug.all);
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output
 		this.addActor(uiTable);
@@ -90,10 +93,12 @@ public class ClientLobbyStage extends AutoResizeStage {
 		//Disconnect
 		disonnectButton = new TextButton("Disconnect", defaultSkin);
 		uiTable.add(disonnectButton);
+		uiTable.add(new ChatWindow());
 	}
 
 	public void render() {		
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		Table.drawDebug(this);
 		this.act(Gdx.graphics.getDeltaTime());
 		
 		this.whiteTeamList.reset();
