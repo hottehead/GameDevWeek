@@ -162,9 +162,12 @@ public class ServerContactMine extends ServerLevelObject {
 							.setSensor(false);
 					shape.setRadius(originRadius);
 				}
+			}else{
+				this.setEntityState(EntityStates.NONE);
+			}
+			
 		}
 	}
-}
 
 	@Override
 	public EntityType getEntityType() {
