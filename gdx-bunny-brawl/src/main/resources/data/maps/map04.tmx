@@ -172,7 +172,7 @@
  </layer>
  <layer name="Detaillayer (Deko)" width="50" height="75">
   <data encoding="base64" compression="zlib">
-   eJzt2lEOgjAMBmBejcYXQX3yFT2C3kBvYEy8/zGEKMmy0K1Dt7b4fwlxkRkLbF1BqwoAAGC+ttIBJDpJBwCQyT6wb10sCj120gFkgPwla0e0LeDEq+WYVpH9daUnVrCpdtobp03VtBZzb+u0tc6XOt7FNO3Hdwzs0x577xfzMnQOckn9Tr+/xXwEIEHT2hfKqdS+lni/hE28Cwji1K4WUWOemiP/+IwLbBnGdPN51bQuTdHXoMN8lKihfXfpABJwnnFZ9A/3JZL12Jhzt12kg/hSP96v3XZz3rOWH914Y3XZI3MsU3DOd8vsB/Pl/9a8YHxmmSMQhqfQ935jyB19nZj7nq5EnXH4vGpbN0Evi3XkwWk3ZK83d/23mKN8w/Wyet9igfVnfdQ4t7AuhP5fB+WF8iuulbzY+keRzAVjNUdKHdKObDmlPu/k9i99HD7O/J06vkqwvk5TtK/TmseEBi/cPg5W
+   eJztml1uAiEQgHk1NX1x1T75SnsEvYFGD9D05/7H6G5SkglZYFhhfnS+hEgWwg4yf4w6ZxiGYdRwHduNW4gGfI/th1sIAnaN1qE694/O6z/LuRt4qHT7LTP22mB9bbq95xagA739l5Fnn+hrACOvlD2tC+ODkyOroZMB9Degn8ppNfpeD/pS7WUoT1GN9P29Z8akyz7Rwi5z30Evat8Zz9fojzRjtSm9SIp9OZ+aGvOJ5xRsylMMRjC5q0ZSOp+ykRY1LkMujxB/J52G8VdSXFrClIMGe+TIoWM+uQWoAFPj0sgz3Es487E5jmM7cQtxJ5O+n8d2Ac9S/lFqLIDylvKyLyfvLoaJRx45z9AJxrbi35pXiHVflomzmGBbv8TvbUHwHVvX/05HkWcc/j+lxU1DLrk8Umr8P4D+tjAXxn+NPiomnJfWe4tEYj3XWusr6bmGuJD7f51BT86/2lnxU4p/McHXcfqCuZyjpp4F67ve9d9Lbb0TO9/PNEow9lurX5RojdMlpMdpyTohgT++dRsn
   </data>
  </layer>
  <objectgroup name="Brueckenebene" width="50" height="75">
@@ -243,7 +243,7 @@
   <object gid="5" x="1504" y="2208"/>
   <object gid="5" x="928" y="2272"/>
  </objectgroup>
- <objectgroup name="Zonenebene" width="50" height="75" visible="0">
+ <objectgroup name="Zonenebene" width="50" height="75">
   <object type="solid" x="0" y="0" width="1600" height="96"/>
   <object type="solid" x="0" y="96" width="32" height="2304"/>
   <object type="solid" x="32" y="2368" width="1568" height="32"/>
@@ -420,7 +420,7 @@
    <property name="renderEntities" value="true"/>
   </properties>
  </objectgroup>
- <objectgroup name="Spielerebene (physikalische Zone)" width="50" height="75" visible="0">
+ <objectgroup name="Spielerebene (physikalische Zone)" width="50" height="75">
   <object type="solid" x="1344" y="1504" width="64" height="64"/>
   <object type="solid" x="1376" y="384" width="64" height="64"/>
   <object type="solid" x="800" y="960" width="64" height="64"/>
@@ -438,10 +438,13 @@
   <object type="solid" x="1152" y="2240" width="32" height="32"/>
   <object type="solid" x="1024" y="2208" width="32" height="32"/>
   <object type="solid" x="608" y="416" width="32" height="32"/>
+  <object type="solid" x="1345" y="1495" width="61" height="9"/>
+  <object type="solid" x="800" y="953" width="61" height="9"/>
+  <object type="solid" x="1379" y="375" width="61" height="9"/>
  </objectgroup>
  <layer name="Overlayer" width="50" height="75">
   <data encoding="base64" compression="zlib">
-   eJzt2DsSgkAQhGHuoXgBxQv4uICPnBK9/zHshMSAYHdntwv/r6pT2KoZZoCuA9Zpo2yVXtk1PkuOvXJQBuXY+Cw5TspZuSjXwPtE1/2m3JWH8gy4/iy67i9lUt7KJ+D6s1p1j1ar7ktK9Hatui9hpnlx6O0SHHobAAAA+MW/KS98x3nhOw5AFPavF/avF/Yv/gW7wAu7wEvOLuDZ8sKz5YX3rPaYUV6YUTFS+9xtRtHnXtz6PJVbnyMdO90Ls87LGmfd2PoAAIr4Ai+eL54=
+   eJzt2EsKg0AQhGHvkccFkniBRC8QyF6E3P8Y1kaQLFzMTM8U5v+gwJUOdNsd03XAMZ2Us3JRro3PkuOm3JWH0jc+S46n8lIGZQx8TnTd35vrT8D9V9F1nzfX34D7r2rVPVqtuu8p0du16r6HmebFobdLcOhtAAAA4Bf/TXnhO84L33EAorB/vbB/vbB/8S/YBV7YBV5ydgHvlhfeLS/8zmqPGeWFGRUjtc/dZhR97sWtz1O59TnSsdO9MOu8HHHWTa0PAKCIBbpnImo=
   </data>
  </layer>
  <layer name="Overoverlayer(je nach Bedarf)" width="50" height="75">
