@@ -109,7 +109,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private Fixture fixtureDeathCheck;
     
     private boolean isDead;
-    private ServerBridgeSwitch currentBridgeSwitch;
+    private int collidingBridgePartsCount;
     
     
     public ServerPlayer()
@@ -137,6 +137,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
     	isDead = false;
+    	collidingBridgePartsCount = 0;
     }
     
     public void enable() {}
@@ -245,11 +246,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         		if (currentState.equals(idleState) || currentState.equals(walkingState))
         			dropEgg();
         		break;
-            case USE_SOMETHING:
-                if(this.currentBridgeSwitch != null) {
-                    this.currentBridgeSwitch.pushSwitch();
-                }
-                break;
             default:
                 break;
         }
@@ -408,9 +404,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 }*/
                      
                      this.isOnBridge = true;
+                     collidingBridgePartsCount++;
                 	 break;
                  case BridgeSwitch:	
-                     this.currentBridgeSwitch = (ServerBridgeSwitch)otherEntity;
                 	 break;
                  case Bush:
                 	 break;
@@ -450,8 +446,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              switch(otherEntity.getEntityType()) 
              {
                  case AbyssZone:
-                 case WaterZone:                     
-                     this.isDead = true;
+                 case WaterZone:
+                     if(!isOnBridge) {
+                         this.isDead = true;
+                     }
                      break;
                  default:
                      break;
@@ -482,7 +480,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          			droppedEggID = -1;
          		break;
                 case Bridge:
-                    this.isOnBridge = false;
+                    collidingBridgePartsCount--;
+                    if(collidingBridgePartsCount <= 0) {
+                        this.isOnBridge = false;
+                    }
                     break;
                 default:
                 	break;
