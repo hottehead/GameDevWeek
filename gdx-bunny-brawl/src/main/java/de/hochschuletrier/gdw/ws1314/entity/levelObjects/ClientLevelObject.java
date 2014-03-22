@@ -46,5 +46,10 @@ public abstract class ClientLevelObject extends ClientEntity
 	}
 
 	public EntityStates getLevelObjectState(){return entityState;}
-	public void setLevelObjectState(EntityStates state){if(this.entityState!=state) { entityState = state; this.stateTime=0.0f; } }
+	public void setLevelObjectState(EntityStates state){
+		if(entityState != state)
+			enterNewState();
+
+			entityState = state;
+	}
 }
