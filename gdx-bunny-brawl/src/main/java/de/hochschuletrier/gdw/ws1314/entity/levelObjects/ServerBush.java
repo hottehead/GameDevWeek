@@ -70,8 +70,7 @@ public class ServerBush extends ServerLevelObject
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapeCircle(16)
-                .sensor(true));
+                .shapeCircle(16));
 
             body.setGravityScale(0);
             body.addContactListener(this);

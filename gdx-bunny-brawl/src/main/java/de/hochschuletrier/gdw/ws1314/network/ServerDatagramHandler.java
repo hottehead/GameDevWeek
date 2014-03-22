@@ -5,6 +5,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,5 +106,10 @@ public class ServerDatagramHandler implements DatagramHandler{
 	@Override
 	public void handle(PingDatagram pingDatagram, NetConnection connection){
 		connection.send(pingDatagram);
+	}
+
+	@Override
+	public void handle(GameInfoReplicationDatagram gameInfoReplicationDatagram, NetConnection connection){
+		logger.warn("Server received a GameInfoReplicationDatagram, which is only intended to be sent to a client, something is wrong here...");
 	}
 }

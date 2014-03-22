@@ -138,6 +138,13 @@
   <tileoffset x="1" y="1"/>
   <image source="tiles/home.png" width="192" height="96"/>
  </tileset>
+ <tileset firstgid="292" name="mine" tilewidth="32" tileheight="32">
+  <tileoffset x="1" y="1"/>
+  <properties>
+   <property name="TYPE" value="mine"/>
+  </properties>
+  <image source="tiles/mine.png" width="32" height="32"/>
+ </tileset>
  <layer name="Groundlayer (Rand, Wand, Terrain)" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJzdmVuSDEEUhnMHddkAVsCwAIYFIAKvowfjcdwtAyvACrACYQXYkeyIPhFff3OyunrahBgPf3RdMrPyP5f/nKp+V0p5f87xoeJjxadzjs8VXyq+nnN8q/heMa7QVwz6JZbX7lXcr3hQ0a0wru4Nq2Ne61fnw+q31/hOz+C8AfA68azl9R8rHl1Z34fXiLnLe48rnlQcYe0e88Im3KP50i5j47gr6/uwjfkc8vCe7J9Aiwdt1mnNMVkzzsmRz8/WoD1pO/tj1O+gOYN4XKi4uAGXYINOx94/r43JHHLnmODBcVwrm08elyuubMBeWY9p7oG+9n3uP8sT7os8Rq3nfIpz8rhecaOBm+DB+bYvr9Nezk/6gXZmfoQGzcFT8OAzHbPhK/JgrDufPd85Tn+19CpsvA2OEn8xRsijw33GNf3iHMrGZPnBuDotD+7J6wePa2WzFrQQGuGa1NLdVxWvt8Sbsu5n6+8cDZijEdZbc+jKSd3NfGxdd2y4NsS1KQ2YQuhD8LCWMnfi2HrFvGIOZ1psnlkuZ/XVcdEJ9ONeyWO303HwcJ8T57cr7myBu+Lh+t2qI7yX8XA/Qvu4L7FGLzkcVjzcAo/Axeu5PllfY2/m0ZfcFlybPGin03AgF/uGezU3+8c8sr6b69kfu/ihxeduYnfGnWvc0ODhGHQ/xvyIZx1s2N/LimcJXkxwsb/HBHP8Qd9Sf6xX4wYeSw7PS94HHzf4LMq8vjhwFTzm1NBL5aQ/ugkewYF5Sh0Nex6Ly6L8nZo4VSvJI9DisSgnY5kxTj06KP+GB/cxxWNTnxr15lDztqntUc9vzRy/X07WwSl/UH86zZnS6kVZ10P70e8Z7JMZv9a7rA5yzFSeR23I0NLqRVnPIdd795p+b8lqZcD9Lu2zSXfngNr8XDalDzLfkgfHtmog6zl9vSuP0DVqvmsH64D7QL9/UT/YG/Y493efKX+06p8R9cXPpkbTbo5/50cWg+5/GVdz9cpa676PuszYZ147v6kD9kfWk7g3J4/YQ9TlzM60Lddyb9FrDJ9tnXP8tfzheMr6RMZqy060vfs7x3pmc+eF/RQwjwx8NuNqm/7nrBH91dzvE+yvzrJvOGuwL/lfeJz228ZZYJf+apvvonOw/I/H+kxNZH633mv3yrreZnUntGGX74lzvzVSx6h51LNWPR+TcRmXXb4nGm/FgzWE+7QP3P9m/nANsA77/w9qe1Zv7GOCPuU3bNsv6+H70vaH6/mQXDcPx7Pj0t8rpnhwPb8vDDpmLXS/67m9xpuH31Xcw2X74P2MB/Pa/UAnhM3cX5mz/Zf1V5mdMj62Sdfg4R6V/nWvF79Zn+j+yHb3+0cWC5nt3Pe1/OH3hGz/g+633gen+Ph7SaYHXMPxyuvm0cov+8D2yvpE6oztRx7Oa8ZfpzmMF/rQPAbNNe+WFmd61dKIuJ797+y84LypPj3j4ZjJcs88W/XcviU38ugaY7x/+yP2mdUP65T9ybjK8rzXM60J7ktcq6xtWZ75nD3BG1x3LWZ9z2pT9Kz7sqdzijG35PGz4tc5x++KPzWlG14=
@@ -226,6 +233,7 @@
   <object gid="5" x="416" y="480"/>
   <object gid="5" x="416" y="704"/>
   <object gid="272" x="800" y="1472"/>
+  <object gid="292" x="896" y="864"/>
  </objectgroup>
  <objectgroup name="Zonenebene" width="50" height="50">
   <object type="water" x="160" y="608" width="160" height="352"/>
@@ -245,7 +253,6 @@
   <object type="water" x="672" y="640" width="32" height="32"/>
   <object type="water" x="704" y="608" width="32" height="32"/>
   <object type="water" x="320" y="800" width="32" height="32"/>
-  <object x="544" y="1088"/>
   <object type="hgrass" x="1248" y="768" width="320" height="256"/>
   <object type="hgrass" x="736" y="1120" width="128" height="448"/>
   <object type="hgrass" x="32" y="416" width="96" height="608"/>
