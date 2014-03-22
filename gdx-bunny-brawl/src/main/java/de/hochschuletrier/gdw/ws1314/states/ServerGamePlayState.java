@@ -14,6 +14,7 @@ import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.hud.ServerGamePlayStage;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener {
+public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener, PlayerDisconnectCallback {
     private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
     
 	private ServerGame game;
@@ -97,6 +98,7 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 		isWinningConditionComplied = false;
 		
         NetworkManager.getInstance().setDisconnectCallback(this);
+        NetworkManager.getInstance().setPlayerDisconnectCallback(this);
         
         game = new ServerGame(playerDatas);
 		game.init(assetManager, this.mapName);
@@ -157,6 +159,13 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 		{
 			isWinningConditionComplied = true;
 			logger.info("Winning-Condition complied");
+		}
+	}
+
+	@Override
+	public void playerDisconnectCallback(Integer[] playerid) {
+		if (NetworkManager.getInstance().clientCount() == 0) {
+			NetworkManager.getInstance().stopServer();
 		}
 	}
 }

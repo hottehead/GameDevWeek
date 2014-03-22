@@ -7,6 +7,7 @@ import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.LevelLoader;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -132,13 +133,18 @@ public class ServerEntityManager {
 
     private void addEntity(ServerEntity e) {
         e.setId(entityIDs.requestID());
+        
+        if (e.getClass() == ServerEgg.class)
+        {
+        	this.gameInfo.incrementRemaining();
+        }
+        
         insertionQueue.add(e);
     }
 
     public void removeEntity(ServerEntity e) {
         entityIDs.returnID(e.getID());
         removalQueue.add(e);
-
     }
 
     public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position){
