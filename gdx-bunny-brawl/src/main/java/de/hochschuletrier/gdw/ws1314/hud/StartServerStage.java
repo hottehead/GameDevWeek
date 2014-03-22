@@ -40,6 +40,7 @@ public class StartServerStage extends AutoResizeStage {
 		//level list
 		levelList = new LevelList(defaultSkin);
 		//add levels for testing
+		//assetManager.get
 		levelList.addLevel("does nothing");
 		levelList.addLevel("new level");
 		uiTable.add(levelList).padBottom(50).row();
