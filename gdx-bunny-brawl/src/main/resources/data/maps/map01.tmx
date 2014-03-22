@@ -354,22 +354,6 @@
   <object type="solid" x="96" y="986" width="62" height="7"/>
   <object type="solid" x="1313" y="1302" width="62" height="7"/>
   <object type="solid" x="97" y="1430" width="62" height="7"/>
-  <object type="solid" x="800" y="1120" width="64" height="64"/>
-  <object type="solid" x="1408" y="992" width="64" height="64"/>
-  <object type="solid" x="480" y="960" width="64" height="64"/>
-  <object type="solid" x="576" y="672" width="64" height="64"/>
-  <object type="solid" x="512" y="640" width="64" height="64"/>
-  <object type="solid" x="1344" y="736" width="64" height="64"/>
-  <object type="solid" x="352" y="384" width="64" height="64"/>
-  <object type="solid" x="480" y="416" width="64" height="64"/>
-  <object type="solid" x="576" y="320" width="64" height="64"/>
-  <object type="solid" x="1376" y="1120" width="64" height="64"/>
-  <object type="solid" x="800" y="1408" width="64" height="64"/>
-  <object type="solid" x="736" y="1120" width="64" height="64"/>
-  <object type="solid" x="960" y="1120" width="64" height="64"/>
-  <object type="solid" x="224" y="1376" width="64" height="64"/>
-  <object type="solid" x="192" y="1248" width="64" height="64"/>
-  <object type="solid" x="256" y="1280" width="64" height="64"/>
  </objectgroup>
  <layer name="Overlayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
