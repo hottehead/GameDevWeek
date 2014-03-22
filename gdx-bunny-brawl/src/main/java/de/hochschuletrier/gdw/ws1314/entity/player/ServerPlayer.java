@@ -399,9 +399,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case BRIDGE_VERTICAL_TOP:
                  ServerBridge b = (ServerBridge)otherEntity;
                  if(b.getVisibility()) {
+                     if(!this.isOnBridge) {
+                         NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                     }
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
-    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  }
                  break;
              case GrassZone:
