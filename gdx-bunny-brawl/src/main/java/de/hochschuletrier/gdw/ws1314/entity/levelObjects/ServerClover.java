@@ -81,4 +81,10 @@ public class ServerClover extends ServerLevelObject
             setPhysicsBody(body);
 	}
 
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

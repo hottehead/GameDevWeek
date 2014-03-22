@@ -44,7 +44,9 @@ public class ServerContactMine extends ServerLevelObject
 			case Hunter:
 			case Knight:
 			case Tank:
+			case HayBale:
 				this.isActive = true;
+				
 		}
 	}
 	
@@ -72,5 +74,11 @@ public class ServerContactMine extends ServerLevelObject
 		body.addContactListener(this);
 		setPhysicsBody(body);
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

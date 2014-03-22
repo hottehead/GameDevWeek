@@ -273,6 +273,14 @@ public class LevelLoader {
 		case "water":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
             zone.setWaterZone();
+			PhysixBody bodyWater = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
+											.position(x, y).create();
+			bodyWater.createFixture(new PhysixFixtureDef(physicsManager)
+											.density(0.5f)
+											.sensor(true)
+											.friction(0.5f)
+											.restitution(0.4f)
+											.shapeBox(width, height));
             break;
         case "hgrass":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);

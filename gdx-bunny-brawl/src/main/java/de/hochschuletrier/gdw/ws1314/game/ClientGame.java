@@ -62,6 +62,7 @@ public class ClientGame {
 
 	public void init(AssetManagerX assets, String mapName) {
 		map = assets.getTiledMap(mapName);
+
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
 		for (TileSet tileset : map.getTileSets()) {
