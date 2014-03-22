@@ -69,7 +69,6 @@ public class ServerHayBale extends ServerLevelObject
 		    switch(otherEntity.getEntityType()) {
 	            case Projectil:
 	                if(!acrossable){
-	                    this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 	                    ServerProjectile projectile = (ServerProjectile) otherEntity;
 	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
@@ -77,11 +76,12 @@ public class ServerHayBale extends ServerLevelObject
 	                }
 	                break;
 	            case SwordAttack:
-	                this.physicsBody.setLinearDamping(NORMAL_DAMPING);
-	                ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
-	                ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-	                this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
-	                                                player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+	                if(!acrossable) {
+	                    ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
+	                    ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
+	                    this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
+	                                                    player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+	                }
 	                break;
 	            default: 
 	                this.acrossable = false;
