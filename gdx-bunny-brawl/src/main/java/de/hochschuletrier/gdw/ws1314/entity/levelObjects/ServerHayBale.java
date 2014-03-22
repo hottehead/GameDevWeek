@@ -71,8 +71,8 @@ public class ServerHayBale extends ServerLevelObject
 				this.physicsBody.setLinearDamping(NORMAL_DAMPING);
 				ServerSwordAttack sword = (ServerSwordAttack) otherEntity;
 				ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
-				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
-												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
+				this.physicsBody.applyImpulse(	player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
+												player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
 				break;
 			case WaterZone:
 				logger.info("Ich bin im Wasser");
@@ -87,6 +87,7 @@ public class ServerHayBale extends ServerLevelObject
 				
 				if(!acrossable){
 				ServerPlayer player2 = (ServerPlayer) otherEntity;
+				
 				this.physicsBody.setLinearDamping(1);
 					if(speed > 0){
 						player2.applyDamage(10);
