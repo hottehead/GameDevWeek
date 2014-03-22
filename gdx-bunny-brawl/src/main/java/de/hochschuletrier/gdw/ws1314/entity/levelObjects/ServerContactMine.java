@@ -13,6 +13,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerMineExplosion;
 
 /**
  * 
@@ -23,6 +24,7 @@ public class ServerContactMine extends ServerLevelObject
 {
 	private final float DURATION_TILL_EXPLOSION = 5.0f;
 	private boolean isActive = false;
+	private float timer;
 	
 	public ServerContactMine()
 	{
@@ -33,6 +35,7 @@ public class ServerContactMine extends ServerLevelObject
 	public void initialize()
 	{
 		super.initialize();
+		timer = DURATION_TILL_EXPLOSION;
 	}
 	
 	@Override
@@ -55,6 +58,19 @@ public class ServerContactMine extends ServerLevelObject
 	{
 		
 	}
+	
+	public void update(float deltaTime) {
+        Vector2 pos = this.physicsBody.getPosition().cpy();
+        timer -= deltaTime;
+        if(isActive){
+        	if(timer <= 0){
+        		ServerMineExplosion explosion = new ServerMineExplosion();
+        		explosion.setSource(this.getID());
+        		isActive = false;
+        	}
+        }
+	}
+	
 	@Override
 	public EntityType getEntityType()
 	{

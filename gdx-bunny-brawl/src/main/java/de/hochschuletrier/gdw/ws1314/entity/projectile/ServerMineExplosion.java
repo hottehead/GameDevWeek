@@ -16,6 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 
@@ -27,7 +28,8 @@ public class ServerMineExplosion extends ServerLevelObject{
 	private long sourceID;
 
 	private Vector2 		originPosition;
-	private float 			despawnTime;
+	private final float 	DURATION_TIME;
+	private float 			timer;
 	private float			damage;
 	private float			hitCircleRadius;
 	
@@ -41,7 +43,8 @@ public class ServerMineExplosion extends ServerLevelObject{
 		super();
 		sourceID = -1;
 		this.originPosition = ServerEntityManager.getInstance().getEntityById(sourceID).getPosition();
-		this.despawnTime = 0.0f;
+		this.DURATION_TIME = 1.0f;
+		this.timer = DURATION_TIME;
 		this.damage = 80.0f;
 		this.hitCircleRadius = 30.0f;
 		this.physicsInitialized = false;
@@ -55,10 +58,6 @@ public class ServerMineExplosion extends ServerLevelObject{
 		return damage;
 	}
 	
-	public void setPhysicalParameters(float despawnTime) {
-		this.despawnTime = despawnTime;
-	}
-	
 	public void setHitCircleRadius(float radius) {
 		hitCircleRadius = radius;
 	}
@@ -68,17 +67,6 @@ public class ServerMineExplosion extends ServerLevelObject{
 		ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 		this.originPosition = player.getPosition();
 		
-	}
-
-	
-
-	
-	public void setDespawnTime(float despawnTime) {
-		this.despawnTime = despawnTime;
-	}
-	
-	public float getDespawnTime() {
-		return this.despawnTime;
 	}
 
 	public long getSourceID() {
@@ -122,11 +110,10 @@ public class ServerMineExplosion extends ServerLevelObject{
 	public void reset() {}
 
 	public void update(float deltaTime) {
-		if (!physicsInitialized)
-			return;
-		
-		Vector2 pos = this.physicsBody.getPosition().cpy();
-		float distance = pos.sub(originPosition).len();
+		timer -= deltaTime;
+		if(timer <= 0){
+			ServerEntityManager.getInstance().removeEntity(this);
+		}
 		
 	}
 
