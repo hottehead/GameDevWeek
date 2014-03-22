@@ -130,7 +130,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getLobbyUpdateCallback().callback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
+		NetworkManager.getInstance().getLobbyUpdateCallback().lobbyUpateCallback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
 	}
 
 	@Override
@@ -156,13 +156,13 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(GameStateDatagram gameStateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getGameStateCallback().callback(gameStateDatagram.getGameStates());
+		NetworkManager.getInstance().getGameStateCallback().gameStateCallback(gameStateDatagram.getGameStates());
 	}
 
 	@Override
 	public void handle(ClientIdDatagram clientIdDatagram, NetConnection connection){
 		if (NetworkManager.getInstance().getClientIdCallback() != null)
-			NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerId());
+			NetworkManager.getInstance().getClientIdCallback().clientIdCallback(clientIdDatagram.getPlayerId());
 	}
 
 	@Override

@@ -1,21 +1,16 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.InputProcessor;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
-import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
-import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
-import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Menu state
@@ -80,14 +75,14 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	}
 
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.warn(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 
 	@Override
-	public void callback(GameStates gameStates) {
+	public void gameStateCallback(GameStates gameStates) {
 		if (gameStates != GameStates.CLIENTGAMEPLAY) {
 			gameStates.init(assetManager);
 			gameStates.activate();
