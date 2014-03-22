@@ -18,7 +18,7 @@ import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ChatWindow;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
-import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
+import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -93,7 +93,7 @@ public class ClientLobbyStage extends AutoResizeStage {
 		//Disconnect
 		disonnectButton = new TextButton("Disconnect", defaultSkin);
 		uiTable.add(disonnectButton);
-		uiTable.add(new ChatWindow());
+		uiTable.add(new ChatWindow(defaultSkin));
 	}
 
 	public void render() {		

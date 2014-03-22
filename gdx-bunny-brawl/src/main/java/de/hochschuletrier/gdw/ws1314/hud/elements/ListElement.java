@@ -3,9 +3,9 @@ package de.hochschuletrier.gdw.ws1314.hud.elements;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-public class LevelListElement extends TextButton {
+public class ListElement extends TextButton {
 
-	public LevelListElement(String text, Skin skin) {
+	public ListElement(String text, Skin skin) {
 		super(text, skin);
 	}
 	
