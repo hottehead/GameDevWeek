@@ -37,15 +37,17 @@ public interface INetMessageInternal extends INetMessageIn, INetMessageOut {
      * Read the message buffer (and optionally the delta buffer) from a channel
      *
      * @param channel the socket channel to read from
+     * @return bytes read
      * @throws IOException
      */
-    void readFromSocket(SocketChannel channel) throws IOException;
+    int readFromSocket(SocketChannel channel) throws IOException;
 
     /**
      * Write the message buffer (and optionally the delta buffer) to a channel
      *
      * @param channel the socket channel to write to
+     * @return bytes written
      * @throws IOException
      */
-    void writeToSocket(SocketChannel channel) throws IOException;
+    int writeToSocket(SocketChannel channel) throws IOException;
 }

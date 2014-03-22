@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="hole" color="#ff0000"/>
+ <objecttype name="solid" color="#000000"/>
+ <objecttype name="dirt" color="#005500"/>
+ <objecttype name="water" color="#a0a0a4"/>
+ <objecttype name="hgrass" color="#00007f"/>
+</objecttypes>

@@ -274,7 +274,11 @@ public class NetMessageDelta implements INetMessageInternal {
     
     @Override
     public <T> T getEnum(Class<T> clazz) {
-        return clazz.getEnumConstants()[get()];
+    	if(!getBool()){
+    		getInt();
+    		return null;
+    	}
+    	else return clazz.getEnumConstants()[getInt()];
     }
 
     @Override
@@ -458,7 +462,8 @@ public class NetMessageDelta implements INetMessageInternal {
 
     @Override
     public void putEnum(Enum value) {
-        putInt(value.ordinal());
+    	putBool(value!=null);
+        putInt(value!=null?value.ordinal():-1);
     }
 
     @Override
@@ -506,23 +511,26 @@ public class NetMessageDelta implements INetMessageInternal {
     }
 
     @Override
-    public void readFromSocket(SocketChannel channel) throws IOException {
-        message.readFromSocket(channel);
+    public int readFromSocket(SocketChannel channel) throws IOException {
+    	int bytesReceived=0;
+        bytesReceived+=message.readFromSocket(channel);
 
         while (deltaBuffer.hasRemaining()) {
-            channel.read(deltaBuffer);
+            bytesReceived+=channel.read(deltaBuffer);
         }
 
         deltaBuffer.flip();
         deltaBits = BitSet.valueOf(deltaBuffer);
+        return bytesReceived;
     }
 
     @Override
-    public void writeToSocket(SocketChannel channel) throws IOException {
-        message.writeToSocket(channel);
+    public int writeToSocket(SocketChannel channel) throws IOException {
+    	int bytesSent=message.writeToSocket(channel);
 
         while (deltaBuffer.hasRemaining()) {
-            channel.write(deltaBuffer);
+            bytesSent+=channel.write(deltaBuffer);
         }
+        return bytesSent;
     }
 }

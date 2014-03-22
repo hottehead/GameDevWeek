@@ -1,33 +1,47 @@
+
 package de.hochschuletrier.gdw.ws1314.entity;
 
-import com.badlogic.gdx.math.Vector2;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
 
 /**
  * Created by Jerry on 18.03.14.
  */
 public class ClientEntityManager {
+    private static final Logger logger = LoggerFactory.getLogger(ClientEntityManager.class);
+
 	private static ClientEntityManager instance = null;
 	
 	private LinkedList<ClientEntity> entityList;
     private HashMap<Long,ClientEntity> entityListMap;
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
+    protected ArrayList<ClientEntityManagerListener> listeners;
+    
+    private GameInfo gameInfo = new GameInfo();
+
+    private long playerEntityID = -1;
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
 		removalQueue = new LinkedList<ClientEntity>();
 		insertionQueue = new LinkedList<ClientEntity>();
+		listeners = new ArrayList<ClientEntityManagerListener>();
     }
 
     public static ClientEntityManager getInstance()
@@ -38,28 +52,104 @@ public class ClientEntityManager {
     	return instance;
     }
     
-    public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+
+	public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
-        switch(type){
-            case Ei :{
-
+        switch(type)
+        {
+            case Ei:
+                e = new ClientEgg();
                 break;
-            }
-            case Hunter:{
-
+            case Noob:
+                e = createPlayer(PlayerKit.NOOB);
                 break;
-            }
-            case Tank :{
-
+            case Hunter:
+                e = createPlayer(PlayerKit.HUNTER);
                 break;
-            }
-            case Knight :{
-
+            case Tank:
+                e = createPlayer(PlayerKit.TANK);
                 break;
-            }
+            case Knight:
+                e = createPlayer(PlayerKit.KNIGHT);
+                break;
+            case Projectil: 
+            	e = new ClientProjectile();
+            	break;
+            case BRIDGE_HORIZONTAL_LEFT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalLeft();
+				break;
+            case BRIDGE_HORIZONTAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalMiddle();
+				break;
+            case BRIDGE_HORIZONTAL_RIGHT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalRight();
+				break;
+            case BRIDGE_VERTICAL_BOTTOM:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalBottom();
+				break;
+            case BRIDGE_VERTICAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalMiddle();
+				break;
+            case BRIDGE_VERTICAL_TOP:
+            	e = new ClientBridge();
+				((ClientBridge)e).setVerticalTop();
+            	break;
+            case BridgeSwitch:
+            	e = new ClientBridgeSwitch();
+            	break;
+            case Bush:
+            	e = new ClientBush();
+            	break;
+            case ContactMine:
+            	e = new ClientContactMine();
+            	break;
+            case Carrot:
+            	e = new ClientCarrot();
+            	break;
+            case Spinach:
+            	e = new ClientSpinach();
+            	break;
+            case Clover:
+            	e = new ClientClover();
+            	break;
+			case HayBale:
+				e = new ClientHayBale();
+				break;
+			default:
+				break;
         }
-        addEntity(e);
+        if(e!=null)
+        {
+            e.setID(id);
+            e.setPosition(pos);
+            addEntity(e);
+        }
         return e;
+    }
+
+    public void setPlayerEntityID(long id) {
+        playerEntityID = id;
+    }
+
+    public long getPlayerEntityID() {
+        if(playerEntityID < 0)
+            logger.warn("Sieht so aus als wurde PlayerID noch nicht gesetzt. getPlayerEntityID muss warscheinlich nochmal aufgerufen werden.");
+
+        return playerEntityID;
+    }
+
+    private ClientEntity createPlayer(PlayerKit pk) {
+        ClientPlayer cp = new ClientPlayer();
+        cp.setPlayerKit(pk);
+        return cp;
     }
 
     private void addEntity(ClientEntity e) {
@@ -67,7 +157,8 @@ public class ClientEntityManager {
     }
 
     public void removeEntity(ClientEntity e) {
-        removalQueue.add(e);
+        if(e!=null)
+            removalQueue.add(e);
     }
 
     public int getListSize() {
@@ -85,6 +176,10 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
+            entityListMap.remove(e.getID());
+            for(ClientEntityManagerListener l : listeners) {
+            	l.onEntityRemove(e);
+            }
         }
         return listChanged;
     }
@@ -95,11 +190,23 @@ public class ClientEntityManager {
             listChanged = true;
             ClientEntity e = insertionQueue.poll();
             entityList.add(e);
+            entityListMap.put(e.getID(),e);
+            for(ClientEntityManagerListener l : listeners) {
+            	l.onEntityInsert(e);
+        	}
         }
         return listChanged;
     }
 
-
+    public boolean isPendingSpawn(long entityId){
+    	for(ClientEntity e: insertionQueue){
+    		if(e.getID()==entityId){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public ClientEntity getEntityById(long id) {
         Long lid = new Long(id);
         if(entityListMap.containsKey(lid))
@@ -124,6 +231,15 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo=new GameInfo();
+    }
+    
+    public void provideListener(ClientEntityManagerListener l) {
+    	this.listeners.add(l);
+    }
+    
+    public void removeListener(ClientEntityManagerListener l) {
+    	this.listeners.remove(l);
     }
 }
 

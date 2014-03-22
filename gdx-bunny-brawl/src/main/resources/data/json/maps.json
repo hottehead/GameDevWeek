@@ -1,3 +1,16 @@
 {
-    "miniarena": "data/maps/miniarena.tmx"
+    "miniarena": "data/maps/miniarena.tmx", 
+	"dummy_fin_map1": "data/maps/dummy_fin_map1.tmx",
+	"map01": "data/maps/map01.tmx",
+	"map02": "data/maps/map02.tmx",
+	"map03": "data/maps/map03.tmx",
+	"map04": "data/maps/map04.tmx",
+	"map05": "data/maps/map05.tmx",
+	"map06": "data/maps/map06.tmx",
+	"map07": "data/maps/map07.tmx", 
+	"map08": "data/maps/map08.tmx",
+	"map09": "data/maps/map09.tmx",
+	
+	"map_trololol": "data/maps/trololol.tmx", 
+	"map_thelongestyard": "data/maps/thelongestyard.tmx"
 }

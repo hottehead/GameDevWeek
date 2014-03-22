@@ -10,8 +10,11 @@ import de.hochschuletrier.gdw.ws1314.Main;
 public enum GameStates {
     LOADING (new LoadGameState ()),
     MAINMENU (new MainMenuState ()),
-    GAMEPLAY (new GameplayState ()),
-    LOBBY (new LobbyState ());
+    SERVERLOBBY (new ServerLobbyState ()),
+    CLIENTLOBBY (new ClientLobbyState ()),
+    SERVERGAMEPLAY (new ServerGamePlayState()),
+    CLIENTGAMEPLAY (new ClientGamePlayState()),
+    DUALGAMEPLAY (new DualGamePlayState());
     private final GameState state;
 
     GameStates (GameState state) {
@@ -49,4 +52,5 @@ public enum GameStates {
     boolean isActive () {
         return Main.getInstance ().getCurrentState () == state;
     }
+
 }

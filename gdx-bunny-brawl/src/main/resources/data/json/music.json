@@ -1,3 +1,4 @@
 {
-    "menu": "data/music/menu.ogg"
+    "music-lobby-loop": "data/music/menu_music.mp3",
+    "music-gameplay-loop": "data/music/gameplay_music.mp3"
 }

@@ -16,7 +16,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.hud.LevelSelectorStage;
+import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.hud.TestHudStage;
 import de.hochschuletrier.gdw.ws1314.shaders.DemoShader;
 
@@ -32,7 +32,6 @@ public class MainMenuState extends GameState implements InputProcessor {
 	private Music music;
     private Sound click;
 	private Texture logo;
-	private Animation walking;
     private float x = 0;
     private boolean useShader;
 
@@ -40,11 +39,11 @@ public class MainMenuState extends GameState implements InputProcessor {
     InputInterceptor inputProcessor;
 
     private TestHudStage testUI;
-    private LevelSelectorStage levelSelection;
+//    private GameplayStage testUI;
 
     public MainMenuState() {
     	testUI = new TestHudStage();
-    	levelSelection = new LevelSelectorStage();
+//    	testUI = new GameplayStage();
     }
 
     @Override
@@ -52,7 +51,6 @@ public class MainMenuState extends GameState implements InputProcessor {
         super.init(assetManager);
 
 		logo = assetManager.getTexture("logo");
-		walking = assetManager.getAnimation("walking");
         music = assetManager.getMusic("menu");
         click = assetManager.getSound("click");
         music.setLooping(true);
@@ -74,7 +72,6 @@ public class MainMenuState extends GameState implements InputProcessor {
                 return isActive && mainProcessor.keyUp(keycode);
             }
         };
-        levelSelection.init(assetManager);
 
         
         Main.inputMultiplexer.addProcessor(inputProcessor);
@@ -91,9 +88,6 @@ public class MainMenuState extends GameState implements InputProcessor {
         if (useShader) {
             DrawUtil.batch.setShader(demoShader);
         }
-		TextureRegion keyFrame = walking.getKeyFrame(stateTime);
-		DrawUtil.batch.draw(keyFrame, x,
-				Gdx.graphics.getHeight() - keyFrame.getRegionHeight());
 
         if (useShader) {
             DrawUtil.batch.setShader(null);
@@ -104,14 +98,9 @@ public class MainMenuState extends GameState implements InputProcessor {
         testUI.render();
     }
 
-	float stateTime = 0f;
     @Override
     public void update(float delta) {
-		stateTime += delta;
-		x += delta * WALKING_SPEED;
-        if (x > 1024) {
-			x = -walking.getKeyFrame(stateTime).getRegionWidth();
-        }
+
         
         testUI.step(delta);
     }
