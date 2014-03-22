@@ -96,10 +96,9 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		isClientInitialized = false;
 		if (this.stateMusic.isMusicPlaying()) 
 			this.stateMusic.setFade('i', 2500);
-
-		this.stateMusic.logger.info("gp state music fading on enter? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on enter? >> " + this.stateMusic.getFadingDirection());
-
+		
+		stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);
 		
 		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		
