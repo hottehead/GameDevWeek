@@ -143,7 +143,6 @@ public class ClientGame {
 		DrawUtil.startRenderToScreen();
 		stage.render();
 		DrawUtil.endRenderToScreen();
-
 	}
 
 	public void update(float delta) {
