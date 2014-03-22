@@ -3,12 +3,6 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hochschuletrier.gdw.commons.utils.Point;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +16,14 @@ import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
+import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
 /**
  * 
@@ -65,7 +61,7 @@ public class ServerGame {
 		gameInfo = entityManager.getGameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		TiledMap map = assets.getTiledMap("map02");
+		TiledMap map = assets.getTiledMap("map01");
 		LevelLoader.load(map, entityManager, manager, gameInfo);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();

@@ -6,6 +6,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterials;
 
 public class MaterialManager {
 
@@ -20,8 +21,8 @@ public class MaterialManager {
 		map = new HashMap<EntityType, HashMap<RenderState, Material>>();
 		this.assetManager = assetManager;
 
-		dbgMaterial = new Material(assetManager, new MaterialInfo(
-				"fallback", RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
+		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
+				RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
 
 		this.provideMaterials(EntityType.Tank, new MaterialInfo(
 				"knightWhiteIdleDown", new RenderState(EntityStates.IDLE,
@@ -30,19 +31,7 @@ public class MaterialManager {
 						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
 						1, true));
 
-		this.provideMaterials(EntityType.Hunter, new MaterialInfo(
-				"hunterWhiteIdleDown", new RenderState(EntityStates.IDLE,
-						FacingDirection.DOWN), 110, 74, 1, true),
-				new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
-						EntityStates.WALKING, FacingDirection.LEFT), 110, 74,
-						1, true), 
-				new MaterialInfo("hunterWhiteWalkDown",
-						new RenderState(EntityStates.WALKING,
-								FacingDirection.DOWN), 110, 74, 1, true),
-				new MaterialInfo("hunterWhiteAttackDown", new RenderState(
-						EntityStates.ATTACK, FacingDirection.DOWN), 110, 74, 1,
-						true)
-		);
+		this.provideMaterials(EntityType.Hunter, HunterMaterials.build());
 
 		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
 				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
@@ -84,7 +73,8 @@ public class MaterialManager {
 				}
 			}
 			map.get(entityType).put(materialInfo.stateUsed, material);
-			System.out.println("Setting " + entityType.name() + " material for " + materialInfo.stateUsed);
+			System.out.println("Setting " + entityType.name()
+					+ " material for " + materialInfo.stateUsed);
 		}
 	}
 
