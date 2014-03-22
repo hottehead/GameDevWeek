@@ -2,10 +2,10 @@ package de.hochschuletrier.gdw.ws1314.render.materials;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 
-public class ArrowMaterial extends MaterialDefinition {
+public class ArrowMaterialDef extends MaterialDefinition {
 
-	public ArrowMaterial() {
-		super(38, 6, 10);
+	public ArrowMaterialDef() {
+		super(38, 6, MaterialLayer.ARROW_LAYER);
 	}
 
 	@Override
