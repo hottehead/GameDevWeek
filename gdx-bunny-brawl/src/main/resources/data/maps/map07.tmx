@@ -257,12 +257,12 @@
   <object type="dirt" x="992" y="224" width="32" height="576"/>
   <object type="dirt" x="608" y="224" width="32" height="576"/>
   <object type="dirt" x="640" y="480" width="352" height="64"/>
-  <object type="startw" x="32" y="96" width="160" height="160">
+  <object type="startw" x="64" y="128" width="160" height="160">
    <properties>
     <property name="direction" value="right"/>
    </properties>
   </object>
-  <object type="startb" x="1408" y="768" width="160" height="160">
+  <object type="startb" x="1376" y="736" width="160" height="160">
    <properties>
     <property name="direction" value="left"/>
    </properties>
@@ -301,6 +301,7 @@
   <object type="solid" x="1088" y="91" width="67" height="68"/>
   <object type="solid" x="801" y="91" width="67" height="68"/>
   <object type="solid" x="480" y="91" width="67" height="68"/>
+  <object type="solid" x="640" y="768" width="352" height="32"/>
  </objectgroup>
  <layer name="Overlayer" width="50" height="30">
   <data encoding="base64" compression="zlib">

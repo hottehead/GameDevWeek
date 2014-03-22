@@ -34,7 +34,7 @@ public class TeamSpawnZone extends Zone {
 
     public Point getRandomPointInZone(){
         Random r = new Random();
-        return new Point(rect[0]+r.nextInt(rect[2]),rect[1]+r.nextInt(rect[3]));
+        return new Point(rect[0]+r.nextInt(rect[2])-rect[2]/2,rect[1]+r.nextInt(rect[3])-rect[3]/2);
     }
 
     public void setTeamWhite(){
