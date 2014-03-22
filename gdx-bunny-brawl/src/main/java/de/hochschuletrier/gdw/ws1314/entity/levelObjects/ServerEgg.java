@@ -54,7 +54,7 @@ public class ServerEgg extends ServerLevelObject
 
     @Override
     public void beginContact(Contact contact) {
-    	 
+        
     }
 
     @Override
@@ -99,6 +99,7 @@ public class ServerEgg extends ServerLevelObject
 
 	public void setPosition(Vector2 position) {
 		physicsBody.setPosition(position);
+                physicsBody.setAwake(true);
 	}
 
 	@Override
