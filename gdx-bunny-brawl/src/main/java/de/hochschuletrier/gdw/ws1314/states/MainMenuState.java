@@ -40,8 +40,9 @@ public class MainMenuState extends GameState {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+        
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
-      
+		
         stage = new MainMenuStage();
 		stage.init(assetManager);
 		
@@ -63,6 +64,7 @@ public class MainMenuState extends GameState {
 	public void update(float delta) {
 		stateTime += delta;
 		music.update();
+		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MainMenuState extends GameState {
     @Override
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2000);
+    		this.music.setFade('o', 2500);
     	}
 		
         stage.getStartServerButton().removeListener(this.startServerClickListener);

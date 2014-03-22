@@ -379,7 +379,9 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
-			this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
+			if(this.disconnectcallback != null){
+				this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
+			}
 			clientConnection.shutdown();
 		}
 	}
@@ -433,10 +435,15 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
-			NetConnection connection = serverReception.getNextNewConnection();
 			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				NetConnection connection = serverReception.getNextNewConnection();
+				while(connection != null){
+					connection.shutdown();
+					connection = serverReception.getNextNewConnection();
+				}
 				return;
 			}
+			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
@@ -449,7 +456,6 @@ public class NetworkManager{
 	}
 
 	private void handleDisconnects(){
-
 		if(isServer()){
 			List<NetConnection> toRemove = new ArrayList<>();
 			for(NetConnection c : serverConnections){
@@ -521,6 +527,9 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
+				}
 				ServerEntityManager.getInstance().getGameInfo().removeListner(gameInfoListener);
 				for(NetConnection nc : serverConnections){
 					nc.shutdown();
@@ -529,10 +538,6 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
-				if(this.disconnectcallback != null){
-					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
-				}
-				//logger.info("[SERVER] stopped");
 			}
 			else{
 				logger.warn("[NETWORK] Can't stop, i'm not a Server.");

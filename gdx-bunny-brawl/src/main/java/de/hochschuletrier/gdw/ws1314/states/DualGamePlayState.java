@@ -5,6 +5,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
@@ -13,6 +14,7 @@ import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
     private List<PlayerData> playerDatas = null;
     
-    private String mapName = "map01";
+    private String mapName;
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
@@ -59,6 +61,10 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		this.stateMusic = Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY);
+		this.stateMusic.play("music-gameplay-loop");
+		this.stateMusic.setVolume(0.5f);
+		this.stateMusic.logger.info("gp state music fading on init? >> " + this.stateMusic.getFading());
 	}
 
 	public void render() {
@@ -72,10 +78,16 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (isServerInitialized) {
 			serverGame.update(delta);
 		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		}
+		if (this.stateMusic.isMusicPlaying())
+			//this.stateMusic.update();
+		this.stateMusic.logger.info("gp state music fading on update? >> " + this.stateMusic.getFading());
+		this.stateMusic.logger.info("gp state fading direction on update? >> " + this.stateMusic.getFadingDirection());
+}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+			this.stateMusic.update();
 		}
 		
 		fpsCalc.addFrame();
@@ -85,6 +97,14 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void onEnter() {
 		isServerInitialized = false;
 		isClientInitialized = false;
+		if (this.stateMusic.isMusicPlaying()) 
+			this.stateMusic.setFade('i', 2500);
+
+		this.stateMusic.logger.info("gp state music fading on enter? >> " + this.stateMusic.getFading());
+		this.stateMusic.logger.info("gp state fading direction on enter? >> " + this.stateMusic.getFadingDirection());
+
+		
+		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		
 		this.playerDatas = new ArrayList<>();
 		
@@ -96,6 +116,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	@Override
 	public void onLeave() {
 		NetworkManager.getInstance().setClientIdCallback(null);
+		if (this.stateMusic.isMusicPlaying())
+			//this.stateMusic.setFade('o', 2500);
 		
 		clientGame = null;
 		serverGame = null;
@@ -119,9 +141,11 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
 	@Override
 	public void clientIdCallback(int playerid) {
-		logger.info("PlayerID received");
-		PlayerData p = new PlayerData(playerid, "Long John", EntityType.Hunter, TeamColor.WHITE, true);
+		PlayerData p = new PlayerData(playerid, Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"), EntityType.Hunter, TeamColor.WHITE, true);
+	
+		ClientEntityManager.getInstance().setPlayerData(p);
 		this.playerDatas.add(p);
+		
 		internalServerInit();
 		internalClientInit();
 	}
@@ -132,7 +156,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
         }
 		
 		serverGame = new ServerGame(playerDatas);
-		serverGame.init(assetManager, mapName);
+		serverGame.init(assetManager, this.mapName);
 		
 		isServerInitialized = true;
 	}
