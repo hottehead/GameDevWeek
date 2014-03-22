@@ -13,7 +13,10 @@ public enum GameStates {
     SERVERLOBBY (new ServerLobbyState ()),
     CLIENTLOBBY (new ClientLobbyState ()),
     SERVERGAMEPLAY (new ServerGamePlayState()),
-    CLIENTGAMEPLAY (new ClientGamePlayState());
+    CLIENTGAMEPLAY (new ClientGamePlayState()),
+    DUALGAMEPLAY (new DualGamePlayState()),
+    FINISHEDGAME (new FinishedGameState());
+    
     private final GameState state;
 
     GameStates (GameState state) {
@@ -26,7 +29,7 @@ public enum GameStates {
 
     public void fadeActivate (int fadeTime) {
         FadeTransition out = new FadeTransition (Color.BLACK, fadeTime);
-        FadeTransition in = new FadeTransition (Color.BLACK, fadeTime).reverse ();
+        FadeTransition in = new FadeTransition (Color.BLACK, fadeTime).reverse();
         Main.getInstance ().changeState (state, out, in);
     }
 
@@ -51,4 +54,5 @@ public enum GameStates {
     boolean isActive () {
         return Main.getInstance ().getCurrentState () == state;
     }
+
 }

@@ -4,30 +4,15 @@ import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
-import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.EventType;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
+import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ActionDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.BaseDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatDeliverDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ChatSendDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ClientIdDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.DespawnDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.EventDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.GameStateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LevelObjectReplicationDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.LobbyUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.MatchUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerReplicationDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerUpdateDatagram;
-import de.hochschuletrier.gdw.ws1314.network.datagrams.ProjectileReplicationDatagram;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +20,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NetworkManager{
-
 	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
 
 	private static NetworkManager instance = new NetworkManager();
-
 	private NetConnection clientConnection = null;
 	private ArrayList<NetConnection> serverConnections = null;
 	private NetReception serverReception = null;
@@ -51,16 +36,88 @@ public class NetworkManager{
 
 	private ServerDatagramHandler serverDgramHandler = new ServerDatagramHandler();
 	private ClientDatagramHandler clientDgramHandler = new ClientDatagramHandler();
-	private ArrayList<ChatListener> chatListeners = new ArrayList<ChatListener>();
+	private ArrayList<ChatListener> chatListeners = new ArrayList<>();
 
-	private int nextPlayerNumber = 1;
-
+	private DisconnectCallback disconnectcallback;
 	private PlayerDisconnectCallback playerdisconnectcallback;
 	private ClientIdCallback clientidcallback;
 	private LobbyUpdateCallback lobbyupdatecallback;
 	private PlayerUpdateCallback playerupdatecallback;
 	private MatchUpdateCallback matchupdatecallback;
 	private GameStateCallback gameStateCallback;
+
+	private long lastStatTime = System.currentTimeMillis();
+	private long lastTotalBytesSent = 0;
+	private long lastTotalBytesReceived = 0;
+	private long lastTotalDgramsSent = 0;
+	private long lastTotalDgramsReceived = 0;
+	private float ping = 0;
+
+	private int nextPlayerNumber = 1;
+	
+	protected Deque<DespawnDatagram> pendingDespawns = new LinkedList<>();
+
+	private GameStateAckCallback gameStateAckCallback;
+
+	public float getPing(){
+		return ping;
+	}
+
+	void updatePing(float newPing){
+		ping = 0.9f * ping + 0.1f * newPing;
+	}
+
+	public void checkStats(){
+		long newStatTime = System.currentTimeMillis();
+		long statDT = newStatTime - lastStatTime;
+		if(statDT < 60000) return;
+		long newTotalBytesSent = 0;
+		long newTotalBytesReceived = 0;
+		long newTotalDgramsSent = 0;
+		long newTotalDgramsReceived = 0;
+		if(serverConnections != null){
+			for(NetConnection con : serverConnections){
+				newTotalBytesSent += con.getBytesSent();
+				newTotalBytesReceived += con.getBytesReceived();
+				newTotalDgramsSent += con.getDatagramsSent();
+				newTotalDgramsReceived += con.getDatagramsReceived();
+			}
+		}
+		if(clientConnection != null){
+			newTotalBytesSent += clientConnection.getBytesSent();
+			newTotalBytesReceived += clientConnection.getBytesReceived();
+			newTotalDgramsSent += clientConnection.getDatagramsSent();
+			newTotalDgramsReceived += clientConnection.getDatagramsReceived();
+		}
+		long deltaBytesSent = newTotalBytesSent - lastTotalBytesSent;
+		long deltaBytesReceived = newTotalBytesReceived - lastTotalBytesReceived;
+		long deltaDgramsSent = newTotalDgramsSent - lastTotalDgramsSent;
+		long deltaDgramsReceived = newTotalDgramsReceived - lastTotalDgramsReceived;
+		double bytesSentPerSecond = deltaBytesSent / (statDT / 1000.0);
+		double bytesReceivedPerSecond = deltaBytesReceived / (statDT / 1000.0);
+		double dgramsSentPerSecond = deltaDgramsSent / (statDT / 1000.0);
+		double dgramsReceivedPerSecond = deltaDgramsReceived / (statDT / 1000.0);
+		double factor = 1024.0;
+		double rF = 100.0;//Rounding Factor
+		if(isClient()){
+			logger.info("Network Statistics: Ping {} ms", ping);
+		}
+		else{
+			logger.info("Network Statistics:");
+		}
+
+		logger.info("Sent: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
+				newTotalBytesSent / factor, Math.round(bytesSentPerSecond * rF) / rF,
+				newTotalDgramsSent, Math.round(dgramsSentPerSecond * rF) / rF);
+		logger.info("Rec: {} KiB, {} Byte/s, {} Dgrams, {} Dgrams/s",
+				newTotalBytesReceived / factor, Math.round(bytesReceivedPerSecond * rF) / rF,
+				newTotalDgramsReceived, Math.round(dgramsReceivedPerSecond * rF) / rF);
+		lastStatTime = newStatTime;
+		lastTotalBytesSent = newTotalBytesSent;
+		lastTotalBytesReceived = newTotalBytesReceived;
+		lastTotalDgramsSent = newTotalDgramsSent;
+		lastTotalDgramsReceived = newTotalDgramsReceived;
+	}
 
 	private NetworkManager(){
 	}
@@ -69,63 +126,142 @@ public class NetworkManager{
 		return instance;
 	}
 
+	private boolean isPortOk(int port){
+		if(port >=  1024 && port <= 65535){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	public void connect(String ip, int port){
 		if(isClient()){
-			logger.warn("Ignoring new connect command because we are already connected.");
+			logger.warn("[CLIENT] Ignoring new connect command because we are already connected.");
 			return;
+		}
+		if(!isPortOk(port)){
+			throw new IllegalArgumentException("[CLIENT] Port out of allowed range 1024 - 65535");
 		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
-			if(clientConnection.isAccepted()) logger.info("Connected to {} on port {}", ip, port);
+			if(clientConnection.isAccepted()) logger.info("[CLIENT] connected to server {}:{}", ip, port);
 		}
 		catch (IOException e){
-			logger.error("Can't connect.", e);
+			logger.error("[CLIENT] Can't connect.", e);
 		}
 	}
 
 	public void listen(String ip, int port, int maxConnections){
 		if(isServer()){
-			logger.warn("Ignoring new listen command because we are already a server.");
+			logger.warn("[SERVER] Ignoring new listen command because we are already a server.");
 			return;
 		}
-		serverConnections = new ArrayList<NetConnection>();
+		if(!isPortOk(port)){
+			throw new IllegalArgumentException("[SERVER] Port out of allowed range 1024 - 65535");
+		}
+		serverConnections = new ArrayList<>();
 		try{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
-
 			if(serverReception.isRunning()){
-				logger.info("Listening, IP: {} Port: {}", InetAddress.getLocalHost().getHostAddress(), port);
-
+				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
+			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
+			Main.getInstance().setConsoleVisible(true);
+			Main.getInstance().setTitle("[SERVER] Bunny Brawl - GameDevWeek WS 2013/14");
 		}
 		catch (IOException e){
-			logger.error("Can't listen for connections.", e);
+			logger.error("[SERVER] Can't listen for connections.", e);
 			serverConnections = null;
 			serverReception = null;
 		}
 	}
 
+	/**
+	 * ONLY FOR LISTEN OF A SERVER
+	 */
+	public String getDefaultServerIp(){
+		return "0.0.0.0";
+	}
+
+	/**
+	 * Default Port
+	 */
+	public int getDefaultPort(){
+		return 54293;
+	}
+
+	/**
+	 * DisconnectCallback: wird auf Server und Clientseite aufgerufen, sobald die eigene Verbindung verloren geht.
+	 * z.B: Client disconnected daraufhin wir dieser Callback aufgerufen, damit der GameState geändert werden kann
+	 */
+	public DisconnectCallback getDisconnectCallback(){
+		return disconnectcallback;
+	}
+
+	/**
+	 * PlayerDisconnectCallback: Serverseitig. Wenn einer oder mehrere Clients disconnecten, wird deren ID
+	 * in diesem Callback mtigegeben damit die Serverdaten angepasst werden können.
+	 * Danach ist eine Funktion wie LobbyUpdate notwendig um diese änderung den Clients mitzutzeilen
+	 */
 	public PlayerDisconnectCallback getPlayerDisconnectCallback(){
 		return playerdisconnectcallback;
 	}
 
+	/**
+	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
+	 */
 	public ClientIdCallback getClientIdCallback(){
 		return clientidcallback;
 	}
 
+	/**
+	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
+	 */
 	public LobbyUpdateCallback getLobbyUpdateCallback(){
 		return lobbyupdatecallback;
 	}
 
+	/**
+	 * Serverseitig: der Client teilt seine Spielerdaten mit(Spielername, Klasse, Team und Accept)
+	 */
 	public PlayerUpdateCallback getPlayerUpdateCallback(){
 		return playerupdatecallback;
 	}
 
+	/**
+	 * Serverseitig: der Client teilt einen Mapvorschlag mit
+	 */
 	public MatchUpdateCallback getMatchUpdateCallback(){
 		return matchupdatecallback;
 	}
 
+	/**
+	 * Clientseitig: der Server teilt dem Clienten den GameState mit
+	 */
 	public GameStateCallback getGameStateCallback(){
 		return gameStateCallback;
+	}
+	
+	/**
+	 * Serverseitig: der Client teilt dem Server den angenommenen GameState mit
+	 */
+	public GameStateAckCallback getGameStateAckCallback(){
+		return gameStateAckCallback;
+	}
+
+	public String getMyIp(){
+		try{
+			return InetAddress.getLocalHost().getHostAddress();
+		}
+		catch (Exception e){
+			logger.error("[NETWORK] error at reading local host IP, fallback to localhost\n{}", e);
+			return "127.0.0.1";
+		}
+	}
+
+	public void setDisconnectCallback(DisconnectCallback callback){
+		this.disconnectcallback = callback;
 	}
 
 	public void setPlayerDisconnectCallback(PlayerDisconnectCallback callback){
@@ -151,6 +287,10 @@ public class NetworkManager{
 	public void setGameStateCallback(GameStateCallback gameStateCallback){
 		this.gameStateCallback = gameStateCallback;
 	}
+	
+	public void setGameStateAckCallback(GameStateAckCallback gameStateAckCallback){
+		this.gameStateAckCallback = gameStateAckCallback;
+	}
 
 	public boolean isServer(){
 		return serverConnections != null && serverReception != null && serverReception.isRunning();
@@ -171,7 +311,7 @@ public class NetworkManager{
 	}
 
 	public void despawnEntity(long id){
-		if(!isClient()) return;
+		if(!isServer()) return;
 		broadcastToClients(new DespawnDatagram(id));
 	}
 
@@ -179,10 +319,15 @@ public class NetworkManager{
 		if(!isServer()) return;
 		broadcastToClients(new GameStateDatagram(gameStates));
 	}
+	
+	public void sendGameStateAck(GameStates gameStates){
+		if(!isClient()) return;
+		clientConnection.send(new GameStateDatagram(gameStates));
+	}
 
 	private void sendClientId(NetConnection con){
 		if(!isServer()) return;
-		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getId()));
+		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getPlayerId()));
 	}
 
 	public void sendMatchUpdate(String map){
@@ -197,8 +342,8 @@ public class NetworkManager{
 
 	public void sendLobbyUpdate(String map, PlayerData[] players){
 		if(!isServer()) return;
-		for(PlayerData pd:players){
-			logger.info("Player: " + pd.toString());
+		for(PlayerData pd : players){
+			logger.info("[SERVER] Player: " + pd.toString());
 		}
 		broadcastToClients(new LobbyUpdateDatagram(map, players));
 	}
@@ -212,7 +357,7 @@ public class NetworkManager{
 			receiveChat("SERVER", text);
 		}
 		else{
-			logger.error("Can't send chat message, when not connected.");
+			logger.error("[CLIENT] Can't send chat message, when not connected.");
 		}
 	}
 
@@ -227,50 +372,60 @@ public class NetworkManager{
 	/**
 	 * Wird von der Verarbeitungslogik für Chat-Datagramme verwendet, um Chat-Nachrichten an den Listener zuzustellen. Aufruf von anderer Stelle ist eher nicht
 	 * sinnvoll.
-	 * 
-	 * @param sender
-	 * @param text
+	 *
+	 * @param sender String
+	 * @param text   String
 	 */
 	void receiveChat(String sender, String text){
-		for(ChatListener l:chatListeners){
+		for(ChatListener l : chatListeners){
 			l.chatMessage(sender, text);
 		}
 	}
 
 	/**
 	 * Wird innerhalb der server-seitigen Netzwerklogik verwendet, um Pakete an alle Clients zu schicken.
-	 * 
-	 * @param dgram
+	 *
+	 * @param dgram BaseDatagram
 	 */
 	void broadcastToClients(BaseDatagram dgram){
 		if(!isServer()){
-			logger.warn("Request to broadast datagram to clients will be ignored because of non-server context.");
+			logger.warn("[SERVER] Request to broadast datagram to clients will be ignored because of non-server context.");
 			return;
 		}
-		for(NetConnection con:serverConnections){
+		for(NetConnection con : serverConnections){
 			con.send(dgram);
 		}
 	}
 
 	public void disconnectFromServer(){
 		if(isClient()){
+			if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
-			clientConnection = null;
-			logger.info("Disconnect from Server.");
 		}
 	}
 
 	public void init(){
-		new NetworkCommands(instance);
+		new NetworkCommands();
 		addChatListener(new ConsoleChatListener());
 	}
 
 	public void update(){
+		handlePendingDespawns();
 		handleNewConnections();
 		handleDisconnects();
 		replicateServerEntities();
 		handleDatagramsClient();
 		handleDatagramsServer();
+		checkStats();
+		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
+	}
+
+	private void handlePendingDespawns(){
+		if(!isClient()) return;
+		DespawnDatagram despawn;
+		while((despawn=pendingDespawns.poll())!=null){
+			clientDgramHandler.handle(despawn, clientConnection);
+		}
 	}
 
 	private void replicateServerEntities(){
@@ -286,21 +441,33 @@ public class NetworkManager{
 			else if(entity instanceof ServerPlayer){
 				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
 			}
+			else if(entity instanceof Zone){
+				//Intentionally ignored. 
+				//Nothing more required here, zones need no replication to the client.
+			}
 			else{
-				logger.warn("Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
+				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
 			}
 		}
 	}
 
 	private void handleNewConnections(){
 		if(isServer()){
+			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				NetConnection connection = serverReception.getNextNewConnection();
+				while(connection != null){
+					connection.shutdown();
+					connection = serverReception.getNextNewConnection();
+				}
+				return;
+			}
 			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
 				serverConnections.add(connection);
 				this.sendClientId(connection);
-				logger.info("Player {} connected.", (nextPlayerNumber - 1));
+				logger.info("[SERVER] Player {} connected.", (nextPlayerNumber - 1));
 				connection = serverReception.getNextNewConnection();
 			}
 		}
@@ -308,66 +475,68 @@ public class NetworkManager{
 
 	private void handleDisconnects(){
 		if(isServer()){
-			List<NetConnection> toRemove = new ArrayList<NetConnection>();
-			for(NetConnection c:serverConnections){
+			List<NetConnection> toRemove = new ArrayList<>();
+			for(NetConnection c : serverConnections){
 				if(!c.isConnected()){
 					toRemove.add(c);
 				}
 			}
 			if(toRemove.size() > 0){
-				List<Integer> ids = new ArrayList<Integer>();
-				for(NetConnection rc:toRemove){
+				List<Integer> ids = new ArrayList<>();
+				for(NetConnection rc : toRemove){
 					serverConnections.remove(rc);
-					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
+					logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
+					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
+					ids.add(((ConnectionAttachment) rc.getAttachment()).getPlayerId());
 				}
-				playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+				if(this.playerdisconnectcallback != null){
+					this.playerdisconnectcallback.playerDisconnectCallback(ids.toArray(new Integer[ids.size()]));
+				}
+			}
+		}
+		if(clientConnection != null && !clientConnection.isConnected()){
+			if(this.disconnectcallback != null){
+				this.disconnectcallback.disconnectCallback("[NETWORK] Disconnected from Server.");
+			}
+			clientConnection = null;
+		}
+	}
+
+	private void handleDatagrams(DatagramHandler handler, NetConnection connection) {
+		connection.sendPendingDatagrams();
+		while(connection.hasIncoming()){
+			INetDatagram dgram = connection.receive();
+			if(dgram instanceof BaseDatagram){
+				((BaseDatagram) dgram).handle(handler, connection);
 			}
 		}
 	}
 
 	private void handleDatagramsClient(){
 		if(!isClient()) return;
-
-		DatagramHandler handler = clientDgramHandler;
-
-		clientConnection.sendPendingDatagrams();
-		while(clientConnection.hasIncoming()){
-			INetDatagram dgram = clientConnection.receive();
-			if(dgram instanceof BaseDatagram){
-				((BaseDatagram) dgram).handle(handler, clientConnection);
-			}
-		}
+		handleDatagrams(clientDgramHandler, clientConnection);
 	}
 
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
-
-		DatagramHandler handler = serverDgramHandler;
-
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while(it.hasNext()){
 			NetConnection connection = it.next();
-			connection.sendPendingDatagrams();
-
-			while(connection.hasIncoming()){
-				INetDatagram dgram = connection.receive();
-				if(dgram instanceof BaseDatagram){
-					((BaseDatagram) dgram).handle(handler, connection);
-				}
-			}
-
+			handleDatagrams(serverDgramHandler, connection);
+			
 			if(!connection.isConnected()){
-				logger.info("{} disconnected.", ((PlayerData) connection.getAttachment()).getPlayername());
+				logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) connection.getAttachment()).getPlayername());
 				it.remove();
 			}
 		}
 	}
 
 	public void setPlayerEntityId(int playerId, long entityId){
-		for(NetConnection nc:serverConnections){
+		for(NetConnection nc : serverConnections){
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
-			if(tmp.getId() == playerId){
+			if(tmp.getPlayerId() == playerId){
 				tmp.setEntityId(entityId);
+				nc.send(new EntityIDDatagram(entityId));
 				break;
 			}
 		}
@@ -376,15 +545,52 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
+				}
+				ServerEntityManager.getInstance().getGameInfo().removeListner(gameInfoListener);
+				for(NetConnection nc : serverConnections){
+					nc.shutdown();
+				}
+				nextPlayerNumber = 1;
+				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
-				logger.info("[SERVER] stopped");
+				serverReception = null;
+				Main.getInstance().setTitle("Bunny Brawl - GameDevWeek WS 2013/14");
 			}
 			else{
-				logger.warn("Can't stop, i'm not a Server.");
+				logger.warn("[NETWORK] Can't stop, i'm not a Server.");
 			}
 		}
 		catch (Exception e){
-			logger.error("Can't Stop Server:", e);
+			logger.error("[SERVER] Can't Stop Server.", e);
 		}
 	}
+
+	public void dispose(){
+		if(isServer()){
+			stopServer();
+		}
+		if(isClient()){
+			disconnectFromServer();
+		}
+	}
+	
+	private GameInfoListener gameInfoListener = new GameInfoListener(){
+		
+		@Override
+		public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg){
+			broadcastToClients(new GameInfoReplicationDatagram(blackPoints,whitePoints,remainingEgg));
+		}
+	};
+
+	/**
+	 * @return Number of clients currently connected to this server.
+	 */
+	public int clientCount(){
+		if(!isServer()) return 0;
+		return serverConnections.size();
+	}
+	
+	
 }

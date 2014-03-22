@@ -6,19 +6,16 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageIn;
 import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class MatchUpdateDatagram extends BaseDatagram{
 	public static final byte MATCH_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x11;
 	private String map;
 
 	public MatchUpdateDatagram(byte type, short id, short param1, short param2){
-		super(MessageType.DELTA, type, id, param1, param2);
+		super(MessageType.NORMAL, type, id, param1, param2);
 	}
 
 	public MatchUpdateDatagram(String map){
-		super(MessageType.DELTA, MATCH_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.NORMAL, MATCH_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
 		this.map = map;
 	}
 

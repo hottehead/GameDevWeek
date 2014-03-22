@@ -1,3 +1,4 @@
+
 package de.hochschuletrier.gdw.ws1314.entity;
 
 import java.util.ArrayList;
@@ -5,27 +6,43 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
 
 /**
  * Created by Jerry on 18.03.14.
  */
 public class ClientEntityManager {
+    private static final Logger logger = LoggerFactory.getLogger(ClientEntityManager.class);
+
 	private static ClientEntityManager instance = null;
 	
 	private LinkedList<ClientEntity> entityList;
+	private LinkedList<ClientDieEntity> dyingEntityList;
     private HashMap<Long,ClientEntity> entityListMap;
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
     protected ArrayList<ClientEntityManagerListener> listeners;
+    
+    private GameInfo gameInfo = new GameInfo();
+
+    private long playerEntityID = -1;
+    
+    private PlayerData myPlayerData;
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
+		dyingEntityList = new LinkedList<ClientDieEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
 		removalQueue = new LinkedList<ClientEntity>();
 		insertionQueue = new LinkedList<ClientEntity>();
@@ -40,30 +57,87 @@ public class ClientEntityManager {
     	return instance;
     }
     
-    public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
-        ClientEntity e = null;
-        switch(type){
-            case Ei :{
-                e = new ClientEgg();
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+    
+    public PlayerData getPlayerData() {
+    	return this.myPlayerData;
+    }
+    public void setPlayerData(PlayerData myData) {
+    	myData.setEntityId(playerEntityID);
+    	this.myPlayerData = myData;
+    }
 
+	public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
+        ClientEntity e = null;
+        switch(type)
+        {
+            case Ei:
+                e = new ClientEgg();
                 break;
-            }
-            case Noob:{
+            case Noob:
                 e = createPlayer(PlayerKit.NOOB);
                 break;
-            }
-            case Hunter:{
+            case Hunter:
                 e = createPlayer(PlayerKit.HUNTER);
                 break;
-            }
-            /*case Tank :{
+            case Tank:
                 e = createPlayer(PlayerKit.TANK);
                 break;
-            }*/
-            case Knight :{
+            case Knight:
                 e = createPlayer(PlayerKit.KNIGHT);
                 break;
-            }
+            case Projectil: 
+            	e = new ClientProjectile();
+            	break;
+            case BRIDGE_HORIZONTAL_LEFT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalLeft();
+				break;
+            case BRIDGE_HORIZONTAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalMiddle();
+				break;
+            case BRIDGE_HORIZONTAL_RIGHT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalRight();
+				break;
+            case BRIDGE_VERTICAL_BOTTOM:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalBottom();
+				break;
+            case BRIDGE_VERTICAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalMiddle();
+				break;
+            case BRIDGE_VERTICAL_TOP:
+            	e = new ClientBridge();
+				((ClientBridge)e).setVerticalTop();
+            	break;
+            case BridgeSwitch:
+            	e = new ClientBridgeSwitch();
+            	break;
+            case Bush:
+            	e = new ClientBush();
+            	break;
+            case ContactMine:
+            	e = new ClientContactMine();
+            	break;
+            case Carrot:
+            	e = new ClientCarrot();
+            	break;
+            case Spinach:
+            	e = new ClientSpinach();
+            	break;
+            case Clover:
+            	e = new ClientClover();
+            	break;
+			case HayBale:
+				e = new ClientHayBale();
+				break;
+			default:
+				break;
         }
         if(e!=null)
         {
@@ -72,6 +146,21 @@ public class ClientEntityManager {
             addEntity(e);
         }
         return e;
+    }
+
+    public void setPlayerEntityID(long id) {
+        playerEntityID = id;
+        
+        if (this.myPlayerData != null) {
+        	this.myPlayerData.setEntityId(id);
+    	}
+    }
+
+    public long getPlayerEntityID() {
+        if(playerEntityID < 0)
+            logger.warn("Sieht so aus als wurde PlayerID noch nicht gesetzt. getPlayerEntityID muss warscheinlich nochmal aufgerufen werden.");
+
+        return playerEntityID;
     }
 
     private ClientEntity createPlayer(PlayerKit pk) {
@@ -104,10 +193,15 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
-            entityListMap.remove(e.getID());
+            if(e instanceof ClientDieEntity){
+            	dyingEntityList.remove(e);
+            }
+			if(e.getID() >= 0)
+            	entityListMap.remove(e.getID());
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityRemove(e);
             }
+
         }
         return listChanged;
     }
@@ -118,7 +212,8 @@ public class ClientEntityManager {
             listChanged = true;
             ClientEntity e = insertionQueue.poll();
             entityList.add(e);
-            entityListMap.put(e.getID(),e);
+			if(e.getID() >= 0)
+            	entityListMap.put(e.getID(),e);
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityInsert(e);
         	}
@@ -126,7 +221,15 @@ public class ClientEntityManager {
         return listChanged;
     }
 
-
+    public boolean isPendingSpawn(long entityId){
+    	for(ClientEntity e: insertionQueue){
+    		if(e.getID()==entityId){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public ClientEntity getEntityById(long id) {
         Long lid = new Long(id);
         if(entityListMap.containsKey(lid))
@@ -136,6 +239,16 @@ public class ClientEntityManager {
         return null;
     }
 
+	public ClientDieEntity createDyingGhost(EntityType type, float time){
+		ClientDieEntity e = new ClientDieEntity();
+		e.setEntityType(type);
+		e.setDyingTime(time);
+
+		dyingEntityList.add(e);
+		addEntity(e);
+		return e;
+	}
+
     public void update(float delta) {
         internalRemove();
         internalInsert();
@@ -143,6 +256,13 @@ public class ClientEntityManager {
         for (ClientEntity e : entityList)
             e.update( delta);
 
+		for (ClientDieEntity e : dyingEntityList){
+			if(e.getDyingTime() < 0){
+				removeEntity(e);
+//				dyingEntityList.remove(e);
+			}
+		}
+		
     }
     
     public void Clear()
@@ -151,6 +271,7 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo.clear();
     }
     
     public void provideListener(ClientEntityManagerListener l) {

@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.commons.gdx.assets;
 
+import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AsynchronousAssetLoaderX;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import de.hochschuletrier.gdw.commons.jackson.JacksonReader;
@@ -47,7 +49,7 @@ public class AssetManagerX extends AssetManager {
 
 	public AssetManagerX(FileHandleResolver resolver) {
 		super(resolver);
-
+		setLoader(AnimationExtended.class, new AnimationExtendedLoader(resolver));
 		setLoader(Animation.class, new AnimationLoader(resolver));
 		setLoader(TiledMap.class, new TiledMapLoader(resolver));
 		setLoader(TrueTypeFont.class, new TrueTypeFontLoader(resolver));
@@ -64,8 +66,26 @@ public class AssetManagerX extends AssetManager {
 		return null;
 	}
 
-	public Animation getAnimation(String name) {
-		return getByName(name, Animation.class);
+	public <T> Array<T> getByType(Class<T> type) {
+		HashMap<String, String> map = assetMaps.get(type);
+		Array<T> assets = new Array<T>();
+		for (String s : map.values()) {
+			assets.add(super.get(s, type));
+		}
+		return assets;
+	}
+
+	public <T> Array<String> getAssetNamesByType(Class<T> type) {
+		HashMap<String, String> map = assetMaps.get(type);
+		Array<String> names = new Array<String>();
+		for (String s : map.keySet()) {
+			names.add(s);
+		}
+		return names;
+	}
+
+	public AnimationExtended getAnimation(String name) {
+		return getByName(name, AnimationExtended.class);
 	}
 
 	/**

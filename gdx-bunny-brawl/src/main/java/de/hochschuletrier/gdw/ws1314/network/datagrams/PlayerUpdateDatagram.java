@@ -8,9 +8,6 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class PlayerUpdateDatagram extends BaseDatagram{
 	public static final byte PLAYER_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x12;
 	private String playerName;
@@ -19,11 +16,11 @@ public class PlayerUpdateDatagram extends BaseDatagram{
 	private boolean accept;
 
 	public PlayerUpdateDatagram(byte type, short id, short param1, short param2){
-		super(MessageType.DELTA, type, id, param1, param2);
+		super(MessageType.NORMAL, type, id, param1, param2);
 	}
 
 	public PlayerUpdateDatagram(String playerName, EntityType type, TeamColor team, boolean accept){
-		super(MessageType.DELTA, PLAYER_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
+		super(MessageType.NORMAL, PLAYER_UPDATE_DATAGRAM, (short) 0, (short) 0, (short) 0);
 		this.playerName = playerName;
 		this.type = type;
 		this.team = team;
@@ -66,5 +63,4 @@ public class PlayerUpdateDatagram extends BaseDatagram{
 	public boolean isAccept(){
 		return accept;
 	}
-
 }

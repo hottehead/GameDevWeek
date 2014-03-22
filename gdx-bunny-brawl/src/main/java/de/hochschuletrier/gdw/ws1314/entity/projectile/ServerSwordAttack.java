@@ -9,8 +9,6 @@ package de.hochschuletrier.gdw.ws1314.entity.projectile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -20,35 +18,74 @@ import static de.hochschuletrier.gdw.ws1314.entity.EntityType.SwordAttack;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 /**
  *
  * @author Patrick
  */
+// Modified by El Fapo: Added getSourceID
 public class ServerSwordAttack extends ServerEntity {
     
     //========================================
-    // CONSTANTS
-    private static final float totalLifetime = 1500.0f;
-    
-    //========================================
     // VARIABLES
-    private final long sourceID;
-    private final Vector2 originPosition;
-    private final Vector2 facingDirection;
-    
-    private float lifetime;
+    private long sourceID;
+    private TeamColor teamColor;
+    private Vector2 originPosition;
+    private float damage;
+    private float despawnTime;
+    private float height;
+    private float amplitude;
     
     //========================================
-    public ServerSwordAttack(long sourceID) {
+    public ServerSwordAttack() {
         super();
         
+    }
+    
+    public void setSource(long sourceID) {
         this.sourceID = sourceID;
-        
-        ServerPlayer player = (ServerPlayer)ServerEntityManager.getInstance().getEntityById(sourceID);
-        
+
+        ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
+
+        this.teamColor = player.getTeamColor();
+        setFacingDirection(player.getFacingDirection());
         this.originPosition = player.getPosition();
-        this.facingDirection = player.getFacingDirection().getDirectionVector();
+    }
+    
+
+	public long getSourceID() {
+		return sourceID;
+	}
+    
+    /**
+     * The collision zone of the Sword attack has the shape of a triangle.
+     * @param height of the triangle
+     * @param amplitude  of the source angle
+     */
+    public void setSize(float height, float amplitude) {
+        this.amplitude = amplitude;
+        this.height = height;
+    }
+    
+    public void setDamage(float dmg) {
+    	damage = dmg;
+    }
+    
+    public float getDamage() {
+    	return damage;
+    }
+    
+    public void setDespawnTime(float t) {
+        despawnTime = t;
+    }
+    
+    public float getDespawnTime() {
+        return despawnTime;
+    }
+    
+    public TeamColor getTeamColor() {
+	return teamColor;
     }
 
     @Override
@@ -65,9 +102,10 @@ public class ServerSwordAttack extends ServerEntity {
 
     @Override
     public void update(float deltaTime) {
-        lifetime += deltaTime;
-        
-        if(lifetime > totalLifetime) {
+        despawnTime -= deltaTime;
+        ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
+        this.physicsBody.setPosition(player.getPosition().x, player.getPosition().y);
+        if(despawnTime < 0) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
     }
@@ -79,12 +117,46 @@ public class ServerSwordAttack extends ServerEntity {
 
     @Override
     public void initPhysics(PhysixManager manager) {
-        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager).position(this.originPosition).fixedRotation(true).create();
-            body.createFixture(new PhysixFixtureDef(manager).density(0.5f).friction(0.0f).restitution(0.0f).shapeCircle(30).sensor(true));
-            body.setGravityScale(0);
-            body.addContactListener(this);
+    	// Modified by ElFapo, because polygons do not work
+//        int oX = (int) this.originPosition.x;
+//        int oY = (int) this.originPosition.y;
+//        Point pointA = new Point(oX, oY);
+//        
+//        float size = (float) Math.sqrt(2 * Math.pow(this.height, 2));
+//        
+//        Vector2 sideL = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * 0.5f);
+//        Vector2 sideR = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * -0.5f);
+//        
+//        int lX = (int) (oX + (sideL.x * size));
+//        int lY = (int) (oY + (sideL.y * size));
+//        
+//        int rX = (int) (oX + (sideR.x * size));
+//        int rY = (int) (oY + (sideR.y * size));
+//        
+//        Point pointB = new Point(lX, lY);
+//        Point pointC = new Point(rX, rY);
+//        
+//        ArrayList<Point> points = new ArrayList<>();
+//        points.add(pointA);
+//        points.add(pointB);
+//        points.add(pointC);
+        
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
+                .position(this.originPosition)
+                .fixedRotation(true)
+                .angle(getFacingDirection().getAngle() - (float) Math.PI / 2.0f)
+                .create();
+        
+        body.createFixture(new PhysixFixtureDef(manager)
+                .density(0.5f)
+                .friction(0.0f)
+                .restitution(0.0f)
+                .shapeBox(amplitude, height * 2.0f, new Vector2(0.0f, height), 0.0f)
+                .sensor(true));
+        body.setGravityScale(0);
+        body.addContactListener(this);
             
-            setPhysicsBody(body);
+        setPhysicsBody(body);
     }
 
     @Override
@@ -93,14 +165,6 @@ public class ServerSwordAttack extends ServerEntity {
 
     @Override
     public void endContact(Contact contact) {
-    }
-
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-    }
-
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
     }
 
     @Override

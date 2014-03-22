@@ -7,9 +7,6 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
-/**
- * Created by albsi on 18.03.14.
- */
 public class GameStateDatagram extends BaseDatagram{
 	public static final byte GAME_STATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x32;
 	private GameStates gameStates;

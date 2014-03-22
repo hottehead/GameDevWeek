@@ -7,9 +7,6 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class EventDatagram extends BaseDatagram{
 	public static final byte EVENT_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x30;
 	private long entityId;

@@ -1,7 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
-import com.badlogic.gdx.math.Vector2;
-
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 
@@ -13,6 +13,8 @@ import de.hochschuletrier.gdw.ws1314.entity.EventType;
  */
 public class ClientBush extends ClientLevelObject
 {
+	private static final float DYING_ANIMATION_TIME	= 1.0f;
+
 	public ClientBush()
 	{
 		super();
@@ -20,12 +22,21 @@ public class ClientBush extends ClientLevelObject
 
     @Override
     public void doEvent(EventType event) {
-
+    	this.getEntitySound().playSoundByAction(event, this);
     }
 
 	@Override
 	public EntityType getEntityType()
 	{
-		return EntityType.ContactMine;
+		return EntityType.Bush;
+	}
+
+	@Override
+	public void dispose() {
+		ClientDieEntity e = ClientEntityManager.getInstance().createDyingGhost(EntityType.Bush, DYING_ANIMATION_TIME);
+		e.setPosition(getPosition());
+		e.enable();
+		e.setLevelObjectState(EntityStates.DISPOSE);
+		super.dispose();
 	}
 }

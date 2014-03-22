@@ -1,23 +1,34 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-// 32 bit coded material id
+import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
+import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+
 public class Material implements Comparable<Material> {
 
 	protected int Layer;
 	protected float width, height;
-	protected Texture texture;
+	protected TextureRegion texture;
+	protected AnimationExtended animation;
+	boolean isAnimation;
 
-	protected Material(Texture texture, MaterialInfo materialInfo) {
-		putInfo(texture, materialInfo);
+	protected Material(AssetManagerX assetManager, MaterialInfo materialInfo) {
+		putInfo(assetManager, materialInfo);
+
 	}
 	
-	protected void putInfo(Texture texture, MaterialInfo materialInfo) {
-		this.texture = texture;
+	protected void putInfo(AssetManagerX assetManager, MaterialInfo materialInfo) {
+		if(materialInfo.isAnimation) {
+			animation = assetManager.getAnimation(materialInfo.textureName);
+		}
+		else {
+			this.texture = new TextureRegion(assetManager.getTexture(materialInfo.textureName));
+		}
 		this.Layer = materialInfo.layer;
 		this.width = materialInfo.width; 
 		this.height = materialInfo.height;
+		this.isAnimation = materialInfo.isAnimation;
 	}
 
 	/*
@@ -36,5 +47,17 @@ public class Material implements Comparable<Material> {
 		
 		return EQUAL_TO;
 	}
+
+	public TextureRegion getActiveTexture(float stateTime) {
+		if(isAnimation) {
+			TextureRegion animationTex = animation.getKeyFrame(stateTime);
+			return animation.getKeyFrame(stateTime);	
+		}
+		else {
+			return texture;
+		}
+	}
+	
+	
 
 }

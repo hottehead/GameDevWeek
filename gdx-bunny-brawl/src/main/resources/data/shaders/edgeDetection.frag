@@ -1,3 +1,5 @@
+#version 330
+
 uniform sampler2D u_texture;
 uniform mat4 u_projTrans;
 
@@ -6,8 +8,8 @@ in vec2 vTexCoord;
 
 float greyscale(vec4 colorValue) {
 	float val=0.0f;
-	for(int i=0;i<4;++i) {
-		val = val+ colorValue[i] * 0.25f;
+	for(int i=0;i<3;++i) {
+		val = val+ colorValue[i] * 0.33f;
 	}
 	return val;
 }
@@ -23,9 +25,9 @@ vec4 gaussianBlur3x3(vec2 texCoord) {
 	);
 
 	float kernel[9] = float[9](
-		1,2,1,
-		2,4,2,
-		1,2,1
+		1.0,2.0,1.0,
+		2.0,4.0,2.0,
+		1.0,2.0,1.0
 	);
 
 	float kernelFactor = 1.0f/16.0f;
@@ -52,11 +54,11 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 	);
 
 	float kernel[25] = float[25](
-		2,4,5,4,2,
-		4,9,12,9,4,
-		5,12,15,12,5,
-		4,9,12,9,4,
-		2,4,5,4,2
+		2.0,4.0,5.0,4.0,2.0,
+		4.0,9.0,12.0,9.0,4.0,
+		5.0,12.0,15.0,12.0,5.0,
+		4.0,9.0,12.0,9.0,4.0,
+		2.0,4.0,5.0,4.0,2.0
 	);
 
 	float kernelFactor = 1.0f/159.0f;
@@ -69,8 +71,6 @@ vec4 gaussianBlur5x5(vec2 texCoord) {
 	endResult.xyz = endResult.xyz * kernelFactor;
 	return endResult;
 }
-
-
 
 void main() {
 	gl_FragColor = (texture2D(u_texture, vTexCoord)) * vColor;

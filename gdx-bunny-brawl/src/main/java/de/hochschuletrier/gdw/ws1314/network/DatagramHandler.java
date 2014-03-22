@@ -30,4 +30,10 @@ public interface DatagramHandler{
 	void handle(GameStateDatagram gameStateDatagram, NetConnection connection);
 
 	void handle(ClientIdDatagram clientIdDatagram, NetConnection connection);
+
+	void handle(EntityIDDatagram entityIDDatagram, NetConnection connection);
+
+	void handle(PingDatagram pingDatagram, NetConnection connection);
+
+	void handle(GameInfoReplicationDatagram gameInfoReplicationDatagram, NetConnection connection);
 }

@@ -20,6 +20,8 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+
 import de.hochschuletrier.gdw.commons.devcon.CCmdFlags;
 import de.hochschuletrier.gdw.commons.devcon.CVarFlags;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
@@ -80,7 +82,7 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
 
         int width = Gdx.graphics.getWidth();
         int height = Gdx.graphics.getHeight();
-        stage = new Stage(width, height, false, DrawUtil.batch);
+        stage = new Stage(new StretchViewport(width, height), DrawUtil.batch);
         stage.addListener(this);
 
         inputProcessor = new InputInterceptor(stage) {
@@ -161,8 +163,8 @@ public class DevConsoleView implements ScreenListener, EventListener, ICVarListe
 
     @Override
     public void resize(int width, int height) {
-        stage.setViewport(width, height, true);
-        adjustHeight();
+        stage.getViewport().update(width, height, true);
+    	adjustHeight();
         logList.invalidateHierarchy();
     }
 
