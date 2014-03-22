@@ -116,6 +116,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private float deathfreeze;
     private boolean isInDeadZone;
     
+    Vector2 dir = new Vector2(0,0);
+    
     
     public ServerPlayer()
     {
@@ -166,6 +168,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearDamping(2000);
             return;
         }
+        if(!this.isOnBridge && this.isInDeadZone) {
+            this.isDead = true;
+            this.isOnBridge = false;
+            this.isInDeadZone = false;
+        }
         
     	currentState.update(deltaTime);
     	
@@ -201,8 +208,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
 
-    //NOT FINAL! CHANGE AS NEEDED
-    Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent) {
         switch (intent){
             case MOVE_UP_ON:
@@ -439,9 +444,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  case AbyssZone:
                  case WaterZone:
                      this.isInDeadZone = true;
-                     if(!isOnBridge) {
-                         this.isDead = true;
-                     }
+//                     if(!isOnBridge) {
+//                         this.isDead = true;
+//                     }
                      break;
                  default:
                      break;
@@ -482,9 +487,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                     collidingBridgePartsCount--;
                     if(collidingBridgePartsCount <= 0) {
                         this.isOnBridge = false;
-                        if(this.isInDeadZone) {
-                            this.isDead = true;
-                        }
+//                        if(this.isInDeadZone) {
+//                            this.isDead = true;
+//                        }
                     }
                     break;
                 default:
