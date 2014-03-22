@@ -155,7 +155,6 @@ public class ClientGame {
 					.getEntityById(playerId);
 			if(playerEntity instanceof ClientPlayer) {
 				stage.setDisplayedPlayer((ClientPlayer)playerEntity);
-				
 			}
 			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}

@@ -115,6 +115,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private boolean isDead;
     private int collidingBridgePartsCount;
+    private float deathfreeze;
     
     
     public ServerPlayer()
@@ -143,6 +144,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	droppedEggID = -1l;
     	isDead = false;
     	collidingBridgePartsCount = 0;
+    	deathfreeze = 0.5f;
     }
     
     public void enable() {}
@@ -154,8 +156,15 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public void update(float deltaTime) 
     {
         if(isDead) {
-            isDead = false;
-            this.reset();
+            deathfreeze -= deltaTime;
+            if(deathfreeze < 0) {
+                isDead = false;
+                deathfreeze = 0.5f;
+                this.reset();
+            }
+            this.physicsBody.setLinearVelocity(new Vector2());
+            this.physicsBody.setLinearDamping(2000);
+            return;
         }
         
     	currentState.update(deltaTime);
@@ -166,9 +175,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         		attackAvailable = true;
         		
         		if(do1Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
         		    doFirstAttack();
         		    do1Attack = false;
         		} else if(do2Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
         		    doSecondAttack();
         		    do2Attack = false;
         		}
@@ -229,7 +240,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do1Attack = true;
-            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
             	}
                 break;
             case ATTACK_2:
@@ -243,7 +253,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do2Attack = true;
-            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
             	}
                 break;
             case DROP_EGG:

@@ -61,7 +61,7 @@ public class ClientPlayer extends ClientEntity
 
     @Override
     public void doEvent(EventType event) {
-    	if (Main.getInstance().getCurrentState().equals(GameStates.DUALGAMEPLAY))
+    	//aaaaaif (Main.getInstance().getCurrentState().equals(GameStates.DUALGAMEPLAY))
     		LocalSound.getInstance().playSoundByAction(event, this);
 
 
