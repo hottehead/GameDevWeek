@@ -605,7 +605,7 @@ public void endContact(Contact contact) {
     		currentArmor = 0;
     	
     	if (currentHealth <= 0)
-    		reset();
+			this.isDead = true;
     }
 	
 	protected void applyKnockback(FacingDirection direction, float impulse)

@@ -4,7 +4,6 @@ import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 
 /**
@@ -34,8 +33,9 @@ public class ClientBush extends ClientLevelObject
 
 	@Override
 	public void dispose() {
-		ClientDieEntity e = ClientEntityManager.getInstance().createDyingGhost(EntityType.Bush,DYING_ANIMATION_TIME);
+		ClientDieEntity e = ClientEntityManager.getInstance().createDyingGhost(EntityType.Bush, DYING_ANIMATION_TIME);
 		e.setPosition(getPosition());
+		e.enable();
 		e.setLevelObjectState(EntityStates.DISPOSE);
 		super.dispose();
 	}
