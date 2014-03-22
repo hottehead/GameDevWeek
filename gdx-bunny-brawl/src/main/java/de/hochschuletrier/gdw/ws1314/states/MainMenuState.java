@@ -3,18 +3,12 @@ package de.hochschuletrier.gdw.ws1314.states;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
@@ -33,10 +27,7 @@ public class MainMenuState extends GameState {
 	private OptionListener optionListener;
 	private ExitListener exitlistener;
 	private PlayServerListener playServerListener;
-	
-	private StartServerClick startServerClickListener;
-	private StartClientClick startClientClickListener;
-	private StartForeverAloneClick startForeverAloneListener;
+	private PlayClientListener playClientListener;
 
     public MainMenuState() {
     }
@@ -49,24 +40,18 @@ public class MainMenuState extends GameState {
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
 		
         stage = new MainMenuStage();
-		stage.init(assetManager);
-
-		this.startServerClickListener = new StartServerClick();
-		this.startClientClickListener = new StartClientClick();
-		this.startForeverAloneListener = new StartForeverAloneClick();
-
+        stage.init(assetManager);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		this.optionListener = new OptionListener();
 		this.exitlistener = new ExitListener();
 		this.playServerListener = new PlayServerListener();
+		this.playClientListener = new PlayClientListener();
 	}
 	
     public void render() {
 
 		stage.render();
-
-
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	float stateTime = 0f; 
@@ -74,6 +59,7 @@ public class MainMenuState extends GameState {
 	public void update(float delta) {
 		stateTime += delta;
 		music.update();
+		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
     }
 
     public void onEnter() {
@@ -84,36 +70,26 @@ public class MainMenuState extends GameState {
         	this.music.play("music-lobby-loop");
         }
 
-	    Gdx.input.setInputProcessor(stage);
+		stage.init(assetManager);
+	    Main.inputMultiplexer.addProcessor(stage);
 		
-	    stage.getStartServerButton().addListener(this.startServerClickListener);
-		stage.getStartClientButton().addListener(this.startClientClickListener);
-		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
-		
-		stage.getStartServerButton().addListener(this.startServerClickListener);
-		stage.getStartClientButton().addListener(this.startClientClickListener);
-		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
+		stage.getPlayClientButton().addListener(this.playClientListener);
 	}
 
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2000);
+    		this.music.setFade('o', 2500);
     	}
     	
-        stage.getStartServerButton().removeListener(this.startServerClickListener);
-        stage.getStartClientButton().removeListener(this.startClientClickListener);
-        stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
-		
-        stage.getStartServerButton().removeListener(this.startServerClickListener);
-		stage.getStartClientButton().removeListener(this.startClientClickListener);
-		stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
+    	stage.getPlayClientButton().removeListener(this.playClientListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getExitButton().removeListener(this.exitlistener);
 		Main.inputMultiplexer.removeProcessor(stage);
+		stage.clear();
 	}
 
 	public void onLeaveComplete() {
@@ -160,8 +136,8 @@ public class MainMenuState extends GameState {
 	private class PlayClientListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to JoinServerState");
-			GameStates.LOBBY.init(assetManager);
-			GameStates.LOBBY.activate();
+			GameStates.CLIENTLOBBY.init(assetManager);
+			GameStates.CLIENTLOBBY.activate();
 		}
 	}
 	
@@ -194,32 +170,4 @@ public class MainMenuState extends GameState {
 			Gdx.app.exit();
 		}
 	}
-
-    private class StartServerClick extends ClickListener {
-		@Override
-		public void clicked(InputEvent event, float x, float y) {
-			logger.info("Changing State to Server-Lobby...");
-			GameStates.SERVERLOBBY.init(assetManager);
-			GameStates.SERVERLOBBY.activate();
-		}
-    }
-    
-    private class StartClientClick extends ClickListener {
-		@Override
-		public void clicked(InputEvent event, float x, float y) {
-			logger.info("Changing State to Client-Lobby...");
-			GameStates.CLIENTLOBBY.init(assetManager);
-			GameStates.CLIENTLOBBY.activate();
-		}
-    }
-    
-    private class StartForeverAloneClick extends ClickListener {
-		@Override
-		public void clicked(InputEvent event, float x, float y) {
-			GameStates.DUALGAMEPLAY.init(assetManager);
-			GameStates.DUALGAMEPLAY.activate();
-//			System.out.println("changed state");
-//			System.out.println(Main.inputMultiplexer.getProcessors().toString());
-		}
-    }
 }
