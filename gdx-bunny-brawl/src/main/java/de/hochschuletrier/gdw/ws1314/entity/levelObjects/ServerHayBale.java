@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import de.hochschuletrier.gdw.ws1314.entity.*;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +15,6 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
-import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
@@ -29,7 +28,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 10000.0f;
+	private final float DURATION_TIME_IN_WATER = 10.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 1.0f;
 	
@@ -73,6 +72,7 @@ public class ServerHayBale extends ServerLevelObject
 	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 	                    speed = 1;
+						this.setEntityState(EntityStates.WALKING);
 	                }
 	                break;
 	            case SwordAttack:
@@ -81,6 +81,7 @@ public class ServerHayBale extends ServerLevelObject
 	                    ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
 	                    this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
 	                                                    player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
+						this.setEntityState(EntityStates.WALKING);
 	                }
 	                break;
 	            default: 
@@ -94,10 +95,13 @@ public class ServerHayBale extends ServerLevelObject
                         this.physicsBody.setLinearVelocity(new Vector2());
                         this.fixtureMain.setSensor(true);
                         this.acrossable = true;
+						this.setEntityState(EntityStates.WET);
+						NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
                         speed = 0;
                     }
                     break;
-		        default: 
+		        default:
+					this.setEntityState(EntityStates.NONE);
                     this.acrossable = false;
                     break;
 		    }

@@ -9,6 +9,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,9 +142,15 @@ public class ClientDatagramHandler implements DatagramHandler{
 	public void handle(DespawnDatagram despawnDatagram, NetConnection connection){
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(despawnDatagram.getEntityId());
 		if(entity == null){
-			logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			if(ClientEntityManager.getInstance().isPendingSpawn(despawnDatagram.getEntityId())){
+				NetworkManager.getInstance().pendingDespawns.add(despawnDatagram);
+			}
+			else{
+				logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			}
 			return;
 		}
+		logger.debug("Despawn entity {}",despawnDatagram.getEntityId());
 		ClientEntityManager.getInstance().removeEntity(entity);
 	}
 
@@ -168,5 +175,16 @@ public class ClientDatagramHandler implements DatagramHandler{
 		long curTime = System.currentTimeMillis();
 		float ping = curTime - pingDatagram.getTimestamp();
 		NetworkManager.getInstance().updatePing(ping);
+	}
+
+	@Override
+	public void handle(GameInfoReplicationDatagram gameInfoReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().getGameInfo()==null){
+			logger.warn("Can't update game info, because gameInfo in ClientEntityManager is null, update will be lost.");
+			return;
+		}
+		ClientEntityManager.getInstance().getGameInfo().setRemainigEggs(gameInfoReplicationDatagram.getEggsRemaining());
+		ClientEntityManager.getInstance().getGameInfo().setTeamPointsBlack(gameInfoReplicationDatagram.getEggsBlack());
+		ClientEntityManager.getInstance().getGameInfo().setTeamPointsWhite(gameInfoReplicationDatagram.getEggsWhite());
 	}
 }

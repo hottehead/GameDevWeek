@@ -268,7 +268,7 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
-    	gameInfo=new GameInfo();
+    	gameInfo.clear();
     }
     
     public void provideListener(ClientEntityManagerListener l) {

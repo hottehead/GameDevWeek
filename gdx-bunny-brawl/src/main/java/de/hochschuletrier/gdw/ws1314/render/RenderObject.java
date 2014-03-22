@@ -33,8 +33,30 @@ public class RenderObject implements Comparable<RenderObject> {
 	
 	@Override
 	public int compareTo(RenderObject o) {
+		final int GREATER_THAN = 1;
+		final int EQUAL_TO = 0;
+		final int LESS_THAN = -1;
+		if(materialAtlas==null) {
+			return GREATER_THAN;
+		}
+		if(o.materialAtlas==null) {
+			return LESS_THAN;
+		}
 		Material activeMaterialThis = materialAtlas.get(this.getActiveState());
 		Material activeMaterialOther= o.materialAtlas.get(o.getActiveState());
+		if(activeMaterialThis==null) {
+			return GREATER_THAN;
+		}
+		if(activeMaterialOther==null) {
+			return LESS_THAN;
+		}
+		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f > o.entity.getPosition().y + activeMaterialOther.height*0.5f) {
+			return GREATER_THAN;
+		}
+		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f < o.entity.getPosition().y +  + activeMaterialOther.height*0.5f) {
+			return LESS_THAN;
+		}
+		
 		return activeMaterialThis.compareTo(activeMaterialOther);
 	}
 	
@@ -49,7 +71,7 @@ public class RenderObject implements Comparable<RenderObject> {
 			stateStorage.setState(levelEntity.getLevelObjectState(), null);
 		}
 		else if(this.entity instanceof ClientProjectile) {
-			stateStorage.setState(EntityStates.NONE, entity.getFacingDirection());
+			stateStorage.setState(EntityStates.NONE, null);
 		}
 		else {
 			stateStorage.setState(EntityStates.NONE, null);
@@ -72,5 +94,12 @@ public class RenderObject implements Comparable<RenderObject> {
 	public TextureRegion getActiveTexture() {
 		Material material = materialAtlas.get(this.getActiveState());
 		return material.getActiveTexture(entity.getStateTime());
+	}
+
+	public boolean isVisible() {
+		if(entity instanceof ClientLevelObject) {
+			return ((ClientLevelObject)entity).getVisible();
+		}
+		return true;
 	}
 }

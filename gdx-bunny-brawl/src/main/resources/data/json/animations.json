@@ -401,5 +401,13 @@
 		"playType": "NORMAL", 
 		"columns": 2, 
 		"rows": 1
+	},
+	"bushDisposeAnimation": {
+		"filename": "data/animations/bush_animation.png",
+		"frames": 8, 
+		"frameDuration": [0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.16],
+		"playType": "NORMAL", 
+		"columns": 8, 
+		"rows": 1	
 	}
 }

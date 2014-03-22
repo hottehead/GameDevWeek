@@ -6,10 +6,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
-import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterials;
+import de.hochschuletrier.gdw.ws1314.render.materials.ArrowMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeHorizontalLeftDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeHorizontalMiddleDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeHorizontalRightDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeVerticalBottomDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeVerticalMiddleDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BridgeVerticalTopDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BushMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.CarrotMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.CloverMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.ContactMineMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.EggMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.KnightMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.SpinachMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.SwitchMaterialDef;
 
 public class MaterialManager {
 	private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
@@ -27,36 +40,27 @@ public class MaterialManager {
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterials(EntityType.Tank, new MaterialInfo(
-				"knightWhiteIdleDown", new RenderState(EntityStates.IDLE,
-						FacingDirection.DOWN), 110, 110, 1, true),
-				new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
-						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
-						1, true));
+		this.provideMaterials(EntityType.Tank, new KnightMaterialDef().get());
+		this.provideMaterials(EntityType.Hunter, new HunterMaterialDef().get());
+		
+		this.provideMaterials(EntityType.Projectil, new ArrowMaterialDef().get());
 
-		this.provideMaterials(EntityType.Hunter, new HunterMaterials(110, 74, 1).get());
-
-		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
-				false));
-
-		this.provideMaterials(EntityType.Carrot, new MaterialInfo("carrot",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Ei, new MaterialInfo("egg",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Spinach, new MaterialInfo("spinach",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.BridgeSwitch,
-				new MaterialInfo("switch", new RenderState(EntityStates.NONE),
-						32, 32, -1, false));
-		this.provideMaterials(EntityType.Clover, new MaterialInfo("clover",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Bush, new MaterialInfo("bush",
-				new RenderState(EntityStates.NONE), 32, 32, 10, false));
-
-		this.provideMaterials(EntityType.ContactMine, new MaterialInfo(
-				"contactMine", new RenderState(EntityStates.NONE), 32, 32, -1,
-				false));
+		this.provideMaterials(EntityType.BridgeSwitch, new SwitchMaterialDef().get());
+		
+		this.provideMaterials(EntityType.Carrot, new CarrotMaterialDef().get());
+		this.provideMaterials(EntityType.Ei, new EggMaterialDef().get());
+		this.provideMaterials(EntityType.Spinach, new SpinachMaterialDef().get());
+		this.provideMaterials(EntityType.Clover, new CloverMaterialDef().get());
+		this.provideMaterials(EntityType.Bush, new BushMaterialDef().get());
+		this.provideMaterials(EntityType.ContactMine, new ContactMineMaterialDef().get());
+		
+		//bridge parts
+		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_LEFT, new BridgeHorizontalLeftDef().get());
+		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_MIDDLE, new BridgeHorizontalMiddleDef().get());
+		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_RIGHT, new BridgeHorizontalRightDef().get());
+		this.provideMaterials(EntityType.BRIDGE_VERTICAL_BOTTOM, new BridgeVerticalBottomDef().get());
+		this.provideMaterials(EntityType.BRIDGE_VERTICAL_MIDDLE, new BridgeVerticalMiddleDef().get());
+		this.provideMaterials(EntityType.BRIDGE_VERTICAL_TOP, new BridgeVerticalTopDef().get());
 
 	}
 
@@ -79,8 +83,8 @@ public class MaterialManager {
 				}
 			}
 			map.get(entityType).put(materialInfo.stateUsed, material);
-			logger.info("Setting " + entityType.name()
-					+ " material for " + materialInfo.stateUsed);
+//			logger.info("Setting " + entityType.name()
+//					+ " material for " + materialInfo.stateUsed);
 		}
 	}
 
