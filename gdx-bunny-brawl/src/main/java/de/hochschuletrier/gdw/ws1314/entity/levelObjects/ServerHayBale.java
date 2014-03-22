@@ -73,14 +73,14 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-				if(!acrossable){
-				ServerPlayer player2 = (ServerPlayer) otherEntity;
-				this.physicsBody.setLinearDamping(1);
-					if(speed > 0){
-						player2.applyDamage(10);
-					}
-				}
-				speed = 0;
+//				if(!acrossable){
+//				ServerPlayer player2 = (ServerPlayer) otherEntity;
+//				this.physicsBody.setLinearDamping(1);
+//					if(speed > 0){
+//						player2.applyDamage(10);
+//					}
+//				}
+//				speed = 0;
 				break;
 			default:
 				break;
