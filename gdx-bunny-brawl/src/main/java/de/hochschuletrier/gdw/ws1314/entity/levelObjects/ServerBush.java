@@ -77,4 +77,10 @@ public class ServerBush extends ServerLevelObject
             body.addContactListener(this);
             setPhysicsBody(body);
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
 }
