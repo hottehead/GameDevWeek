@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -18,7 +19,9 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
  * 
  */
 public class ServerContactMine extends ServerLevelObject {
-	private final float DURATION_TILL_EXPLOSION = 5.0f;
+	private final float DURATION_TILL_EXPLOSION_MAX = 3.0f;
+	private final float DURATION_TILL_EXPLOSION_MIN = 1.0f;
+
 	private final float DURATION_EXPLOSION = 1.0f;
 	private boolean isActive = false;
 	private float timer;
@@ -36,7 +39,7 @@ public class ServerContactMine extends ServerLevelObject {
 	@Override
 	public void initialize() {
 		super.initialize();
-		timer = DURATION_TILL_EXPLOSION;
+		timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN, DURATION_TILL_EXPLOSION_MAX);;
 	}
 
 	@Override
@@ -69,6 +72,7 @@ public class ServerContactMine extends ServerLevelObject {
 				System.out.println(" server mine exploding");
 				isActive = false;
 				entityState = EntityStates.EXPLODING;
+				timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN, DURATION_TILL_EXPLOSION_MAX);
 				this.physicsBody.getBody().getFixtureList().get(1);
 			}
 		} else {

@@ -29,8 +29,8 @@ public class CameraFollowingBehaviour {
 //			currentPos.x = currentPos.x - Gdx.graphics.getWidth() * 0.5f;
 //			currentPos.y = currentPos.y - Gdx.graphics.getHeight() * 0.5f;
 
-			float dx = (currentPos .x - this.prevFollowingPosition.x)*dt;
-			float dy = (currentPos .y - this.prevFollowingPosition.y)*dt;
+			float dx = (currentPos .x - this.prevFollowingPosition.x)*dt * 2;
+			float dy = (currentPos .y - this.prevFollowingPosition.y)*dt * 2;
 			
 			
 			camera.translate(dx, dy);

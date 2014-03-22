@@ -38,12 +38,12 @@ public class ClientContactMine extends ClientLevelObject
 			ClientDieEntity entity =  ClientEntityManager.getInstance().createDyingGhost(EntityType.ContactMine, DURATION_EXPLOSION);
 			entity.enable();
 			entity.setPosition(this.getPosition());
-			entity.setLevelObjectState(EntityStates.ATTACK);
+			entity.setLevelObjectState(EntityStates.EXPLODING);
 			System.out.println("client contact exploding");
 		}
 	}
 	
 	public void update(float deltaTime){
-		
+		super.update(deltaTime);
 	}
 }

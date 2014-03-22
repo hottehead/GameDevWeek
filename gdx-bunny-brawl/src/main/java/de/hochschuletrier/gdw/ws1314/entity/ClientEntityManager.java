@@ -178,11 +178,15 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
+            if(e instanceof ClientDieEntity){
+            	dyingEntityList.remove(e);
+            }
 			if(e.getID() >= 0)
             	entityListMap.remove(e.getID());
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityRemove(e);
             }
+
         }
         return listChanged;
     }
@@ -240,11 +244,10 @@ public class ClientEntityManager {
 		for (ClientDieEntity e : dyingEntityList){
 			if(e.getDyingTime() < 0){
 				removeEntity(e);
-				dyingEntityList.remove(e);
+//				dyingEntityList.remove(e);
 			}
 		}
-
-
+		
     }
     
     public void Clear()
