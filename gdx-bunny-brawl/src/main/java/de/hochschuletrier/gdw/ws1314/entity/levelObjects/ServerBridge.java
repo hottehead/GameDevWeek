@@ -129,21 +129,14 @@ public class ServerBridge extends ServerLevelObject
 	public boolean getVisibility(){
 		return isVisible;
 	}
-	public void setVisiblity(boolean b){
+
+	public void setVisibility(boolean b){
 		if(isVisible)	{
 			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.BRIDGE_IN);
 		} else{
 			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.BRIDGE_OUT);
 		}
 		isVisible = b;
-		
-		if(this.fixtureBody != null) {
-    		if(isVisible) {
-    		   this.fixtureBody.setSensor(true); 
-    		} else if(isVisible) {
-    		    this.fixtureBody.setSensor(false);
-    		}
-		}
 	}
 
     @Override
