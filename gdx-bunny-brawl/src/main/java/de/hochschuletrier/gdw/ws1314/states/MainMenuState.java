@@ -55,10 +55,8 @@ public class MainMenuState extends GameState {
 		music.update();
 		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
 		if(Main.startAsServer){
-			logger.info("start as Server");
-			GameStates.SERVERLOBBY.init(assetManager);
-			GameStates.SERVERLOBBY.activate();
-			Main.startAsServer = false;
+			logger.info("Start as Server...");
+			startServer();
 		}
     }
 
@@ -105,32 +103,36 @@ public class MainMenuState extends GameState {
 		if (this.stage != null)
 			stage.dispose();
     }
+
+	public void startServer(){
+		if (!NetworkManager.getInstance().isServer())
+		{
+			int port;
+			if(Main.port > 0){
+				port = Main.port;
+			} else {
+				port = NetworkManager.getInstance().getDefaultPort();
+			}
+
+			NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
+
+			if (!NetworkManager.getInstance().isServer())
+			{
+				logger.warn("Server could not be created. Another Server allready running or Port is blocked.");
+				return;
+			}
+		}
+
+		logger.info("Changing State to Server-Lobby...");
+		GameStates.SERVERLOBBY.init(assetManager);
+		GameStates.SERVERLOBBY.activate();
+	}
     
     private class StartServerClick extends ClickListener {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
 			// TODO: Nur Temporär zum localen Testen
-	        if (!NetworkManager.getInstance().isServer())
-	        {
-	        	int port;
-				if(Main.port > 0){
-					port = Main.port;
-				} else {
-					port = NetworkManager.getInstance().getDefaultPort();
-				}
-				
-	        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
-	        	
-	        	if (!NetworkManager.getInstance().isServer())
-	        	{
-	        		logger.warn("Server could not be created. Another Server allready running or Port is blocked.");
-		        	return;
-	        	}
-	        }
-	        
-			logger.info("Changing State to Server-Lobby...");
-			GameStates.SERVERLOBBY.init(assetManager);
-			GameStates.SERVERLOBBY.activate();
+	        startServer();
 		}
     }
     
