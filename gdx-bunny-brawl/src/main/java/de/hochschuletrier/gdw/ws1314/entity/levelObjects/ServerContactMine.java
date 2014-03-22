@@ -138,13 +138,21 @@ public class ServerContactMine extends ServerLevelObject {
 				.getFixtureList().get(1).getShape();
 		//Vector2 pos = this.physicsBody.getPosition().cpy();
 		this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
-		if (isActive) {
-			entityState = EntityStates.ATTACK;
+		if(this.getEntityState() == EntityStates.EXPLODING){
+			isActive = false;
+		}
+		else if (!isActive) {
+			originRadius = manager.toBox2D(2.0f);
+			shape.setRadius(originRadius);
+			gotDamage = false;
+			entityState = EntityStates.NONE;
+		}else {
+			this.setEntityState(EntityStates.ATTACK);
 			timer -= deltaTime;
-			System.out.println("Time left: " + timer);
+//			System.out.println("Time left: " + timer);
 			if (timer <= 0) {
 				isActive = false;
-				entityState = EntityStates.EXPLODING;
+				this.setEntityState(EntityStates.EXPLODING);
 				timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN,
 						DURATION_TILL_EXPLOSION_MAX);
 				if (originRadius <= EXPLOSION_RADIUS) {
@@ -153,13 +161,7 @@ public class ServerContactMine extends ServerLevelObject {
 							.setSensor(false);
 					shape.setRadius(originRadius);
 				}
-		}else {
-			originRadius = manager.toBox2D(2.0f);
-			shape.setRadius(originRadius);
-			gotDamage = false;
-			entityState = EntityStates.NONE;
 		}
-		System.out.println(this.getEntityState());
 	}
 }
 
