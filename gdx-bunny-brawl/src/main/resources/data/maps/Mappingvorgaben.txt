@@ -12,6 +12,9 @@ KEINE UMLAUTE, KEIN 'ß'
 
 #Spielerebene  <- Physikalische Zone
 					solid
+
+#Renderebene   <- Hier wird vom Levelmacher nichts gesetzt. Extra Kollisionsebene für die Programmierer.
+
 #Aktionsebene  <- Interagierbare Objekte - Eier,PowerUps, Brückenschalter
 					
 #Zonenebene    <- Alle ausgewiesenen Zonen, außer 'solid'.
@@ -22,10 +25,10 @@ KEINE UMLAUTE, KEIN 'ß'
 					startb
 					dirt
 
-#Brueckenebene <-jede Brücke mit eindeutiger Bezeichnung im Tile, Schalter 						in der Objekteben korrekt beschriften
+#Brueckenebene <-jede Brücke mit eindeutiger Bezeichnung im Tile, Schalter in der Objekteben korrekt beschriften
 
 
-+Detaillayer   <-Objekte mit denen man nicht interagieren kann, die sich 						unter dem Spieler befinden. Zäune,Steine,Brückenränder
++Detaillayer   <-Objekte mit denen man nicht interagieren kann, die sich unter dem Spieler befinden. Zäune, Steine, 		    	 Brückenränder, Switches und diverse Flora
 
 +Zonelayer     <-Terrains+1 Hohes Gras,Startpunkte,Transparenz
 
@@ -49,3 +52,12 @@ Bäume setzt man folgendermaßen: OOOO 		Mauern nach dem Schema: OOOOOOOO	O=Over
 								OOOO
 								OWWO
 								OWWO
+
+[[Switches & Bridges]]
+
+Eine Brücke besteht immer aus ihren Hauptteilen, welche in der Brueckenebene gesetzt werden und den Namen bridgeX haben. Wobei X die Nummer beschreibt, die die Brückenteile mit ihren Schalter(n) identifizieren. Der hat widerum den Namen switchX.
+Ein Switch hat immer die Eigenschaft ’activate’, welche mit dem Wert true oder false angegeben wird. Diese bestimmt die Anfangsstellung der Brücke.
+
+[[Startpunkte]]
+
+Werden in der Zonenebene gesetzt und haben die Eigenschaft: ’direction’. Diese sind entweder right,up,down,left und bestimmen den Ausrichtung der Spieler beim spawn. Es darf jeweils nur eine Zone vom Typ startb und startw vorhanden sein.

@@ -20,12 +20,9 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -38,7 +35,6 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -72,7 +68,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
     private PlayerData	playerData;
     private PlayerKit 	playerKit;
-    private TeamColor	teamColor;
     
     private float		currentHealth;
     private float		currentArmor;
@@ -303,7 +298,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     {
     	setFacingDirection(desiredDirection);
 
-    	physicsBody.setLinearDamping(BRAKING);
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
@@ -343,10 +337,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              return;
          }
          
-         
-         if (fixture == fixtureLowerBody) {
-        	 switch(otherEntity.getEntityType())
-        	 {
+         if(fixture == fixtureLowerBody) {
+        	 switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
              case Knight:
@@ -377,15 +369,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
-                 
-            	 break;
-             case AbyssZone:
-            	 break;
-             case GrassZone:
-            	 break;
-             case PathZone:
-            	 break;
-             case StartZone:
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
@@ -397,22 +380,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                        if(ball.getSpeed() > 0){
                            this.applyDamage(ball.getVelocity().len());
                        }
-                   }
+                 }
                  break;
              case Bridge:
                  this.isOnBridge = true;
                  collidingBridgePartsCount++;
                  break;
-             case BridgeSwitch:	
-                 break;
-             case Bush:
-                 break;
              default:
             	 break;
         	 }
          } else if(fixture == fixtureFullBody) {
-        	 switch(otherEntity.getEntityType()) 
-        	 {
+        	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                      if (getID() != projectile.getSourceID()) {
@@ -421,7 +399,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                      	ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
                 	 break;
-                 
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
                      if (attack.getSourceID() != getID()) {
@@ -433,8 +410,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 break;
         	 }      
          } else if(fixture == fixtureDeathCheck) {
-             switch(otherEntity.getEntityType()) 
-             {
+             switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
                      if(!isOnBridge) {
@@ -448,48 +424,40 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     }
     
     
-    public void endContact(Contact contact) 	
-    {
-    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-    	Fixture fixture = getCollidingFixture(contact);
-         
-         if(otherEntity == null)
-             return;
-         
-
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-  		 {
-             switch(otherEntity.getEntityType()) 
-             {
-             	case Ei:
-             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-             			droppedEggID = -1;
-             		break;
-             	case HayBale:
-             	   ServerHayBale ball = (ServerHayBale)otherEntity;
-                   if(ball.isCrossable()) {
-                       collidingBridgePartsCount--;
-                       if(collidingBridgePartsCount <= 0) {
-                           this.isOnBridge = false;
-                       }
+public void endContact(Contact contact) {
+	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+	Fixture fixture = getCollidingFixture(contact);
+     
+     if(otherEntity == null)
+         return;
+     
+     if (fixture == fixtureLowerBody) {
+         switch(otherEntity.getEntityType()) {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+         	case HayBale:
+         	   ServerHayBale ball = (ServerHayBale)otherEntity;
+               if(ball.isCrossable()) {
+                   collidingBridgePartsCount--;
+                   if(collidingBridgePartsCount <= 0) {
+                       this.isOnBridge = false;
                    }
-                   break;
-                case Bridge:
-                    collidingBridgePartsCount--;
-                    if(collidingBridgePartsCount <= 0) {
-                        this.isOnBridge = false;
-                    }
-                    break;
-                default:
-                	break;
-             }
-  		 }
-         
-    }
+               }
+               break;
+            case Bridge:
+                collidingBridgePartsCount--;
+                if(collidingBridgePartsCount <= 0) {
+                    this.isOnBridge = false;
+                }
+                break;
+            default:
+            	break;
+         }
+	 }
+}
+
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
@@ -541,25 +509,25 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		PhysixBody body1 = new PhysixBodyDef(BodyType.DynamicBody, manager)
+		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(properties.getFloat("x"), properties.getFloat("y"))
 				.fixedRotation(false)
 				.gravityScale(0.0f)
 				.create();
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
@@ -567,31 +535,24 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             .sensor(true)
         );
 
-		body1.setGravityScale(0);
-		body1.addContactListener(this);
-		body1.setLinearDamping(BRAKING);
-		setPhysicsBody(body1);
+		body.setGravityScale(0);
+		body.addContactListener(this);
+		body.setLinearDamping(BRAKING);
+		setPhysicsBody(body);
 
-		Array<Fixture> fixtures = body1.getBody().getFixtureList();
+		Array<Fixture> fixtures = body.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
 		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
-	public void switchToState(StatePlayer state)
-	{
-
-		currentState.exit();
-		currentState = state;
-		currentState.init();
-	}
-	
-
 	@Override
 	public void switchToState(State state)
 	{
-		switchToState((StatePlayer)state);
+		currentState.exit();
+		currentState = (StatePlayer) state;
+		currentState.init();
 	}
 
     public void reset()

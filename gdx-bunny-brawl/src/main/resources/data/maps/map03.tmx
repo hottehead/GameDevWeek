@@ -164,12 +164,12 @@
   <object gid="5" x="672" y="896"/>
  </objectgroup>
  <objectgroup name="Zonenebene" width="40" height="60">
-  <object type="startw" x="992" y="1632" width="256" height="256">
+  <object type="startw" x="1024" y="1632" width="192" height="224">
    <properties>
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object type="startb" x="32" y="512" width="256" height="256">
+  <object type="startb" x="64" y="576" width="224" height="192">
    <properties>
     <property name="direction" value="up"/>
    </properties>

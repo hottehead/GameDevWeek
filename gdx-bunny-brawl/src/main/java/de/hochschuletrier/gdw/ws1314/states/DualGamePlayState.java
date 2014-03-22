@@ -13,13 +13,10 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
-import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
-import de.hochschuletrier.gdw.ws1314.hud.ServerGamePlayStage;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -32,7 +29,7 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
  * 
  * @author Santo Pfingsten
  */
-public class DualGamePlayState extends GameState implements InputProcessor, DisconnectCallback, ClientIdCallback {
+public class DualGamePlayState extends GameState implements DisconnectCallback, ClientIdCallback {
 	private static final Logger logger = LoggerFactory.getLogger(DualGamePlayState.class);
 	
 	private boolean isServerInitialized = false;
@@ -45,6 +42,8 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 	private ServerGame serverGame;
 
     private List<PlayerData> playerDatas = null;
+    
+    private String mapName = "map01";
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
@@ -53,29 +52,22 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 	public DualGamePlayState() {
 	}
 
+	public String getMapName() {
+		return mapName;
+	}
+
+	public void setMapName(String mapName) {
+		this.mapName = mapName;
+	}
+
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		
-		this.playerDatas = new ArrayList<>();
-		
-		NetworkManager.getInstance().setClientIdCallback(this);
-		
-		logger.info("creating FakeConnecction");
-		createFakeConnection();
-		logger.info("fake Con created");
-		
-		Main.inputMultiplexer.addProcessor(this);
 	}
 
 	public void render() {
 		if (!isClientInitialized) return;
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
-		// game.render();
 		clientGame.render();
-		
-                
-		//TODO: Jemand der weis woher das kommt bitte fixen, hier war nach dem Merge zwischen integration_test/network_gameplay und master ein Build-Fehler.
-                //game.getManager().render();
 	}
 
 	@Override
@@ -94,74 +86,36 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 
 	@Override
 	public void onEnter() {
-}
+		isServerInitialized = false;
+		isClientInitialized = false;
+		
+		this.playerDatas = new ArrayList<>();
+		
+		NetworkManager.getInstance().setClientIdCallback(this);
+		
+		createLocalConnection();
+	}
 
 	@Override
 	public void onLeave() {
+		NetworkManager.getInstance().setClientIdCallback(null);
+		
+		clientGame = null;
+		serverGame = null;
 	}
 
 	@Override
 	public void dispose() {
-		//stage.dispose();
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-        //tmpGame.keyDown(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-        //tmpGame.keyUp(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
 	}
 
 	@Override
 	public void callback(String msg) {
-		/*
 		logger.warn(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
-		*/
 	}
 	
-	private void createDummyPlayer() {
-		this.playerDatas = new ArrayList<>();
-		this.playerDatas.add(new PlayerData(1, "Long John", EntityType.Hunter, TeamColor.WHITE, true));
-	}
-	
-	private void createFakeConnection() {
+	private void createLocalConnection() {
 		NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), 10);
 		NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
 	}
@@ -181,7 +135,7 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
         }
 		
 		serverGame = new ServerGame(playerDatas);
-		serverGame.init(assetManager);
+		serverGame.init(assetManager, mapName);
 		
 		isServerInitialized = true;
 	}
@@ -189,7 +143,7 @@ public class DualGamePlayState extends GameState implements InputProcessor, Disc
 	private void internalClientInit()
 	{
 		clientGame = new ClientGame();
-		clientGame.init(assetManager);
+		clientGame.init(assetManager, mapName);
 		
 		
 		stateMusic = new LocalMusic(assetManager);
