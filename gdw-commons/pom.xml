@@ -17,9 +17,9 @@
 		<repository>
 			<id>gdx-nightlies</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                        <releases>
-                            <updatePolicy>never</updatePolicy>
-                        </releases>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
 		</repository>
 	</repositories>
 
