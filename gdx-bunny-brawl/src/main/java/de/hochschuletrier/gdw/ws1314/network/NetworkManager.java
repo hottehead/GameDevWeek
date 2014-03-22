@@ -379,6 +379,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
+			this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
@@ -470,15 +471,15 @@ public class NetworkManager{
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
 				if(this.playerdisconnectcallback != null){
-					this.playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+					this.playerdisconnectcallback.playerDisconnectCallback(ids.toArray(new Integer[ids.size()]));
 				}
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
-			clientConnection = null;
 			if(this.disconnectcallback != null){
-				this.disconnectcallback.callback("[SERVER] Disconnected from Server.");
+				this.disconnectcallback.disconnectCallback("[NETWORK] Disconnected from Server.");
 			}
+			clientConnection = null;
 		}
 	}
 
@@ -534,9 +535,9 @@ public class NetworkManager{
 				serverReception.shutdown();
 				serverReception = null;
 				if(this.disconnectcallback != null){
-					this.disconnectcallback.callback("[SERVER] Stopped.");
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
 				}
-				logger.info("[SERVER] stopped");
+				//logger.info("[SERVER] stopped");
 			}
 			else{
 				logger.warn("[NETWORK] Can't stop, i'm not a Server.");

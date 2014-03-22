@@ -163,7 +163,7 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
 	}
 
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.info(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();

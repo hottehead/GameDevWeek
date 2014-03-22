@@ -58,7 +58,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	
 	// PlayerUpdateCallback
 	@Override
-	public void callback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept) 
+	public void playerUpdateCallback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept)
 	{
 		if (this.players.containsKey(playerid)) {
 			this.players.remove(playerid);
@@ -103,7 +103,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	}
 
 	@Override
-	public void callback(Integer[] playerid) {
+	public void playerDisconnectCallback(Integer[] playerid) {
 		for (int i = 0; i < playerid.length; i++) {
 			this.players.remove(playerid[i]);
 		}

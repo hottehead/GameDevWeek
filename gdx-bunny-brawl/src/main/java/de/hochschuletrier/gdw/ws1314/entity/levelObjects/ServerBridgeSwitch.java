@@ -57,10 +57,13 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs.add(id);
     }
 
+	public boolean getActivePropertys()	{
+		return properties.getBoolean("active",true);
+	}
+
 	@Override
 	public void setVisibility(boolean b) {
 		super.setVisibility(b);
-		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
 	}
 
 	@Override
@@ -74,6 +77,7 @@ public class ServerBridgeSwitch extends ServerLevelObject
                     for(Long targetID : targetIDs) {
                         ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
                         bridge.setVisibility(!bridge.getVisibility());
+						NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
                     }
 	                break;
 	            default:
