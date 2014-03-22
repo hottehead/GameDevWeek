@@ -449,11 +449,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) 
              {
-                 case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
+                 case AbyssZone:
+                 case WaterZone:                     
                      this.isDead = true;
-                     
                      break;
                  default:
                      break;
