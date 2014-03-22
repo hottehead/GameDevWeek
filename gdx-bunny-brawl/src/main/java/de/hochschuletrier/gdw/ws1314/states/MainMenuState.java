@@ -1,23 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.input.InputInterceptor;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Menu state
@@ -65,6 +57,12 @@ public class MainMenuState extends GameState {
 		stateTime += delta;
 		music.update();
 		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
+		if(Main.startAsServer){
+			logger.info("start as Server");
+			GameStates.SERVERLOBBY.init(assetManager);
+			GameStates.SERVERLOBBY.activate();
+			Main.startAsServer = false;
+		}
     }
 
     @Override
