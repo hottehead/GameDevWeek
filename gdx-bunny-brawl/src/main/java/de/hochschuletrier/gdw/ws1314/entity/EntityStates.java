@@ -10,6 +10,7 @@ public enum EntityStates {
 	ATTACK,
 	KNOCKBACK,
 	WALKING,
-	WAITING
+	WAITING,
+	WET
 }
 

@@ -25,13 +25,14 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyManager.class);
 	
 	private HashMap<Integer, PlayerData> players;
-	private String map = "map01";
+	private String map;
 	private ArrayList<IServerLobbyListener> listener;
 	
 	public ServerLobbyManager()
 	{
 		this.players = new HashMap<>();
 		this.listener = new ArrayList<>();
+		this.map = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		NetworkManager.getInstance().setPlayerUpdateCallback(this);
 		NetworkManager.getInstance().setPlayerDisconnectCallback(this);
 		
@@ -58,7 +59,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	
 	// PlayerUpdateCallback
 	@Override
-	public void callback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept) 
+	public void playerUpdateCallback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept)
 	{
 		if (this.players.containsKey(playerid)) {
 			this.players.remove(playerid);
@@ -103,7 +104,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	}
 
 	@Override
-	public void callback(Integer[] playerid) {
+	public void playerDisconnectCallback(Integer[] playerid) {
 		for (int i = 0; i < playerid.length; i++) {
 			this.players.remove(playerid[i]);
 		}

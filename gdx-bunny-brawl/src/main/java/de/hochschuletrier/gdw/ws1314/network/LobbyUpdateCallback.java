@@ -6,5 +6,5 @@ public interface LobbyUpdateCallback{
 	/**
 	 * LobbyUpdateCallback: Clientseitig, dem Clienten wird die neue Spielerliste und Map zugeteilt
 	 */
-	public void callback(String map, PlayerData[] players);
+	public void lobbyUpateCallback(String map, PlayerData[] players);
 }

@@ -114,7 +114,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	}
 
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.info(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();

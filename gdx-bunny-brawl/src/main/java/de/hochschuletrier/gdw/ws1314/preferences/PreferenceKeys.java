@@ -10,5 +10,6 @@ public enum PreferenceKeys {
 	volumeSound,
 	playerName,
 	gameWindowHeight,
-	gameWindowWidth
+	gameWindowWidth,
+	mapName
 }

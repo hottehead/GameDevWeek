@@ -6,5 +6,5 @@ public interface GameStateCallback{
 	/**
 	 * Clientseitig: der Server teilt dem Clienten den GameState mit
 	 */
-	public void callback(GameStates gameStates);
+	public void gameStateCallback(GameStates gameStates);
 }
