@@ -1,0 +1,25 @@
+﻿Merge branch 'sound'
+
+Conflicts:
+	gdx-bunny-brawl/src/main/java/de/hochschuletrier/gdw/ws1314/states/DualGamePlayState.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   gdx-bunny-brawl/src/main/java/de/hochschuletrier/gdw/ws1314/entity/player/ClientPlayer.java
+#	modified:   gdx-bunny-brawl/src/main/java/de/hochschuletrier/gdw/ws1314/sound/LocalMusic.java
+#	modified:   gdx-bunny-brawl/src/main/java/de/hochschuletrier/gdw/ws1314/states/DualGamePlayState.java
+#	modified:   gdx-bunny-brawl/src/main/java/de/hochschuletrier/gdw/ws1314/states/MainMenuState.java
+#
+

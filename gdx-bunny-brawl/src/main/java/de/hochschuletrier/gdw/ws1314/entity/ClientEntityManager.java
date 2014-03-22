@@ -27,6 +27,7 @@ public class ClientEntityManager {
 	private static ClientEntityManager instance = null;
 	
 	private LinkedList<ClientEntity> entityList;
+	private LinkedList<ClientDieEntity> dyingEntityList;
     private HashMap<Long,ClientEntity> entityListMap;
     protected Queue<ClientEntity> removalQueue;
     protected Queue<ClientEntity> insertionQueue;
@@ -38,6 +39,7 @@ public class ClientEntityManager {
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
+		dyingEntityList = new LinkedList<ClientDieEntity>();
         entityListMap = new HashMap<Long, ClientEntity>();
 		removalQueue = new LinkedList<ClientEntity>();
 		insertionQueue = new LinkedList<ClientEntity>();
@@ -176,7 +178,8 @@ public class ClientEntityManager {
             ClientEntity e = removalQueue.poll();
             e.dispose();
             entityList.remove(e);
-            entityListMap.remove(e.getID());
+			if(e.getID() >= 0)
+            	entityListMap.remove(e.getID());
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityRemove(e);
             }
@@ -190,7 +193,8 @@ public class ClientEntityManager {
             listChanged = true;
             ClientEntity e = insertionQueue.poll();
             entityList.add(e);
-            entityListMap.put(e.getID(),e);
+			if(e.getID() >= 0)
+            	entityListMap.put(e.getID(),e);
             for(ClientEntityManagerListener l : listeners) {
             	l.onEntityInsert(e);
         	}
@@ -216,12 +220,30 @@ public class ClientEntityManager {
         return null;
     }
 
+	public ClientDieEntity createDyingGhost(EntityType type, float time){
+		ClientDieEntity e = new ClientDieEntity();
+		e.setEntityType(type);
+		e.setDyingTime(time);
+
+		dyingEntityList.add(e);
+		addEntity(e);
+		return e;
+	}
+
     public void update(float delta) {
         internalRemove();
         internalInsert();
 
         for (ClientEntity e : entityList)
             e.update( delta);
+
+		for (ClientDieEntity e : dyingEntityList){
+			if(e.getDyingTime() < 0){
+				removeEntity(e);
+				dyingEntityList.remove(e);
+			}
+		}
+
 
     }
     
@@ -231,7 +253,7 @@ public class ClientEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
-    	gameInfo=new GameInfo();
+    	gameInfo.clear();
     }
     
     public void provideListener(ClientEntityManagerListener l) {
