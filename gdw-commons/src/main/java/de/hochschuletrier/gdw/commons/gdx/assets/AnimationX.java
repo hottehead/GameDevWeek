@@ -34,7 +34,7 @@ public class AnimationX {
 			}
 		}
 		animation = new Animation(frameTime * 0.001f, frames);
-		animation.setPlayMode(loop ? Animation.LOOP : Animation.NORMAL);
+		animation.setPlayMode(loop ? Animation.PlayMode.LOOP : Animation.PlayMode.NORMAL);
 		stateTime = 0f;
 		looping = loop;
 	}
