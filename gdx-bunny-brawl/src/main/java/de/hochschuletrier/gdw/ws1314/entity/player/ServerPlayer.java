@@ -343,6 +343,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	
     {
+        logger.info("begin contact vom spieler");
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
          

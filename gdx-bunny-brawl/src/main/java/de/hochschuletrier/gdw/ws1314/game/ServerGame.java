@@ -3,8 +3,6 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hochschuletrier.gdw.commons.utils.Point;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -62,7 +60,7 @@ public class ServerGame {
 
 
 	public void init(AssetManagerX assets) {
-		gameInfo = entityManager.getGameInfo();
+		gameInfo = new GameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		TiledMap map = assets.getTiledMap("dummy_fin_map2");
@@ -74,11 +72,9 @@ public class ServerGame {
 			tilesetImages.put(tileset, new Texture(filename));
 		}
 
+        float offset = 0f;
         for(PlayerData playerData : playerDatas ){
-
-            Point startpoint = gameInfo.getASpawnPoint(playerData.getTeam());
-
-            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(startpoint.x,startpoint.y));
+            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(0f,0f+offset));
 
             switch(playerData.getType())
             {
@@ -98,7 +94,7 @@ public class ServerGame {
         
             sp.setPlayerData(playerData);
             netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
-
+            offset += 10f;
         }
 
 
