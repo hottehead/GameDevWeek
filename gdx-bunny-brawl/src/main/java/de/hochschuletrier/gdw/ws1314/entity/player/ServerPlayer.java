@@ -486,6 +486,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
 	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
+	public String getPlayerName() {return playerData.getPlayername();}
     
     public void setPlayerKit(PlayerKit kit) {
     	playerKit = kit;

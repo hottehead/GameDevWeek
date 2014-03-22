@@ -78,12 +78,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
-		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		if (this.stateMusic.isMusicPlaying())
-			//this.stateMusic.update();
-		this.stateMusic.logger.info("gp state music fading on update? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on update? >> " + this.stateMusic.getFadingDirection());
-}
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+		}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
