@@ -149,6 +149,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
     	isInDeadZone = false;
+    	pickedUpEggs = new ArrayList<>();
     }
     
     public void enable() {}
