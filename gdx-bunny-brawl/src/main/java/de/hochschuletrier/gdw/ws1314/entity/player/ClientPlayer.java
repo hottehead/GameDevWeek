@@ -51,7 +51,12 @@ public class ClientPlayer extends ClientEntity
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
     public void setPlayerInfo(PlayerData playerData)				{ this.playerData = playerData; }
     public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
-	public void setCurrentPlayerState(EntityStates state) {this.playerState = state;}
+	public void setCurrentPlayerState(EntityStates state){
+		if(playerState != state)
+			enterNewState();
+
+		this.playerState = state;
+	}
 
     @Override
     public void doEvent(EventType event) {
