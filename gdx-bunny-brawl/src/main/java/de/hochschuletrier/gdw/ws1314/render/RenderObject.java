@@ -49,7 +49,7 @@ public class RenderObject implements Comparable<RenderObject> {
 			stateStorage.setState(levelEntity.getLevelObjectState(), null);
 		}
 		else if(this.entity instanceof ClientProjectile) {
-			stateStorage.setState(EntityStates.NONE, entity.getFacingDirection());
+			stateStorage.setState(EntityStates.NONE, null);
 		}
 		else {
 			stateStorage.setState(EntityStates.NONE, null);
