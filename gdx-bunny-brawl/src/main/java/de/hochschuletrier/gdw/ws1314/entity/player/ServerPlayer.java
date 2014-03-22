@@ -547,19 +547,12 @@ public void endContact(Contact contact) {
     	walkingState.setPhysixBody(physicsBody);
 	}
 
-	public void switchToState(StatePlayer state)
-	{
-
-		currentState.exit();
-		currentState = state;
-		currentState.init();
-	}
-	
-
 	@Override
 	public void switchToState(State state)
 	{
-		switchToState((StatePlayer)state);
+		currentState.exit();
+		currentState = (StatePlayer) state;
+		currentState.init();
 	}
 
     public void reset()
