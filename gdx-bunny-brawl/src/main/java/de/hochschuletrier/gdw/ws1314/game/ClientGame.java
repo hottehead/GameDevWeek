@@ -153,6 +153,7 @@ public class ClientGame {
 	}
 
 	public void update(float delta) {
+        mapRenderer.update(delta);
 		// fadeIn = Math.min(fadeIn + delta/100.0f, 1);
 		entityManager.update(delta);
 

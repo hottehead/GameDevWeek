@@ -421,6 +421,11 @@ public static void connectBridges(){
                 break;
             case "mine":
             	ServerContactMine cMine = entityManager.createEntity(ServerContactMine.class, pos, properties);
+				break;
+			case "straw":
+				entityManager.createEntity(ServerHayBale.class, pos, properties);
+				break;
+
 		}
 
 		if (entity != null) {

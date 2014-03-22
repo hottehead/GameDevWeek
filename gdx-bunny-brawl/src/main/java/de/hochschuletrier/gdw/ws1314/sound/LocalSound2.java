@@ -15,7 +15,7 @@ public class LocalSound2 {
 	
 	public static AssetManagerX assetManager;
 	private static float SystemVolume = 1.0f;
-	private static float maxDistance = 300;
+	private static float maxDistance = 300.0f;
 	private static ClientPlayer LocalPlayer;
 	
 	public static void init(AssetManagerX assetManager) {
@@ -54,9 +54,15 @@ public class LocalSound2 {
 		distance = (float) Math.sqrt( Math.pow( (localX - remoteX), 2 ) + Math.pow( (localY - remoteY), 2 ) );
 		
 		// volume will be [volume]% (percent) of systemVolume
-		volume = (100 - (distance * 100 / LocalSound2.maxDistance)) / 100;
-		
+		if (distance <= LocalSound2.maxDistance)
+			volume = (1.0f - (distance * 100.f / LocalSound2.maxDistance) / 100.0f);
+		else
+			volume = 0;
+			
+		float test = (distance * 100 / LocalSound2.maxDistance) / 1000.0f;
 		this.play(sound, volume);
+		System.out.println("Volume:::" + volume);
+		System.out.println("distance:::" + distance);
 	}
 	
 	/**
