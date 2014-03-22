@@ -3,6 +3,8 @@ package de.hochschuletrier.gdw.ws1314.entity;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
 
 /**
  * 
@@ -15,6 +17,7 @@ public abstract class ClientEntity
 	private Vector2 		position;
 	protected FacingDirection direction;
 	private long 			id;
+	private LocalSound2 entitySound;
 	
 	public ClientEntity()
 	{
@@ -22,6 +25,7 @@ public abstract class ClientEntity
 		this.id = -1l;
 		this.stateTime = 0.0f;
 		this.direction = FacingDirection.NONE;
+		this.entitySound = new LocalSound2();
 	}
 
 	public Vector2 getPosition() 				{ return this.position; }
@@ -32,6 +36,9 @@ public abstract class ClientEntity
 	public void setFacingDirection(FacingDirection direction)	{ this.direction = direction; }
 	public void setID(long id)					{ this.id = id; }
 	
+	public LocalSound2 getEntitySound() {
+		return this.entitySound;
+	}
 	public abstract EntityType getEntityType();
 	
 	public abstract void enable();
