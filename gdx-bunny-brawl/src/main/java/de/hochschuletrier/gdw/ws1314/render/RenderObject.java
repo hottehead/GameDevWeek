@@ -44,12 +44,15 @@ public class RenderObject implements Comparable<RenderObject> {
 			stateStorage.setState(playerEntity.getCurrentPlayerState(), entity.getFacingDirection());
 			
 		}
-		if(this.entity instanceof ClientLevelObject) {
+		else if(this.entity instanceof ClientLevelObject) {
 			ClientLevelObject levelEntity = (ClientLevelObject)entity;
-			stateStorage.setState(levelEntity.getLevelObjectState(), entity.getFacingDirection());
+			stateStorage.setState(levelEntity.getLevelObjectState(), null);
 		}
-		if(this.entity instanceof ClientProjectile) {
+		else if(this.entity instanceof ClientProjectile) {
 			stateStorage.setState(EntityStates.NONE, entity.getFacingDirection());
+		}
+		else {
+			stateStorage.setState(EntityStates.NONE, null);
 		}
 		return stateStorage;
 	}
