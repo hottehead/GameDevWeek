@@ -15,21 +15,6 @@ public class HunterMaterials extends MaterialDefinition {
 	}
 
 	public void build() {
-//		materials.add(new MaterialInfo("hunterWhiteIdleDown", new RenderState(
-//				EntityStates.IDLE, FacingDirection.DOWN), width, height, layer,
-//				true));
-//		materials.add(new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
-//				EntityStates.WALKING, FacingDirection.LEFT), width, height,
-//				layer, true));
-//		materials.add(new MaterialInfo("hunterWhiteWalkDown", new RenderState(
-//				EntityStates.WALKING, FacingDirection.DOWN), width, height,
-//				layer, true));
-//		materials.add(new MaterialInfo("hunterWhiteAttackDown",
-//				new RenderState(EntityStates.ATTACK, FacingDirection.DOWN),
-//				width, height, layer, true));
-//		materials.add(new MaterialInfo("hunterWhiteWalkUp", new RenderState(
-//				EntityStates.WALKING, FacingDirection.UP), width, height,
-//				layer, true));
 		newMaterial("hunterWhiteIdleDown", EntityStates.IDLE, FacingDirection.DOWN, true);
 		newMaterial("hunterWhiteIdleUp", EntityStates.IDLE, FacingDirection.UP, true);
 		newMaterial("hunterWhiteIdleLeft", EntityStates.IDLE, FacingDirection.LEFT, true);
@@ -47,7 +32,11 @@ public class HunterMaterials extends MaterialDefinition {
 		newMaterial("hunterWhiteAttackDown", EntityStates.ATTACK, FacingDirection.DOWN, true);
 		newMaterial("hunterWhiteAttackUp", EntityStates.ATTACK, FacingDirection.UP, true);
 		newMaterial("hunterWhiteAttackLeft", EntityStates.ATTACK, FacingDirection.LEFT, true);
+		newMaterial("hunterWhiteAttackLeft", EntityStates.ATTACK, FacingDirection.DOWN_LEFT, true);
+		newMaterial("hunterWhiteAttackLeft", EntityStates.ATTACK, FacingDirection.UP_LEFT, true);
 		newMaterial("hunterWhiteAttackRight", EntityStates.ATTACK, FacingDirection.RIGHT, true);
+		newMaterial("hunterWhiteAttackRight", EntityStates.ATTACK, FacingDirection.DOWN_RIGHT, true);
+		newMaterial("hunterWhiteAttackRight", EntityStates.ATTACK, FacingDirection.UP_RIGHT, true);
 	}
 
 }

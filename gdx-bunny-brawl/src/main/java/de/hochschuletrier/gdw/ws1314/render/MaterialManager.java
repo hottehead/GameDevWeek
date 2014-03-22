@@ -37,7 +37,7 @@ public class MaterialManager {
 		this.provideMaterials(EntityType.Hunter, new HunterMaterials(110, 74, 1).get());
 
 		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
+				"arrow", new RenderState(EntityStates.WALKING), 64, 64, 1,
 				false));
 
 		this.provideMaterials(EntityType.Carrot, new MaterialInfo("carrot",
