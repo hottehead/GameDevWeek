@@ -20,12 +20,9 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -38,7 +35,6 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -72,7 +68,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
     private PlayerData	playerData;
     private PlayerKit 	playerKit;
-    private TeamColor	teamColor;
     
     private float		currentHealth;
     private float		currentArmor;
@@ -303,7 +298,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     {
     	setFacingDirection(desiredDirection);
 
-    	physicsBody.setLinearDamping(BRAKING);
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
