@@ -562,4 +562,14 @@ public class NetworkManager{
 			broadcastToClients(new GameInfoReplicationDatagram(blackPoints,whitePoints,remainingEgg));
 		}
 	};
+
+	/**
+	 * @return Number of clients currently connected to this server.
+	 */
+	public int clientCount(){
+		if(!isServer()) return 0;
+		return serverConnections.size();
+	}
+	
+	
 }

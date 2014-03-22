@@ -4,9 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
@@ -16,9 +14,6 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 
  * @author yannick
@@ -27,22 +22,6 @@ import java.util.List;
 public class ServerBridge extends ServerLevelObject
 {
 	private boolean isVisible = false;
-	private Fixture fixtureBody;
-	/* FIXME:
-	 * Comment: von Fabio Gimmillaro (Der komische Typ ganz hinten rechts)
-	 * Bridge braucht ID, damit man einer Brücke bestimmte Schalter hinzufügen kann
-	 * Ich muss auch in ServerBridgeSwitch darauf zugreifen können
-	 * also bitte noch Getter einfügen oder public setzen mir egal ^^
-	 * 
-	 * private final long ID;
-	 * public ServerBridge(long ID)
-	 * {
-	 * 		this.ID = ID;
-	 * }
-	 * 
-	*/
-
-
 
     private EntityType type = EntityType.Bridge;
 	
@@ -110,7 +89,6 @@ public class ServerBridge extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		// TODO Auto-generated method stub
 		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
 									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
 									.fixedRotation(false).create();
@@ -121,10 +99,8 @@ public class ServerBridge extends ServerLevelObject
 		body.setGravityScale(0);
 		body.addContactListener(this);
 		setPhysicsBody(body);
-		
-		Array<Fixture> fixtures = body.getBody().getFixtureList();
-		fixtureBody = fixtures.get(0);
 	}
+	
 	@Override
 	public boolean getVisibility(){
 		return isVisible;
@@ -141,7 +117,6 @@ public class ServerBridge extends ServerLevelObject
 
     @Override
     public void update(float deltaTime) {
-        // TODO Auto-generated method stub
         
     }
 }
