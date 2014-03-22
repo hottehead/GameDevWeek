@@ -1,9 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
-
-import java.util.ArrayList;
-
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -402,8 +399,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case BRIDGE_VERTICAL_TOP:
                  ServerBridge b = (ServerBridge)otherEntity;
                  if(b.getVisibility()) {
-                     logger.info("beginCollision mit Brücke");
-                     logger.info("anzahl an brücken kollisionen: " + this.collidingBridgePartsCount);
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
     				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
@@ -483,8 +478,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 case BRIDGE_VERTICAL_MIDDLE:
                 case BRIDGE_VERTICAL_TOP:
                     collidingBridgePartsCount--;
-                    logger.info("endCollision mit Brücke");
-                    logger.info("anzahl an brücken kollisionen: " + this.collidingBridgePartsCount);
                     if(collidingBridgePartsCount <= 0) {
                         this.isOnBridge = false;
                         if(this.isInDeadZone) {
