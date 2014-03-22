@@ -88,7 +88,7 @@ public class MaterialManager {
 		if (map.containsKey(entityType)) {
 			return map.get(entityType);
 		} else {
-			System.out.println("Cannot find material for "
+			logger.error("Cannot find material for "
 					+ entityType.toString());
 			return null;
 		}
