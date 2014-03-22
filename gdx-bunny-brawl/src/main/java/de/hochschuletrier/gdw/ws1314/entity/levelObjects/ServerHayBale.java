@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
@@ -34,7 +32,6 @@ public class ServerHayBale extends ServerLevelObject
 	private final float DURATION_TIME_IN_WATER = 10000.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 1.0f;
-	private final float WATER_DAMPING = 100.0f;
 	
 	private float speed;
 	private boolean acrossable;
@@ -111,20 +108,6 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
-		ServerEntity otherEntity = this.identifyContactFixtures(contact);
-        
-        if(otherEntity == null){
-            return;
-        }
-        
-        switch(otherEntity.getEntityType()) {
-            case WaterZone:
-//                this.physicsBody.setLinearDamping(0);
-//                this.acrossable = false;
-                break;
-            default:
-                break;
-        }
 	}
 
 	@Override
@@ -161,6 +144,7 @@ public class ServerHayBale extends ServerLevelObject
         
         body.setGravityScale(0);
         body.addContactListener(this);
+        body.setLinearDamping(NORMAL_DAMPING);
         setPhysicsBody(body);
         
         Array<Fixture> fixtures = body.getBody().getFixtureList();
