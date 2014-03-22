@@ -63,6 +63,9 @@ public class ServerEgg extends ServerLevelObject
     public void beginContact(Contact contact) {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 
+    	 if(otherEntity == null){
+    		 return;
+    	 }
     	 switch(otherEntity.getEntityType()){
     	 	case Hunter:
     	 	case Noob:
