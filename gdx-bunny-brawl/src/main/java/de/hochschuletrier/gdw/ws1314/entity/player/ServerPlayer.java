@@ -117,6 +117,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private boolean isDead;
     private int collidingBridgePartsCount;
     private float deathfreeze;
+    private boolean isInDeadZone;
     
     
     public ServerPlayer()
@@ -146,6 +147,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	isDead = false;
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
+    	isInDeadZone = false;
     }
     
     public void enable() {}
@@ -400,6 +402,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case BRIDGE_VERTICAL_TOP:
                  ServerBridge b = (ServerBridge)otherEntity;
                  if(b.getVisibility()) {
+                     logger.info("beginCollision mit Brücke");
+                     logger.info("anzahl an brücken kollisionen: " + this.collidingBridgePartsCount);
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
     				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
@@ -436,7 +440,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
-                 case WaterZone:                     
+                 case WaterZone:
+                     this.isInDeadZone = true;
                      if(!isOnBridge) {
                          this.isDead = true;
                      }
@@ -478,13 +483,27 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 case BRIDGE_VERTICAL_MIDDLE:
                 case BRIDGE_VERTICAL_TOP:
                     collidingBridgePartsCount--;
+                    logger.info("endCollision mit Brücke");
+                    logger.info("anzahl an brücken kollisionen: " + this.collidingBridgePartsCount);
                     if(collidingBridgePartsCount <= 0) {
                         this.isOnBridge = false;
+                        if(this.isInDeadZone) {
+                            this.isDead = true;
+                        }
                     }
                     break;
                 default:
                 	break;
              }
+    	 } else if(fixture == fixtureDeathCheck) {
+    	     switch(otherEntity.getEntityType()) {
+    	         case AbyssZone:
+    	         case WaterZone:
+    	             this.isInDeadZone = false;
+    	             break;
+    	         default:
+    	             break;
+    	     }
     	 }
     }
 
