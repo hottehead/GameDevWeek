@@ -17,6 +17,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitHorizontalTransition;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
@@ -43,14 +44,10 @@ public class MainMenuState extends GameState {
         
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
 		
-        stage = new MainMenuStage();
-		stage.init(assetManager);
-		
 		this.startServerClickListener = new StartServerClick();
 		this.startClientClickListener = new StartClientClick();
 		this.startForeverAloneListener = new StartForeverAloneClick();
-
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
     }
 
     @Override
@@ -76,6 +73,11 @@ public class MainMenuState extends GameState {
         	this.music.play("music-lobby-loop");
         }
         
+        stage = new MainMenuStage();
+		stage.init(assetManager);
+        
+		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		stage.getStartServerButton().addListener(this.startServerClickListener);
 		stage.getStartClientButton().addListener(this.startClientClickListener);
 		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
@@ -92,6 +94,8 @@ public class MainMenuState extends GameState {
 		stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
 		
 		Main.inputMultiplexer.removeProcessor(this.stage);
+		
+		stage = null;
 	}
 
 	@Override
@@ -107,6 +111,18 @@ public class MainMenuState extends GameState {
     private class StartServerClick extends ClickListener {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
+			// TODO: Nur Temporär zum localen Testen
+	        if (!NetworkManager.getInstance().isServer())
+	        {
+	        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), 10);
+	        	
+	        	if (!NetworkManager.getInstance().isServer())
+	        	{
+	        		logger.warn("Server could not be created. Another Server allready running or Port is blocked.");
+		        	return;
+	        	}
+	        }
+	        
 			logger.info("Changing State to Server-Lobby...");
 			GameStates.SERVERLOBBY.init(assetManager);
 			GameStates.SERVERLOBBY.activate();
@@ -116,6 +132,19 @@ public class MainMenuState extends GameState {
     private class StartClientClick extends ClickListener {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
+			// TODO: Nur Temporär zum localen Testen
+		    if (!NetworkManager.getInstance().isClient())
+		    {
+		        NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
+		        
+		        if (!NetworkManager.getInstance().isClient()) {
+		        	logger.warn("Connection could not be established! Server maybe not running.");
+		        	GameStates.MAINMENU.init(assetManager);
+		        	GameStates.MAINMENU.activate();
+		        	return;
+		        }
+		    }
+			
 			logger.info("Changing State to Client-Lobby...");
 			GameStates.CLIENTLOBBY.init(assetManager);
 			GameStates.CLIENTLOBBY.activate();

@@ -85,19 +85,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
     	this.stage = new ClientLobbyStage(this.clientLobby);
 	    this.stage.init(assetManager);
     	
-	    // TODO: Temporär nur zum localen Testen
-	    if (!NetworkManager.getInstance().isClient())
-	    {
-	        NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
-	        
-	        if (!NetworkManager.getInstance().isClient()) {
-	        	logger.warn("Connection could not be established! Server maybe not running.");
-	        	GameStates.MAINMENU.init(assetManager);
-	        	GameStates.MAINMENU.activate();
-	        	return;
-	        }
-	    }
-	    
 	    this.clientLobby.sendChanges();
 	    
 	    NetworkManager.getInstance().setGameStateCallback(this);

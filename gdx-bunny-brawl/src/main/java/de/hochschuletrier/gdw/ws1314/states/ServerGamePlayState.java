@@ -101,6 +101,8 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 		this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 		
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		ServerEntityManager.getInstance().getGameInfo().addListner(this);
 	}
 
 	@Override
@@ -110,6 +112,8 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 		NetworkManager.getInstance().setDisconnectCallback(null);
 		
 		this.stage.getDisconnectButton().removeListener(this.disconnectClickListener);
+		
+		ServerEntityManager.getInstance().getGameInfo().removeListner(this);
 		
 		this.stage = null;
 		this.game = null;
