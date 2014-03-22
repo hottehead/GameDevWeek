@@ -85,7 +85,7 @@ public class ServerEgg extends ServerLevelObject
                                 .density(0.5f)
                                 .friction(0.0f)
                                 .restitution(0.0f)
-                                .shapeCircle(16));
+                                .shapeCircle(12));
 
 
 
