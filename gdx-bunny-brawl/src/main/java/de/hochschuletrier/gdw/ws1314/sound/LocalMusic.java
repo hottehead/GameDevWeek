@@ -61,36 +61,34 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
-		this.fading = false;
 	}
 	
 	public void setVolume(float volume) {
-		this.musicHandle.setVolume(volume);
+		this.musicHandle.setVolume(volume * LocalMusic.SystemVolume);
 	}
 	
 	public char getFadingDirection() { return this.fadingDirection; }
 	public boolean getFading() { return this.fading; }
+
 	
 	public void update() {
 		float delta = Gdx.graphics.getDeltaTime();
-		if (this.fading) {
+		float step = delta * (1000.0f / this.duration);
+		
+		if (this.fading && this.musicHandle != null) {
 			float volume = this.musicHandle.getVolume();
+			
 			if (this.fadingDirection == 'i') {
-				volume += delta * (1000.0f / this.duration);
-				volume = volume < delta * (1000.0f / this.duration) ? LocalMusic.SystemVolume : volume;
-				this.fading = volume >= LocalMusic.SystemVolume ? false : true;
+				volume += step;
 			}
 			else if (this.fadingDirection == 'o') {
-				volume -= delta * (1000.0f / this.duration);
+				volume -= step;
 				volume = volume < delta * (1000.0f / this.duration) ? 0.0f : volume;
 				this.fading = volume == 0.0f ? false : true;
 			}
-			
-			volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
-			this.musicHandle.setVolume(volume);
-			/*System.out.println(this.musicHandle.getVolume());
-			System.out.println(this.fadingDirection);
-			System.out.println(this.fading);*/
+		
+		this.musicHandle.setVolume(volume);
+		volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
 		}
 	}
 	

@@ -83,7 +83,7 @@ public class MainMenuState extends GameState {
     @Override
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2000);
+    		this.music.setFade('o', 2500);
     	}
 		
         stage.getStartServerButton().removeListener(this.startServerClickListener);
