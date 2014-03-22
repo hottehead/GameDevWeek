@@ -98,6 +98,7 @@ public class NetConnection extends Thread {
      * @throws IOException when setting the TCP_NODELAY option fails.
      */
     public NetConnection(String ip, int port, INetDatagramFactory datagramFactory) throws IOException {
+    	setDaemon(true);
         this.datagramFactory = datagramFactory;
         channel = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(ip), port));
         channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
