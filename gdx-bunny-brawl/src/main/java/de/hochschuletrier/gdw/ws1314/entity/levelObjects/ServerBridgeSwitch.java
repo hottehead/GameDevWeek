@@ -74,11 +74,7 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	        switch(otherEntity.getEntityType()) {
 	            case SwordAttack:
 	            case Projectil:
-                    for(Long targetID : targetIDs) {
-                        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-                        bridge.setVisibility(!bridge.getVisibility());
-						NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
-                    }
+					pushSwitch();
 	                break;
 	            default:
 	                break;
