@@ -50,6 +50,6 @@ public class RenderState {
 	
 	@Override
 	public String toString() {
-		return state.toString();//(state.name() + ":"+facing!=null?facing.name():"none"); 
+		return state!=null?state.toString():"null" + " : " + facing!=null?facing.toString():"none";//(state.name() + ":"+facing!=null?facing.name():"none"); 
 	}
 }

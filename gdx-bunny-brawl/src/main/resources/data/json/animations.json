@@ -232,12 +232,12 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteWalkDown": {
+	"hunterWhiteWalkDown": {
         "filename": "data/animations/HunterWhite_WalkDown.png",
-        "frames" : 4,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 4,
+        "columns": 2,
         "rows" : 1
     },
     "hunterWhiteWalkRight": {

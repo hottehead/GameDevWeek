@@ -9,7 +9,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class MaterialManager {
 
-	protected static HashMap<RenderState, Material> dbgMaterialAtlas;
+	protected static Material dbgMaterial;
 
 	@SuppressWarnings("rawtypes")
 	private HashMap<EntityType, HashMap<RenderState, Material>> map;
@@ -20,10 +20,8 @@ public class MaterialManager {
 		map = new HashMap<EntityType, HashMap<RenderState, Material>>();
 		this.assetManager = assetManager;
 
-		Material dbgMaterial = new Material(assetManager, new MaterialInfo(
+		dbgMaterial = new Material(assetManager, new MaterialInfo(
 				"fallback", RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
-		dbgMaterialAtlas = new HashMap<RenderState, Material>();
-		dbgMaterialAtlas.put(RenderState.NONE, dbgMaterial);
 
 		this.provideMaterials(EntityType.Tank, new MaterialInfo(
 				"knightWhiteIdleDown", new RenderState(EntityStates.IDLE,
@@ -43,7 +41,8 @@ public class MaterialManager {
 								FacingDirection.DOWN), 110, 74, 1, true),
 				new MaterialInfo("hunterWhiteAttackDown", new RenderState(
 						EntityStates.ATTACK, FacingDirection.DOWN), 110, 74, 1,
-						true));
+						true)
+		);
 
 		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
 				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
@@ -95,7 +94,7 @@ public class MaterialManager {
 		} else {
 			System.out.println("Cannot find material for "
 					+ entityType.toString());
-			return dbgMaterialAtlas;
+			return null;
 		}
 	}
 
