@@ -2,6 +2,9 @@ package de.hochschuletrier.gdw.ws1314.game;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -35,6 +38,8 @@ import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
  */
 // Modfied by El Fapo: updated intention changes
 public class ClientGame {
+	private static final Logger logger = LoggerFactory.getLogger(ClientGame.class);
+	
 	private ClientEntityManager entityManager;
 	private NetworkManager netManager;
 	private int Inputmask;
@@ -60,8 +65,9 @@ public class ClientGame {
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 
-	public void init(AssetManagerX assets) {
-		map = assets.getTiledMap("map01");
+	public void init(AssetManagerX assets, String mapName) {
+		map = assets.getTiledMap(mapName);
+
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
 		for (TileSet tileset : map.getTileSets()) {
@@ -86,9 +92,6 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 
-//			System.out.println(l.getName());
-//		}
-
 		stage = new GameplayStage();
 		stage.init(assets);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -106,10 +109,10 @@ public class ClientGame {
 
 		postProcessing = new TextureAdvection("data/shaders/post.vert",
 				"data/shaders/post.frag");
-		System.out.println(postProcessing.getLog());
+		logger.error(postProcessing.getLog());
 		advShader = new TextureAdvection("data/shaders/texAdv.vert",
 				"data/shaders/texAdv.frag");
-		System.out.println(advShader.getLog());
+		logger.error(advShader.getLog());
 	}
 
 	float fadeIn = 0.25f;
@@ -132,14 +135,10 @@ public class ClientGame {
 		DrawUtil.startRenderToScreen();
 		DrawUtil.screenSpace.update();
 		DrawUtil.batch.setShader(postProcessing);
-		postProcessing.setUniformi(
-				postProcessing.getUniformLocation("u_prevStep"), 1);
 		DrawUtil.batch.draw(sceneToTexture.getActiveFrameBuffer(), 0, 0);
 		DrawUtil.batch.setShader(null);
 		DrawUtil.batch.flush();
 		DrawUtil.endRenderToScreen();
-		
-		sceneToTexture.swap();
 		
 		DrawUtil.startRenderToScreen();
 		stage.render();

@@ -20,12 +20,9 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
@@ -38,7 +35,6 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
@@ -72,7 +68,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
     private PlayerData	playerData;
     private PlayerKit 	playerKit;
-    private TeamColor	teamColor;
     
     private float		currentHealth;
     private float		currentArmor;
@@ -513,25 +508,25 @@ public void endContact(Contact contact) {
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		PhysixBody body1 = new PhysixBodyDef(BodyType.DynamicBody, manager)
+		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(properties.getFloat("x"), properties.getFloat("y"))
 				.fixedRotation(false)
 				.gravityScale(0.0f)
 				.create();
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true)
 				);
-		body1.createFixture(new PhysixFixtureDef(manager)
+		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
@@ -539,31 +534,24 @@ public void endContact(Contact contact) {
             .sensor(true)
         );
 
-		body1.setGravityScale(0);
-		body1.addContactListener(this);
-		body1.setLinearDamping(BRAKING);
-		setPhysicsBody(body1);
+		body.setGravityScale(0);
+		body.addContactListener(this);
+		body.setLinearDamping(BRAKING);
+		setPhysicsBody(body);
 
-		Array<Fixture> fixtures = body1.getBody().getFixtureList();
+		Array<Fixture> fixtures = body.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
 		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
-	public void switchToState(StatePlayer state)
-	{
-
-		currentState.exit();
-		currentState = state;
-		currentState.init();
-	}
-	
-
 	@Override
 	public void switchToState(State state)
 	{
-		switchToState((StatePlayer)state);
+		currentState.exit();
+		currentState = (StatePlayer) state;
+		currentState.init();
 	}
 
     public void reset()

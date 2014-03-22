@@ -13,20 +13,13 @@ import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
-import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 
 public class ServerLobbyStage extends AutoResizeStage {
 	
 	private BitmapFont font;
 	private Skin defaultSkin;
 	
-	private LevelList levelList;
-	private TextButton startButton;
-	
-	//server-client-testing
-	private TextButton startClient;
-	private TextButton startServer;
+	private TextButton disconnectButton;
 	
 	public ServerLobbyStage() {
 		super();
@@ -45,29 +38,11 @@ public class ServerLobbyStage extends AutoResizeStage {
 		//info
 		Label label = new Label("Server is listening . . .", defaultSkin);
 		uiTable.add(label);
-		uiTable.row().pad(20).bottom();
+		uiTable.row().padBottom(20);
 		
-		/*
-		//level list
-		levelList = new LevelList(defaultSkin);
-		//add levels for testing
-		levelList.addLevel("does nothing");
-		levelList.addLevel("new level");
-		uiTable.add(levelList);
-		
-		uiTable.row();
-		
-		//start Button
-		startButton = new TextButton("LADEN", defaultSkin);
-		uiTable.add(startButton);
-		
-		//testing server-client stuff
-		startServer = new TextButton("start Server", defaultSkin);
-		startClient = new TextButton("start Client", defaultSkin);
-		uiTable.row().padTop(20);
-		uiTable.add(startClient).row();
-		uiTable.add(startServer);
-		*/
+		//disconnectButton
+		disconnectButton = new TextButton("Disconnect", defaultSkin);
+		uiTable.add(disconnectButton);
 	}
 
 	public void render() {		
@@ -83,24 +58,8 @@ public class ServerLobbyStage extends AutoResizeStage {
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 	
-	public void addLevel(String levelName) {
-		levelList.addLevel(levelName);
-	}
-	
-	public LevelListElement getSelecetedLevel() {
-		return levelList.getSelected();
-	}
-	
-	public TextButton getStartButton() {
-		return startButton;
-	}
-	
-	//for testing server-client stuff
-	public TextButton getStartClientButton() {
-		return startClient;
-	}
-	public TextButton getStartServerButton() {
-		return startServer;
+	public TextButton getDisconnectButton() {
+		return disconnectButton;
 	}
 	
 }
