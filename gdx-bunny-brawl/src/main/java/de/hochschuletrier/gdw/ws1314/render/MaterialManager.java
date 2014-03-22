@@ -5,59 +5,71 @@ import java.util.HashMap;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 public class MaterialManager {
 
-	protected static HashMap<EntityStates, Material> dbgMaterialAtlas;
+	protected static HashMap<RenderState, Material> dbgMaterialAtlas;
 
 	@SuppressWarnings("rawtypes")
-	private HashMap<EntityType, HashMap<EntityStates, Material>> map;
+	private HashMap<EntityType, HashMap<RenderState, Material>> map;
 	private AssetManagerX assetManager;
 
 	@SuppressWarnings("rawtypes")
 	public MaterialManager(AssetManagerX assetManager) {
-		map = new HashMap<EntityType, HashMap<EntityStates, Material>>();
+		map = new HashMap<EntityType, HashMap<RenderState, Material>>();
 		this.assetManager = assetManager;
 
-		Material dbgMaterial = new Material(assetManager,
-				new MaterialInfo("fallback", EntityStates.NONE, 32, 32,
-						Integer.MAX_VALUE, false));
-		dbgMaterialAtlas = new HashMap<EntityStates, Material>();
-		dbgMaterialAtlas.put(EntityStates.NONE, dbgMaterial);
+		Material dbgMaterial = new Material(assetManager, new MaterialInfo(
+				"fallback", RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
+		dbgMaterialAtlas = new HashMap<RenderState, Material>();
+		dbgMaterialAtlas.put(RenderState.NONE, dbgMaterial);
 
-		this.provideMaterial(EntityType.Tank, new MaterialInfo(
-				"knightWhiteIdleDown", EntityStates.IDLE, 110, 110, 1, true),
-				new MaterialInfo("hunterWhiteWalkLeft", EntityStates.WALKING,
-						110, 110, 1, true));
+		this.provideMaterials(EntityType.Tank, new MaterialInfo(
+				"knightWhiteIdleDown", new RenderState(EntityStates.IDLE,
+						FacingDirection.DOWN), 110, 110, 1, true),
+				new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
+						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
+						1, true));
 
-		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
-				"hunterWhiteIdleDown", EntityStates.IDLE, 110, 74, 1, true),
-				new MaterialInfo("hunterWhiteWalkLeft", EntityStates.WALKING,
-						110, 74, 1, true),
-						new MaterialInfo("hunterWhiteAttackDown", EntityStates.ATTACK, 110, 74, 1, true));
+		this.provideMaterials(EntityType.Hunter, new MaterialInfo(
+				"hunterWhiteIdleDown", new RenderState(EntityStates.IDLE,
+						FacingDirection.DOWN), 110, 74, 1, true),
+				new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
+						EntityStates.WALKING, FacingDirection.LEFT), 110, 74,
+						1, true), 
+				new MaterialInfo("hunterWhiteWalkDown",
+						new RenderState(EntityStates.WALKING,
+								FacingDirection.DOWN), 110, 74, 1, true),
+				new MaterialInfo("hunterWhiteAttackDown", new RenderState(
+						EntityStates.ATTACK, FacingDirection.DOWN), 110, 74, 1,
+						true));
 
-		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", EntityStates.NONE, 64, 64, 1, false));
+		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
+				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
+				false));
 
-		this.provideMaterial(EntityType.Carrot, new MaterialInfo("carrot",
-				EntityStates.NONE, 32, 32, -1, false));
-		this.provideMaterial(EntityType.Ei, new MaterialInfo("egg",
-				EntityStates.NONE, 32, 32, -1, false));
-		this.provideMaterial(EntityType.Spinach, new MaterialInfo("spinach",
-				EntityStates.NONE, 32, 32, -1, false));
-		this.provideMaterial(EntityType.BridgeSwitch, new MaterialInfo(
-				"switch", EntityStates.NONE, 32, 32, -1, false));
-		this.provideMaterial(EntityType.Clover, new MaterialInfo("clover",
-				EntityStates.NONE, 32, 32, -1, false));
-		this.provideMaterial(EntityType.Bush, new MaterialInfo("bush",
-				EntityStates.NONE, 32, 32, 10, false));
+		this.provideMaterials(EntityType.Carrot, new MaterialInfo("carrot",
+				new RenderState(EntityStates.NONE), 32, 32, -1, false));
+		this.provideMaterials(EntityType.Ei, new MaterialInfo("egg",
+				new RenderState(EntityStates.NONE), 32, 32, -1, false));
+		this.provideMaterials(EntityType.Spinach, new MaterialInfo("spinach",
+				new RenderState(EntityStates.NONE), 32, 32, -1, false));
+		this.provideMaterials(EntityType.BridgeSwitch,
+				new MaterialInfo("switch", new RenderState(EntityStates.NONE),
+						32, 32, -1, false));
+		this.provideMaterials(EntityType.Clover, new MaterialInfo("clover",
+				new RenderState(EntityStates.NONE), 32, 32, -1, false));
+		this.provideMaterials(EntityType.Bush, new MaterialInfo("bush",
+				new RenderState(EntityStates.NONE), 32, 32, 10, false));
 
-		this.provideMaterial(EntityType.ContactMine, new MaterialInfo(
-				"contactMine", EntityStates.NONE, 32, 32, -1, false));
+		this.provideMaterials(EntityType.ContactMine, new MaterialInfo(
+				"contactMine", new RenderState(EntityStates.NONE), 32, 32, -1,
+				false));
 
 	}
 
-	public void provideMaterial(EntityType entityType,
+	public void provideMaterials(EntityType entityType,
 			MaterialInfo... materialInfos) {
 		for (MaterialInfo materialInfo : materialInfos) {
 			Material material = null;
@@ -69,14 +81,15 @@ public class MaterialManager {
 			} else {
 				material = new Material(assetManager, materialInfo);
 				if (map.get(entityType) == null) {
-					map.put(entityType, new HashMap<EntityStates, Material>());
+					map.put(entityType, new HashMap<RenderState, Material>());
 				}
 			}
 			map.get(entityType).put(materialInfo.stateUsed, material);
+			System.out.println("Setting " + entityType.name() + " material for " + materialInfo.stateUsed);
 		}
 	}
 
-	public HashMap<EntityStates, Material> fetch(EntityType entityType) {
+	public HashMap<RenderState, Material> fetch(EntityType entityType) {
 		if (map.containsKey(entityType)) {
 			return map.get(entityType);
 		} else {

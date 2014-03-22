@@ -9,17 +9,21 @@ import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
 
 public class RenderObject implements Comparable<RenderObject> {
 
-	protected ClientEntity entity;
-	protected HashMap<EntityStates, Material> materialAtlas;
-	float stateTime;
 	
-	public RenderObject(HashMap<EntityStates, Material> material, ClientEntity entity) {
+	protected ClientEntity entity;
+	protected HashMap<RenderState, Material> materialAtlas;
+	float stateTime;
+	private RenderState stateStorage;
+	
+	public RenderObject(HashMap<RenderState, Material> material, ClientEntity entity) {
 		this.entity = entity;
 		this.materialAtlas = material;
 		stateTime = 0;
+		stateStorage = new RenderState();
 	}
 	
 	@Override
@@ -34,14 +38,18 @@ public class RenderObject implements Comparable<RenderObject> {
 		return activeMaterialThis.compareTo(activeMaterialOther);
 	}
 	
-	protected EntityStates getActiveState() {
+	protected RenderState getActiveState() {
 		if(this.entity instanceof ClientPlayer) {
-			return ((ClientPlayer)entity).getCurrentPlayerState();
+			stateStorage.setState(((ClientPlayer)entity).getCurrentPlayerState(),
+			entity.getFacingDirection());
 		}
 		if(this.entity instanceof ClientLevelObject) {
-			return ((ClientLevelObject)entity).getLevelObjectState();
+			stateStorage.setState(((ClientLevelObject)entity).getLevelObjectState(), null);
 		}
-		return EntityStates.NONE;
+		if(this.entity instanceof ClientProjectile) {
+			stateStorage.setState(EntityStates.NONE, entity.getFacingDirection());
+		}
+		return stateStorage;
 	}
 	
 	public Material getActiveMaterial() {
