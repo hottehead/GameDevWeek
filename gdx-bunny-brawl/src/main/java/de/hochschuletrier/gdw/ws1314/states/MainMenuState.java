@@ -84,7 +84,7 @@ public class MainMenuState extends GameState {
         	this.music.play("music-lobby-loop");
         }
 
-	    Gdx.input.setInputProcessor(stage);
+	    Main.inputMultiplexer.addProcessor(stage);
 		
 	    stage.getStartServerButton().addListener(this.startServerClickListener);
 		stage.getStartClientButton().addListener(this.startClientClickListener);
@@ -218,8 +218,9 @@ public class MainMenuState extends GameState {
 		public void clicked(InputEvent event, float x, float y) {
 			GameStates.DUALGAMEPLAY.init(assetManager);
 			GameStates.DUALGAMEPLAY.activate();
-//			System.out.println("changed state");
-//			System.out.println(Main.inputMultiplexer.getProcessors().toString());
+			System.out.println("changed state");
+			System.out.println(Main.inputMultiplexer.getProcessors().toString());
+//			System.out.println(Gdx.input.getInputProcessor().toString());
 		}
     }
 }

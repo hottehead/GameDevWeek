@@ -38,7 +38,7 @@ public class OptionState extends GameState {
     }
 
     public void onEnter() {
-	    Gdx.input.setInputProcessor(stage);
+	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
     }
 

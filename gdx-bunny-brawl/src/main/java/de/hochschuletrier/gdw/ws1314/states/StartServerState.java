@@ -42,7 +42,7 @@ public class StartServerState extends GameState {
     }
 
     public void onEnter() {
-	    Gdx.input.setInputProcessor(stage);
+	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
 		stage.getStartServerButton().addListener(startServerListener);
 		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
