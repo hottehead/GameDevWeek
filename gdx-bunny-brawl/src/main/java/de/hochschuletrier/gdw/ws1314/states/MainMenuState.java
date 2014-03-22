@@ -27,6 +27,7 @@ public class MainMenuState extends GameState {
 	private OptionListener optionListener;
 	private ExitListener exitlistener;
 	private PlayServerListener playServerListener;
+	private PlayClientListener playClientListener;
 
     public MainMenuState() {
     }
@@ -45,6 +46,7 @@ public class MainMenuState extends GameState {
 		this.optionListener = new OptionListener();
 		this.exitlistener = new ExitListener();
 		this.playServerListener = new PlayServerListener();
+		this.playClientListener = new PlayClientListener();
 	}
 	
     public void render() {
@@ -73,6 +75,7 @@ public class MainMenuState extends GameState {
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
+		stage.getPlayClientButton().addListener(this.playClientListener);
 	}
 
     public void onLeave() {
@@ -80,6 +83,7 @@ public class MainMenuState extends GameState {
     		this.music.setFade('o', 2000);
     	}
     	
+    	stage.getPlayClientButton().removeListener(this.playClientListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getExitButton().removeListener(this.exitlistener);
@@ -131,8 +135,8 @@ public class MainMenuState extends GameState {
 	private class PlayClientListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to JoinServerState");
-			GameStates.LOBBY.init(assetManager);
-			GameStates.LOBBY.activate();
+			GameStates.CLIENTLOBBY.init(assetManager);
+			GameStates.CLIENTLOBBY.activate();
 		}
 	}
 	
