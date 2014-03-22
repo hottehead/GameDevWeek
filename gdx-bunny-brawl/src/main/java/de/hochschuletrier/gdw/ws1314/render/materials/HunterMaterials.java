@@ -10,7 +10,7 @@ public class HunterMaterials extends MaterialDefinition {
 
 	public ArrayList<MaterialInfo> materials = new ArrayList<MaterialInfo>();
 
-	public HunterMaterials(int width, int height, int layer) {
+	public HunterMaterials() {
 		super(110, 74, 1);
 	}
 
