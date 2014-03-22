@@ -302,16 +302,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     protected void moveBegin(FacingDirection dir)
     {
     	setFacingDirection(desiredDirection);
-    	// TODO 
-    	// Damp old impulse
-    	// acceleration impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
 
-    	moveEnd();
+    	physicsBody.setLinearDamping(BRAKING);
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	moveEnd();
 
     }
     
@@ -340,7 +334,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
     
-    // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	
     {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
@@ -350,20 +343,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              return;
          }
          
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-         {
-        	 switch(otherEntity.getEntityType())
-        	 {
+         if(fixture == fixtureLowerBody) {
+        	 switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
              case Knight:
              case Noob:
             	 ServerPlayer player = (ServerPlayer) otherEntity;
-                	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
+            	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -388,15 +375,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
-                 
-            	 break;
-             case AbyssZone:
-            	 break;
-             case GrassZone:
-            	 break;
-             case PathZone:
-            	 break;
-             case StartZone:
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
@@ -408,39 +386,28 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                        if(ball.getSpeed() > 0){
                            this.applyDamage(ball.getVelocity().len());
                        }
-                   }
+                 }
                  break;
              case Bridge:
                  this.isOnBridge = true;
                  collidingBridgePartsCount++;
                  break;
-             case BridgeSwitch:	
-                 break;
-             case Bush:
-                 break;
              default:
             	 break;
         	 }
          } else if(fixture == fixtureFullBody) {
-        	 switch(otherEntity.getEntityType()) 
-        	 {
+        	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID())
-                     //	break;
-                     //if (getTeamColor() != projectile.getTeamColor())
-                     {
+                     if (getID() != projectile.getSourceID()) {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
+                     	ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
                 	 break;
-                 
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     //if(attack.getTeamColor() != this.teamColor) 
-                     if (attack.getSourceID() != getID())
-                     {
+                     if (attack.getSourceID() != getID()) {
                          applyDamage(attack.getDamage());
                          applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
                      }
@@ -449,8 +416,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 break;
         	 }      
          } else if(fixture == fixtureDeathCheck) {
-             switch(otherEntity.getEntityType()) 
-             {
+             switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
                      if(!isOnBridge) {
@@ -464,48 +430,40 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     }
     
     
-    public void endContact(Contact contact) 	
-    {
-    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-    	Fixture fixture = getCollidingFixture(contact);
-         
-         if(otherEntity == null)
-             return;
-         
-
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-  		 {
-             switch(otherEntity.getEntityType()) 
-             {
-             	case Ei:
-             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-             			droppedEggID = -1;
-             		break;
-             	case HayBale:
-             	   ServerHayBale ball = (ServerHayBale)otherEntity;
-                   if(ball.isCrossable()) {
-                       collidingBridgePartsCount--;
-                       if(collidingBridgePartsCount <= 0) {
-                           this.isOnBridge = false;
-                       }
+public void endContact(Contact contact) {
+	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+	Fixture fixture = getCollidingFixture(contact);
+     
+     if(otherEntity == null)
+         return;
+     
+     if (fixture == fixtureLowerBody) {
+         switch(otherEntity.getEntityType()) {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+         	case HayBale:
+         	   ServerHayBale ball = (ServerHayBale)otherEntity;
+               if(ball.isCrossable()) {
+                   collidingBridgePartsCount--;
+                   if(collidingBridgePartsCount <= 0) {
+                       this.isOnBridge = false;
                    }
-                   break;
-                case Bridge:
-                    collidingBridgePartsCount--;
-                    if(collidingBridgePartsCount <= 0) {
-                        this.isOnBridge = false;
-                    }
-                    break;
-                default:
-                	break;
-             }
-  		 }
-         
-    }
+               }
+               break;
+            case Bridge:
+                collidingBridgePartsCount--;
+                if(collidingBridgePartsCount <= 0) {
+                    this.isOnBridge = false;
+                }
+                break;
+            default:
+            	break;
+         }
+	 }
+}
+
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
@@ -585,6 +543,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
 		body1.setGravityScale(0);
 		body1.addContactListener(this);
+		body1.setLinearDamping(BRAKING);
 		setPhysicsBody(body1);
 
 		Array<Fixture> fixtures = body1.getBody().getFixtureList();
