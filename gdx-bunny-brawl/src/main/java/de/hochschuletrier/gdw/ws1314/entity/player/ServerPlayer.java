@@ -302,16 +302,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     protected void moveBegin(FacingDirection dir)
     {
     	setFacingDirection(desiredDirection);
-    	// TODO 
-    	// Damp old impulse
-    	// acceleration impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
 
-    	moveEnd();
+    	physicsBody.setLinearDamping(BRAKING);
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
 		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	moveEnd();
 
     }
     
@@ -340,7 +334,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
     
-    // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	
     {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
@@ -350,12 +343,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              return;
          }
          
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-         {
+         
+         if (fixture == fixtureLowerBody) {
         	 switch(otherEntity.getEntityType())
         	 {
              case Tank:
@@ -363,7 +352,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case Knight:
              case Noob:
             	 ServerPlayer player = (ServerPlayer) otherEntity;
-                	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
+            	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
@@ -426,21 +415,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	 {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                     if (getID() != projectile.getSourceID())
-                     //	break;
-                     //if (getTeamColor() != projectile.getTeamColor())
-                     {
+                     if (getID() != projectile.getSourceID()) {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
+                     	ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
                 	 break;
                  
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     //if(attack.getTeamColor() != this.teamColor) 
-                     if (attack.getSourceID() != getID())
-                     {
+                     if (attack.getSourceID() != getID()) {
                          applyDamage(attack.getDamage());
                          applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
                      }
@@ -585,6 +569,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
 		body1.setGravityScale(0);
 		body1.addContactListener(this);
+		body1.setLinearDamping(BRAKING);
 		setPhysicsBody(body1);
 
 		Array<Fixture> fixtures = body1.getBody().getFixtureList();
