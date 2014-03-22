@@ -32,6 +32,7 @@ public class ServerMineExplosion extends ServerLevelObject{
 	private float 			timer;
 	private float			damage;
 	private float			hitCircleRadius;
+	private float 			sourceRadius;
 	
 	private boolean 		physicsInitialized;
 	
@@ -46,6 +47,7 @@ public class ServerMineExplosion extends ServerLevelObject{
 		this.DURATION_TIME = 1.0f;
 		this.timer = DURATION_TIME;
 		this.damage = 80.0f;
+		this.sourceRadius = 1.0f;
 		this.hitCircleRadius = 30.0f;
 		this.physicsInitialized = false;
 	}
@@ -108,13 +110,15 @@ public class ServerMineExplosion extends ServerLevelObject{
 	public void dispose() {}
 	public void initialize() {}
 	public void reset() {}
-
+	
 	public void update(float deltaTime) {
 		timer -= deltaTime;
-		if(timer <= 0){
+		sourceRadius *= 2;
+		if(sourceRadius < hitCircleRadius){
+			physicsBody.scale(2);
+		}else{
 			ServerEntityManager.getInstance().removeEntity(this);
 		}
-		
 	}
 
 	@Override
@@ -135,7 +139,7 @@ public class ServerMineExplosion extends ServerLevelObject{
 								.density(0.5f)
 								.friction(0.0f)
 								.restitution(0.0f)
-								.shapeCircle(hitCircleRadius)
+								.shapeCircle(sourceRadius)
 								.sensor(true));
 		
 		body.setGravityScale(0);
