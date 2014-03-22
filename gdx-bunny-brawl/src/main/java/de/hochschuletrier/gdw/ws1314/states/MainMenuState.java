@@ -59,6 +59,7 @@ public class MainMenuState extends GameState {
 	public void update(float delta) {
 		stateTime += delta;
 		music.update();
+		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
     }
 
     public void onEnter() {
@@ -80,7 +81,7 @@ public class MainMenuState extends GameState {
 
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2000);
+    		this.music.setFade('o', 2500);
     	}
     	
     	stage.getPlayClientButton().removeListener(this.playClientListener);

@@ -158,11 +158,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         
     	currentState.update(deltaTime);
     	
-    	if (!attackAvailable)
-    	{
+    	if (!attackAvailable) {
         	attackCooldownTimer += deltaTime;
-        	if (attackCooldownTimer > attackCooldown)
-        	{
+        	if (attackCooldownTimer > attackCooldown) {
         		attackAvailable = true;
         		
         		if(do1Attack) {
@@ -175,20 +173,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	}
     	}
     	
-    	if (speedBuffActive)
-    	{
+    	if (speedBuffActive) {
     		speedBuffTimer += deltaTime;
-    		if (speedBuffTimer >= speedBuffDuration)
-    		{
+    		if (speedBuffTimer >= speedBuffDuration) {
     			this.deactivateSpeedBuff();
     		}
     	}
     	
-    	if (attackBuffActive)
-    	{
+    	if (attackBuffActive) {
     		attackBuffTimer += deltaTime;
-    		if (attackBuffTimer >= attackBuffDuration)
-    		{
+    		if (attackBuffTimer >= attackBuffDuration) {
     			this.deactivateAttackBuff();
     		}
     	}
@@ -196,8 +190,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
     //NOT FINAL! CHANGE AS NEEDED
     Vector2 dir = new Vector2(0,0);
-    public void doAction(PlayerIntention intent)
-    {
+    public void doAction(PlayerIntention intent) {
         switch (intent){
             case MOVE_UP_ON:
                 movingUp = true;
@@ -227,8 +220,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-            	if (currentState.equals(idleState) || currentState.equals(walkingState))
-            	{
+            	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
             		attackCooldown = playerKit.getFirstAttackCooldown();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
@@ -242,8 +234,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-        		if (currentState.equals(idleState) || currentState.equals(walkingState))
-            	{
+        		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
             		attackCooldown = playerKit.getSecondAttackCooldown();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
@@ -262,8 +253,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         }
         
         desiredDirection = FacingDirection.NONE;
-        if (movingUp)
-        {
+        if (movingUp) {
         	if (movingLeft)
         		desiredDirection = FacingDirection.UP_LEFT;
         	else if (movingRight)
@@ -271,8 +261,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	else
         		desiredDirection = FacingDirection.UP;
         }
-        else if (movingDown)
-        {
+        else if (movingDown) {
         	if (movingLeft)
         		desiredDirection = FacingDirection.DOWN_LEFT;
         	else if (movingRight)
@@ -286,8 +275,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	desiredDirection = FacingDirection.RIGHT;    	
         
         // Player intended movement
-        if (desiredDirection != FacingDirection.NONE)
-        {
+        if (desiredDirection != FacingDirection.NONE) {
         	walkingState.setMovingDirection(desiredDirection);
             if (currentState.equals(idleState) || currentState.equals(walkingState))
             	switchToState(walkingState);
@@ -296,8 +284,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	knockbackState.setWaitFinishedState(walkingState);
         }
         // Not intended movement
-        else
-        {
+        else {
         	if (currentState.equals(walkingState))
         		switchToState(idleState);
 
@@ -306,8 +293,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         }
     }
 
-    protected void moveBegin(FacingDirection dir)
-    {
+    protected void moveBegin(FacingDirection dir) {
     	setFacingDirection(desiredDirection);
 
     	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
@@ -315,25 +301,20 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 
     }
     
-    protected void moveEnd()
-    {
+    protected void moveEnd() {
     	physicsBody.setLinearDamping(BRAKING);
     }
     
-    private void doFirstAttack()
-    {
+    private void doFirstAttack() {
     	playerKit.doFirstAttack(this);
     }
     
-    private void doSecondAttack()
-    {
+    private void doSecondAttack() {
     	playerKit.doSecondAttack(this);
     }
     
-    public void dropEgg()
-    {
-    	if (currentEggCount > 0)
-    	{
+    public void dropEgg() {
+    	if (currentEggCount > 0) {
     	currentEggCount--;
     		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
     		droppedEggID = egg.getID();
@@ -341,8 +322,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
     
-    public void beginContact(Contact contact) 	
-    {
+    public void beginContact(Contact contact) {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
          
@@ -494,69 +474,63 @@ public void endContact(Contact contact) {
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
 	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
     
-    public void setPlayerKit(PlayerKit kit)
-    {
+    public void setPlayerKit(PlayerKit kit) {
     	playerKit = kit;
     	currentHealth = kit.getBaseHealth();
     	currentArmor = kit.getBaseArmor();
     }
     
-    public void setPlayerData(PlayerData pd)
-    {
+    public void setPlayerData(PlayerData pd) {
     	playerData = pd;
     }
 
-    public void applySpeedBuff(float factor, float duration)
-    {
+    public void applySpeedBuff(float factor, float duration) {
     	speedBuffActive = true;
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = duration;
     	walkingState.setSpeedFactor(factor);
     }
 
-    public void applyAttackBuff(float factor, float duration)
-    {
+    public void applyAttackBuff(float factor, float duration) {
     	attackBuffActive = true;
     	attackBuffTimer = 0.f;
     	attackBuffDuration = duration;
     	attackBuffFactor = factor;
     }
     
-    public void applyHealth(float factor)
-    {
+    public void applyHealth(float factor) {
     	this.currentHealth += factor * playerKit.getBaseHealth();
     	if (this.currentHealth > playerKit.getBaseHealth())
     		this.currentHealth = playerKit.getBaseHealth();
     }
 
 	@Override
-	public void initPhysics(PhysixManager manager)
-	{
+	public void initPhysics(PhysixManager manager) {
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
 				.position(properties.getFloat("x"), properties.getFloat("y"))
 				.fixedRotation(false)
 				.gravityScale(0.0f)
 				.create();
+		
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
-				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f))
-				);
+				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f)));
+		
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
-				.sensor(true)
-				);
+				.sensor(true));
+		
 		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 4.0f, new Vector2(0, HEIGHT / 4.0f))
-            .sensor(true)
-        );
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 16.0f))
+            .sensor(true));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);
@@ -571,15 +545,13 @@ public void endContact(Contact contact) {
 	}
 
 	@Override
-	public void switchToState(State state)
-	{
+	public void switchToState(State state) {
 		currentState.exit();
 		currentState = (StatePlayer) state;
 		currentState.init();
 	}
 
-    public void reset()
-    {
+    public void reset() {
         
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
@@ -592,8 +564,7 @@ public void endContact(Contact contact) {
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }
 	
-    public void applyDamage(float amount)
-    {
+    public void applyDamage(float amount) {
         NetworkManager.getInstance().sendEntityEvent(getID(), EventType.HIT_BY_ATTACK_1);
         
     	amount -= currentArmor;
@@ -609,8 +580,7 @@ public void endContact(Contact contact) {
 			this.isDead = true;
     }
 	
-	protected void applyKnockback(FacingDirection direction, float impulse)
-	{
+	protected void applyKnockback(FacingDirection direction, float impulse) {
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
 		switchToState(knockbackState);
 		physicsBody.setLinearDamping(BRAKING);
