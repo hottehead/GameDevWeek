@@ -1,8 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
-import com.badlogic.gdx.audio.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
+import de.hochschuletrier.gdw.ws1314.states.MainMenuState;
 
 /**
  * Class for handling the music in GameplayState
@@ -11,11 +18,16 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
  * @author MikO
  */
 public class LocalMusic {
+	public static final Logger logger = LoggerFactory.getLogger(LocalMusic.class);
+	
 	private AssetManagerX assetManager;
 	private Music musicHandle;
+	private boolean fading;
+	private char fadingDirection;
+	private int duration;
 	
-	private static float SystemVolume = 0.9f;
-	
+	// FIXME (if music's not playing as should)
+	private static float SystemVolume;
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume
@@ -24,6 +36,7 @@ public class LocalMusic {
 	 */
 	public static void setSystemVolume(float systemVolume) {
 		LocalMusic.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeMusic, systemVolume);
 	}
 	
 	/**
@@ -32,6 +45,12 @@ public class LocalMusic {
 	 */
 	public static float getSystemVolume() {
 		return LocalMusic.SystemVolume;
+	}
+	
+	public void setFade(char fadingDirection, int duration) {
+		this.duration = duration;
+		this.fading = this.fading == true ? false : true;
+		this.fadingDirection = fadingDirection;
 	}
 
 	/**
@@ -42,6 +61,36 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
+		 LocalMusic.SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeMusic, 0.9f);
+	}
+	
+	public void setVolume(float volume) {
+		this.musicHandle.setVolume(volume * LocalMusic.SystemVolume);
+	}
+	
+	public char getFadingDirection() { return this.fadingDirection; }
+	public boolean getFading() { return this.fading; }
+
+	
+	public void update() {
+		float delta = Gdx.graphics.getDeltaTime();
+		float step = delta * (1000.0f / this.duration);
+		
+		if (this.fading && this.musicHandle != null) {
+			float volume = this.musicHandle.getVolume();
+			
+			if (this.fadingDirection == 'i') {
+				volume += step;
+			}
+			else if (this.fadingDirection == 'o') {
+				volume -= step;
+				volume = volume < delta * (1000.0f / this.duration) ? 0.0f : volume;
+				this.fading = volume == 0.0f ? false : true;
+			}
+		
+		this.musicHandle.setVolume(volume);
+		volume = volume > LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
+		}
 	}
 	
 	/**

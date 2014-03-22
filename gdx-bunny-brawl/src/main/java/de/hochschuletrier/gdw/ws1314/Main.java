@@ -1,20 +1,16 @@
 package de.hochschuletrier.gdw.ws1314;
 
-import org.lwjgl.opengl.GL11;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
@@ -23,30 +19,22 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.SleepDummyLoader;
-import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
+import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
-import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
-import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
-import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
-import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
+import de.hochschuletrier.gdw.ws1314.hud.HudResizer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
-import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
-import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
+import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,17 +47,21 @@ import java.util.List;
  */
 public class Main extends StateBasedGame {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	
 	public static final int WINDOW_WIDTH = 1024;
 	public static final int WINDOW_HEIGHT = 512;
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
+	public final GamePreferences gamePreferences = new GamePreferences();
+	public static MusicManager musicManager;
 
 	public final DevConsole console = new DevConsole(16);
 	private final DevConsoleView consoleView = new DevConsoleView(console);
 	private Skin skin;
 	public static final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+	public static final String playerName = "Long John " + (int) (Math.random() * 100.0);
+	public static boolean startAsServer = false;
+	public static int port = 0;
 
 	public static Main getInstance() {
 		if (instance == null) {
@@ -103,6 +95,10 @@ public class Main extends StateBasedGame {
 				null);
 	}
 
+	public AssetManagerX getAssetManager(){
+		return assetManager;
+	}
+
 	private void setupGdx() {
 		KeyUtil.init();
 		Gdx.graphics.setContinuousRendering(true);
@@ -130,6 +126,10 @@ public class Main extends StateBasedGame {
 		DrawUtil.init();
 		loadAssetLists();
 		setupGdx();
+		gamePreferences.init();
+		LocalSound2.init(assetManager);
+		musicManager = MusicManager.getInstance();
+		musicManager.init(this.assetManager);
 		skin = new Skin(Gdx.files.internal("data/skins/basic.json"));
 		consoleView.init(assetManager, skin);
 		addScreenListener(consoleView);
@@ -139,83 +139,7 @@ public class Main extends StateBasedGame {
 		GameStates.LOADING.activate();
         
 		NetworkManager.getInstance().init();
-		NetworkManager.getInstance().setClientIdCallback(new ClientIdCallback() {
-			
-			@Override
-			public void callback(int playerid) {
-				c_own_id = playerid;
-				logger.info("Own id: " + c_own_id);
-			}
-		});
 		
-		
-		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
-			
-			@Override
-			public void callback(String map) {
-				//s_map = map;
-				logger.info("New map: " + map);
-			}
-		});
-
-		NetworkManager.getInstance().setPlayerUpdateCallback(new PlayerUpdateCallback() {
-			
-			@Override
-			public void callback(int playerid, String playerName, EntityType type, TeamColor team,
-					boolean accept) {
-				//PlayerData tmp = new PlayerData(playerid, playerName, type, team, accept);
-				boolean update = false;
-				for(int i = 0; i < s_players.size(); i++){
-					if(s_players.get(i) == null)
-						continue;
-					logger.info(s_players.get(i).getPlayerId() + " == " + playerid);
-					if(s_players.get(i).getPlayerId() == playerid){
-						logger.info("Updated Player: " + playerid + " " + playerName);
-						s_players.set(i, new PlayerData(playerid, playerName, type, team, accept));
-						update = true;
-						break;
-					}
-				}
-				if(!update){
-					logger.info("New Player: " + playerid + " " + playerName);
-					s_players.add(new PlayerData(playerid, playerName, type, team, accept));
-				}
-			}
-		});
-		NetworkManager.getInstance().setLobbyUpdateCallback(new LobbyUpdateCallback() {
-			@Override
-			public void callback(String map, PlayerData[] players) {
-				logger.info("Map: " + map);
-				logger.info("Playercount: " + players.length);
-				for(int i = 0; i < players.length; i++)
-					logger.info("Player" + i + ": " + players[i].getPlayername() + " id: " + players[i].getPlayerId() + " class: " + players[i].getType());
-				c_players = players;
-			}
-		});
-		
-		NetworkManager.getInstance().setPlayerDisconnectCallback(new PlayerDisconnectCallback() {
-			
-			@Override
-			public void callback(Integer[] playerid) {
-				// TODO Auto-generated method stub
-				List<PlayerData> players = new ArrayList<PlayerData>();
-				for(int i = 0; i < s_players.size(); i++){
-					boolean inlist = true;
-					for(int j = 0; j < playerid.length; j++){
-						if(playerid[j] == s_players.get(i).getPlayerId()){
-							inlist = false;
-							break;
-						}
-					}
-					if(inlist)
-						players.add(s_players.get(i));
-				}
-				//playercount = players.size();
-				s_players = players;
-				NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
-			}
-		});
-		 	
 		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
 			@Override
 			public void showUsage() {
@@ -243,42 +167,48 @@ public class Main extends StateBasedGame {
 						logger.info("Not yet connected...");
 					}
 				}
-				if (args.get(1).equals("sgp"))
+				if (args.get(1).equals("main"))
 				{
-					ArrayList<PlayerData> list = new ArrayList<>();
-					for (int i = 1; i < 4; i++) {
-						PlayerData p = new  PlayerData(i, "Long John " + i, EntityType.Hunter, TeamColor.WHITE, true);
-						list.add(p);
+					if (NetworkManager.getInstance().isServer())
+					{
+						logger.info("Changing State to Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
 					}
-					
-					((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(list);
-					GameStates.SERVERGAMEPLAY.init(assetManager);					
-					GameStates.SERVERGAMEPLAY.activate();
-					logger.info("ServerGamePlayState activated...");
+					else if (NetworkManager.getInstance().isClient())
+					{
+						logger.info("Changing State to Mainmenu...");
+						GameStates.MAINMENU.init(assetManager);
+						GameStates.MAINMENU.activate();
+					}
+					else
+					{
+						logger.info("Not yet connected...");
+					}
 				}
 			}
 		});
 		
 	}
 
-	/**
-	 * NETWORK nur von sendLobbyUpdateCmd aus NetworkCommands nutzen !
-	 */
-	public void sendDevLobbyUpdate(){
-		NetworkManager.getInstance().sendLobbyUpdate(s_map, s_players.toArray(new PlayerData[s_players.size()]));
-	}
-
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
+	    GameStates.SERVERLOBBY.init(assetManager);
+	    GameStates.CLIENTLOBBY.init(assetManager);
+	    GameStates.SERVERGAMEPLAY.init(assetManager);
+	    GameStates.CLIENTGAMEPLAY.init(assetManager);
+	    GameStates.DUALGAMEPLAY.init(assetManager);
+	    GameStates.FINISHEDGAME.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
 	@Override
 	public void dispose() {
-		DrawUtil.batch.dispose();
+		NetworkManager.getInstance().dispose();
 		GameStates.dispose();
 		consoleView.dispose();
 		skin.dispose();
+		Gdx.app.exit();
 	}
 
 	@Override
@@ -311,8 +241,10 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void resize(int width, int height) {
+		Gdx.gl.glViewport(0, 0, width, height);
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
+		HudResizer.resize(width, height);
 	}
 
 	@Override
@@ -323,13 +255,33 @@ public class Main extends StateBasedGame {
 	public void resume() {
 	}
 
+	public void setTitle(String title){
+		Gdx.graphics.setTitle(title);
+	}
+
+	public void setConsoleVisible(boolean b){
+		if(consoleView.isVisible() != b){
+			consoleView.setVisible(b);
+		}
+	}
+
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "LibGDX Test";
+		cfg.title = "Bunny Brawl - GameDevWeek WS 2013/14";
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
-
+		for(String s:args){ //start as server console argument: -server[:port]
+			if(s.toLowerCase().contains("-server".toLowerCase())){
+				startAsServer = true;
+				if(s.toLowerCase().contains(":".toLowerCase())){
+					String [] split = s.split("[:]");
+					if(split.length > 1){
+						port = Integer.parseInt(split[1]);
+					}
+				}
+			}
+		}
 		new LwjglApplication(getInstance(), cfg);
 	}
 }

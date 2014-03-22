@@ -90,6 +90,14 @@ YPosition float
 Direction Enum
 //OK
 
+GameInfoReplicationDatagram
+Server > Client
+FIRST_CUSTOM + 0x23
+eggsWhite int
+eggsBlack int
+eggsRemaining int
+
+
 EventDatagram
 Server > Client
 FIRST_CUSTOM + 0x30
@@ -118,3 +126,10 @@ FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 PlayerEvent int
 //ok
+
+PingDatagram
+Both
+FIRST_CUSTOM + 0x50
+MessageType.NORMAL
+timestamp long
+//OK

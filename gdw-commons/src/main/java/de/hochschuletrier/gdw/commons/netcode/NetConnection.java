@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A NetConnection represents a connection from server to client or vice versa.
@@ -58,6 +59,16 @@ public class NetConnection extends Thread {
     private final NetMessageCache messageCacheOut = new NetMessageCache();
     /** Set to true so outgoing datagrams can be queued */
     private boolean accepted;
+    
+    /** Total bytes sent to this connection */
+    private AtomicLong bytesSent=new AtomicLong(0);
+    /** Total bytes received from this connection */
+    private AtomicLong bytesReceived=new AtomicLong(0);
+    /** Number of datagrams sent to this connection */
+    private AtomicLong datagramsSent=new AtomicLong(0);
+    /** Number of datagrams received from this connection */
+    private AtomicLong datagramsReceived=new AtomicLong(0);
+    
 
     /**
      * Create a connection to a client.
@@ -87,6 +98,7 @@ public class NetConnection extends Thread {
      * @throws IOException when setting the TCP_NODELAY option fails.
      */
     public NetConnection(String ip, int port, INetDatagramFactory datagramFactory) throws IOException {
+    	setDaemon(true);
         this.datagramFactory = datagramFactory;
         channel = SocketChannel.open(new InetSocketAddress(InetAddress.getByName(ip), port));
         channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
@@ -145,7 +157,7 @@ public class NetConnection extends Thread {
                 // Read the datagram header into the buffer.
                 headerIn.clear();
                 while (headerIn.hasRemaining()) {
-                    channel.read(headerIn);
+                    bytesReceived.addAndGet(channel.read(headerIn));
                 }
 
                 // Get the values
@@ -212,7 +224,7 @@ public class NetConnection extends Thread {
                 // Normal message, param1 contains the message size.
                 msg = NetMessageAllocator.createMessage();
                 msg.prepareReading(param1, 0);
-                msg.readFromSocket(channel);
+                bytesReceived.addAndGet(msg.readFromSocket(channel));
 
                 // Let the datagram read its data
                 datagram.readFromMessage(msg);
@@ -231,7 +243,7 @@ public class NetConnection extends Thread {
 
                 // Read both the message and the delta bits from the channel
                 deltaMsg.prepareReading(param1, param2);
-                deltaMsg.readFromSocket(channel);
+                bytesReceived.addAndGet(deltaMsg.readFromSocket(channel));
 
                 // Let the datagram read its data
                 datagram.readFromMessage(deltaMsg);
@@ -241,7 +253,7 @@ public class NetConnection extends Thread {
                 messageCacheIn.set(datagram.getType(), datagram.getID(), newBase);
                 break;
         }
-
+        datagramsReceived.incrementAndGet();
         // The datagram is ready to be received
         incomingDatagrams.add(datagram);
     }
@@ -258,6 +270,7 @@ public class NetConnection extends Thread {
 
             try {
                 while (!outgoingDatagrams.isEmpty()) {
+                	datagramsSent.incrementAndGet();
                     INetDatagram datagram = outgoingDatagrams.poll();
                     switch (datagram.getMessageType()) {
                         case NONE:
@@ -304,7 +317,7 @@ public class NetConnection extends Thread {
         headerOut.flip();
 
         while (headerOut.hasRemaining()) {
-            channel.write(headerOut);
+            bytesSent.addAndGet(channel.write(headerOut));
         }
     }
 
@@ -365,7 +378,7 @@ public class NetConnection extends Thread {
      */
     private void sendMessage(INetMessageInternal msg) throws IOException {
         msg.prepareWriting();
-        msg.writeToSocket(channel);
+        bytesSent.addAndGet(msg.writeToSocket(channel));
         msg.free();
     }
 
@@ -490,4 +503,32 @@ public class NetConnection extends Thread {
     public boolean isAccepted() {
         return accepted;
     }
+
+    /**
+     * @return Number of bytes sent to the connection.
+     */
+	public long getBytesSent(){
+		return bytesSent.get();
+	}
+
+	/**
+	 * @return Number of bytes received from the connection.
+	 */
+	public long getBytesReceived(){
+		return bytesReceived.get();
+	}
+
+	/**
+	 * @return Number of datagrams sent to the connection.
+	 */
+	public long getDatagramsSent(){
+		return datagramsSent.get();
+	}
+
+	/**
+	 * @return Number of datagrams received from the connection.
+	 */
+	public long getDatagramsReceived(){
+		return datagramsReceived.get();
+	}
 }

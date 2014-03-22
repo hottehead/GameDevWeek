@@ -21,7 +21,7 @@ public class AttackShootArrow extends AttackType
 	public static final float ARROW_FLIGHT_DISTANCE = 500.0f;
 	public static final float ARROW_DESPAWN_TIME = 1.0f;
 	
-	public static final float ARROW_HITCIRCLE_RADIUS = 10.0f;
+	public static final float ARROW_HITCIRCLE_RADIUS = 8.0f;
 	
     public void fire(ServerPlayer player)  
     {
@@ -29,7 +29,7 @@ public class AttackShootArrow extends AttackType
     	Vector2 playerDir = player.getFacingDirection().getDirectionVector();
     	
     	Vector2 arrowPos = new Vector2( playerPos.x + playerDir.x * ARROW_SPAWN_DISTANCE,
-    									playerPos.y + playerDir.y * ARROW_SPAWN_DISTANCE - ARROW_SPAWN_DISTANCE / 2.0f);
+    									playerPos.y + playerDir.y * ARROW_SPAWN_DISTANCE);// - ARROW_SPAWN_DISTANCE / 2.0f);
     	
     	ServerProjectile projectile = (ServerProjectile) ServerEntityManager.getInstance().createEntity(ServerProjectile.class, arrowPos);
     	projectile.setSource(player.getID());

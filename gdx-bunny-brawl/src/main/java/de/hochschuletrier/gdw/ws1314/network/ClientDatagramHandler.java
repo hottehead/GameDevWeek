@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
+import com.badlogic.gdx.math.Vector2;
 import de.hochschuletrier.gdw.commons.netcode.NetConnection;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
@@ -11,8 +12,6 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.math.Vector2;
 
 public class ClientDatagramHandler implements DatagramHandler{
 	private static final Logger logger = LoggerFactory.getLogger(ClientDatagramHandler.class);
@@ -29,6 +28,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(PlayerReplicationDatagram playerReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(playerReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(playerReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning player entity {} of type {}.", playerReplicationDatagram.getEntityId(), playerReplicationDatagram.getEntityType().name());
@@ -51,6 +51,8 @@ public class ClientDatagramHandler implements DatagramHandler{
 		player.setCurrentArmor(playerReplicationDatagram.getArmor());
 		player.setFacingDirection(playerReplicationDatagram.getFacingDirection());
 		player.setTeamColor(playerReplicationDatagram.getTeamColor());
+		player.setCurrentPlayerState(playerReplicationDatagram.getEntityState());
+		player.setPlayerName(playerReplicationDatagram.getPlayerName());
 	}
 
 	@Override
@@ -60,6 +62,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(LevelObjectReplicationDatagram levelObjectReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(levelObjectReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(levelObjectReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning level-object entity {}.", levelObjectReplicationDatagram.getEntityId());
@@ -84,10 +87,12 @@ public class ClientDatagramHandler implements DatagramHandler{
 		else{
 			levelObject.disable();
 		}
+		levelObject.setLevelObjectState(levelObjectReplicationDatagram.getEntityState());
 	}
 
 	@Override
 	public void handle(ProjectileReplicationDatagram projectileReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().isPendingSpawn(projectileReplicationDatagram.getEntityId())) return;
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(projectileReplicationDatagram.getEntityId());
 		if(entity == null){
 			logger.debug("Spawning projectile entity {}.", projectileReplicationDatagram.getEntityId());
@@ -126,7 +131,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getLobbyUpdateCallback().callback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
+		NetworkManager.getInstance().getLobbyUpdateCallback().lobbyUpateCallback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
 	}
 
 	@Override
@@ -138,25 +143,49 @@ public class ClientDatagramHandler implements DatagramHandler{
 	public void handle(DespawnDatagram despawnDatagram, NetConnection connection){
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(despawnDatagram.getEntityId());
 		if(entity == null){
-			logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			if(ClientEntityManager.getInstance().isPendingSpawn(despawnDatagram.getEntityId())){
+				NetworkManager.getInstance().pendingDespawns.add(despawnDatagram);
+			}
+			else{
+				logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			}
 			return;
 		}
+		logger.debug("Despawn entity {}",despawnDatagram.getEntityId());
 		ClientEntityManager.getInstance().removeEntity(entity);
 	}
 
 	@Override
 	public void handle(GameStateDatagram gameStateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getGameStateCallback().callback(gameStateDatagram.getGameStates());
+		NetworkManager.getInstance().getGameStateCallback().gameStateCallback(gameStateDatagram.getGameStates());
 	}
 
 	@Override
 	public void handle(ClientIdDatagram clientIdDatagram, NetConnection connection){
-		NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerId());
+		if (NetworkManager.getInstance().getClientIdCallback() != null)
+			NetworkManager.getInstance().getClientIdCallback().clientIdCallback(clientIdDatagram.getPlayerId());
 	}
 
 	@Override
 	public void handle(EntityIDDatagram entityIDDatagram, NetConnection connection){
-		// TODO Auto-generated method stub
 		ClientEntityManager.getInstance().setPlayerEntityID(entityIDDatagram.getEntityId());
+	}
+
+	@Override
+	public void handle(PingDatagram pingDatagram, NetConnection connection){
+		long curTime = System.currentTimeMillis();
+		float ping = curTime - pingDatagram.getTimestamp();
+		NetworkManager.getInstance().updatePing(ping);
+	}
+
+	@Override
+	public void handle(GameInfoReplicationDatagram gameInfoReplicationDatagram, NetConnection connection){
+		if(ClientEntityManager.getInstance().getGameInfo()==null){
+			logger.warn("Can't update game info, because gameInfo in ClientEntityManager is null, update will be lost.");
+			return;
+		}
+		ClientEntityManager.getInstance().getGameInfo().setRemainigEggs(gameInfoReplicationDatagram.getEggsRemaining());
+		ClientEntityManager.getInstance().getGameInfo().setTeamPointsBlack(gameInfoReplicationDatagram.getEggsBlack());
+		ClientEntityManager.getInstance().getGameInfo().setTeamPointsWhite(gameInfoReplicationDatagram.getEggsWhite());
 	}
 }

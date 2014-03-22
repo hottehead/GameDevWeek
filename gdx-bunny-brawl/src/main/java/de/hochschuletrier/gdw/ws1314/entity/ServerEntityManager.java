@@ -6,9 +6,12 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.utils.id.Identifier;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.game.LevelLoader;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+
 
 
 
@@ -33,6 +36,8 @@ public class ServerEntityManager {
     protected HashMap<String, Class<? extends ServerEntity>> classMap = new HashMap<String, Class<? extends ServerEntity>>();
     protected ServerEntityFactory factory;
     
+    private GameInfo gameInfo = new GameInfo();
+    
     protected ServerEntityManager(){
         entityList = new LinkedList<ServerEntity>();
         entityListMap = new HashMap<Long, ServerEntity>();
@@ -55,7 +60,11 @@ public class ServerEntityManager {
 
     }
     
-    public static ServerEntityManager getInstance()
+    public GameInfo getGameInfo(){
+		return gameInfo;
+	}
+
+	public static ServerEntityManager getInstance()
     {
 
     	if (instance == null)
@@ -124,19 +133,31 @@ public class ServerEntityManager {
 
     private void addEntity(ServerEntity e) {
         e.setId(entityIDs.requestID());
+        
+        if (e.getClass() == ServerEgg.class)
+        {
+        	this.gameInfo.incrementRemaining();
+        }
+        
         insertionQueue.add(e);
     }
 
     public void removeEntity(ServerEntity e) {
         entityIDs.returnID(e.getID());
         removalQueue.add(e);
-
     }
 
-    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position) {
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position){
+        return createEntity(entityClass,position,null);
+    }
+
+    public <T extends ServerEntity> T createEntity(Class<? extends ServerEntity> entityClass, Vector2 position , SafeProperties properties) {
         T e = factory.createEntity(entityClass);
         assert (e != null);
-        SafeProperties properties = new SafeProperties();
+
+        if(properties == null)
+            properties = new SafeProperties();
+
         properties.setFloat("x",position.x);
         properties.setFloat("y",position.y);
         e.setProperties(properties);
@@ -165,6 +186,7 @@ public class ServerEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
+    	gameInfo.clear();
     	// classMap und identifier brauchen nicht neu erstellt zu werden!?
     }
 

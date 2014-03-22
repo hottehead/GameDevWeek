@@ -65,4 +65,5 @@ public class HealthBar {
 	public void reset() {
 		logicRepresentation.setValue(maxHealthValue);
 	}
+
 }

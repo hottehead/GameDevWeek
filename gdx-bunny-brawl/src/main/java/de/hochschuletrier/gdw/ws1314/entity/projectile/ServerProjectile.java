@@ -28,14 +28,14 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 //
 // Modified by ElFapo
-    
-public class ServerProjectile extends ServerEntity {
 
+public class ServerProjectile extends ServerEntity {
+    
     //==================================================
     // VARIABLES
     private long sourceID;
 
-    private FacingDirection facingDirection;
+    //private FacingDirection facingDirection;
     private TeamColor 		teamColor;
     private Vector2 		originPosition;
     private float 			velocity;
@@ -52,10 +52,10 @@ public class ServerProjectile extends ServerEntity {
     //==================================================
     public ServerProjectile() {
             super();
-
+            
             sourceID = -1;
             this.teamColor = TeamColor.BOTH;
-            this.facingDirection = FacingDirection.NONE;
+            setFacingDirection(FacingDirection.NONE);
             this.originPosition = FacingDirection.NONE.getDirectionVector();
             this.velocity = 0.0f;
             this.flightDistance = 0.0f;
@@ -84,17 +84,13 @@ public class ServerProjectile extends ServerEntity {
 	}
 	
 	public void setSource(long sourceID) {
-            this.sourceID = sourceID;
+		this.sourceID = sourceID;
 
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
-            this.teamColor = player.getTeamColor();
-            this.facingDirection = player.getFacingDirection();
-            this.originPosition = player.getPosition();
-    }
-	
-	public FacingDirection getFacingDirection() {
-		return this.facingDirection;
+        this.teamColor = player.getTeamColor();
+        this.setFacingDirection(player.getFacingDirection());
+        this.originPosition = player.getPosition().cpy();
 	}
 
 	public TeamColor getTeamColor() {
@@ -122,14 +118,16 @@ public class ServerProjectile extends ServerEntity {
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
             if(otherEntity == null) {
+                ServerEntityManager.getInstance().removeEntity(this);
                 return;
             }
             
             switch(otherEntity.getEntityType()) {
-                case Tank:
-                case Hunter:
-                case Knight:
-                case Noob:
+            	case BridgeSwitch:
+            	case Bush:
+            	case HayBale:
+            			ServerEntityManager.getInstance().removeEntity(this);
+            			
                     break;
                 default:
                     break;
@@ -157,9 +155,10 @@ public class ServerProjectile extends ServerEntity {
 		
         Vector2 pos = this.physicsBody.getPosition().cpy();
         float distance = pos.sub(originPosition).len();
-            if(distance > this.flightDistance) {
-                ServerEntityManager.getInstance().removeEntity(this);
-            }
+        if(distance > this.flightDistance) {
+            ServerEntityManager.getInstance().removeEntity(this);
+        }
+
 	}
 
 	@Override
@@ -170,11 +169,12 @@ public class ServerProjectile extends ServerEntity {
 	@Override
 	public void initPhysics(PhysixManager manager){
             this.originPosition = new Vector2(properties.getFloat("x"), properties.getFloat("y"));
-            
+                
             PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                     .position(this.originPosition)
                     .fixedRotation(true)
-                    .angle(facingDirection.getAngle())
+                    .angle(getFacingDirection().getAngle())
+                    .bullet(true)
                     .create();
             
             body.createFixture(new PhysixFixtureDef(manager)
@@ -183,14 +183,14 @@ public class ServerProjectile extends ServerEntity {
                     .restitution(0.0f)
                     .shapeCircle(hitCircleRadius)
                     .sensor(true));
-
+            
             body.setGravityScale(0);
             body.addContactListener(this);
-            
+
             setPhysicsBody(body);
-	
-            Vector2 vel = new Vector2(	facingDirection.getDirectionVector().x * velocity,
-                                        facingDirection.getDirectionVector().y * velocity);
+
+            Vector2 vel = new Vector2(	getFacingDirection().getDirectionVector().x * velocity,
+            							getFacingDirection().getDirectionVector().y * velocity);
             physicsBody.setLinearVelocity(vel);
 
             physicsInitialized = true;

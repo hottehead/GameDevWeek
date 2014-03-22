@@ -12,7 +12,7 @@ public class DatagramFactory implements INetDatagramFactory{
 
 	@Override
 	public INetDatagram createDatagram(byte type, short id, short param1, short param2){
-		switch (type) {
+		switch (type){
 		case ActionDatagram.ACTION_DATAGRAM:
 			return new ActionDatagram(type, id, param1, param2);
 		case ChatSendDatagram.CHAT_SEND_DATAGRAM:
@@ -41,10 +41,13 @@ public class DatagramFactory implements INetDatagramFactory{
 			return new ClientIdDatagram(type, id, param1, param2);
 		case EntityIDDatagram.ENTITY_ID_DATAGRAM:
 			return new EntityIDDatagram(type, id, param1, param2);
+		case PingDatagram.PING_DATAGRAM:
+			return new PingDatagram(type, id, param1, param2);
+		case GameInfoReplicationDatagram.GAME_INFO_REPLICATION_DATAGRAM:
+			return new GameInfoReplicationDatagram(type, id, param1, param2);
 		default:
 			logger.warn("Received datagram with unknown type {}", type);
 			throw new IllegalArgumentException("Received datagram with unknown type: " + type);
 		}
 	}
-
 }

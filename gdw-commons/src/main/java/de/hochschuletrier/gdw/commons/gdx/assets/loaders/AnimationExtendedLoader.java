@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.Array;
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetLoaderParametersX;
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended.PlayMode;
-import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationLoader.PlayType;
 import de.hochschuletrier.gdw.commons.jackson.JacksonList;
 
 public class AnimationExtendedLoader extends
@@ -80,7 +79,7 @@ public class AnimationExtendedLoader extends
 			}
 		}
 		float[] frameDurations = new float[parameter.frameDuration.size()];
-		for (int i = 0; i < parameter.frameDuration.size() - 1; i++) {
+		for (int i = 0; i < parameter.frameDuration.size(); i++) {
 			frameDurations[i] = parameter.frameDuration.get(i);
 		}
 		AnimationExtended anim = new AnimationExtended(parameter.playType,

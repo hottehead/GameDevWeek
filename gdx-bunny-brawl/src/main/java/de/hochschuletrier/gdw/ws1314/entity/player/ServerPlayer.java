@@ -1,39 +1,46 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+
+
+import java.util.ArrayList;
+
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
+import de.hochschuletrier.gdw.ws1314.state.State;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.basic.PlayerInfo;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
-
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
-import de.hochschuletrier.gdw.ws1314.entity.player.kit.AttackShootArrow;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
-import de.hochschuletrier.gdw.ws1314.state.State;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -42,44 +49,55 @@ import org.slf4j.LoggerFactory;
  * -I'D REALLY LIKE TO SEE THIS xD
  */
 
-public class ServerPlayer extends ServerEntity implements IStateListener
-{
+public class ServerPlayer extends ServerEntity implements IStateListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-    public static final float FRICTION = 0;
-	public static final float	BRAKING = 5.0f;
+	public static final float BRAKING = 5.0f;
+	public static final float COLLISION_DAMPING = 10.0f;
 
+	public static final float KNOCKBACK_IMPULSE = 100.0f;
 
-	public static final float RESTITUTION = 0;
+	public static final float DENSITY = 0.0f;
+    public static final float FRICTION = 0.0f;
+	public static final float RESTITUTION = 0.0f;
 	public static final float KNOCKBACK_TIME = 0.8f;
-	public static final float ATTACK_TIME = 0.18f;
+	public static final float ATTACK_TIME = 1.5f;
 
 	public static final float WIDTH = 32.0f;
 	public static final float HEIGHT = 32.0f;
 
+	public static final float EGG_CARRY_SPEED_PENALTY = 0.15f;
 
-    private PlayerInfo	playerInfo;
+        private boolean isOnBridge = false;
+
+
+    private PlayerData	playerData;
     private PlayerKit 	playerKit;
-    private TeamColor	teamColor;
     
     private float		currentHealth;
     private float		currentArmor;
     
     private int 		currentEggCount;
     
-    private StatePlayerWaiting 	 attackState;
+    private StatePlayerAttack 	 attackState;
     private StatePlayerIdle		 idleState;
-    private StatePlayerWaiting 	 knockbackState;
+    private StatePlayerKnockback knockbackState;
     private StatePlayerWalking	 walkingState;
     
-    private State				 currentState;
+    private StatePlayer			 currentState;
     
     private float				 attackCooldown;
     private float				 attackCooldownTimer;
     private boolean				 attackAvailable;
+    private boolean do1Attack;
+    private boolean do2Attack;
     
-    private FacingDirection 	facingDirection;
+    private float attackBuffTimer;
+    private float attackBuffDuration;
+    private boolean attackBuffActive;
+    private float	attackBuffFactor;
+
     private FacingDirection		desiredDirection;
     private boolean				movingUp;
     private boolean				movingDown;
@@ -90,21 +108,48 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
+    
+    private long				droppedEggID;
+    
+    private Fixture				fixtureLowerBody;
+    private Fixture				fixtureFullBody;
+    private Fixture 			fixtureDeathCheck;
+    
+    private boolean 			isDead;
+    private int 				collidingBridgePartsCount;
+    private float 				deathfreeze;
+	private ArrayList<Long>		pickedUpEggs;
+    private boolean             isInDeadZone;
+    
+    
     public ServerPlayer()
     {
     	super();
-    	
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
-    	attackState = new StatePlayerWaiting(this);
+    	attackState = new StatePlayerAttack(this);
     	idleState = new StatePlayerIdle(this);
-    	knockbackState = new StatePlayerWaiting(this);
+    	knockbackState = new StatePlayerKnockback(this);
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-    	facingDirection = FacingDirection.NONE;
+    	pickedUpEggs = new ArrayList<Long>();
     	desiredDirection = FacingDirection.NONE;
+    	setFacingDirection(FacingDirection.DOWN);
+    	speedBuffTimer = 0.0f;
+    	speedBuffDuration = 0.0f;
+    	speedBuffActive = false;
+    	attackBuffTimer = 0.f;
+    	attackBuffDuration = 0.f;
+    	attackBuffActive = false;
+    	attackBuffFactor = 1.0f;
+    	droppedEggID = -1l;
+    	isDead = false;
+    	collidingBridgePartsCount = 0;
+    	deathfreeze = 0.5f;
+    	isInDeadZone = false;
+    	pickedUpEggs = new ArrayList<>();
     }
     
     public void enable() {}
@@ -115,32 +160,63 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     @Override
     public void update(float deltaTime) 
     {
+        if(isDead) {
+            deathfreeze -= deltaTime;
+            if(deathfreeze < 0) {
+                isDead = false;
+                deathfreeze = 0.5f;
+                this.reset();
+            }
+            this.physicsBody.setLinearVelocity(new Vector2());
+            this.physicsBody.setLinearDamping(2000);
+			for(Long id : pickedUpEggs){
+				ServerEntityManager.getInstance().getEntityById(id).reset();
+			}
+			pickedUpEggs.clear();
+			currentEggCount = 0;
+            return;
+        }
+        if(!this.isOnBridge && this.isInDeadZone) {
+            this.isDead = true;
+            this.isOnBridge = false;
+            this.isInDeadZone = false;
+        }
+        
     	currentState.update(deltaTime);
     	
-    	if (!attackAvailable)
-    	{
+    	if (!attackAvailable) {
         	attackCooldownTimer += deltaTime;
-        	if (attackCooldownTimer > attackCooldown)
-        	{
+        	if (attackCooldownTimer > attackCooldown) {
         		attackAvailable = true;
+        		
+        		if(do1Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
+        		    doFirstAttack();
+        		    do1Attack = false;
+        		} else if(do2Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
+        		    doSecondAttack();
+        		    do2Attack = false;
+        		}
         	}
     	}
     	
-    	if (speedBuffActive)
-    	{
+    	if (speedBuffActive) {
     		speedBuffTimer += deltaTime;
-    		if (speedBuffTimer >= speedBuffDuration)
-    		{
-    			walkingState.setSpeedFactor(1.0f);
-    			speedBuffActive = false;
+    		if (speedBuffTimer >= speedBuffDuration) {
+    			this.deactivateSpeedBuff();
+    		}
+    	}
+    	
+    	if (attackBuffActive) {
+    		attackBuffTimer += deltaTime;
+    		if (attackBuffTimer >= attackBuffDuration) {
+    			this.deactivateAttackBuff();
     		}
     	}
     }
 
-    //NOT FINAL! CHANGE AS NEEDED
-    Vector2 dir = new Vector2(0,0);
-    public void doAction(PlayerIntention intent)
-    {
+    public void doAction(PlayerIntention intent) {
         switch (intent){
             case MOVE_UP_ON:
                 movingUp = true;
@@ -170,38 +246,38 @@ public class ServerPlayer extends ServerEntity implements IStateListener
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-            	if (currentState == idleState || currentState == walkingState)
-            	{
+            	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
             		attackCooldown = playerKit.getFirstAttackCooldown();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doFirstAttack();
+            		do1Attack = true;
             	}
                 break;
             case ATTACK_2:
             	if (!attackAvailable)
             		break;
         		attackState.setWaitTime(ATTACK_TIME);
-        		if (currentState == idleState || currentState == walkingState)
-            	{
+        		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
             		attackCooldown = playerKit.getSecondAttackCooldown();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
-            		doSecondAttack();
+            		do2Attack = true;
             	}
                 break;
             case DROP_EGG:
-        		if (currentState == idleState || currentState == walkingState)
+        		if (currentState.equals(idleState) || currentState.equals(walkingState))
         			dropEgg();
+        		break;
+            default:
+                break;
         }
         
         desiredDirection = FacingDirection.NONE;
-        if (movingUp)
-        {
+        if (movingUp) {
         	if (movingLeft)
         		desiredDirection = FacingDirection.UP_LEFT;
         	else if (movingRight)
@@ -209,8 +285,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         	else
         		desiredDirection = FacingDirection.UP;
         }
-        else if (movingDown)
-        {
+        else if (movingDown) {
         	if (movingLeft)
         		desiredDirection = FacingDirection.DOWN_LEFT;
         	else if (movingRight)
@@ -224,19 +299,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         	desiredDirection = FacingDirection.RIGHT;    	
         
         // Player intended movement
-        if (desiredDirection != FacingDirection.NONE)
-        {
+        if (desiredDirection != FacingDirection.NONE) {
         	walkingState.setMovingDirection(desiredDirection);
-            if (currentState == idleState || currentState == walkingState)
+            if (currentState.equals(idleState) || currentState.equals(walkingState))
             	switchToState(walkingState);
 
         	attackState.setWaitFinishedState(walkingState);
         	knockbackState.setWaitFinishedState(walkingState);
         }
         // Not intended movement
-        else
-        {
-        	if (currentState == walkingState)
+        else {
+        	if (currentState.equals(walkingState))
         		switchToState(idleState);
 
         	attackState.setWaitFinishedState(idleState);
@@ -244,205 +317,315 @@ public class ServerPlayer extends ServerEntity implements IStateListener
         }
     }
 
-    protected void moveBegin(FacingDirection dir)
-    {
-    	facingDirection = desiredDirection;
-    	// TODO 
-    	// Damp old impulse
-    	// acceleration impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
+    protected void moveBegin(FacingDirection dir) {
+    	setFacingDirection(desiredDirection);
 
-    	moveEnd();
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
-    	//System.out.println(dir.getDirectionVector().x + " " + dir.getDirectionVector().y);
-    	moveEnd();
+//    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+//		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
     }
     
-    protected void moveEnd()
-    {
-    	// TODO brake impulse to physics body
-    	// Use direction vector and impulse constant to create the impulse vector
-    	// Check PlayerKit for impulse constant
-    	//physicsBody.setLinearVelocity(FacingDirection.NONE.getDirectionVector());
+    protected void moveEnd() {
     	physicsBody.setLinearDamping(BRAKING);
     }
     
-    private void doFirstAttack()
-    {
+    private void doFirstAttack() {
     	playerKit.doFirstAttack(this);
     }
     
-    private void doSecondAttack()
-    {
+    private void doSecondAttack() {
     	playerKit.doSecondAttack(this);
     }
     
-    public void dropEgg()
-    {
-    	// TODO Place egg on map
-    	
-    	currentEggCount--;
-    	if (currentEggCount < 0)
-    		currentEggCount = 0;
+    public void dropEgg() {
+    	if (currentEggCount > 0) {
+    		currentEggCount--;
+    		droppedEggID = pickedUpEggs.get(0);
+			pickedUpEggs.remove(droppedEggID);
+			ServerEgg egg = (ServerEgg)ServerEntityManager.getInstance().getEntityById(droppedEggID);
+			egg.setVisibility(true);
+			egg.setPosition(getPosition());
+    	}
     }
     
-    // TODO Handle all possible collision types: damage, death, physical, egg collected...
-    public void beginContact(Contact contact) 	{
+    public void beginContact(Contact contact) {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	 Fixture fixture = this.getCollidingFixture(contact);
          
          if(otherEntity == null) {
              return;
          }
          
-         switch(otherEntity.getEntityType()) {
+         if(fixture == fixtureLowerBody) {
+        	 switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
              case Knight:
              case Noob:
+            	 ServerPlayer player = (ServerPlayer) otherEntity;
+            	 player.physicsBody.setLinearDamping(COLLISION_DAMPING);
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 System.out.println(this.getCurrentEggCount());
-            	 if(this.currentEggCount < this.playerKit.getMaxEggCount()){
-            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
+            	 if(egg.getVisibility() && this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 {
+					 pickedUpEggs.add(otherEntity.getID());
+					 egg.setVisibility(false);
             	 this.currentEggCount++;
+					 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_PICKUP);
             	 }
             	 break;
-             case Projectil: 
-            	
-            	 ServerProjectile projectile = (ServerProjectile) otherEntity;
-                 if (getID() == projectile.getSourceID())
-                 	return;
-                 if (getTeamColor() != projectile.getTeamColor())
-                 	applyDamage(projectile.getDamage());
-                 ServerEntityManager.getInstance().removeEntity(otherEntity);
-
-            	  
-            	 break;
-             case Bridge: 		
-            	 ServerBridge bridge = (ServerBridge) otherEntity;
-            	/*  Von Fabio Gimmillaro
-            	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
-            	 *  Nur zum Test:
-            	 * if(!bridge.getVisibility()){
-            		 this.physicsBody.setPosition(0, 0);
-            	  }*/
-            	 break;
-             case BridgeSwitch:	
-            	 break;
-             case Bush:			
-            	 break;
-             case SwordAttack:
-                 ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                 if(attack.getTeamColor() != this.teamColor) {
-                     this.applyDamage(attack.getDamage());
-                 }
-            	 break;
              case ContactMine:
-            	 ServerContactMine mine = (ServerContactMine) otherEntity;
-            	 
+            	 	ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
-            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
-            	 ServerCarrot carrot = (ServerCarrot) otherEntity;
-            	 ServerEntityManager.getInstance().removeEntity(carrot);
-
+            	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
+                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Spinach:
+                	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
+                     ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Clover:
+                	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+                	 ServerClover clover = (ServerClover) otherEntity;
+                	 ServerEntityManager.getInstance().removeEntity(clover);
+				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
-             case WaterZone:
-            	 break;
-             case AbyssZone:
-            	 break;
+             case HayBale:
+                 ServerHayBale ball = (ServerHayBale)otherEntity;
+                 if(ball.isCrossable()) {
+                     this.isOnBridge = true;
+                     collidingBridgePartsCount++;
+                 } else {
+                   this.physicsBody.setLinearDamping(1);
+                       if(ball.getSpeed() > 0){
+                           this.applyDamage(ball.getVelocity().len());
+                       }
+                 }
+                 break;
+             case Bridge:
+             case BRIDGE_HORIZONTAL_LEFT:
+             case BRIDGE_HORIZONTAL_MIDDLE:
+             case BRIDGE_HORIZONTAL_RIGHT:
+             case BRIDGE_VERTICAL_BOTTOM:
+             case BRIDGE_VERTICAL_MIDDLE:
+             case BRIDGE_VERTICAL_TOP:
+                 ServerBridge b = (ServerBridge)otherEntity;
+                 if(b.getVisibility()) {
+                     if(!this.isOnBridge) {
+                         NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                     }
+                     this.isOnBridge = true;
+                     collidingBridgePartsCount++;
+    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                 }
+                 break;
              case GrassZone:
-            	 break;
+                 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_GRASS);
+                 break;
              case PathZone:
-            	 break;
-             case StartZone:
-            	 break;
+                 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_WAY);
              default:
             	 break;
-                 
+        	 }
+         } else if(fixture == fixtureFullBody) {
+        	 switch(otherEntity.getEntityType()) {
+                 case Projectil:
+                	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+                     if (getID() != projectile.getSourceID()) {
+                     	applyDamage(projectile.getDamage());
+                     	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
+                     	ServerEntityManager.getInstance().removeEntity(otherEntity);
+                     }
+                	 break;
+                 case SwordAttack:
+                     ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
+                     if (attack.getSourceID() != getID()) {
+                         applyDamage(attack.getDamage());
+                         applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
+                     }
+                	 break;
+                 default:
+                	 break;
+        	 }      
+         } else if(fixture == fixtureDeathCheck) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZone = true;
+//                     if(!isOnBridge) {
+//                         this.isDead = true;
+//                     }
+                     break;
+                 default:
+                     break;
+             }
          }
     }
-    public void endContact(Contact contact) 	{}
+    
+    
+    public void endContact(Contact contact) {
+    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	Fixture fixture = getCollidingFixture(contact);
+         
+         if(otherEntity == null)
+             return;
+         
+         if (fixture == fixtureLowerBody) {
+             switch(otherEntity.getEntityType()) {
+             	case Ei:
+             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+             			droppedEggID = -1;
+             		break;
+             	case HayBale:
+             	   ServerHayBale ball = (ServerHayBale)otherEntity;
+                   if(ball.isCrossable()) {
+                       collidingBridgePartsCount--;
+                       if(collidingBridgePartsCount <= 0) {
+                           this.isOnBridge = false;
+                       }
+                   }
+                   break;
+                case Bridge:
+                case BRIDGE_HORIZONTAL_LEFT:
+                case BRIDGE_HORIZONTAL_MIDDLE:
+                case BRIDGE_HORIZONTAL_RIGHT:
+                case BRIDGE_VERTICAL_BOTTOM:
+                case BRIDGE_VERTICAL_MIDDLE:
+                case BRIDGE_VERTICAL_TOP:
+                    collidingBridgePartsCount--;
+                    if(collidingBridgePartsCount <= 0) {
+                        this.isOnBridge = false;
+//                        if(this.isInDeadZone) {
+//                            this.isDead = true;
+//                        }
+                    }
+                    break;
+                default:
+                	break;
+             }
+    	 } else if(fixture == fixtureDeathCheck) {
+    	     switch(otherEntity.getEntityType()) {
+    	         case AbyssZone:
+    	         case WaterZone:
+    	             this.isInDeadZone = false;
+    	             break;
+    	         default:
+    	             break;
+    	     }
+    	 }
+    }
+
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
-
-    public FacingDirection  getFacingDirection()	{ return facingDirection; }
     public int				getCurrentEggCount()	{ return currentEggCount; }
     public float			getCurrentHealth()		{ return currentHealth; }
     public float			getCurrentArmor()		{ return currentArmor; }
-    public PlayerInfo		getPlayerInfo()			{ return playerInfo; }
+    public PlayerData		getPlayerInfo()			{ return playerData; }
     public PlayerKit		getPlayerKit()			{ return playerKit; }
-    public TeamColor		getTeamColor()			{ return playerInfo.getTeam(); }
+    public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
+    public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
+	public EntityStates 	getCurrentPlayerState() {return currentState.getCurrentState();}
+	public String 			getPlayerName() {return playerData.getPlayername();}
     
-    public void setPlayerKit(PlayerKit kit)
-    {
+    public void setPlayerKit(PlayerKit kit) {
     	playerKit = kit;
     	currentHealth = kit.getBaseHealth();
     	currentArmor = kit.getBaseArmor();
     }
     
-    public void setPlayerInfo(PlayerInfo info)
-    {
-    	playerInfo = info;
-    }
-    
-    public void setTeamColor(TeamColor color)
-    {
-    	playerInfo.setTeam(color);
+    public void setPlayerData(PlayerData pd) {
+    	playerData = pd;
     }
 
-    public void applySpeedBuff(float factor, float duration)
-    {
+    public void applySpeedBuff(float factor, float duration) {
     	speedBuffActive = true;
     	speedBuffTimer = 0.0f;
     	speedBuffDuration = duration;
     	walkingState.setSpeedFactor(factor);
     }
 
+    public void applyAttackBuff(float factor, float duration) {
+    	attackBuffActive = true;
+    	attackBuffTimer = 0.f;
+    	attackBuffDuration = duration;
+    	attackBuffFactor = factor;
+    }
+    
+    public void applyHealth(float factor) {
+    	this.currentHealth += factor * playerKit.getBaseHealth();
+    	if (this.currentHealth > playerKit.getBaseHealth())
+    		this.currentHealth = playerKit.getBaseHealth();
+    }
+
 	@Override
-	public void initPhysics(PhysixManager manager)
-	{
-		// TODO Auto-generated method stub
+	public void initPhysics(PhysixManager manager) {
 		PhysixBody body = new PhysixBodyDef(BodyType.DynamicBody, manager)
-							  .position(properties.getFloat("x"), properties.getFloat("y")).fixedRotation(false).create();
-		body.createFixture(new PhysixFixtureDef(manager).density(0)
-				.friction(FRICTION).restitution(RESTITUTION).shapeBox(WIDTH, HEIGHT));
+				.position(properties.getFloat("x"), properties.getFloat("y"))
+				.fixedRotation(false)
+				.gravityScale(0.0f)
+				.create();
+		
+		body.createFixture(new PhysixFixtureDef(manager)
+				.density(DENSITY)
+				.friction(FRICTION)
+				.restitution(RESTITUTION)
+				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f)));
+		
+		body.createFixture(new PhysixFixtureDef(manager)
+				.density(DENSITY)
+				.friction(FRICTION)
+				.restitution(RESTITUTION)
+				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
+				.sensor(true));
+		
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 4.0f))
+            .sensor(true));
 
 		body.setGravityScale(0);
 		body.addContactListener(this);
+		body.setLinearDamping(BRAKING);
 		setPhysicsBody(body);
+
+		Array<Fixture> fixtures = body.getBody().getFixtureList();
+		fixtureLowerBody = fixtures.get(0);
+		fixtureFullBody = fixtures.get(1);
+		fixtureDeathCheck = fixtures.get(2);
     	walkingState.setPhysixBody(physicsBody);
 	}
 
 	@Override
-	public void switchToState(State state)
-	{
+	public void switchToState(State state) {
 		currentState.exit();
-		currentState = state;
+		currentState = (StatePlayer) state;
 		currentState.init();
 	}
-	
-    public void reset(){
-        physicsBody.setPosition(new Vector2(properties.getFloat("x"), properties.getFloat("y")));
+
+    public void reset() {
+        
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
-        facingDirection = FacingDirection.DOWN;
+        setFacingDirection(FacingDirection.DOWN);
+        this.deactivateAttackBuff();
+        this.deactivateSpeedBuff();
         		
         switchToState(idleState);
+        
+        this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }
 	
-    public void applyDamage(float amount)
-    {
+    public void applyDamage(float amount) {
+        NetworkManager.getInstance().sendEntityEvent(getID(), EventType.HIT_BY_ATTACK_1);
+        
     	amount -= currentArmor;
     	if (amount < 0)
     		amount = 0;
@@ -453,14 +636,29 @@ public class ServerPlayer extends ServerEntity implements IStateListener
     		currentArmor = 0;
     	
     	if (currentHealth <= 0)
-    		reset();
+			this.isDead = true;
     }
 	
-	protected void applyKnockback()
-	{
+	protected void applyKnockback(FacingDirection direction, float impulse) {
 		knockbackState.setWaitTime(KNOCKBACK_TIME);
 		switchToState(knockbackState);
-		
-		// TODO Calculate KnockbackImpulse
+		physicsBody.setLinearDamping(BRAKING);
+		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
+		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
 	}
+	
+	private void deactivateSpeedBuff() {
+	    if(speedBuffActive) {
+	        walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
+	        speedBuffActive = false;
+	    }
+	}
+	
+	private void deactivateAttackBuff() {
+	    if(attackBuffActive) {
+	        attackBuffFactor = 1.0f;
+	        attackBuffActive = false;
+	    }
+	}
+        
 }

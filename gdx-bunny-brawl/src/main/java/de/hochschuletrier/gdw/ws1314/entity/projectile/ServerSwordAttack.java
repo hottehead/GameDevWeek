@@ -13,27 +13,23 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import static de.hochschuletrier.gdw.ws1314.entity.EntityType.SwordAttack;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Patrick
  */
+// Modified by El Fapo: Added getSourceID
 public class ServerSwordAttack extends ServerEntity {
     
     //========================================
     // VARIABLES
     private long sourceID;
-    private FacingDirection facingDirection;
     private TeamColor teamColor;
     private Vector2 originPosition;
     private float damage;
@@ -53,9 +49,14 @@ public class ServerSwordAttack extends ServerEntity {
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
         this.teamColor = player.getTeamColor();
-        this.facingDirection = player.getFacingDirection();
+        setFacingDirection(player.getFacingDirection());
         this.originPosition = player.getPosition();
     }
+    
+
+	public long getSourceID() {
+		return sourceID;
+	}
     
     /**
      * The collision zone of the Sword attack has the shape of a triangle.
@@ -102,6 +103,8 @@ public class ServerSwordAttack extends ServerEntity {
     @Override
     public void update(float deltaTime) {
         despawnTime -= deltaTime;
+        ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
+        this.physicsBody.setPosition(player.getPosition().x, player.getPosition().y);
         if(despawnTime < 0) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
@@ -114,40 +117,41 @@ public class ServerSwordAttack extends ServerEntity {
 
     @Override
     public void initPhysics(PhysixManager manager) {
-        int oX = (int) this.originPosition.x;
-        int oY = (int) this.originPosition.y;
-        Point pointA = new Point(oX, oY);
+    	// Modified by ElFapo, because polygons do not work
+//        int oX = (int) this.originPosition.x;
+//        int oY = (int) this.originPosition.y;
+//        Point pointA = new Point(oX, oY);
+//        
+//        float size = (float) Math.sqrt(2 * Math.pow(this.height, 2));
+//        
+//        Vector2 sideL = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * 0.5f);
+//        Vector2 sideR = this.facingDirection.getDirectionVector().cpy().rotate((float) Math.toDegrees(this.amplitude) * -0.5f);
+//        
+//        int lX = (int) (oX + (sideL.x * size));
+//        int lY = (int) (oY + (sideL.y * size));
+//        
+//        int rX = (int) (oX + (sideR.x * size));
+//        int rY = (int) (oY + (sideR.y * size));
+//        
+//        Point pointB = new Point(lX, lY);
+//        Point pointC = new Point(rX, rY);
+//        
+//        ArrayList<Point> points = new ArrayList<>();
+//        points.add(pointA);
+//        points.add(pointB);
+//        points.add(pointC);
         
-        float size = (float) Math.sqrt(2 * Math.pow(this.height, 2));
-        
-        Vector2 sideL = this.facingDirection.getDirectionVector().cpy().rotate(this.amplitude * 0.5f);
-        Vector2 sideR = this.facingDirection.getDirectionVector().cpy().rotate(this.amplitude * -0.5f);
-        
-        int lX = (int) (oX + (sideL.x * size));
-        int lY = (int) (oY + (sideL.y * size));
-        
-        int rX = (int) (oX + (sideR.x * size));
-        int rY = (int) (oY + (sideR.y * size));
-        
-        Point pointB = new Point(lX, lY);
-        Point pointC = new Point(rX, rY);
-        
-        ArrayList<Point> points = new ArrayList<>();
-        points.add(pointA);
-        points.add(pointB);
-        points.add(pointC);
-        
-        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.StaticBody, manager)
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
                 .position(this.originPosition)
                 .fixedRotation(true)
-                .angle(facingDirection.getAngle())
+                .angle(getFacingDirection().getAngle() - (float) Math.PI / 2.0f)
                 .create();
         
         body.createFixture(new PhysixFixtureDef(manager)
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapePolygon(points)
+                .shapeBox(amplitude, height * 2.0f, new Vector2(0.0f, height), 0.0f)
                 .sensor(true));
         body.setGravityScale(0);
         body.addContactListener(this);

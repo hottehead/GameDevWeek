@@ -7,15 +7,8 @@ import de.hochschuletrier.gdw.commons.netcode.message.INetMessageOut;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.DatagramHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * Created by albsi on 17.03.14.
- */
 public class LobbyUpdateDatagram extends BaseDatagram{
-	private static final Logger logger = LoggerFactory.getLogger(LobbyUpdateDatagram.class);
-
 	public static final byte LOBBY_UPDATE_DATAGRAM = INetDatagram.Type.FIRST_CUSTOM + 0x10;
 	private String map;
 	private int playercount;
@@ -42,7 +35,6 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 		message.putString(map);
 		message.putInt(playercount);
 		for(int i = 0;i < playercount;i++){
-			logger.info("PUT id: " + players[i].getPlayerId() + " name: " + players[i].getPlayername());
 			message.putInt(players[i].getPlayerId());
 			message.putString(players[i].getPlayername());
 			message.putEnum(players[i].getType());
@@ -64,7 +56,7 @@ public class LobbyUpdateDatagram extends BaseDatagram{
 			TeamColor team = message.getEnum(TeamColor.class);
 			boolean accept = message.getBool();
 			long entityId = message.getLong();
-			players[i] = new PlayerData(id, name, type, team, accept,entityId);
+			players[i] = new PlayerData(id, name, type, team, accept, entityId);
 		}
 	}
 
