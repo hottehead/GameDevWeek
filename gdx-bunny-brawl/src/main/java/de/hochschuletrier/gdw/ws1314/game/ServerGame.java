@@ -3,6 +3,8 @@ package de.hochschuletrier.gdw.ws1314.game;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hochschuletrier.gdw.commons.utils.Point;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
@@ -60,10 +62,10 @@ public class ServerGame {
 
 
 	public void init(AssetManagerX assets) {
-		gameInfo = new GameInfo();
+		gameInfo = entityManager.getGameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		TiledMap map = assets.getTiledMap("dummy_fin_map2");
+		TiledMap map = assets.getTiledMap("map02");
 		LevelLoader.load(map, entityManager, manager, gameInfo);
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
@@ -72,9 +74,11 @@ public class ServerGame {
 			tilesetImages.put(tileset, new Texture(filename));
 		}
 
-        float offset = 0f;
         for(PlayerData playerData : playerDatas ){
-            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(0f,0f+offset));
+
+            Point startpoint = gameInfo.getASpawnPoint(playerData.getTeam());
+
+            ServerPlayer sp = entityManager.createEntity(ServerPlayer.class,new Vector2(startpoint.x,startpoint.y));
 
             switch(playerData.getType())
             {
@@ -94,7 +98,7 @@ public class ServerGame {
         
             sp.setPlayerData(playerData);
             netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
-            offset += 10f;
+
         }
 
 

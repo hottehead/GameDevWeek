@@ -17,6 +17,5 @@ public enum PlayerIntention
 	 MOVE_RIGHT_OFF,
 	 ATTACK_1,
 	 ATTACK_2,
-	 DROP_EGG,
-	 USE_SOMETHING
+	 DROP_EGG
 }
