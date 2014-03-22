@@ -79,6 +79,8 @@ public class ServerContactMine extends ServerLevelObject {
 				}
 			
 				break;
+			default:
+					break;
 			}
 		} else if (f == fixture1) {
 			switch (otherEntity.getEntityType()) {
@@ -115,6 +117,8 @@ public class ServerContactMine extends ServerLevelObject {
 					this.setEntityState(EntityStates.NONE);
 				}
 			
+				break;
+			default:
 				break;
 			}
 		} else if (f == fixture1) {
