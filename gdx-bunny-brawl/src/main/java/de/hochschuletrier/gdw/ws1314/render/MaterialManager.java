@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.render.materials.ArrowMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.BridgeHorizontalLeftDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.BridgeHorizontalMiddleDef;
@@ -30,72 +31,70 @@ public class MaterialManager {
 	protected static Material dbgMaterial;
 
 	@SuppressWarnings("rawtypes")
-	private HashMap<EntityType, HashMap<RenderState, Material>> map;
+	private HashMap<RenderType, HashMap<RenderState, Material>> map;
 	private AssetManagerX assetManager;
 
 	@SuppressWarnings("rawtypes")
 	public MaterialManager(AssetManagerX assetManager) {
-		map = new HashMap<EntityType, HashMap<RenderState, Material>>();
+		map = new HashMap<RenderType, HashMap<RenderState, Material>>();
 		this.assetManager = assetManager;
 
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterials(EntityType.Tank, new KnightMaterialDef().get());
-		this.provideMaterials(EntityType.Hunter, new HunterMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.WHITE), new KnightMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.WHITE), new HunterMaterialDef().get());
 		
-		this.provideMaterials(EntityType.Projectil, new ArrowMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Projectil), new ArrowMaterialDef().get());
 
-		this.provideMaterials(EntityType.BridgeSwitch, new SwitchMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.BridgeSwitch), new SwitchMaterialDef().get());
 		
-		this.provideMaterials(EntityType.Carrot, new CarrotMaterialDef().get());
-		this.provideMaterials(EntityType.Ei, new EggMaterialDef().get());
-		this.provideMaterials(EntityType.Spinach, new SpinachMaterialDef().get());
-		this.provideMaterials(EntityType.Clover, new CloverMaterialDef().get());
-		this.provideMaterials(EntityType.Bush, new BushMaterialDef().get());
-		this.provideMaterials(EntityType.ContactMine, new ContactMineMaterialDef().get());
-		this.provideMaterials(EntityType.HayBale, new StrawMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Carrot), new CarrotMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Ei), new EggMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Spinach), new SpinachMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Clover), new CloverMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.Bush), new BushMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.ContactMine), new ContactMineMaterialDef().get());
+		this.provideMaterials(new RenderType(EntityType.HayBale), new StrawMaterialDef().get());
 		
 		//bridge parts
-		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_LEFT, new BridgeHorizontalLeftDef().get());
-		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_MIDDLE, new BridgeHorizontalMiddleDef().get());
-		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_RIGHT, new BridgeHorizontalRightDef().get());
-		this.provideMaterials(EntityType.BRIDGE_VERTICAL_BOTTOM, new BridgeVerticalBottomDef().get());
-		this.provideMaterials(EntityType.BRIDGE_VERTICAL_MIDDLE, new BridgeVerticalMiddleDef().get());
-		this.provideMaterials(EntityType.BRIDGE_VERTICAL_TOP, new BridgeVerticalTopDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_HORIZONTAL_LEFT), new BridgeHorizontalLeftDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_HORIZONTAL_MIDDLE), new BridgeHorizontalMiddleDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_HORIZONTAL_RIGHT), new BridgeHorizontalRightDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_VERTICAL_BOTTOM), new BridgeVerticalBottomDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_VERTICAL_MIDDLE), new BridgeVerticalMiddleDef().get());
+		this.provideMaterials(new RenderType(EntityType.BRIDGE_VERTICAL_TOP), new BridgeVerticalTopDef().get());
 		
 	}
 
-	public void provideMaterials(EntityType entityType,
+	public void provideMaterials(RenderType renderType,
 			MaterialInfo... materialInfos) {
 		for (MaterialInfo materialInfo : materialInfos) {
 			Material material = null;
-			if ((entityType != EntityType.None) && map.containsKey(entityType)
-					&& map.get(entityType).containsKey(materialInfo.stateUsed)) {
+			if ((renderType.entityType != EntityType.None) && map.containsKey(renderType)
+					&& map.get(renderType).containsKey(materialInfo.stateUsed)) {
 				// Overwriting existing Material
-				material = map.get(entityType).get(materialInfo.stateUsed);
+				material = map.get(renderType).get(materialInfo.stateUsed);
 				material.putInfo(assetManager, materialInfo);
 			} else {
 				material = new Material(assetManager, materialInfo);
 				if((material.isAnimation && material.animation==null) || (!material.isAnimation && material.texture==null)) {
-					logger.error("Material name inconsistency! "+materialInfo.textureName+" of "+entityType.toString());
+					logger.error("Material name inconsistency! "+materialInfo.textureName+" of "+renderType.toString());
 				}
-				if (map.get(entityType) == null) {
-					map.put(entityType, new HashMap<RenderState, Material>());
+				if (map.get(renderType) == null) {
+					map.put(renderType, new HashMap<RenderState, Material>());
 				}
 			}
-			map.get(entityType).put(materialInfo.stateUsed, material);
-//			logger.info("Setting " + entityType.name()
-//					+ " material for " + materialInfo.stateUsed);
+			map.get(renderType).put(materialInfo.stateUsed, material);
 		}
 	}
 
-	public HashMap<RenderState, Material> fetch(EntityType entityType) {
-		if (map.containsKey(entityType)) {
-			return map.get(entityType);
+	public HashMap<RenderState, Material> fetch(RenderType renderType) {
+		if (map.containsKey(renderType)) {
+			return map.get(renderType);
 		} else {
 			logger.error("Cannot find material for "
-					+ entityType.toString());
+					+ renderType.toString());
 			return null;
 		}
 	}

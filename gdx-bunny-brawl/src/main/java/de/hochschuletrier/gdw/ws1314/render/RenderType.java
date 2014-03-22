@@ -1,6 +1,8 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 
 public class RenderType {
@@ -18,6 +20,18 @@ public class RenderType {
 		this.entityType = entityType;
 		this.teamColor = teamColor;
 		requiresColor = teamColor!=null?true:false;
+	}
+	
+	protected void setByEntity(ClientEntity entity) {
+		this.entityType = entity.getEntityType();
+		if(entity instanceof ClientPlayer) {
+			this.teamColor = ((ClientPlayer)entity).getTeamColor();
+			requiresColor = true;
+		}
+		else {
+			this.teamColor = null;
+			requiresColor = false;
+		}
 	}
 	
 	public RenderType(EntityType entityType, TeamColor facing) {
