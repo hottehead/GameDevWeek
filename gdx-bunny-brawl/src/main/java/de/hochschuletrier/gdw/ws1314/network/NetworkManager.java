@@ -466,36 +466,28 @@ public class NetworkManager{
 		}
 	}
 
-	private void handleDatagramsClient(){
-		if(!isClient()) return;
-
-		DatagramHandler handler = clientDgramHandler;
-
-		clientConnection.sendPendingDatagrams();
-		while(clientConnection.hasIncoming()){
-			INetDatagram dgram = clientConnection.receive();
+	private void handleDatagrams(DatagramHandler handler, NetConnection connection) {
+		connection.sendPendingDatagrams();
+		while(connection.hasIncoming()){
+			INetDatagram dgram = connection.receive();
 			if(dgram instanceof BaseDatagram){
-				((BaseDatagram) dgram).handle(handler, clientConnection);
+				((BaseDatagram) dgram).handle(handler, connection);
 			}
 		}
 	}
 
+	private void handleDatagramsClient(){
+		if(!isClient()) return;
+		handleDatagrams(clientDgramHandler, clientConnection);
+	}
+
 	private void handleDatagramsServer(){
 		if(!isServer()) return;
-		DatagramHandler handler = serverDgramHandler;
-
 		Iterator<NetConnection> it = serverConnections.iterator();
 		while(it.hasNext()){
 			NetConnection connection = it.next();
-			connection.sendPendingDatagrams();
-
-			while(connection.hasIncoming()){
-				INetDatagram dgram = connection.receive();
-				if(dgram instanceof BaseDatagram){
-					((BaseDatagram) dgram).handle(handler, connection);
-				}
-			}
-
+			handleDatagrams(serverDgramHandler, connection);
+			
 			if(!connection.isConnected()){
 				logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) connection.getAttachment()).getPlayername());
 				it.remove();
