@@ -22,7 +22,7 @@ public class ClientBush extends ClientLevelObject
 
     @Override
     public void doEvent(EventType event) {
-
+    	this.getEntitySound().playSoundByAction(event, this);
     }
 
 	@Override

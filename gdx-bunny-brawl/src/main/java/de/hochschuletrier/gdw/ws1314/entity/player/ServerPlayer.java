@@ -1,6 +1,9 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
+
+import java.util.ArrayList;
+
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -49,7 +52,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-	public static final float	BRAKING = 5.0f;
+	public static final float BRAKING = 5.0f;
 	public static final float COLLISION_DAMPING = 10.0f;
 
 	public static final float KNOCKBACK_IMPULSE = 100.0f;
@@ -109,14 +112,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
-    private Fixture fixtureDeathCheck;
+    private Fixture 			fixtureDeathCheck;
     
-    private boolean isDead;
-    private int collidingBridgePartsCount;
-    private float deathfreeze;
-    private boolean isInDeadZone;
-    
-    Vector2 dir = new Vector2(0,0);
+    private boolean 			isDead;
+    private int 				collidingBridgePartsCount;
+    private float 				deathfreeze;
+	private ArrayList<Long>		pickedUpEggs;
+    private boolean             isInDeadZone;
     
     
     public ServerPlayer()
@@ -166,6 +168,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             }
             this.physicsBody.setLinearVelocity(new Vector2());
             this.physicsBody.setLinearDamping(2000);
+			for(Long id : pickedUpEggs){
+				ServerEntityManager.getInstance().getEntityById(id).reset();
+			}
+			pickedUpEggs.clear();
+			currentEggCount = 0;
             return;
         }
         if(!this.isOnBridge && this.isInDeadZone) {
@@ -331,10 +338,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     public void dropEgg() {
     	if (currentEggCount > 0) {
-    	currentEggCount--;
-    		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
-    		droppedEggID = egg.getID();
-			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_DROP);
+    		currentEggCount--;
+    		droppedEggID = pickedUpEggs.get(0);
+			pickedUpEggs.remove(droppedEggID);
+			ServerEgg egg = (ServerEgg)ServerEntityManager.getInstance().getEntityById(droppedEggID);
+			egg.setVisibility(true);
+			egg.setPosition(getPosition());
     	}
     }
     
@@ -357,9 +366,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 if(egg.getVisibility() && this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
             	 {
-            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
+					 pickedUpEggs.add(otherEntity.getID());
+					 egg.setVisibility(false);
             	 this.currentEggCount++;
 					 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_PICKUP);
             	 }
@@ -409,6 +419,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                      }
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
+    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  }
                  break;
              case GrassZone:
@@ -518,8 +529,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
-	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
-	public String getPlayerName() {return playerData.getPlayername();}
+	public EntityStates 	getCurrentPlayerState() {return currentState.getCurrentState();}
+	public String 			getPlayerName() {return playerData.getPlayername();}
     
     public void setPlayerKit(PlayerKit kit) {
     	playerKit = kit;
