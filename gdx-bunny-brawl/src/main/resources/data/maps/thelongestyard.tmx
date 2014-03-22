@@ -244,7 +244,7 @@
  </layer>
  <layer name="Detaillayer (Deko)" width="120" height="80">
   <data encoding="base64" compression="zlib">
-   eJzt3F1OAyEQwPF9NX23vYreQKMHMFrv4Ue8gd5Azyr70ISuILDL7Azs/5eQmHTbTrswDNA4DAAAAAAAAAAAAAAAAAAAAGjJQTsAADDmzrV77SAg4tG1J9eOrj0rxyLhQTuAjbjIuGaXcd2uQixox147gM71nv+2tGZjrOA/OWOdWr5Pp/sqXcvn1Hm+mvWclbls7Tmn9zUa7PTtUi+uvU7aKReNf3/ohVbkMvH4lWvXFd5HIndI1oXTfjnNRZ+C751jP8Q/f+yehp5z49ptraAKWF+/fA9/x/ebakSQZr1PpkzHfSq3p7Q6N+eqPX+M31eoLljapPLOks+vvZ5e2rdrKPn+pHJL7dddaz2Nc2vscfo1bO3c3vrciXIWcjBsa72PbOnsyUIOb6m/lJ4JjELnAnNeJ+d1l/DvwzgGJNaCEmslC3s1mmujHvOV9lrTt/aZVCwfaubJOe8de46lM75QP7PU90bjHP2uHUSDQv3MUt/zad3f0Nwxnfdj4zi3dtSYnzT3sUOfdyvj18J6Yq4lsbdyf0vP9iXHUUt169fQxjo1dbZ/GNoeoyGxNaX/25xU+xGKraU+bp0//vw67hC5RpulWFrCmNHHPehHqoYr2YtO7TmT87an99+MabC2B4l6rO5BQga11Lm19h9K65rY9fyfBgAAAAAAAAAAAAAAYNEv5BBLVQ==
+   eJzt21tOxCAUgOG+mnl3ZgfqEnQHGl2A8bIPL3EHugNdqyU6CYNQoAXOof5fQmK0zjAFDgfoDAMAAAAAAAAAAAAAAAAAAAB6spOuAAAocz2WG+lKoIq7sdyP5WEsj8J1qeFWugL/xFHCNZuE6zbWz6fzq4Nf2u/hVroCK7f2+Bdas500rUUbWsdK6r3WHot6MHUP92P9bOKaErn81OuXRH9Jt2/X2rl8Sp5n28QvSWL6gpa5rMU+oT3Gaq7RWo1lTNPSt3M9jeXZKftYZH5+k6taluPI38/HclHgfZbGDt94rZkXuv3SjUXvFd87xXYIf/5Qm/r+53IsV6UqZYnlxnZ/0JjvfA5/x/eLaI3qYS780fs5qDvuY7E9pte5OVXp+cPcL19esLTUijtLPr/02ZjbtyViWM79qxVbSr9uq/U0Dvn6Uuk+beewpWN773Mn8i3NL7B+vfcRrWdPNcRieIscq6f+knsmYPjOBea8Tsrr5nDb1m4HMwZqrAVrrJXcNVNOny11dl57bTS1X7bGeCW91rS1fm4wFA8l4+Sc9w79j6bnMH39TFPfM8wc/er8TuP++Rw18wtfP9PU92xu+7bimzvceT80jlPX/xLzk+Q+tu/zSrVvabHx2vOe0JK699K+uWf7NcdRT3nrx6B3nWrnArGz/d3Q9xj1Ca0p7WdzYuWrUt1K9HGtuV7r8zd7/Nl53C5wjSFx7/bvqTVezNWqvXuaF9aKNliPWA6Xsxcd23NeW8xLoeH7V5LP8639mTEJ2vYgUY7WPcj/QGI9QC51qNX+Q25eE7q+1Pf6AAAAAAAAAAAAAAAASvoGGGdQ2A==
   </data>
  </layer>
  <objectgroup name="Brueckenebene" width="120" height="80">
@@ -417,7 +417,7 @@
   <object gid="7" x="2848" y="1888"/>
   <object gid="8" x="800" y="1408"/>
   <object gid="8" x="1632" y="1408"/>
-  <object gid="6" x="2208" y="1568"/>
+  <object gid="6" x="2209" y="1564"/>
   <object gid="6" x="1600" y="768"/>
   <object gid="6" x="1568" y="2112"/>
   <object gid="6" x="3424" y="1376"/>
@@ -640,27 +640,35 @@
   <object type="hgrass" x="800" y="1536" width="128" height="64"/>
   <object type="hgrass" x="864" y="1600" width="64" height="32"/>
   <object type="hgrass" x="768" y="1536" width="32" height="32"/>
-  <object type="startw" x="928" y="1824" width="224" height="224"/>
-  <object type="startb" x="1024" y="864" width="224" height="224"/>
+  <object type="startw" x="928" y="1824" width="224" height="224">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object type="startb" x="1024" y="864" width="224" height="224">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Renderlayer" width="120" height="80">
   <properties>
    <property name="renderEntities" value="true"/>
   </properties>
  </objectgroup>
- <objectgroup name="Spielerebene (physikalische Zone)" width="120" height="80" visible="0">
+ <objectgroup name="Spielerebene (physikalische Zone)" width="120" height="80">
   <object type="solid" x="448" y="800" width="64" height="64"/>
-  <object type="solid" x="1024" y="1504" width="64" height="64"/>
+  <object type="solid" x="1023" y="1500" width="64" height="67"/>
   <object type="solid" x="1504" y="1024" width="64" height="64"/>
-  <object type="solid" x="1568" y="992" width="64" height="64"/>
-  <object type="solid" x="2048" y="1888" width="64" height="64"/>
-  <object type="solid" x="2112" y="1536" width="64" height="64"/>
-  <object type="solid" x="2272" y="1536" width="64" height="64"/>
-  <object type="solid" x="2176" y="1472" width="96" height="64"/>
-  <object type="solid" x="2144" y="1280" width="64" height="64"/>
-  <object type="solid" x="2208" y="1248" width="64" height="64"/>
-  <object type="solid" x="3104" y="1696" width="64" height="64"/>
-  <object type="solid" x="3136" y="1088" width="64" height="64"/>
+  <object type="solid" x="1567" y="986" width="64" height="70"/>
+  <object type="solid" x="2049" y="1882" width="63" height="69"/>
+  <object type="solid" x="2112" y="1526" width="64" height="74"/>
+  <object type="solid" x="2272" y="1526" width="64" height="74"/>
+  <object type="solid" x="2143" y="1464" width="97" height="70"/>
+  <object type="solid" x="2143" y="1272" width="65" height="72"/>
+  <object type="solid" x="2208" y="1240" width="64" height="71"/>
+  <object type="solid" x="3104" y="1689" width="63" height="71"/>
+  <object type="solid" x="3136" y="1075" width="64" height="76"/>
   <object type="solid" x="352" y="1248" width="704" height="32"/>
   <object type="solid" x="448" y="1472" width="768" height="32"/>
   <object type="solid" x="1216" y="1696" width="64" height="32"/>
