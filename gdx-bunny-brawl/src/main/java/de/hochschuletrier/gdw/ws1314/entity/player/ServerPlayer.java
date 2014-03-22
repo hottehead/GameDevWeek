@@ -343,10 +343,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              return;
          }
          
-         
-         if (fixture == fixtureLowerBody) {
-        	 switch(otherEntity.getEntityType())
-        	 {
+         if(fixture == fixtureLowerBody) {
+        	 switch(otherEntity.getEntityType()) {
              case Tank:
              case Hunter:
              case Knight:
@@ -377,15 +375,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
                 	 ServerClover clover = (ServerClover) otherEntity;
                 	 ServerEntityManager.getInstance().removeEntity(clover);
-                 
-            	 break;
-             case AbyssZone:
-            	 break;
-             case GrassZone:
-            	 break;
-             case PathZone:
-            	 break;
-             case StartZone:
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
@@ -397,22 +386,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                        if(ball.getSpeed() > 0){
                            this.applyDamage(ball.getVelocity().len());
                        }
-                   }
+                 }
                  break;
              case Bridge:
                  this.isOnBridge = true;
                  collidingBridgePartsCount++;
                  break;
-             case BridgeSwitch:	
-                 break;
-             case Bush:
-                 break;
              default:
             	 break;
         	 }
          } else if(fixture == fixtureFullBody) {
-        	 switch(otherEntity.getEntityType()) 
-        	 {
+        	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
                      if (getID() != projectile.getSourceID()) {
@@ -421,7 +405,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                      	ServerEntityManager.getInstance().removeEntity(otherEntity);
                      }
                 	 break;
-                 
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
                      if (attack.getSourceID() != getID()) {
@@ -433,8 +416,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 break;
         	 }      
          } else if(fixture == fixtureDeathCheck) {
-             switch(otherEntity.getEntityType()) 
-             {
+             switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
                      if(!isOnBridge) {
@@ -448,48 +430,40 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     }
     
     
-    public void endContact(Contact contact) 	
-    {
-    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-    	Fixture fixture = getCollidingFixture(contact);
-         
-         if(otherEntity == null)
-             return;
-         
-
-         if (fixture == null)
-         {
-        	 
-         }
-         else if (fixture == fixtureLowerBody)
-  		 {
-             switch(otherEntity.getEntityType()) 
-             {
-             	case Ei:
-             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-             			droppedEggID = -1;
-             		break;
-             	case HayBale:
-             	   ServerHayBale ball = (ServerHayBale)otherEntity;
-                   if(ball.isCrossable()) {
-                       collidingBridgePartsCount--;
-                       if(collidingBridgePartsCount <= 0) {
-                           this.isOnBridge = false;
-                       }
+public void endContact(Contact contact) {
+	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+	Fixture fixture = getCollidingFixture(contact);
+     
+     if(otherEntity == null)
+         return;
+     
+     if (fixture == fixtureLowerBody) {
+         switch(otherEntity.getEntityType()) {
+         	case Ei:
+         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+         			droppedEggID = -1;
+         		break;
+         	case HayBale:
+         	   ServerHayBale ball = (ServerHayBale)otherEntity;
+               if(ball.isCrossable()) {
+                   collidingBridgePartsCount--;
+                   if(collidingBridgePartsCount <= 0) {
+                       this.isOnBridge = false;
                    }
-                   break;
-                case Bridge:
-                    collidingBridgePartsCount--;
-                    if(collidingBridgePartsCount <= 0) {
-                        this.isOnBridge = false;
-                    }
-                    break;
-                default:
-                	break;
-             }
-  		 }
-         
-    }
+               }
+               break;
+            case Bridge:
+                collidingBridgePartsCount--;
+                if(collidingBridgePartsCount <= 0) {
+                    this.isOnBridge = false;
+                }
+                break;
+            default:
+            	break;
+         }
+	 }
+}
+
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
     
