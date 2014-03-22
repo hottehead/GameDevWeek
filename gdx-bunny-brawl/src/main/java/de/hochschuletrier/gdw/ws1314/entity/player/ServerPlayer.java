@@ -21,6 +21,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
@@ -33,6 +34,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
 
@@ -235,6 +237,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do1Attack = true;
+            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
             	}
                 break;
             case ATTACK_2:
@@ -249,6 +252,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do2Attack = true;
+            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
             	}
                 break;
             case DROP_EGG:
@@ -396,6 +400,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  this.isOnBridge = true;
                  collidingBridgePartsCount++;
                  break;
+             case GrassZone:
+                 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_GRASS);
+                 break;
+             case PathZone:
+                 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_WAY);
              default:
             	 break;
         	 }
@@ -579,6 +588,8 @@ public void endContact(Contact contact) {
 	
     public void applyDamage(float amount)
     {
+        NetworkManager.getInstance().sendEntityEvent(getID(), EventType.HIT_BY_ATTACK_1);
+        
     	amount -= currentArmor;
     	if (amount < 0)
     		amount = 0;
