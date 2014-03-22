@@ -23,7 +23,6 @@ public class StartServerStage extends AutoResizeStage {
 	
 	LevelList levelList;
 	TextButton startServer;
-	TextButton startServerAndPlay;
 	TextButton back;
 
 	public void init(AssetManagerX assetManager) {
@@ -51,9 +50,6 @@ public class StartServerStage extends AutoResizeStage {
 		Table tmp = new Table(defaultSkin);
 		uiTable.add(tmp);
 		
-		startServerAndPlay = new TextButton("Starte Server und selbst spielen", defaultSkin);
-		tmp.add(startServerAndPlay);
-		
 		startServer = new TextButton("Starte Server", defaultSkin);
 		tmp.add(startServer);
 		
@@ -79,11 +75,7 @@ public class StartServerStage extends AutoResizeStage {
 	public TextButton getStartServerButton() {
 		return startServer;
 	}
-	
-	public TextButton getStartServerAndPlayButton() {
-		return startServerAndPlay;
-	}
-	
+
 	public LevelListElement getSelectedLevel() {
 		return levelList.getSelected();
 	}

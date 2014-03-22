@@ -38,6 +38,9 @@ public class MainMenuStage extends AutoResizeStage {
 	private TextButton credits;
 	private TextButton exit;
 	
+	//test
+	TextButton startServerAndPlay;
+	
 	public MainMenuStage() {
 		super();
 	}
@@ -110,7 +113,8 @@ public class MainMenuStage extends AutoResizeStage {
 		tmpTable.add(exit).pad(5);
 		
 		//testing server-client stuff
-		uiTable.row().padTop(20);
+		startServerAndPlay = new TextButton("Teststart", defaultSkin);
+		tmpTable.add(startServerAndPlay);
 	}
 
 	public void render() {		
@@ -145,6 +149,10 @@ public class MainMenuStage extends AutoResizeStage {
 	
 	public TextButton getPlayServerButton() {
 		return playServer;
+	}	
+	
+	public TextButton getStartServerAndPlayButton() {
+		return startServerAndPlay;
 	}
 	
 	public TextButton getOptionsButton() {

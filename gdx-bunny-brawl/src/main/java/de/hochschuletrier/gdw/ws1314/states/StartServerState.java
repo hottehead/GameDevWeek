@@ -19,7 +19,6 @@ public class StartServerState extends GameState {
 	
 	private BackListener backListener;
 	private StartServerListener startServerListener;
-	private StartServerAndPlayListener startServerAndPlayListener;
 	
 	public void init(AssetManagerX assetManager) {
         super.init(assetManager);
@@ -27,7 +26,6 @@ public class StartServerState extends GameState {
         
         backListener = new BackListener();
         startServerListener = new StartServerListener();
-        startServerAndPlayListener = new StartServerAndPlayListener();
         
         stage = new StartServerStage();
         stage.init(assetManager);
@@ -46,7 +44,6 @@ public class StartServerState extends GameState {
 	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
 		stage.getStartServerButton().addListener(startServerListener);
-		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
     }
 
     public void onEnterComplete() {
@@ -54,7 +51,6 @@ public class StartServerState extends GameState {
 
     public void onLeave() {
     	stage.getStartServerButton().removeListener(startServerListener);
-    	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
 		stage.clear();
@@ -79,13 +75,5 @@ public class StartServerState extends GameState {
 			GameStates.SERVERLOBBY.init(assetManager);
 			GameStates.SERVERLOBBY.activate();
     	}
-    }
-	
-	private class StartServerAndPlayListener extends ClickListener {
-    	public void clicked(InputEvent event, float x, float y) {
-    		logger.warn("Changing to DualGameplayState - to be removed");
-			GameStates.DUALGAMEPLAY.init(assetManager);
-			GameStates.DUALGAMEPLAY.activate();
-    	}
-    }
+	}
 }
