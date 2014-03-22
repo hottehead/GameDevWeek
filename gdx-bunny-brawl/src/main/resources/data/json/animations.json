@@ -392,5 +392,14 @@
         "playType" : "NORMAL",
         "columns": 6,
         "rows" : 1
-    }
+    }, 
+	
+	"mineActive": {
+		"filename": "data/images/mine_ani.png", 
+		"frames": 2, 
+		"frameDuration": [0.5, 0.5],
+		"playType": "NORMAL", 
+		"columns": 2, 
+		"rows": 1
+	}
 }

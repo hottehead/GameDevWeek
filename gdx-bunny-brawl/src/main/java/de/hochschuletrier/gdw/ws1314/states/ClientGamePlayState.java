@@ -21,41 +21,33 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
  * 
  * @author Santo Pfingsten
  */
-public class ClientGamePlayState extends GameState implements InputProcessor, DisconnectCallback {
+public class ClientGamePlayState extends GameState implements DisconnectCallback {
 	private static final Logger logger = LoggerFactory.getLogger(ClientGamePlayState.class);
 	
 	private ClientGame tmpGame;
 	private final FpsCalculator fpsCalc = new FpsCalculator(200, 100, 16);
 	private LocalMusic stateMusic;
 	private LocalSound stateSound;
+	private String mapName;
 	
-	
-
-
 	public ClientGamePlayState() {
+	}
+	
+	public String getMapName() {
+		return mapName;
+	}
+
+	public void setMapName(String mapName) {
+		this.mapName = mapName;
 	}
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		tmpGame = new ClientGame();
-		tmpGame.init(assetManager);
-		stateMusic = new LocalMusic(assetManager);
-		stateSound = LocalSound.getInstance();
-		stateSound.init(assetManager);
-
-		Main.inputMultiplexer.addProcessor(this);
-		
-		
 	}
 
 	public void render() {
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
-		// game.render();
 		tmpGame.render();
-		
-                
-		//TODO: Jemand der weis woher das kommt bitte fixen, hier war nach dem Merge zwischen integration_test/network_gameplay und master ein Build-Fehler.
-                //game.getManager().render();
 	}
 
 	@Override
@@ -63,68 +55,27 @@ public class ClientGamePlayState extends GameState implements InputProcessor, Di
 		tmpGame.update(delta);
 		fpsCalc.addFrame();
 		
-		
-		
-		
-		
-		
 		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
 	}
 
 	@Override
 	public void onEnter() {
+		tmpGame = new ClientGame();
+		tmpGame.init(assetManager, mapName);
+		stateMusic = new LocalMusic(assetManager);
+		stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);
 	}
 
 	@Override
 	public void onLeave() {
+		tmpGame = null;
 	}
 
 	@Override
 	public void dispose() {
 		//stage.dispose();
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-        //tmpGame.keyDown(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-        //tmpGame.keyUp(keycode);
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
 	}
 
 	@Override

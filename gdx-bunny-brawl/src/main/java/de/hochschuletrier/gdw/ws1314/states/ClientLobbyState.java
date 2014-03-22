@@ -15,6 +15,8 @@ import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,12 +57,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 
     @Override
     public void update (float delta) {
-        // TODO
     }
 
     @Override
     public void dispose () {
-    	System.out.println("DISPOSED");
     }
     
     // GameStateCallback
@@ -69,6 +69,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		logger.info("GameStateChange received");
 		if (gameStates == GameStates.CLIENTGAMEPLAY)
 		{
+			
+			((ClientGamePlayState) gameStates.get()).setMapName(this.clientLobby.getMap());
 			gameStates.init(assetManager);
 			gameStates.activate();
 			logger.info("ClientGamePlayState activated.");
@@ -79,7 +81,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	public void onEnter() {
     	super.onEnter();
     	
-    	this.clientLobby = new ClientLobbyManager(Main.playerName);
+    	this.clientLobby = new ClientLobbyManager(Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"));
     	
     	this.stage = new ClientLobbyStage(this.clientLobby);
 	    this.stage.init(assetManager);
@@ -103,15 +105,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	    NetworkManager.getInstance().setDisconnectCallback(this);
 	    
 	    logger.info("Client-Lobby entered.");
-	    
-	    /*
-	    this.sendPlayerUpdate = new ConsoleCmd("sendPlayerUpdate",0,"[DEBUG]Post playerdata",0) {
-			@Override
-			public void execute(List<String> args) {
-				clientLobby.sendChanges();
-			}
-		};
-		*/
 	    
 	    // ButtonEvents
 	    this.stage.getReadyButton().addListener(this.acceptClick);
@@ -164,7 +157,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		Main.getInstance().console.register(this.cpAccept);
 		Main.getInstance().console.register(this.cpTeam);
 		Main.getInstance().console.register(this.cpClass);
-		//Main.getInstance().console.register(this.sendPlayerUpdate);
 		
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -183,11 +175,16 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		Main.getInstance().console.unregister(this.cpTeam);
 		Main.getInstance().console.unregister(this.cpClass);
 		
+		NetworkManager.getInstance().setGameStateCallback(null);
+		NetworkManager.getInstance().setDisconnectCallback(null);
+		
 		// Remove ButtonListener
 		this.stage.getReadyButton().removeListener(this.acceptClick);
 		this.stage.getSwapTeamButton().removeListener(this.swapTeamClick);
 	    this.stage.getDisconnectButton().removeListener(this.disconnectClick);
 		
+	    Main.inputMultiplexer.removeProcessor(this.stage);
+	    
 		this.clientLobby = null;
 		this.stage = null;
 	}
@@ -217,10 +214,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
 			NetworkManager.getInstance().disconnectFromServer();
-			GameStates.MAINMENU.init(assetManager);
-			GameStates.MAINMENU.activate();
 		}
-		
 	}
 	
 	@Override
