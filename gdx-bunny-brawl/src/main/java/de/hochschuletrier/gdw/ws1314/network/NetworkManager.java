@@ -5,6 +5,7 @@ import de.hochschuletrier.gdw.commons.netcode.NetReception;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagram;
 import de.hochschuletrier.gdw.commons.netcode.datagram.INetDatagramFactory;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
 import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
@@ -164,6 +165,7 @@ public class NetworkManager{
 			if(serverReception.isRunning()){
 				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
+			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
 		}
 		catch (IOException e){
 			logger.error("[SERVER] Can't listen for connections.", e);
@@ -510,6 +512,7 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				ServerEntityManager.getInstance().getGameInfo().removeListner(gameInfoListener);
 				for(NetConnection nc : serverConnections){
 					nc.shutdown();
 				}
@@ -539,4 +542,12 @@ public class NetworkManager{
 			disconnectFromServer();
 		}
 	}
+	
+	private GameInfoListener gameInfoListener = new GameInfoListener(){
+		
+		@Override
+		public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg){
+			broadcastToClients(new GameInfoReplicationDatagram(blackPoints,whitePoints,remainingEgg));
+		}
+	};
 }
