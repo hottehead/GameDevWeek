@@ -73,14 +73,14 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-				if(!acrossable){
-				ServerPlayer player2 = (ServerPlayer) otherEntity;
-				this.physicsBody.setLinearDamping(1);
-					if(speed > 0){
-						player2.applyDamage(10);
-					}
-				}
-				speed = 0;
+//				if(!acrossable){
+//				ServerPlayer player2 = (ServerPlayer) otherEntity;
+//				this.physicsBody.setLinearDamping(1);
+//					if(speed > 0){
+//						player2.applyDamage(10);
+//					}
+//				}
+//				speed = 0;
 				break;
 			default:
 				break;
@@ -90,7 +90,7 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
-ServerEntity otherEntity = this.identifyContactFixtures(contact);
+	    ServerEntity otherEntity = this.identifyContactFixtures(contact);
         
         if(otherEntity == null){
             return;
@@ -137,6 +137,10 @@ ServerEntity otherEntity = this.identifyContactFixtures(contact);
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);
+	}
+	
+	public boolean isCrossable() {
+	    return this.acrossable;
 	}
 
 }
