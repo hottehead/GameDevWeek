@@ -145,6 +145,10 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		Main.getInstance().console.register(this.cpClass);
 		
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		if(!NetworkManager.getInstance().isClient()){
+			onLeave();
+		}
     }
 
 	@Override

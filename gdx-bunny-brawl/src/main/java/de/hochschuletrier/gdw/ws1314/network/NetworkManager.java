@@ -167,6 +167,7 @@ public class NetworkManager{
 				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
 			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
+			Main.getInstance().setConsoleVisible(true);
 			Main.getInstance().setTitle("[SERVER] Bunny Brawl - GameDevWeek WS 2013/14");
 		}
 		catch (IOException e){
