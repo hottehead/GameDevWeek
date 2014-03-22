@@ -94,6 +94,10 @@ public class Main extends StateBasedGame {
 				null);
 	}
 
+	public AssetManagerX getAssetManager(){
+		return assetManager;
+	}
+
 	private void setupGdx() {
 		KeyUtil.init();
 		Gdx.graphics.setContinuousRendering(true);
@@ -241,6 +245,10 @@ public class Main extends StateBasedGame {
 
 	@Override
 	public void resume() {
+	}
+
+	public void setTitle(String title){
+		Gdx.graphics.setTitle(title);
 	}
 
 	public static void main(String[] args) {

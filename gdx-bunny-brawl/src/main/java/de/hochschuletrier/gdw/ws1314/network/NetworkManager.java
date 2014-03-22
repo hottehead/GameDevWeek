@@ -165,6 +165,7 @@ public class NetworkManager{
 				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
 			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
+			Main.getInstance().setTitle("[SERVER] Bunny Brawl - GameDevWeek WS 2013/14");
 		}
 		catch (IOException e){
 			logger.error("[SERVER] Can't listen for connections.", e);
@@ -536,6 +537,7 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
+				Main.getInstance().setTitle("Bunny Brawl - GameDevWeek WS 2013/14");
 			}
 			else{
 				logger.warn("[NETWORK] Can't stop, i'm not a Server.");
