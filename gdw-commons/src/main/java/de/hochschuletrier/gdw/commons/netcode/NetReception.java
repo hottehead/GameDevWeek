@@ -43,7 +43,8 @@ public class NetReception extends Thread {
      * @throws IOException
      */
     public NetReception(String ip, int port, int maxConnections, INetDatagramFactory datagramFactory) throws IOException {
-        this.datagramFactory = datagramFactory;
+    	setDaemon(true);
+    	this.datagramFactory = datagramFactory;
         this.maxConnections = maxConnections;
 
         channel = ServerSocketChannel.open();
