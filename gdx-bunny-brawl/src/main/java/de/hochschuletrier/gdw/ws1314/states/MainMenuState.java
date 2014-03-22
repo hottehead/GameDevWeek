@@ -54,7 +54,6 @@ public class MainMenuState extends GameState {
 	}
 	
     public void render() {
-
 		stage.render();
 	}
 

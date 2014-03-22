@@ -19,11 +19,10 @@ public class OptionStage extends AutoResizeStage {
 	
 	private Skin defaultSkin;
 	private BitmapFont font;
+	private boolean isInited = false;
 	
 	private Slider master, music, sound;
-	private TextButton back;
-	
-	private boolean isInited = false;
+	private TextButton back;	
 	
 	public OptionStage() {
 		super();
