@@ -9,6 +9,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
+import de.hochschuletrier.gdw.ws1314.render.materials.ArrowMaterial;
 import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterials;
 
 public class MaterialManager {
@@ -34,12 +35,12 @@ public class MaterialManager {
 						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
 						1, true));
 
-		this.provideMaterials(EntityType.Hunter, new HunterMaterials(110, 74, 1).get());
+		this.provideMaterials(EntityType.Hunter, new HunterMaterials().get());
 
-		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
-				false));
-
+//		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
+//				"arrow", new RenderState(EntityStates.NONE), 38, 6, 1,
+//				false));
+		this.provideMaterials(EntityType.Projectil, new ArrowMaterial().get());
 		this.provideMaterials(EntityType.Carrot, new MaterialInfo("carrot",
 				new RenderState(EntityStates.NONE), 32, 32, -1, false));
 		this.provideMaterials(EntityType.Ei, new MaterialInfo("egg",
@@ -53,7 +54,10 @@ public class MaterialManager {
 				new RenderState(EntityStates.NONE), 32, 32, -1, false));
 		this.provideMaterials(EntityType.Bush, new MaterialInfo("bush",
 				new RenderState(EntityStates.NONE), 32, 32, 10, false));
-
+		this.provideMaterials(EntityType.Bush, new MaterialInfo("bushDisposeAnimation",
+				new RenderState(EntityStates.DISPOSE), 32, 32, 10, true));
+		
+		
 		this.provideMaterials(EntityType.ContactMine, new MaterialInfo(
 				"contactMine", new RenderState(EntityStates.NONE), 32, 32, -1,
 				false));
