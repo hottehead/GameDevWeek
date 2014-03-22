@@ -28,6 +28,7 @@ public class EntityRenderer extends Pool<RenderObject> implements
 		for (RenderObject obj : this.renderList) {
 			float rot = obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees;
 			if(obj.entity instanceof ClientPlayer) {
+				System.out.println(obj.getActiveState());
 				rot = 0;
 			}
 			Material activeMat = obj.getActiveMaterial();

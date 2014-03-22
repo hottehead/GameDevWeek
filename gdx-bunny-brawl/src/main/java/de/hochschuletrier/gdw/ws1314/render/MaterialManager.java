@@ -33,10 +33,11 @@ public class MaterialManager {
 		this.provideMaterial(EntityType.Hunter, new MaterialInfo(
 				"hunterWhiteIdleDown", EntityStates.IDLE, 110, 74, 1, true),
 				new MaterialInfo("hunterWhiteWalkLeft", EntityStates.WALKING,
-						110, 74, 1, true));
+						110, 74, 1, true),
+						new MaterialInfo("hunterWhiteAttackDown", EntityStates.ATTACK, 110, 74, 1, true));
 
 		this.provideMaterial(EntityType.Projectil, new MaterialInfo(
-				"debugArrow", EntityStates.IDLE, 64, 64, 1, false));
+				"debugArrow", EntityStates.NONE, 64, 64, 1, false));
 
 		this.provideMaterial(EntityType.Carrot, new MaterialInfo("carrot",
 				EntityStates.NONE, 32, 32, -1, false));
