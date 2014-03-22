@@ -343,7 +343,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     // TODO Handle all possible collision types: damage, death, physical, egg collected...
     public void beginContact(Contact contact) 	
     {
-        logger.info("begin contact vom spieler");
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
          
@@ -450,11 +449,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
          } else if(fixture == fixtureDeathCheck) {
              switch(otherEntity.getEntityType()) 
              {
-                 case WaterZone:
-                     logger.info("spieler kollision mit wasser");
-                     
+                 case AbyssZone:
+                 case WaterZone:                     
                      this.isDead = true;
-                     
                      break;
                  default:
                      break;
