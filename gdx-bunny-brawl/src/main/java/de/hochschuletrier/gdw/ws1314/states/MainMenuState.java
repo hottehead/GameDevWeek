@@ -24,10 +24,9 @@ import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
  *
  * @author Santo Pfingsten
  */
-public class MainMenuState extends GameState implements InputProcessor {
+public class MainMenuState extends GameState {
 	private static final Logger logger = LoggerFactory.getLogger(MainMenuState.class);
 	
-    InputInterceptor inputProcessor;
     private LocalMusic music;
 	private int stateChangeDuration=500;
 	private MainMenuStage stage;
@@ -42,20 +41,7 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
-        inputProcessor = new InputInterceptor(this) {
-            @Override
-            public boolean keyUp(int keycode) {
-                switch (keycode) {
-                    case Keys.ESCAPE:                    	
-                    	//Wird aktuelle nicht benutzt (laut Jerry)
-                        return true;
-                }
-                return isActive && mainProcessor.keyUp(keycode);
-            }
-        };
-        Main.inputMultiplexer.addProcessor(inputProcessor);
-        
-
+      
         stage = new MainMenuStage();
 		stage.init(assetManager);
 		
@@ -81,8 +67,6 @@ public class MainMenuState extends GameState implements InputProcessor {
 
     @Override
     public void onEnter() {
-		inputProcessor.setActive(true);
-        
         if (this.music.isMusicPlaying()) {
 			this.music.setFade('i', 2500);
         }
@@ -101,11 +85,11 @@ public class MainMenuState extends GameState implements InputProcessor {
     		this.music.setFade('o', this.stateChangeDuration);
         }
 		
-        inputProcessor.setActive(false);
-        
         stage.getStartServerButton().removeListener(this.startServerClickListener);
 		stage.getStartClientButton().removeListener(this.startClientClickListener);
 		stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
+		
+		Main.inputMultiplexer.removeProcessor(this.stage);
 	}
 
 	@Override
@@ -116,46 +100,6 @@ public class MainMenuState extends GameState implements InputProcessor {
     public void dispose() {
 		if (this.stage != null)
 			stage.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
     
     private class StartServerClick extends ClickListener {

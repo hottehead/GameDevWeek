@@ -21,7 +21,7 @@ public abstract class ClientEntity
 		this.position = new Vector2(0.0f, 0.0f);
 		this.id = -1l;
 		this.stateTime = 0.0f;
-		this.direction = FacingDirection.RIGHT;
+		this.direction = FacingDirection.NONE;
 	}
 
 	public Vector2 getPosition() 				{ return this.position; }
