@@ -30,15 +30,19 @@ public class HunterMaterials extends MaterialDefinition {
 //		materials.add(new MaterialInfo("hunterWhiteWalkUp", new RenderState(
 //				EntityStates.WALKING, FacingDirection.UP), width, height,
 //				layer, true));
-		newMaterial("hunterWhietIdleDown", EntityStates.IDLE, FacingDirection.DOWN, true);
-		newMaterial("hunterWhietIdleUp", EntityStates.IDLE, FacingDirection.UP, true);
-		newMaterial("hunterWhietIdleLeft", EntityStates.IDLE, FacingDirection.LEFT, true);
-		newMaterial("hunterWhietIdleRight", EntityStates.IDLE, FacingDirection.RIGHT, true);
+		newMaterial("hunterWhiteIdleDown", EntityStates.IDLE, FacingDirection.DOWN, true);
+		newMaterial("hunterWhiteIdleUp", EntityStates.IDLE, FacingDirection.UP, true);
+		newMaterial("hunterWhiteIdleLeft", EntityStates.IDLE, FacingDirection.LEFT, true);
+		newMaterial("hunterWhiteIdleRight", EntityStates.IDLE, FacingDirection.RIGHT, true);
 		
 		newMaterial("hunterWhiteWalkDown", EntityStates.WALKING, FacingDirection.DOWN, true);
-		newMaterial("hunterWhietIdleUp", EntityStates.WALKING, FacingDirection.UP, true);
-		newMaterial("hunterWhietIdleLeft", EntityStates.WALKING, FacingDirection.LEFT, true);
-		newMaterial("hunterWhietIdleRight", EntityStates.WALKING, FacingDirection.RIGHT, true);
+		newMaterial("hunterWhiteWalkUp", EntityStates.WALKING, FacingDirection.UP, true);
+		newMaterial("hunterWhiteWalkLeft", EntityStates.WALKING, FacingDirection.LEFT, true);
+		newMaterial("hunterWhiteWalkLeft", EntityStates.WALKING, FacingDirection.DOWN_LEFT, true);
+		newMaterial("hunterWhiteWalkLeft", EntityStates.WALKING, FacingDirection.UP_LEFT, true);
+		newMaterial("hunterWhiteWalkRight", EntityStates.WALKING, FacingDirection.RIGHT, true);
+		newMaterial("hunterWhiteWalkRight", EntityStates.WALKING, FacingDirection.DOWN_RIGHT, true);
+		newMaterial("hunterWhiteWalkRight", EntityStates.WALKING, FacingDirection.UP_RIGHT, true);
 		
 		newMaterial("hunterWhiteAttackDown", EntityStates.ATTACK, FacingDirection.DOWN, true);
 		newMaterial("hunterWhiteAttackUp", EntityStates.ATTACK, FacingDirection.UP, true);

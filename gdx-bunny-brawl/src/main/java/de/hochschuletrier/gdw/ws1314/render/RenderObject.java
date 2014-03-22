@@ -67,6 +67,7 @@ public class RenderObject implements Comparable<RenderObject> {
 	}
 	
 	public TextureRegion getActiveTexture() {
-		return materialAtlas.get(this.getActiveState()).getActiveTexture(entity.getStateTime());
+		Material material = materialAtlas.get(this.getActiveState());
+		return material.getActiveTexture(entity.getStateTime());
 	}
 }

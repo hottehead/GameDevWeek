@@ -2,6 +2,9 @@ package de.hochschuletrier.gdw.ws1314.render;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
@@ -9,7 +12,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterials;
 
 public class MaterialManager {
-
+	private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
 	protected static Material dbgMaterial;
 
 	@SuppressWarnings("rawtypes")
@@ -68,15 +71,15 @@ public class MaterialManager {
 				material.putInfo(assetManager, materialInfo);
 			} else {
 				material = new Material(assetManager, materialInfo);
-				if(material==null) {
-					System.out.println("Material name inconsistency! "+materialInfo.textureName+" of "+entityType.toString());
+				if((material.isAnimation && material.animation==null) || (!material.isAnimation && material.texture==null)) {
+					logger.error("Material name inconsistency! "+materialInfo.textureName+" of "+entityType.toString());
 				}
 				if (map.get(entityType) == null) {
 					map.put(entityType, new HashMap<RenderState, Material>());
 				}
 			}
 			map.get(entityType).put(materialInfo.stateUsed, material);
-			System.out.println("Setting " + entityType.name()
+			logger.info("Setting " + entityType.name()
 					+ " material for " + materialInfo.stateUsed);
 		}
 	}
