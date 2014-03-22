@@ -54,7 +54,7 @@ public class ServerEgg extends ServerLevelObject
 
     @Override
     public void beginContact(Contact contact) {
-        
+    	 
     }
 
     @Override

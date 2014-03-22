@@ -29,6 +29,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
@@ -124,7 +125,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public ServerPlayer()
     {
     	super();
-    	
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
@@ -134,7 +134,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-
+    	pickedUpEggs = new ArrayList<Long>();
     	desiredDirection = FacingDirection.NONE;
     	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
@@ -376,7 +376,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);

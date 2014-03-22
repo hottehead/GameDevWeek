@@ -42,7 +42,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
     private List<PlayerData> playerDatas = null;
     
-    private String mapName;
+    private String mapName = "map07";
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
