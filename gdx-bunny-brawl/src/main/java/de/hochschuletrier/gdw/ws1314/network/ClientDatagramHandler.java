@@ -142,9 +142,15 @@ public class ClientDatagramHandler implements DatagramHandler{
 	public void handle(DespawnDatagram despawnDatagram, NetConnection connection){
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(despawnDatagram.getEntityId());
 		if(entity == null){
-			logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			if(ClientEntityManager.getInstance().isPendingSpawn(despawnDatagram.getEntityId())){
+				NetworkManager.getInstance().pendingDespawns.add(despawnDatagram);
+			}
+			else{
+				logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			}
 			return;
 		}
+		logger.debug("Despawn entity {}",despawnDatagram.getEntityId());
 		ClientEntityManager.getInstance().removeEntity(entity);
 	}
 

@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NetworkManager{
@@ -52,6 +54,8 @@ public class NetworkManager{
 	private float ping = 0;
 
 	private int nextPlayerNumber = 1;
+	
+	protected Deque<DespawnDatagram> pendingDespawns = new LinkedList<>();
 
 	public float getPing(){
 		return ping;
@@ -385,6 +389,7 @@ public class NetworkManager{
 	}
 
 	public void update(){
+		handlePendingDespawns();
 		handleNewConnections();
 		handleDisconnects();
 		replicateServerEntities();
@@ -392,6 +397,14 @@ public class NetworkManager{
 		handleDatagramsServer();
 		checkStats();
 		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
+	}
+
+	private void handlePendingDespawns(){
+		if(!isClient()) return;
+		DespawnDatagram despawn;
+		while((despawn=pendingDespawns.poll())!=null){
+			clientDgramHandler.handle(despawn, clientConnection);
+		}
 	}
 
 	private void replicateServerEntities(){
