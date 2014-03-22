@@ -54,7 +54,10 @@ public class MaterialManager {
 				new RenderState(EntityStates.NONE), 32, 32, -1, false));
 		this.provideMaterials(EntityType.Bush, new MaterialInfo("bush",
 				new RenderState(EntityStates.NONE), 32, 32, 10, false));
-
+		this.provideMaterials(EntityType.Bush, new MaterialInfo("bushDisposeAnimation",
+				new RenderState(EntityStates.DISPOSE), 32, 32, 10, true));
+		
+		
 		this.provideMaterials(EntityType.ContactMine, new MaterialInfo(
 				"contactMine", new RenderState(EntityStates.NONE), 32, 32, -1,
 				false));
