@@ -1,12 +1,12 @@
 package de.hochschuletrier.gdw.ws1314.network;
 
 public class ConnectionAttachment{
-	int id;
+	int playerId;
 	String playername;
 	long entityid;
 
-	public ConnectionAttachment(int id, String playername){
-		this.id = id;
+	public ConnectionAttachment(int playerId, String playername){
+		this.playerId = playerId;
 		this.playername = playername;
 	}
 
@@ -14,8 +14,8 @@ public class ConnectionAttachment{
 		this.entityid = entityid;
 	}
 
-	public int getId(){
-		return id;
+	public int getPlayerId(){
+		return playerId;
 	}
 
 	public String getPlayername(){

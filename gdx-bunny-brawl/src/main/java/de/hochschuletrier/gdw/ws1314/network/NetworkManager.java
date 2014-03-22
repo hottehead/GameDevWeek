@@ -57,6 +57,8 @@ public class NetworkManager{
 	
 	protected Deque<DespawnDatagram> pendingDespawns = new LinkedList<>();
 
+	private GameStateAckCallback gameStateAckCallback;
+
 	public float getPing(){
 		return ping;
 	}
@@ -238,6 +240,13 @@ public class NetworkManager{
 	public GameStateCallback getGameStateCallback(){
 		return gameStateCallback;
 	}
+	
+	/**
+	 * Serverseitig: der Client teilt dem Server den angenommenen GameState mit
+	 */
+	public GameStateAckCallback getGameStateAckCallback(){
+		return gameStateAckCallback;
+	}
 
 	public String getMyIp(){
 		try{
@@ -276,6 +285,10 @@ public class NetworkManager{
 	public void setGameStateCallback(GameStateCallback gameStateCallback){
 		this.gameStateCallback = gameStateCallback;
 	}
+	
+	public void setGameStateAckCallback(GameStateAckCallback gameStateAckCallback){
+		this.gameStateAckCallback = gameStateAckCallback;
+	}
 
 	public boolean isServer(){
 		return serverConnections != null && serverReception != null && serverReception.isRunning();
@@ -304,10 +317,15 @@ public class NetworkManager{
 		if(!isServer()) return;
 		broadcastToClients(new GameStateDatagram(gameStates));
 	}
+	
+	public void sendGameStateAck(GameStates gameStates){
+		if(!isClient()) return;
+		clientConnection.send(new GameStateDatagram(gameStates));
+	}
 
 	private void sendClientId(NetConnection con){
 		if(!isServer()) return;
-		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getId()));
+		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getPlayerId()));
 	}
 
 	public void sendMatchUpdate(String map){
@@ -467,7 +485,7 @@ public class NetworkManager{
 					serverConnections.remove(rc);
 					logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
 					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
-					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
+					ids.add(((ConnectionAttachment) rc.getAttachment()).getPlayerId());
 				}
 				if(this.playerdisconnectcallback != null){
 					this.playerdisconnectcallback.playerDisconnectCallback(ids.toArray(new Integer[ids.size()]));
@@ -514,7 +532,7 @@ public class NetworkManager{
 	public void setPlayerEntityId(int playerId, long entityId){
 		for(NetConnection nc : serverConnections){
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
-			if(tmp.getId() == playerId){
+			if(tmp.getPlayerId() == playerId){
 				tmp.setEntityId(entityId);
 				nc.send(new EntityIDDatagram(entityId));
 				break;
