@@ -25,13 +25,14 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyManager.class);
 	
 	private HashMap<Integer, PlayerData> players;
-	private String map = "map01";
+	private String map;
 	private ArrayList<IServerLobbyListener> listener;
 	
 	public ServerLobbyManager()
 	{
 		this.players = new HashMap<>();
 		this.listener = new ArrayList<>();
+		this.map = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		NetworkManager.getInstance().setPlayerUpdateCallback(this);
 		NetworkManager.getInstance().setPlayerDisconnectCallback(this);
 		

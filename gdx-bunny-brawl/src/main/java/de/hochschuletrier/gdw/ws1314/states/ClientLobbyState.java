@@ -7,6 +7,7 @@ import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
@@ -71,6 +72,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		{
 			
 			((ClientGamePlayState) gameStates.get()).setMapName(this.clientLobby.getMap());
+			ClientEntityManager.getInstance().setPlayerData(this.clientLobby.getPlayerData());
 			gameStates.init(assetManager);
 			gameStates.activate();
 			logger.info("ClientGamePlayState activated.");

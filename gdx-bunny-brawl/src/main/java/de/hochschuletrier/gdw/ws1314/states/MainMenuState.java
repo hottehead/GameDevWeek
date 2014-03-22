@@ -40,8 +40,9 @@ public class MainMenuState extends GameState {
     @Override
     public void init(AssetManagerX assetManager) {
         super.init(assetManager);
+        
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
-      
+		
         stage = new MainMenuStage();
 		stage.init(assetManager);
 		
