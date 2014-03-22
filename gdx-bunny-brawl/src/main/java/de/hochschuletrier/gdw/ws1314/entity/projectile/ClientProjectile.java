@@ -37,36 +37,6 @@ public class ClientProjectile extends ClientEntity {
 
     @Override
     public void doEvent(EventType event) {
-		switch (event){
-			case WALK_UP:
-				direction = FacingDirection.UP;
-				break;
-			case WALK_UP_LEFT:
-				direction = FacingDirection.UP_LEFT;
-				break;
-			case WALK_LEFT:
-				direction = FacingDirection.LEFT;
-				break;
-			case WALK_DOWN_LEFT:
-				direction = FacingDirection.DOWN_LEFT;
-				break;
-			case WALK_DOWN:
-				direction = FacingDirection.DOWN;
-				break;
-			case WALK_DOWN_RIGHT:
-				direction = FacingDirection.DOWN_RIGHT;
-				break;
-			case WALK_RIGHT:
-				direction = FacingDirection.RIGHT;
-				break;
-			case WALK_UP_RIGHT:
-				direction = FacingDirection.UP_RIGHT;
-				break;
-
-		}
-
-
-
     }
 
 	@Override
