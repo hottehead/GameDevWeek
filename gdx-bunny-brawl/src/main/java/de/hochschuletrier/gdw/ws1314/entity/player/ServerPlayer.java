@@ -529,7 +529,7 @@ public void endContact(Contact contact) {
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 4.0f, new Vector2(0, HEIGHT / 4.0f))
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 16.0f))
             .sensor(true));
 
 		body.setGravityScale(0);
