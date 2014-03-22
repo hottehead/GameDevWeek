@@ -1,11 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
@@ -59,7 +59,6 @@ public class ClientPlayer extends ClientEntity
     		LocalSound.getInstance().playSoundByAction(event, this);
 
 
-   		this.activeAction = event; 
 
 		/*if(event == EventType.WALK_LEFT){
 			facingDirection = FacingDirection.LEFT;

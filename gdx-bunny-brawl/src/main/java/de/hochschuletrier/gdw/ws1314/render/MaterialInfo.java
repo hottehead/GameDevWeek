@@ -1,6 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
-import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 
 public class MaterialInfo {
 	final protected String textureName;
@@ -8,16 +8,16 @@ public class MaterialInfo {
 	final protected int layer;
 	final protected boolean isAnimation;
 	
-	final protected EventType stateUsed;
+	final protected EntityStates stateUsed;
 	
 	final String shaderVertPath;
 	final String shaderFragPath;
 	
-	public MaterialInfo(String textureName, EventType stateUsed, float width, float height, int layer, boolean isAnimation) {
+	public MaterialInfo(String textureName, EntityStates stateUsed, float width, float height, int layer, boolean isAnimation) {
 		this(textureName, stateUsed, width, height, layer, isAnimation, null, null);
 	}
 	
-	public MaterialInfo(String textureName, EventType stateUsed, float width, float height, int layer, boolean isAnimation, String shaderVertPath, String shaderFrag) {
+	public MaterialInfo(String textureName, EntityStates stateUsed, float width, float height, int layer, boolean isAnimation, String shaderVertPath, String shaderFrag) {
 		this.textureName = textureName;
 		this.width = width;
 		this.height = height;

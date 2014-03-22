@@ -6,15 +6,17 @@ import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
-import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientLevelObject;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 
 public class RenderObject implements Comparable<RenderObject> {
 
 	protected ClientEntity entity;
-	protected HashMap<EventType, Material> materialAtlas;
+	protected HashMap<EntityStates, Material> materialAtlas;
 	float stateTime;
 	
-	public RenderObject(HashMap<EventType, Material> material, ClientEntity entity) {
+	public RenderObject(HashMap<EntityStates, Material> material, ClientEntity entity) {
 		this.entity = entity;
 		this.materialAtlas = material;
 		stateTime = 0;
@@ -27,24 +29,34 @@ public class RenderObject implements Comparable<RenderObject> {
 	
 	@Override
 	public int compareTo(RenderObject o) {
-		Material activeMaterialThis = materialAtlas.get(entity.activeAction);
-		Material activeMaterialOther= o.materialAtlas.get(entity.activeAction);
+		Material activeMaterialThis = materialAtlas.get(this.getActiveState());
+		Material activeMaterialOther= o.materialAtlas.get(o.getActiveState());
 		return activeMaterialThis.compareTo(activeMaterialOther);
+	}
+	
+	protected EntityStates getActiveState() {
+		if(this.entity instanceof ClientPlayer) {
+			return ((ClientPlayer)entity).getCurrentPlayerState();
+		}
+		if(this.entity instanceof ClientLevelObject) {
+			return ((ClientLevelObject)entity).getLevelObjectState();
+		}
+		return EntityStates.NONE;
 	}
 	
 	public Material getActiveMaterial() {
 		if(materialAtlas!=null) {
-			if(materialAtlas.containsKey(entity.activeAction)) {
-				return materialAtlas.get(entity.activeAction);
+			if(materialAtlas.containsKey(this.getActiveState())) {
+				return materialAtlas.get(this.getActiveState());
 			}
-			if(materialAtlas.containsKey(EventType.ANY)) {
-				return materialAtlas.get(EventType.ANY);
+			if(materialAtlas.containsKey(EntityStates.NONE)) {
+				return materialAtlas.get(EntityStates.NONE);
 			}
 		}
 		return null; // no entry found use debug
 	}
 	
 	public TextureRegion getActiveTexture() {
-		return materialAtlas.get(entity.activeAction).getActiveTexture(entity.getStateTime());
+		return materialAtlas.get(this.getActiveState()).getActiveTexture(entity.getStateTime());
 	}
 }
