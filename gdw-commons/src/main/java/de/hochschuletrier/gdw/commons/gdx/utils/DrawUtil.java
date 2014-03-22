@@ -67,6 +67,7 @@ public class DrawUtil {
 		camera.update(true);
 		
 		screenSpace.setToOrtho(true, width, height);
+		screenSpace.position.set(width * 0.5f, height * 0.5f, 0);
 		screenSpace.update(true);
 	}
 
