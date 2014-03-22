@@ -25,7 +25,7 @@ public class GameplayStage extends AutoResizeStage {
 	private MinMaxValue fpsValue;
 	private DynamicTextElement fpsCounter;
 
-	private int MaxHealth = 100;
+	private int maxHealth = 100;
 	
 	private HealthBar healthBar;
 	private VisualBox classIcon;
@@ -62,7 +62,7 @@ public class GameplayStage extends AutoResizeStage {
 		fpsCounter.setDecimalPLace(3);
 		
 		//healthbar
-		healthBar = new HealthBar(100);
+		healthBar = new HealthBar(maxHealth);
 		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight()-60, 250, 40);
 		healthBar.setDecimalSpace(2);
 		
