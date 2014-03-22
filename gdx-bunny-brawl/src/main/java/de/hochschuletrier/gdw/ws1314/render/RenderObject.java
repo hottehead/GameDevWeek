@@ -40,10 +40,13 @@ public class RenderObject implements Comparable<RenderObject> {
 	
 	protected RenderState getActiveState() {
 		if(this.entity instanceof ClientPlayer) {
-			stateStorage.setState(((ClientPlayer)entity).getCurrentPlayerState(), entity.getFacingDirection());
+			ClientPlayer playerEntity = (ClientPlayer)entity;
+			stateStorage.setState(playerEntity.getCurrentPlayerState(), entity.getFacingDirection());
+			
 		}
 		if(this.entity instanceof ClientLevelObject) {
-			stateStorage.setState(((ClientLevelObject)entity).getLevelObjectState(), entity.getFacingDirection());
+			ClientLevelObject levelEntity = (ClientLevelObject)entity;
+			stateStorage.setState(levelEntity.getLevelObjectState(), entity.getFacingDirection());
 		}
 		if(this.entity instanceof ClientProjectile) {
 			stateStorage.setState(EntityStates.NONE, entity.getFacingDirection());

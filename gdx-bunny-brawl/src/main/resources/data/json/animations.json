@@ -267,7 +267,7 @@
 	"hunterWhiteAttackDown": {
         "filename": "data/animations/HunterWhite_AttackDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2, 0.2 ] ,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
         "columns": 6,
         "rows" : 1

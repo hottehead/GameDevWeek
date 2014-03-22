@@ -8,6 +8,7 @@ public class RenderState {
 	public EntityStates state;
 	public FacingDirection facing;
 	
+	
 	boolean requiresFacing;
 	
 	protected RenderState() {

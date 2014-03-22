@@ -37,8 +37,6 @@ public class EntityRenderer extends Pool<RenderObject> implements
 				float dh = activeMat.height * 0.5f;
 				float dw = activeMat.width * 0.5f;
 				
-				
-				
 				TextureRegion texPtr = obj.getActiveTexture();
 				DrawUtil.batch.draw(texPtr, pos.x - dw, pos.y + dh, dw, -dh,
 							activeMat.width, -activeMat.height, 1, 1,
