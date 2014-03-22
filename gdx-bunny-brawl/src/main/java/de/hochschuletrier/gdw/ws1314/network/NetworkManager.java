@@ -411,7 +411,8 @@ public class NetworkManager{
 				broadcastToClients(new PlayerReplicationDatagram((ServerPlayer) entity));
 			}
 			else if(entity instanceof Zone){
-				//Intentionally ignored. //TODO implement this
+				//Intentionally ignored. 
+				//Nothing more required here, zones need no replication to the client.
 			}
 			else{
 				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
