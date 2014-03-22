@@ -21,6 +21,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.TrueTypeFont;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.AnimationExtendedLoader;
 import de.hochschuletrier.gdw.commons.gdx.assets.loaders.TiledMapLoader.TiledMapParameter;
 import de.hochschuletrier.gdw.commons.gdx.devcon.DevConsoleView;
+import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.state.StateBasedGame;
 import de.hochschuletrier.gdw.commons.gdx.state.transition.SplitVerticalTransition;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -33,7 +34,15 @@ import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
+import de.hochschuletrier.gdw.ws1314.states.ClientGamePlayState;
+import de.hochschuletrier.gdw.ws1314.states.ClientLobbyState;
+import de.hochschuletrier.gdw.ws1314.states.DualGamePlayState;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
+import de.hochschuletrier.gdw.ws1314.states.LoadGameState;
+import de.hochschuletrier.gdw.ws1314.states.MainMenuState;
+import de.hochschuletrier.gdw.ws1314.states.ServerGamePlayState;
+import de.hochschuletrier.gdw.ws1314.states.ServerLobbyState;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,6 +196,12 @@ public class Main extends StateBasedGame {
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
+	    GameStates.SERVERLOBBY.init(assetManager);
+	    GameStates.CLIENTLOBBY.init(assetManager);
+	    GameStates.SERVERGAMEPLAY.init(assetManager);
+	    GameStates.CLIENTGAMEPLAY.init(assetManager);
+	    GameStates.DUALGAMEPLAY.init(assetManager);
+	    GameStates.FINISHEDGAME.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
