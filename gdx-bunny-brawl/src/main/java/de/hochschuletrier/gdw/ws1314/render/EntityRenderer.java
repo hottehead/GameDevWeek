@@ -1,6 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.render;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,7 +23,7 @@ public class EntityRenderer extends Pool<RenderObject> implements
 	}
 
 	public void draw() {
-//		Collections.sort(renderList);
+		Collections.sort(renderList);
 
 		for (RenderObject obj : this.renderList) {
 			float rot = obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees;

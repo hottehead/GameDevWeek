@@ -6,11 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
-import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
-import de.hochschuletrier.gdw.ws1314.render.materials.ArrowMaterial;
-import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterials;
+import de.hochschuletrier.gdw.ws1314.render.materials.ArrowMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.BushMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.CarrotMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.CloverMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.ContactMineMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.EggMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.KnightMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.SwitchMaterialDef;
 
 public class MaterialManager {
 	private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
@@ -28,39 +33,19 @@ public class MaterialManager {
 		dbgMaterial = new Material(assetManager, new MaterialInfo("fallback",
 				RenderState.NONE, 32, 32, Integer.MAX_VALUE, false));
 
-		this.provideMaterials(EntityType.Tank, new MaterialInfo(
-				"knightWhiteIdleDown", new RenderState(EntityStates.IDLE,
-						FacingDirection.DOWN), 110, 110, 1, true),
-				new MaterialInfo("hunterWhiteWalkLeft", new RenderState(
-						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
-						1, true));
-
-		this.provideMaterials(EntityType.Hunter, new HunterMaterials().get());
-
-//		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
-//				"arrow", new RenderState(EntityStates.NONE), 38, 6, 1,
-//				false));
-		this.provideMaterials(EntityType.Projectil, new ArrowMaterial().get());
-		this.provideMaterials(EntityType.Carrot, new MaterialInfo("carrot",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Ei, new MaterialInfo("egg",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Spinach, new MaterialInfo("spinach",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.BridgeSwitch,
-				new MaterialInfo("switch", new RenderState(EntityStates.NONE),
-						32, 32, -1, false));
-		this.provideMaterials(EntityType.Clover, new MaterialInfo("clover",
-				new RenderState(EntityStates.NONE), 32, 32, -1, false));
-		this.provideMaterials(EntityType.Bush, new MaterialInfo("bush",
-				new RenderState(EntityStates.NONE), 32, 32, 10, false));
-		this.provideMaterials(EntityType.Bush, new MaterialInfo("bushDisposeAnimation",
-				new RenderState(EntityStates.DISPOSE), 32, 32, 10, true));
+		this.provideMaterials(EntityType.Tank, new KnightMaterialDef().get());
+		this.provideMaterials(EntityType.Hunter, new HunterMaterialDef().get());
 		
+		this.provideMaterials(EntityType.Projectil, new ArrowMaterialDef().get());
+
+		this.provideMaterials(EntityType.BridgeSwitch, new SwitchMaterialDef().get());
 		
-		this.provideMaterials(EntityType.ContactMine, new MaterialInfo(
-				"contactMine", new RenderState(EntityStates.NONE), 32, 32, -1,
-				false));
+		this.provideMaterials(EntityType.Carrot, new CarrotMaterialDef().get());
+		this.provideMaterials(EntityType.Ei, new EggMaterialDef().get());
+		this.provideMaterials(EntityType.Spinach, new SpinachMaterialDef().get());
+		this.provideMaterials(EntityType.Clover, new CloverMaterialDef().get());
+		this.provideMaterials(EntityType.Bush, new BushMaterialDef().get());
+		this.provideMaterials(EntityType.ContactMine, new ContactMineMaterialDef().get());
 
 	}
 
@@ -83,8 +68,8 @@ public class MaterialManager {
 				}
 			}
 			map.get(entityType).put(materialInfo.stateUsed, material);
-			logger.info("Setting " + entityType.name()
-					+ " material for " + materialInfo.stateUsed);
+//			logger.info("Setting " + entityType.name()
+//					+ " material for " + materialInfo.stateUsed);
 		}
 	}
 

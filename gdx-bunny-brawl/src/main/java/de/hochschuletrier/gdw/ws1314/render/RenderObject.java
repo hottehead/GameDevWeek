@@ -33,8 +33,30 @@ public class RenderObject implements Comparable<RenderObject> {
 	
 	@Override
 	public int compareTo(RenderObject o) {
+		final int GREATER_THAN = 1;
+		final int EQUAL_TO = 0;
+		final int LESS_THAN = -1;
+		if(materialAtlas==null) {
+			return GREATER_THAN;
+		}
+		if(o.materialAtlas==null) {
+			return LESS_THAN;
+		}
 		Material activeMaterialThis = materialAtlas.get(this.getActiveState());
 		Material activeMaterialOther= o.materialAtlas.get(o.getActiveState());
+		if(activeMaterialThis==null) {
+			return GREATER_THAN;
+		}
+		if(activeMaterialOther==null) {
+			return LESS_THAN;
+		}
+		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f > o.entity.getPosition().y + activeMaterialOther.height*0.5f) {
+			return GREATER_THAN;
+		}
+		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f < o.entity.getPosition().y +  + activeMaterialOther.height*0.5f) {
+			return LESS_THAN;
+		}
+		
 		return activeMaterialThis.compareTo(activeMaterialOther);
 	}
 	
