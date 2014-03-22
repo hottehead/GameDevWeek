@@ -52,4 +52,8 @@ public abstract class ClientLevelObject extends ClientEntity
 
 			entityState = state;
 	}
+	
+	public boolean getVisible() {
+		return isVisible;
+	}
 }

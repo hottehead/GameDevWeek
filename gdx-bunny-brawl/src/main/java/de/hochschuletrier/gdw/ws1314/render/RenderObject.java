@@ -95,4 +95,11 @@ public class RenderObject implements Comparable<RenderObject> {
 		Material material = materialAtlas.get(this.getActiveState());
 		return material.getActiveTexture(entity.getStateTime());
 	}
+
+	public boolean isVisible() {
+		if(entity instanceof ClientLevelObject) {
+			return ((ClientLevelObject)entity).getVisible();
+		}
+		return true;
+	}
 }

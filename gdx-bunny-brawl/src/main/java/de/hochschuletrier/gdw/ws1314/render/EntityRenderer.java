@@ -26,28 +26,29 @@ public class EntityRenderer extends Pool<RenderObject> implements
 		Collections.sort(renderList);
 
 		for (RenderObject obj : this.renderList) {
-			float rot = obj.entity.getFacingDirection().getAngle() * MathUtils.radiansToDegrees;
-			if(obj.entity instanceof ClientPlayer) {
-				rot = 0;
-			}
-			Material activeMat = obj.getActiveMaterial();
-			Vector2 pos = obj.entity.getPosition();
-			if(activeMat!=null) {
+			if (obj.isVisible()) {
+				float rot = obj.entity.getFacingDirection().getAngle()
+						* MathUtils.radiansToDegrees;
+				if (obj.entity instanceof ClientPlayer) {
+					rot = 0;
+				}
+				Material activeMat = obj.getActiveMaterial();
+				Vector2 pos = obj.entity.getPosition();
+				if (activeMat != null) {
 
-				float dh = activeMat.height * 0.5f;
-				float dw = activeMat.width * 0.5f;
-				
-				TextureRegion texPtr = obj.getActiveTexture();
-				DrawUtil.batch.draw(texPtr, pos.x - dw, pos.y + dh, dw, -dh,
-							activeMat.width, -activeMat.height, 1, 1,
-							rot);
-			}
-			else {
-				Material m = MaterialManager.dbgMaterial;
-				
-				
-				DrawUtil.batch.draw(m.texture, pos.x - m.width*0.5f, pos.y + m.height*0.5f , m.width*0.5f, -m.height*0.5f,
-						m.width, -m.height, 1, 1, 0);
+					float dh = activeMat.height * 0.5f;
+					float dw = activeMat.width * 0.5f;
+
+					TextureRegion texPtr = obj.getActiveTexture();
+					DrawUtil.batch.draw(texPtr, pos.x - dw, pos.y + dh, dw,
+							-dh, activeMat.width, -activeMat.height, 1, 1, rot);
+				} else {
+					Material m = MaterialManager.dbgMaterial;
+
+					DrawUtil.batch.draw(m.texture, pos.x - m.width * 0.5f,
+							pos.y + m.height * 0.5f, m.width * 0.5f,
+							-m.height * 0.5f, m.width, -m.height, 1, 1, 0);
+				}
 			}
 		}
 	}
