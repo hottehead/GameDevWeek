@@ -180,7 +180,7 @@ public class ServerEntityManager {
     	this.entityList.clear();
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
-    	gameInfo=new GameInfo();
+    	gameInfo.clear();
     	// classMap und identifier brauchen nicht neu erstellt zu werden!?
     }
 
