@@ -31,7 +31,7 @@ public class MaterialManager {
 						EntityStates.WALKING, FacingDirection.LEFT), 110, 110,
 						1, true));
 
-		this.provideMaterials(EntityType.Hunter, HunterMaterials.build());
+		this.provideMaterials(EntityType.Hunter, new HunterMaterials(110, 74, 1).get());
 
 		this.provideMaterials(EntityType.Projectil, new MaterialInfo(
 				"debugArrow", new RenderState(EntityStates.NONE), 64, 64, 1,
@@ -68,6 +68,9 @@ public class MaterialManager {
 				material.putInfo(assetManager, materialInfo);
 			} else {
 				material = new Material(assetManager, materialInfo);
+				if(material==null) {
+					System.out.println("Material name inconsistency! "+materialInfo.textureName+" of "+entityType.toString());
+				}
 				if (map.get(entityType) == null) {
 					map.put(entityType, new HashMap<RenderState, Material>());
 				}
