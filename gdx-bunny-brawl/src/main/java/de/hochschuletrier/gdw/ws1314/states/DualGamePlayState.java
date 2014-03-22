@@ -71,6 +71,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (!isClientInitialized) return;
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		clientGame.render();
+		this.serverGame.getManager().render();
 	}
 
 	@Override
