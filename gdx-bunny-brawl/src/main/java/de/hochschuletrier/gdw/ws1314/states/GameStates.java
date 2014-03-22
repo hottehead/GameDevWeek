@@ -11,12 +11,11 @@ public enum GameStates {
 
     LOADING(new LoadGameState()),
     MAINMENU(new MainMenuState()),
-    STARTSERVER(new StartServerState()),
-    SERVERLOBBY (new ServerLobbyState()), //new
-    SERVERGAMEPLAY (new ServerGamePlayState()), //new
-    CLIENTGAMEPLAY (new ClientGamePlayState()), //new
-    CLIENTLOBBY (new ClientLobbyState()), //new
-    LOBBY(new LobbyState()),
+    STARTSERVER(new StartServerState()), //map changing
+    SERVERLOBBY (new ServerLobbyState()), //waiting for players
+    SERVERGAMEPLAY (new ServerGamePlayState()), //server is running
+    CLIENTGAMEPLAY (new ClientGamePlayState()), //client is playing
+    CLIENTLOBBY (new ClientLobbyState()), //client connects to server lobby
     CREDITS(new CreditState()),
     OPTIONS(new OptionState()),
 	DUALGAMEPLAY (new DualGamePlayState()),
