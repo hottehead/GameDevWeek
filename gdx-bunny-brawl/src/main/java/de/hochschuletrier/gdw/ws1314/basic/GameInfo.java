@@ -99,14 +99,17 @@ public class GameInfo {
 	public void scoreBlack(){
 		teamPointsBlack++;
 		remainigEggs--;
+		sendUpdate();
 	}
 	
 	public void scoreWhite(){
 		teamPointsWhite++;
 		remainigEggs--;
+		sendUpdate();
 	}
 	
 	public void incrementRemaining(){
 		remainigEggs++;
+		sendUpdate();
 	}
 }
