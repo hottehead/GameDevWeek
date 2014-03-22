@@ -252,13 +252,7 @@ public class Main extends StateBasedGame {
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
-
-		try {
-			new LwjglApplication(getInstance(), cfg);
-		} catch (Exception e) {
-			getInstance().dispose();
-			e.printStackTrace();
-			System.exit(0);
-		}
+		
+		new LwjglApplication(getInstance(), cfg);
 	}
 }
