@@ -53,7 +53,13 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		// TODO: Temporär nur zum localen Testen
         if (!NetworkManager.getInstance().isServer())
         {
-        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), 10);
+			int port;
+			if(Main.port > 0){
+				port = Main.port;
+			} else {
+				port = NetworkManager.getInstance().getDefaultPort();
+			}
+        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
         }
         
         NetworkManager.getInstance().setDisconnectCallback(this);
