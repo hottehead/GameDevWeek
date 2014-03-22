@@ -1,5 +1,11 @@
 package de.hochschuletrier.gdw.ws1314;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -36,12 +42,6 @@ import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
 import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -191,6 +191,12 @@ public class Main extends StateBasedGame {
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
+	    GameStates.SERVERLOBBY.init(assetManager);
+	    GameStates.CLIENTLOBBY.init(assetManager);
+	    GameStates.SERVERGAMEPLAY.init(assetManager);
+	    GameStates.CLIENTGAMEPLAY.init(assetManager);
+	    GameStates.DUALGAMEPLAY.init(assetManager);
+	    GameStates.FINISHEDGAME.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
