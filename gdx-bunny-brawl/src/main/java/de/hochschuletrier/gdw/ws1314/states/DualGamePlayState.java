@@ -42,7 +42,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
     private List<PlayerData> playerDatas = null;
     
-    private String mapName;
+    private String mapName = "map07";
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
@@ -97,8 +97,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (this.stateMusic.isMusicPlaying()) 
 			this.stateMusic.setFade('i', 2500);
 		
-		stateSound = LocalSound.getInstance();
-		stateSound.init(assetManager);
+		/*stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);*/
 		
 		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		

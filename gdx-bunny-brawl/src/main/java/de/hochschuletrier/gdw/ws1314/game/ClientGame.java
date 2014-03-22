@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -20,9 +19,11 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -30,7 +31,7 @@ import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
 import de.hochschuletrier.gdw.ws1314.render.MaterialManager;
-import de.hochschuletrier.gdw.ws1314.shaders.DoubleBufferFBO;
+import de.hochschuletrier.gdw.ws1314.shaders.FrameBufferFBO;
 import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 
 /**
@@ -48,18 +49,24 @@ public class ClientGame {
 	private InputHandler inputHandler;
 	private EntityRenderer entityRenderer; 
 
-	private DoubleBufferFBO sceneToTexture;
+	private FrameBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
 
 	private GameplayStage stage;
+        private int scoreBlack;
+        private int scoreWhite;
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
+                scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
+                scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
 		netManager = NetworkManager.getInstance();
 		
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
+		
+		
 		
 	}
 
@@ -104,8 +111,9 @@ public class ClientGame {
 		
 		entityManager.provideListener(entityRenderer);
 
-		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888,
+		sceneToTexture = new FrameBufferFBO(Format.RGBA8888,
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		Main.getInstance().addScreenListener(sceneToTexture);
 
 		postProcessing = new TextureAdvection("data/shaders/post.vert",
 				"data/shaders/post.frag");
@@ -120,7 +128,6 @@ public class ClientGame {
 	public void render() {
 		sceneToTexture.begin();
 		DrawUtil.batch.setShader(advShader);
-		sceneToTexture.bindOtherBufferTo(GL20.GL_TEXTURE1);
 		for (Layer layer : map.getLayers()) {
 			if (layer.getType() == Layer.Type.OBJECT
 					&& layer.getBooleanProperty("renderEntities", false)) {
@@ -162,6 +169,14 @@ public class ClientGame {
 		
 		stage.setFPSCounter(delta);
 		stage.step();
+                if (scoreBlack < entityManager.getGameInfo().getTeamPointsBlack()) {
+                    stage.advanceScoreOwnTeam();
+                    scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
+                }
+                if (scoreWhite < entityManager.getGameInfo().getTeamPointsWhite()) {
+                    stage.advanceScoreEnemeyTeam();
+                    scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
+                }
 	}
 
 	public TiledMap loadMap(String filename) {

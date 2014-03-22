@@ -50,14 +50,14 @@ public class RenderObject implements Comparable<RenderObject> {
 		if(activeMaterialOther==null) {
 			return LESS_THAN;
 		}
-		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f > o.entity.getPosition().y + activeMaterialOther.height*0.5f) {
-			return GREATER_THAN;
-		}
-		if(this.entity.getPosition().y + activeMaterialThis.height*0.5f < o.entity.getPosition().y +  + activeMaterialOther.height*0.5f) {
-			return LESS_THAN;
-		}
+
+		float thisTop = this.entity.getPosition().y - activeMaterialThis.height*0.5f;
+		float thisBot = this.entity.getPosition().y + activeMaterialThis.height*0.5f;
+		float otherTop = o.entity.getPosition().y - activeMaterialOther.height*0.5f;
+		float otherBot = o.entity.getPosition().y + activeMaterialOther.height*0.5f;
 		
 		return activeMaterialThis.compareTo(activeMaterialOther);
+		
 	}
 	
 	protected RenderState getActiveState() {
