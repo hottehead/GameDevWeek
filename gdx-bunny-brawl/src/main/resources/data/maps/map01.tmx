@@ -140,7 +140,7 @@
  </tileset>
  <layer name="Groundlayer (Rand, Wand, Terrain)" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   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
+   eJzdmVuSDEEUhnMHddkAVsCwAIYFIAKvowfjcdwtAyvACrACYQXYkeyIPhFff3OyunrahBgPf3RdMrPyP5f/nKp+V0p5f87xoeJjxadzjs8VXyq+nnN8q/heMa7QVwz6JZbX7lXcr3hQ0a0wru4Nq2Ne61fnw+q31/hOz+C8AfA68azl9R8rHl1Z34fXiLnLe48rnlQcYe0e88Im3KP50i5j47gr6/uwjfkc8vCe7J9Aiwdt1mnNMVkzzsmRz8/WoD1pO/tj1O+gOYN4XKi4uAGXYINOx94/r43JHHLnmODBcVwrm08elyuubMBeWY9p7oG+9n3uP8sT7os8Rq3nfIpz8rhecaOBm+DB+bYvr9Nezk/6gXZmfoQGzcFT8OAzHbPhK/JgrDufPd85Tn+19CpsvA2OEn8xRsijw33GNf3iHMrGZPnBuDotD+7J6wePa2WzFrQQGuGa1NLdVxWvt8Sbsu5n6+8cDZijEdZbc+jKSd3NfGxdd2y4NsS1KQ2YQuhD8LCWMnfi2HrFvGIOZ1psnlkuZ/XVcdEJ9ONeyWO303HwcJ8T57cr7myBu+Lh+t2qI7yX8XA/Qvu4L7FGLzkcVjzcAo/Axeu5PllfY2/m0ZfcFlybPGin03AgF/uGezU3+8c8sr6b69kfu/ihxeduYnfGnWvc0ODhGHQ/xvyIZx1s2N/LimcJXkxwsb/HBHP8Qd9Sf6xX4wYeSw7PS94HHzf4LMq8vjhwFTzm1NBL5aQ/ugkewYF5Sh0Nex6Ly6L8nZo4VSvJI9DisSgnY5kxTj06KP+GB/cxxWNTnxr15lDztqntUc9vzRy/X07WwSl/UH86zZnS6kVZ10P70e8Z7JMZv9a7rA5yzFSeR23I0NLqRVnPIdd795p+b8lqZcD9Lu2zSXfngNr8XDalDzLfkgfHtmog6zl9vSuP0DVqvmsH64D7QL9/UT/YG/Y493efKX+06p8R9cXPpkbTbo5/50cWg+5/GVdz9cpa676PuszYZ147v6kD9kfWk7g3J4/YQ9TlzM60Lddyb9FrDJ9tnXP8tfzheMr6RMZqy060vfs7x3pmc+eF/RQwjwx8NuNqm/7nrBH91dzvE+yvzrJvOGuwL/lfeJz228ZZYJf+apvvonOw/I/H+kxNZH633mv3yrreZnUntGGX74lzvzVSx6h51LNWPR+TcRmXXb4nGm/FgzWE+7QP3P9m/nANsA77/w9qe1Zv7GOCPuU3bNsv6+H70vaH6/mQXDcPx7Pj0t8rpnhwPb8vDDpmLXS/67m9xpuH31Xcw2X74P2MB/Pa/UAnhM3cX5mz/Zf1V5mdMj62Sdfg4R6V/nWvF79Zn+j+yHb3+0cWC5nt3Pe1/OH3hGz/g+633gen+Ph7SaYHXMPxyuvm0cov+8D2yvpE6oztRx7Oa8ZfpzmMF/rQPAbNNe+WFmd61dKIuJ797+y84LypPj3j4ZjJcs88W/XcviU38ugaY7x/+yP2mdUP65T9ybjK8rzXM60J7ktcq6xtWZ75nD3BG1x3LWZ9z2pT9Kz7sqdzijG35PGz4tc5x++KPzWlG14=
   </data>
  </layer>
  <layer name="Zonelayer (hohes Gras, Start)" width="50" height="50">
@@ -226,7 +226,6 @@
   <object gid="5" x="416" y="480"/>
   <object gid="5" x="416" y="704"/>
   <object gid="272" x="800" y="1472"/>
-  <object gid="273" x="640" y="384"/>
  </objectgroup>
  <objectgroup name="Zonenebene" width="50" height="50">
   <object type="water" x="160" y="608" width="160" height="352"/>
@@ -266,12 +265,12 @@
   <object x="32" y="320" height="32"/>
   <object type="hole" x="32" y="288" width="448" height="128"/>
   <object type="hole" x="384" y="96" width="96" height="192"/>
-  <object type="startb" x="896" y="1408" width="160" height="160">
+  <object type="startb" x="928" y="1376" width="160" height="160">
    <properties>
     <property name="direction" value="up"/>
    </properties>
   </object>
-  <object type="startw" x="1408" y="1408" width="160" height="160">
+  <object type="startw" x="1376" y="1376" width="160" height="160">
    <properties>
     <property name="direction" value="up"/>
    </properties>
