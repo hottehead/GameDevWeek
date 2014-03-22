@@ -9,6 +9,10 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.hud.ServerGamePlayStage;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
@@ -24,7 +28,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class ServerGamePlayState extends GameState implements InputProcessor, DisconnectCallback {
+public class ServerGamePlayState extends GameState implements InputProcessor, DisconnectCallback, GameInfoListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
     
 	private ServerGame game;
@@ -37,8 +41,11 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
     private DisconnectClick disconnectClickListener;
     
     private String mapName;
-    
-	public String getMapName() {
+
+	public ServerGamePlayState() {
+	}
+	
+    public String getMapName() {
 		return mapName;
 	}
 
@@ -46,10 +53,7 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
 		this.mapName = mapName;
 	}
 
-	public ServerGamePlayState() {
-	}
-
-    public void setPlayerDatas(List<PlayerData> playerDatas) {
+	public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
     }
 
@@ -68,7 +72,10 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
 
 	@Override
 	public void update(float delta) {
-		game.update(delta);
+		if (game != null) {
+			game.update(delta);
+		}
+		
 		fpsCalc.addFrame();
 	}
 
@@ -85,7 +92,7 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
         NetworkManager.getInstance().setDisconnectCallback(this);
         
         game = new ServerGame(playerDatas);
-		game.init(assetManager, mapName);
+		game.init(assetManager, this.mapName);
 		
 		Main.inputMultiplexer.addProcessor(this);
 		
@@ -163,9 +170,21 @@ public class ServerGamePlayState extends GameState implements InputProcessor, Di
 	}
 
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.info(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
+	}
+
+	@Override
+	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
+		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
+		
+		// WinningCondition HERE:
+		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
+		{
+			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
+			NetworkManager.getInstance().stopServer();
+		}
 	}
 }

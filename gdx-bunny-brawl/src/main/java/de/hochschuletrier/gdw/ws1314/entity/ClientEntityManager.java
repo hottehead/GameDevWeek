@@ -16,6 +16,7 @@ import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
+import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.render.ClientEntityManagerListener;
 
 /**
@@ -36,6 +37,8 @@ public class ClientEntityManager {
     private GameInfo gameInfo = new GameInfo();
 
     private long playerEntityID = -1;
+    
+    private PlayerData myPlayerData;
 
     protected ClientEntityManager(){
         entityList = new LinkedList<ClientEntity>();
@@ -57,6 +60,14 @@ public class ClientEntityManager {
     public GameInfo getGameInfo(){
 		return gameInfo;
 	}
+    
+    public PlayerData getPlayerData() {
+    	return this.myPlayerData;
+    }
+    public void setPlayerData(PlayerData myData) {
+    	myData.setEntityId(playerEntityID);
+    	this.myPlayerData = myData;
+    }
 
 	public ClientEntity createEntity(long id, Vector2 pos,EntityType type){
         ClientEntity e = null;
@@ -139,6 +150,10 @@ public class ClientEntityManager {
 
     public void setPlayerEntityID(long id) {
         playerEntityID = id;
+        
+        if (this.myPlayerData != null) {
+        	this.myPlayerData.setEntityId(id);
+    	}
     }
 
     public long getPlayerEntityID() {

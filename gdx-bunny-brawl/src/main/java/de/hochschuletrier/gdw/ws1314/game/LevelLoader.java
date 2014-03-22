@@ -117,6 +117,7 @@ public class LevelLoader {
                 for(Long bridgeID : bridgeIDs.get(bswitch.getKey()))
                 {
                     sbswitch.addTargetID(bridgeID);
+					((ServerBridge)entityManager.getEntityById(bridgeID)).setVisibility(sbswitch.getActivePropertys());
                 }
             }
 
