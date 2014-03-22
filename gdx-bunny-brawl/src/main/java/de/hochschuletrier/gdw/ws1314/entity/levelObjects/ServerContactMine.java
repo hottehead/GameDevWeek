@@ -68,14 +68,13 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				System.out.println(fixture2.isSensor());
-			
 				if (!fixture2.isSensor()) {
 					ServerPlayer player = (ServerPlayer) otherEntity;
 					if(!gotDamage){
 						player.applyDamage(DAMAGE);
 						gotDamage = true;
 					}
+					this.physicsBody.getBody().getFixtureList().get(1).getShape().setRadius(originRadius);
 				}
 			
 				break;
@@ -111,12 +110,10 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				System.out.println(fixture2.isSensor());
-			
 				if(this.getEntityState() == EntityStates.EXPLODING){
 					this.setEntityState(EntityStates.NONE);
+					this.physicsBody.getBody().getFixtureList().get(1).getShape().setRadius(originRadius);
 				}
-			
 				break;
 			default:
 				break;
