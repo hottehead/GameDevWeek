@@ -38,6 +38,7 @@ public class OptionState extends GameState {
     }
 
     public void onEnter() {
+    	stage.init(assetManager);
 	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
     }
@@ -48,6 +49,7 @@ public class OptionState extends GameState {
     public void onLeave() {
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
+		stage.clear();
     }
 
     public void onLeaveComplete() {

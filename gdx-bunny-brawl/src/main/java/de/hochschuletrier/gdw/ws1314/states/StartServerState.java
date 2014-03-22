@@ -42,6 +42,7 @@ public class StartServerState extends GameState {
     }
 
     public void onEnter() {
+    	stage.init(assetManager);
 	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
 		stage.getStartServerButton().addListener(startServerListener);
@@ -56,6 +57,7 @@ public class StartServerState extends GameState {
     	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
+		stage.clear();
     }
 
     public void onLeaveComplete() {
@@ -73,13 +75,17 @@ public class StartServerState extends GameState {
 	
 	private class StartServerListener extends ClickListener {
     	public void clicked(InputEvent event, float x, float y) {
-    		logger.info("TODO: Change state to ServerGameplay");
+			logger.info("Changing State to Server-Lobby...");
+			GameStates.SERVERLOBBY.init(assetManager);
+			GameStates.SERVERLOBBY.activate();
     	}
     }
 	
 	private class StartServerAndPlayListener extends ClickListener {
     	public void clicked(InputEvent event, float x, float y) {
-    		logger.info("TODO: change state to dualgameplay");
+    		logger.warn("Changing to DualGameplayState - to be removed");
+			GameStates.DUALGAMEPLAY.init(assetManager);
+			GameStates.DUALGAMEPLAY.activate();
     	}
     }
 }
