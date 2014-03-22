@@ -191,7 +191,7 @@
   <object gid="271" x="448" y="1024"/>
   <object gid="271" x="896" y="480"/>
  </objectgroup>
- <objectgroup name="Zonenebene" width="50" height="50" visible="0">
+ <objectgroup name="Zonenebene" width="50" height="50">
   <object type="hole" x="320" y="192" width="992" height="96"/>
   <object type="hole" x="320" y="416" width="96" height="608"/>
   <object type="hole" x="544" y="416" width="96" height="608"/>
@@ -217,7 +217,7 @@
    <property name="renderEntities" value="true"/>
   </properties>
  </objectgroup>
- <objectgroup name="Spielerebene (physikalische Zone)" width="50" height="50" visible="0">
+ <objectgroup name="Spielerebene (physikalische Zone)" width="50" height="50">
   <object type="solid" x="0" y="0" width="1600" height="96"/>
   <object type="solid" x="0" y="96" width="32" height="1504"/>
   <object type="solid" x="0" y="1568" width="1600" height="32"/>
@@ -239,6 +239,14 @@
   <object type="solid" x="960" y="672" width="32" height="32"/>
   <object type="solid" x="256" y="128" width="32" height="32"/>
   <object type="solid" x="224" y="128" width="32" height="32"/>
+  <object type="solid" x="1408" y="1147" width="64" height="9"/>
+  <object type="solid" x="1472" y="955" width="64" height="9"/>
+  <object type="solid" x="1472" y="571" width="64" height="9"/>
+  <object type="solid" x="1472" y="411" width="64" height="9"/>
+  <object type="solid" x="128" y="1179" width="64" height="9"/>
+  <object type="solid" x="65" y="955" width="64" height="9"/>
+  <object type="solid" x="64" y="571" width="64" height="9"/>
+  <object type="solid" x="64" y="411" width="64" height="9"/>
  </objectgroup>
  <layer name="Overlayer" width="50" height="50">
   <data encoding="base64" compression="zlib">
