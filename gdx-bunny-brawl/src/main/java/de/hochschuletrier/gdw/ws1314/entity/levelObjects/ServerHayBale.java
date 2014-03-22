@@ -84,18 +84,7 @@ public class ServerHayBale extends ServerLevelObject
 			case Hunter:
 			case Noob:
 			case Tank:
-				
-				if(!acrossable){
-				ServerPlayer player2 = (ServerPlayer) otherEntity;
-				
-				this.physicsBody.setLinearDamping(1);
-					if(speed > 0){
-						player2.applyDamage(10);
-					}
-				}else{
-					this.physicsBody.setLinearDamping(WATER_DAMPING);
-				}
-				speed = 0;
+
 				break;
 			default: 
 				this.acrossable = false;
@@ -111,6 +100,7 @@ public class ServerHayBale extends ServerLevelObject
         if(otherEntity == null){
             return;
         }
+        
         switch(otherEntity.getEntityType()) {
             case WaterZone:
                 this.physicsBody.setLinearDamping(0);
@@ -135,24 +125,24 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-            PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
-                .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
-                .fixedRotation(true).create();
-            body.setLinearDamping(NORMAL_DAMPING);
-            if(!acrossable){
-            	body.createFixture(new PhysixFixtureDef(manager)
-				.density(0.5f)
-				.friction(0.0f)
-				.restitution(0.0f)
-				.shapeBox(50,50));
-            }else{
-	            body.createFixture(new PhysixFixtureDef(manager)
-	            	.sensor(true)
-	            	.shapeBox(60,60));
-            }
-            body.setGravityScale(0);
-            body.addContactListener(this);
-            setPhysicsBody(body);
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
+            .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+            .fixedRotation(true).create();
+
+        
+    	body.createFixture(new PhysixFixtureDef(manager)
+		    .density(0.5f)
+		    .friction(0.0f)
+		    .restitution(0.0f)
+		    .shapeBox(50,50));
+        
+        body.setGravityScale(0);
+        body.addContactListener(this);
+        setPhysicsBody(body);
+	}
+	
+	public boolean isCrossable() {
+	    return this.acrossable;
 	}
 
 }
