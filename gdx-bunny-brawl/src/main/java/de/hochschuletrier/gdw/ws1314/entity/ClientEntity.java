@@ -11,8 +11,7 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
  */
 public abstract class ClientEntity
 {
-	public EventType 		activeAction = EventType.IDLE;
-	private float 			stateTime;
+	protected float 			stateTime;
 	private Vector2 		position;
 	protected FacingDirection direction;
 	private long 			id;

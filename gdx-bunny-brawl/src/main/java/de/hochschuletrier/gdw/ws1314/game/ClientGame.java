@@ -61,7 +61,7 @@ public class ClientGame {
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 
 	public void init(AssetManagerX assets) {
-		map = assets.getTiledMap("map02");
+		map = assets.getTiledMap("map01");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
 		for (TileSet tileset : map.getTileSets()) {

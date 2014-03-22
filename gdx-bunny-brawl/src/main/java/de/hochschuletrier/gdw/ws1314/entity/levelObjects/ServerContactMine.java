@@ -75,4 +75,10 @@ public class ServerContactMine extends ServerLevelObject
 		setPhysicsBody(body);
 	}
 
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
