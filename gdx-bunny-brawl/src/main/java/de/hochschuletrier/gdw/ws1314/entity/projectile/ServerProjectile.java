@@ -91,8 +91,8 @@ public class ServerProjectile extends ServerEntity {
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
         this.teamColor = player.getTeamColor();
-        setFacingDirection(player.getFacingDirection());
-        this.originPosition = player.getPosition();
+        this.setFacingDirection(player.getFacingDirection());
+        this.originPosition = player.getPosition().cpy();
 	}
 
 	public TeamColor getTeamColor() {
