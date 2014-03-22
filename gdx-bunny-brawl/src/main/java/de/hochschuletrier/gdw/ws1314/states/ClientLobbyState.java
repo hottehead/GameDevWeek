@@ -9,14 +9,11 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.hud.ClientLobbyStage;
-import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
-import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +62,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
     
     // GameStateCallback
 	@Override
-	public void callback(GameStates gameStates) {
+	public void gameStateCallback(GameStates gameStates) {
 		logger.info("GameStateChange received");
 		if (gameStates == GameStates.CLIENTGAMEPLAY)
 		{
@@ -218,7 +215,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	}
 	
 	@Override
-	public void callback(String msg) {
+	public void disconnectCallback(String msg) {
 		logger.warn(msg);
 		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();

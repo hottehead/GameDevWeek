@@ -130,7 +130,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(LobbyUpdateDatagram lobbyUpdateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getLobbyUpdateCallback().callback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
+		NetworkManager.getInstance().getLobbyUpdateCallback().lobbyUpateCallback(lobbyUpdateDatagram.getMap(), lobbyUpdateDatagram.getPlayers());
 	}
 
 	@Override
@@ -142,21 +142,27 @@ public class ClientDatagramHandler implements DatagramHandler{
 	public void handle(DespawnDatagram despawnDatagram, NetConnection connection){
 		ClientEntity entity = ClientEntityManager.getInstance().getEntityById(despawnDatagram.getEntityId());
 		if(entity == null){
-			logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			if(ClientEntityManager.getInstance().isPendingSpawn(despawnDatagram.getEntityId())){
+				NetworkManager.getInstance().pendingDespawns.add(despawnDatagram);
+			}
+			else{
+				logger.warn("Received DespawnDatagram for already non-existent entity {}.", despawnDatagram.getEntityId());
+			}
 			return;
 		}
+		logger.debug("Despawn entity {}",despawnDatagram.getEntityId());
 		ClientEntityManager.getInstance().removeEntity(entity);
 	}
 
 	@Override
 	public void handle(GameStateDatagram gameStateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getGameStateCallback().callback(gameStateDatagram.getGameStates());
+		NetworkManager.getInstance().getGameStateCallback().gameStateCallback(gameStateDatagram.getGameStates());
 	}
 
 	@Override
 	public void handle(ClientIdDatagram clientIdDatagram, NetConnection connection){
 		if (NetworkManager.getInstance().getClientIdCallback() != null)
-			NetworkManager.getInstance().getClientIdCallback().callback(clientIdDatagram.getPlayerId());
+			NetworkManager.getInstance().getClientIdCallback().clientIdCallback(clientIdDatagram.getPlayerId());
 	}
 
 	@Override
