@@ -141,8 +141,7 @@ public class ServerContactMine extends ServerLevelObject {
 		this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
 		if(this.getEntityState() == EntityStates.EXPLODING){
 			isActive = false;
-		}
-		else if (!isActive) {
+		}else if (!isActive) {
 			originRadius = manager.toBox2D(2.0f);
 			shape.setRadius(originRadius);
 			gotDamage = false;
@@ -162,8 +161,6 @@ public class ServerContactMine extends ServerLevelObject {
 							.setSensor(false);
 					shape.setRadius(originRadius);
 				}
-			}else{
-				this.setEntityState(EntityStates.NONE);
 			}
 			
 		}
