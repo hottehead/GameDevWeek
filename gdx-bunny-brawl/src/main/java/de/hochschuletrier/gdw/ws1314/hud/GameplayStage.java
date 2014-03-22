@@ -27,7 +27,8 @@ public class GameplayStage extends AutoResizeStage {
 
 	private HealthBar healthBar;
 	private VisualBox classIcon;
-
+	StaticTextElement classIconText;
+	
 	private VisualBox buff1, buff2, buff3;
 
 	private VisualBox attackIcon, layEggIcon;
@@ -54,7 +55,7 @@ public class GameplayStage extends AutoResizeStage {
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		this.addActor(uiTable);
 		font = assetManager.getFont("verdana", 24);
-		StaticTextElement decor;
+		
 
 		// FPS counter
 		fpsValue = new MinMaxValue(0, 1000, -1);
@@ -68,11 +69,11 @@ public class GameplayStage extends AutoResizeStage {
 		healthBar.setDecimalSpace(2);
 
 		// class icon
-		classIcon = new VisualBox(assetManager.getTexture("debugClass"), 20,
+		classIcon = new VisualBox(assetManager.getTexture("HudEmblemKnightWhite"), 20,
 				Gdx.graphics.getHeight() - 80, 60, 60);
-		decor = new StaticTextElement(font, "Klasse",
+		classIconText = new StaticTextElement(font, "Klasse",
 				this.classIcon.getWidth() * .5f, -14);
-		classIcon = new BoxOffsetDecorator(classIcon, decor);
+		classIcon = new BoxOffsetDecorator(classIcon, classIconText);
 
 		// buffs
 		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 250,
@@ -86,15 +87,15 @@ public class GameplayStage extends AutoResizeStage {
 		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"),
 				(Gdx.graphics.getWidth() * .5f) - 50,
 				Gdx.graphics.getHeight() - 80, 60, 60);
-		decor = new StaticTextElement(font, "Attacke",
+		classIconText = new StaticTextElement(font, "Attacke",
 				attackIcon.getWidth() * .5f, -14);
-		attackIcon = new BoxOffsetDecorator(this.attackIcon, decor);
+		attackIcon = new BoxOffsetDecorator(this.attackIcon, classIconText);
 		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"),
 				(Gdx.graphics.getWidth() * .5f) + 50,
 				Gdx.graphics.getHeight() - 80, 60, 60);
-		decor = new StaticTextElement(font, "Ei ablegen",
+		classIconText = new StaticTextElement(font, "Ei ablegen",
 				layEggIcon.getWidth() * .5f, -14);
-		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, decor);
+		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, classIconText);
 
 		// score icons
 		DynamicTextElement textScore;
@@ -107,9 +108,9 @@ public class GameplayStage extends AutoResizeStage {
 				scoreTeamIcon.getWidth() * .5f, 50, scoreTeam);
 		textScore.setDecimalPLace(0);
 		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, textScore);
-		decor = new StaticTextElement(font, "Team 1",
+		classIconText = new StaticTextElement(font, "Team 1",
 				this.scoreTeamIcon.getWidth() * .5f, -14);
-		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, decor);
+		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, classIconText);
 
 		scoreEnemyIcon = new VisualBox(
 				assetManager.getTexture("debugScoreEnemy"),
@@ -119,9 +120,9 @@ public class GameplayStage extends AutoResizeStage {
 				scoreEnemyIcon.getWidth() * .5f, 50, scoreEnemy);
 		textScore.setDecimalPLace(0);
 		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, textScore);
-		decor = new StaticTextElement(font, "Team 2",
+		classIconText = new StaticTextElement(font, "Team 2",
 				this.scoreEnemyIcon.getWidth() * .5f, -14);
-		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, decor);
+		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, classIconText);
 	}
 
 	public void render() {
@@ -174,42 +175,50 @@ public class GameplayStage extends AutoResizeStage {
 
 	@SuppressWarnings("incomplete-switch")
 	public void setDisplayedPlayer(ClientPlayer playerEntity) {
+		// if (this.visualDataEntity != playerEntity) {
 		visualDataEntity = playerEntity;
-		if (playerEntity.getPlayerInfo() != null) {
-			switch (playerEntity.getPlayerInfo().getTeam()) {
-			case WHITE:
-				switch (playerEntity.getEntityType()) {
-				case Knight:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemKnightWhite"));
-					break;
-				case Tank:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemTankWhite"));
-					break;
-				case Hunter:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterWhite"));
-					break;
-				}
+		switch (playerEntity.getTeamColor()) {
+		case WHITE:
+			switch (playerEntity.getEntityType()) {
+			case Knight:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemKnightWhite"));
 				break;
-			case BLACK:
-				switch (playerEntity.getEntityType()) {
-				case Knight:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemKnightBlack"));
-					break;
-				case Tank:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemTankBlack"));
-					break;
-				case Hunter:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterBlack"));
-					break;
-				}
+			case Tank:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemTankWhite"));
+				break;
+			case Hunter:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemHunterWhite"));
+				break;
+			default:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemHunterBlack"));
 				break;
 			}
+			break;
+		case BLACK:
+			switch (playerEntity.getEntityType()) {
+			case Knight:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemKnightBlack"));
+				break;
+			case Tank:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemTankBlack"));
+				break;
+			case Hunter:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemHunterBlack"));
+				break;
+			default:
+				this.classIcon.setTexture(assetManager
+						.getTexture("HudEmblemHunterBlack"));
+				break;
+			}
+			break;
+		// }
 		}
 	}
 
