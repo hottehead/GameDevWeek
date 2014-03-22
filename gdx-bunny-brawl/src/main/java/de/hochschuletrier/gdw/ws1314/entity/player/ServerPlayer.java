@@ -394,22 +394,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 break;
              case StartZone:
             	 break;
-                 case Bridge:
-                	 ServerBridge bridge = (ServerBridge) otherEntity;
-                	/*  Von Fabio Gimmillaro
-                	 *  Wenn Spieler über eine Brücke läuft deren Visibility false ist, wird er an die Stelle 0,0 versetzt
-                	 *  Nur zum Test:
-                	 * if(!bridge.getVisibility()){
-                		 this.physicsBody.setPosition(0, 0);
-                	 }*/
-                     
-                     this.isOnBridge = true;
-                     collidingBridgePartsCount++;
-                	 break;
-                 case BridgeSwitch:	
-                	 break;
-                 case Bush:
-                	 break;
+             case Bridge:
+                 this.isOnBridge = true;
+                 collidingBridgePartsCount++;
+                 break;
+             case BridgeSwitch:	
+                 break;
+             case Bush:
+                 break;
              default:
             	 break;
         	 }
