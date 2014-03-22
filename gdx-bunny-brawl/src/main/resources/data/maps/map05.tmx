@@ -198,9 +198,6 @@
   <object type="hole" x="768" y="416" width="96" height="608"/>
   <object type="hole" x="992" y="416" width="96" height="608"/>
   <object type="hole" x="1216" y="416" width="96" height="608"/>
-  <object type="hole" x="736" y="1568">
-   <polygon points="0,0 0,-128 0,-320 -416,-320 -416,-416 576,-416 576,-320 160,-320 160,0"/>
-  </object>
   <object type="startb" x="352" y="1312" width="224" height="224">
    <properties>
     <property name="direction" value="left"/>
@@ -211,6 +208,8 @@
     <property name="direction" value="right"/>
    </properties>
   </object>
+  <object type="hole" x="320" y="1152" width="992" height="96"/>
+  <object type="hole" x="736" y="1248" width="160" height="320"/>
  </objectgroup>
  <objectgroup name="Renderlayer" width="50" height="50">
   <properties>

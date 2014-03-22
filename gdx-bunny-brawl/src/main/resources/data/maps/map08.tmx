@@ -243,12 +243,12 @@
   <object type="dirt" x="128" y="128" width="1344" height="64"/>
   <object type="dirt" x="1472" y="128" width="64" height="1408"/>
   <object type="dirt" x="128" y="1472" width="1344" height="64"/>
-  <object type="startb" x="1376" y="96" width="192" height="192">
+  <object type="startb" x="1376" y="128" width="160" height="160">
    <properties>
     <property name="direction" value="left"/>
    </properties>
   </object>
-  <object type="startw" x="32" y="1376" width="192" height="192">
+  <object type="startw" x="64" y="1376" width="160" height="160">
    <properties>
     <property name="direction" value="right"/>
    </properties>
