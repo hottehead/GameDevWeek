@@ -308,8 +308,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     protected void moveBegin(FacingDirection dir) {
     	setFacingDirection(desiredDirection);
 
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+//    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+//		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
     }
     
