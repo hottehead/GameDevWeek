@@ -8,10 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelListElement;
 
@@ -40,9 +42,11 @@ public class StartServerStage extends AutoResizeStage {
 		//level list
 		levelList = new LevelList(defaultSkin);
 		//add levels for testing
-		//assetManager.get
-		levelList.addLevel("does nothing");
-		levelList.addLevel("new level");
+		Array<String> levels = assetManager.getAssetNamesByType(TiledMap.class);
+		
+		for (String current : levels) {
+			levelList.addLevel(current);
+		}
 		uiTable.add(levelList).padBottom(50).row();
 		
 		Table tmp = new Table(defaultSkin);
