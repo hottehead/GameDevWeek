@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.hochschuletrier.gdw.commons.gdx.assets.AnimationExtended;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 
-// 32 bit coded material id
 public class Material implements Comparable<Material> {
 
 	protected int Layer;
@@ -52,9 +51,7 @@ public class Material implements Comparable<Material> {
 	public TextureRegion getActiveTexture(float stateTime) {
 		if(isAnimation) {
 			TextureRegion animationTex = animation.getKeyFrame(stateTime);
-			animationTex.flip(false, true);
-			return animation.getKeyFrame(stateTime);
-			
+			return animation.getKeyFrame(stateTime);	
 		}
 		else {
 			return texture;

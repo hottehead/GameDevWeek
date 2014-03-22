@@ -3,16 +3,16 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
  * @author ElFapo
  *
  */
-public class StatePlayerWalking extends State
+public class StatePlayerWalking extends StatePlayer
 {
 	private FacingDirection movingDirection;
 	
@@ -66,6 +66,8 @@ public class StatePlayerWalking extends State
 	{
 		((ServerPlayer) getOwner()).moveEnd();
 	}
+
+	public EntityStates getCurrentState(){return EntityStates.WALKING;}
 
 	public void setMovingDirection(FacingDirection direction)
 	{

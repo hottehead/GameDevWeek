@@ -1,9 +1,10 @@
 package de.hochschuletrier.gdw.commons.gdx.assets;
 
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
 /**
  * 

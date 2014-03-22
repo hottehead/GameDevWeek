@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +40,13 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs = new ArrayList<Long>();
 	}
 	
-	// Note: Switch pushing must be solved by collision reaction
-//	public void pushSwitch()
-//	{
-//		//bridge.setVisibility(!bridge.getVisibility());
-//	}
+	public void pushSwitch()
+	{
+	    for(long id : targetIDs) {
+	        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(id);
+	        bridge.setVisibility(!bridge.getVisibility());
+	    }
+	}
 
 	public void initialize()
 	{
@@ -53,6 +57,15 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs.add(id);
     }
 
+	public boolean getActivePropertys()	{
+		return properties.getBoolean("active",true);
+	}
+
+	@Override
+	public void setVisibility(boolean b) {
+		super.setVisibility(b);
+	}
+
 	@Override
 	public void beginContact(Contact contact)
 	{
@@ -61,17 +74,11 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	        switch(otherEntity.getEntityType()) {
 	            case SwordAttack:
 	            case Projectil:
-	            	ServerProjectile projectile = (ServerProjectile) otherEntity;
                     for(Long targetID : targetIDs) {
                         ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-                        if (bridge.getVisibility()) {
-                            ServerEntityManager.getInstance().removeEntity(bridge);
-                            
-                        }
                         bridge.setVisibility(!bridge.getVisibility());
+						NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
                     }
-            	
-	            	//ServerEntityManager.getInstance().removeEntity(projectile);
 	                break;
 	            default:
 	                break;
@@ -117,4 +124,10 @@ public class ServerBridgeSwitch extends ServerLevelObject
 		setPhysicsBody(body);
 		
 	}
+
+    @Override
+    public void update(float deltaTime) {
+        // TODO Auto-generated method stub
+        
+    }
 }

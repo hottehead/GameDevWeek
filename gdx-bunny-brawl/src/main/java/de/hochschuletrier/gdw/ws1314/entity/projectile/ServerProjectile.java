@@ -13,13 +13,13 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
-import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.game.ClientServerConnect;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 
 /**
@@ -91,8 +91,8 @@ public class ServerProjectile extends ServerEntity {
         ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sourceID);
 
         this.teamColor = player.getTeamColor();
-        setFacingDirection(player.getFacingDirection());
-        this.originPosition = player.getPosition();
+        this.setFacingDirection(player.getFacingDirection());
+        this.originPosition = player.getPosition().cpy();
 	}
 
 	public TeamColor getTeamColor() {
@@ -159,6 +159,7 @@ public class ServerProjectile extends ServerEntity {
         if(distance > this.flightDistance) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
+
 	}
 
 	@Override

@@ -20,6 +20,11 @@ public class TeamSpawnZone extends Zone {
     private TeamColor teamOwner;
     private int[] rect = new int[4];
 
+	public TeamSpawnZone(){
+		super();
+		currentZone = EntityType.StartZone;
+	}
+
     public void setRect(int x, int y, int width, int height){
         rect[0] = x;
         rect[1] = y;
@@ -29,7 +34,7 @@ public class TeamSpawnZone extends Zone {
 
     public Point getRandomPointInZone(){
         Random r = new Random();
-        return new Point(rect[0]+r.nextInt(rect[2]),rect[1]+r.nextInt(rect[3]));
+        return new Point(rect[0]+r.nextInt(rect[2])-rect[2]/2,rect[1]+r.nextInt(rect[3])-rect[3]/2);
     }
 
     public void setTeamWhite(){

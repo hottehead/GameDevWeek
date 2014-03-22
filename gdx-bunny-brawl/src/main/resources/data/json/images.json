@@ -11,7 +11,14 @@
     "straw": "data/images/straw.png",
     "switch": "data/images/switch.png",
     "contactMine": "data/images/mine.png",
+	"arrow": "data/images/arrow.png",
 
+    "bridgeHoriLeft": "data/images/bridge_horizontal_left.png",
+    "bridgeHoriMiddle": "data/images/bridge_horizontal_middle.png",
+    "bridgeHoriRight": "data/images/bridge_horizontal_right.png",
+    "bridgeVertBottom": "data/images/bridge_vertical_bottom.png",
+    "bridgeVertMiddle": "data/images/bridge_vertical_middle.png",
+    "bridgeVertTop": "data/images/bridge_vertical_top.png",
 
     "debugBush": "data/images/dbg/bush.png",
     "debugCarrot": "data/images/dbg/carrot.png",
@@ -33,6 +40,7 @@
     "debugScoreTeam": "data/images/dbg/scoreTeamIcon.png",
     "debugTooltip": "data/images/dbg/tooltip.png",
     "debugAttackIcon": "data/images/dbg/attackIcon.png",
+	
 	
 	"HudEmblemKnightWhite": "data/huds/wappenKnightWhite.png",
 	"HudEmblemHunterWhite": "data/huds/wappenHunterWhite.png",

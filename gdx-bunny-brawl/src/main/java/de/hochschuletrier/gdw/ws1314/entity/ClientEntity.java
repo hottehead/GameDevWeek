@@ -11,9 +11,9 @@ import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
  */
 public abstract class ClientEntity
 {
-	private float 			stateTime;
+	protected float 			stateTime;
 	private Vector2 		position;
-	private FacingDirection direction;
+	protected FacingDirection direction;
 	private long 			id;
 	
 	public ClientEntity()
@@ -40,6 +40,10 @@ public abstract class ClientEntity
     public void update(float delta){
 		stateTime += delta;
 	}
+    public void enterNewState() {
+    	stateTime = 0.0f;
+    }
+    
     public abstract void doEvent(EventType event);
 	
 	public abstract void render();

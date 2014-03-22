@@ -232,12 +232,12 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteWalkDown": {
+	"hunterWhiteWalkDown": {
         "filename": "data/animations/HunterWhite_WalkDown.png",
-        "frames" : 4,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 4,
+        "columns": 2,
         "rows" : 1
     },
     "hunterWhiteWalkRight": {
@@ -266,10 +266,10 @@
     },
 	"hunterWhiteAttackDown": {
         "filename": "data/animations/HunterWhite_AttackDown.png",
-        "frames" : 5,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 5,
+        "columns": 6,
         "rows" : 1
     },
 	"hunterWhiteAttackRight": {
@@ -282,10 +282,10 @@
     },
 	"hunterWhiteAttackLeft": {
         "filename": "data/animations/HunterWhite_AttackLeft.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 6,
         "rows" : 1
     },
 	"hunterBlackIdleUp": {
@@ -392,5 +392,22 @@
         "playType" : "NORMAL",
         "columns": 6,
         "rows" : 1
-    }
+    }, 
+	
+	"mineActive": {
+		"filename": "data/images/mine_ani.png", 
+		"frames": 2, 
+		"frameDuration": [0.5, 0.5],
+		"playType": "NORMAL", 
+		"columns": 2, 
+		"rows": 1
+	},
+	"bushDisposeAnimation": {
+		"filename": "data/animations/bush_animation.png",
+		"frames": 8, 
+		"frameDuration": [0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.16],
+		"playType": "NORMAL", 
+		"columns": 8, 
+		"rows": 1	
+	}
 }

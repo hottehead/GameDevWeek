@@ -11,47 +11,51 @@ public enum GameStates {
 
     LOADING(new LoadGameState()),
     MAINMENU(new MainMenuState()),
-    GAMEPLAY(new GameplayState()),
     STARTSERVER(new StartServerState()),
+    SERVERLOBBY (new ServerLobbyState()), //new
+    SERVERGAMEPLAY (new ServerGamePlayState()), //new
+    CLIENTGAMEPLAY (new ClientGamePlayState()), //new
+    CLIENTLOBBY (new ClientLobbyState()), //new
     LOBBY(new LobbyState()),
     CREDITS(new CreditState()),
-    OPTIONS(new OptionState());
+    OPTIONS(new OptionState()),
+	DUALGAMEPLAY (new DualGamePlayState());
     private final GameState state;
 
-    GameStates(GameState state) {
+    GameStates (GameState state) {
         this.state = state;
     }
 
-    public void activate() {
-        Main.getInstance().changeState(state, null, null);
+    public void activate () {
+        Main.getInstance ().changeState (state, null, null);
     }
 
-    public void fadeActivate(int fadeTime) {
-        FadeTransition out = new FadeTransition(Color.BLACK, fadeTime);
-        FadeTransition in = new FadeTransition(Color.BLACK, fadeTime).reverse();
-        Main.getInstance().changeState(state, out, in);
+    public void fadeActivate (int fadeTime) {
+        FadeTransition out = new FadeTransition (Color.BLACK, fadeTime);
+        FadeTransition in = new FadeTransition (Color.BLACK, fadeTime).reverse();
+        Main.getInstance ().changeState (state, out, in);
     }
 
-    public void activate(Transition out, Transition in) {
-        Main.getInstance().changeState(state, out, in);
+    public void activate (Transition out, Transition in) {
+        Main.getInstance ().changeState (state, out, in);
     }
 
-    public GameState get() {
+    public GameState get () {
         return state;
     }
 
-    public void init(AssetManagerX assetManager) {
-        state.init(assetManager);
+    public void init (AssetManagerX assetManager) {
+        state.init (assetManager);
     }
 
-    public static void dispose() {
-        for (GameStates entry : GameStates.values()) {
-            entry.state.dispose();
+    public static void dispose () {
+        for (GameStates entry : GameStates.values ()) {
+            entry.state.dispose ();
         }
     }
 
-    boolean isActive() {
-        return Main.getInstance().getCurrentState() == state;
+    boolean isActive () {
+        return Main.getInstance ().getCurrentState () == state;
     }
 
 }

@@ -29,7 +29,7 @@ public enum FacingDirection
 	{
 		direction = new Vector2(x, y);
 		angle = direction.x == 0.0f && 
-				direction.y == 0.0f ? 0.0f 
+				direction.y == 0.0f ? 0 //180deg
 						: direction.getAngleRad();
 	}
 	
