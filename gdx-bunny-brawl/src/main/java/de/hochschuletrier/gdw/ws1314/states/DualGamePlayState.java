@@ -6,10 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.InputProcessor;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
@@ -71,6 +74,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
+		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
 		}
 		
 		if (isClientInitialized) {
