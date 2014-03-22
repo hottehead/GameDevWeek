@@ -19,7 +19,9 @@ public enum GameStates {
     LOBBY(new LobbyState()),
     CREDITS(new CreditState()),
     OPTIONS(new OptionState()),
-	DUALGAMEPLAY (new DualGamePlayState());
+	DUALGAMEPLAY (new DualGamePlayState()),
+	FINISHEDGAME (new FinishedGameState());
+
     private final GameState state;
 
     GameStates (GameState state) {

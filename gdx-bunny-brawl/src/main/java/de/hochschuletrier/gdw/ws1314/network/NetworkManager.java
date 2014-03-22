@@ -433,10 +433,15 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
-			NetConnection connection = serverReception.getNextNewConnection();
 			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				NetConnection connection = serverReception.getNextNewConnection();
+				while(connection != null){
+					connection.shutdown();
+					connection = serverReception.getNextNewConnection();
+				}
 				return;
 			}
+			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
