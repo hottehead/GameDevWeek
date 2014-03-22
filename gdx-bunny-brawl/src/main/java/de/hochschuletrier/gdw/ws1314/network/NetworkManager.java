@@ -379,9 +379,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
-			if(this.disconnectcallback != null){
-				this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
-			}
+			if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
