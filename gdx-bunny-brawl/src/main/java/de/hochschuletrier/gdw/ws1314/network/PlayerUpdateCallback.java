@@ -8,5 +8,5 @@ public interface PlayerUpdateCallback{
 	/**
 	 * Serverseitig: der Client teilt seine Spielerdaten mit(Spielername, Klasse, Team und Accept)
 	 */
-	void callback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept);
+	void playerUpdateCallback(int playerid, String playerName, EntityType type, TeamColor team, boolean accept);
 }

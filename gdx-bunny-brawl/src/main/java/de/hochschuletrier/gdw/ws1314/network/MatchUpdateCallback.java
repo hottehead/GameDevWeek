@@ -4,5 +4,5 @@ public interface MatchUpdateCallback{
 	/**
 	 * Serverseitig: der Client teilt einen Mapvorschlag mit
 	 */
-	void callback(String map);
+	void matchUpateCallback(String map);
 }

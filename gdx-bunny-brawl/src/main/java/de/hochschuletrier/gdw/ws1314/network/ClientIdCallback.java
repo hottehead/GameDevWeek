@@ -4,5 +4,5 @@ public interface ClientIdCallback{
 	/**
 	 * ClientIdCallback: Clientseitig, dem Clienten wird seine ID mitgeteilt
 	 */
-	public void callback(int playerid);
+	public void clientIdCallback(int playerid);
 }
