@@ -370,6 +370,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
+            	 
             	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 if(mine.getEntityState() == EntityStates.EXPLODING){
             		 this.applyDamage(50);
