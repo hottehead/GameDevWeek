@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NetworkManager{
@@ -52,6 +54,8 @@ public class NetworkManager{
 	private float ping = 0;
 
 	private int nextPlayerNumber = 1;
+	
+	protected Deque<DespawnDatagram> pendingDespawns = new LinkedList<>();
 
 	public float getPing(){
 		return ping;
@@ -121,16 +125,11 @@ public class NetworkManager{
 	}
 
 	private boolean isPortOk(int port){
-		if(port < 1024){
-			logger.warn("port must higher or equal 1024");
-			return false;
-		}
-		else if(port > 65535){
-			logger.warn("port must lower or equal 65535");
-			return false;
+		if(port >=  1024 && port <= 65535){
+			return true;
 		}
 		else {
-			return true;
+			return false;
 		}
 	}
 
@@ -140,7 +139,7 @@ public class NetworkManager{
 			return;
 		}
 		if(!isPortOk(port)){
-			throw new IllegalArgumentException("Port out of allowed range 1024 - 65535");
+			throw new IllegalArgumentException("[CLIENT] Port out of allowed range 1024 - 65535");
 		}
 		try{
 			clientConnection = new NetConnection(ip, port, datagramFactory);
@@ -157,7 +156,7 @@ public class NetworkManager{
 			return;
 		}
 		if(!isPortOk(port)){
-			throw new IllegalArgumentException("Port out of allowed range 1024 - 65535");
+			throw new IllegalArgumentException("[SERVER] Port out of allowed range 1024 - 65535");
 		}
 		serverConnections = new ArrayList<>();
 		try{
@@ -245,7 +244,7 @@ public class NetworkManager{
 			return InetAddress.getLocalHost().getHostAddress();
 		}
 		catch (Exception e){
-			logger.error("NWM: error at reading local host IP, fallback to localhost\n{}", e);
+			logger.error("[NETWORK] error at reading local host IP, fallback to localhost\n{}", e);
 			return "127.0.0.1";
 		}
 	}
@@ -380,6 +379,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
+			this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
@@ -390,6 +390,7 @@ public class NetworkManager{
 	}
 
 	public void update(){
+		handlePendingDespawns();
 		handleNewConnections();
 		handleDisconnects();
 		replicateServerEntities();
@@ -397,6 +398,14 @@ public class NetworkManager{
 		handleDatagramsServer();
 		checkStats();
 		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
+	}
+
+	private void handlePendingDespawns(){
+		if(!isClient()) return;
+		DespawnDatagram despawn;
+		while((despawn=pendingDespawns.poll())!=null){
+			clientDgramHandler.handle(despawn, clientConnection);
+		}
 	}
 
 	private void replicateServerEntities(){
@@ -424,10 +433,15 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
-			NetConnection connection = serverReception.getNextNewConnection();
 			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				NetConnection connection = serverReception.getNextNewConnection();
+				while(connection != null){
+					connection.shutdown();
+					connection = serverReception.getNextNewConnection();
+				}
 				return;
 			}
+			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
@@ -457,15 +471,15 @@ public class NetworkManager{
 					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
 				}
 				if(this.playerdisconnectcallback != null){
-					this.playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+					this.playerdisconnectcallback.playerDisconnectCallback(ids.toArray(new Integer[ids.size()]));
 				}
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
-			clientConnection = null;
 			if(this.disconnectcallback != null){
-				this.disconnectcallback.callback("[SERVER] Disconnected from Server.");
+				this.disconnectcallback.disconnectCallback("[NETWORK] Disconnected from Server.");
 			}
+			clientConnection = null;
 		}
 	}
 
@@ -521,12 +535,12 @@ public class NetworkManager{
 				serverReception.shutdown();
 				serverReception = null;
 				if(this.disconnectcallback != null){
-					this.disconnectcallback.callback("[SERVER] Stopped.");
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
 				}
-				logger.info("[SERVER] stopped");
+				//logger.info("[SERVER] stopped");
 			}
 			else{
-				logger.warn("[CLIENT] Can't stop, i'm not a Server.");
+				logger.warn("[NETWORK] Can't stop, i'm not a Server.");
 			}
 		}
 		catch (Exception e){

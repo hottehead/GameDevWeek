@@ -42,7 +42,7 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 		
 		NetworkManager.getInstance().setClientIdCallback(new ClientIdCallback() {
 			@Override
-			public void callback(int playerid) {
+			public void clientIdCallback(int playerid) {
 				logger.info("Your Unique-PlayerID: " + playerid);
 				playerId = playerid;
 			}
@@ -50,7 +50,7 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 		
 		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
 			@Override
-			public void callback(String map) {
+			public void matchUpateCallback(String map) {
 				chosenMap = map;
 			}
 		});
@@ -86,7 +86,7 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 
 	// LobbyUpdateCallback
 	@Override
-	public void callback(String map, PlayerData[] players) {
+	public void lobbyUpateCallback(String map, PlayerData[] players) {
 		this.chosenMap = map;
 		
 		this.connectedPlayers.clear();

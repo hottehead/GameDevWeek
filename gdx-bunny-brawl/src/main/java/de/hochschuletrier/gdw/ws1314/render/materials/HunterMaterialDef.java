@@ -6,12 +6,12 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.input.FacingDirection;
 import de.hochschuletrier.gdw.ws1314.render.MaterialInfo;
 
-public class HunterMaterials extends MaterialDefinition {
+public class HunterMaterialDef extends MaterialDefinition {
 
 	public ArrayList<MaterialInfo> materials = new ArrayList<MaterialInfo>();
 
-	public HunterMaterials() {
-		super(110, 74, 1);
+	public HunterMaterialDef() {
+		super(110, 74, MaterialLayer.PLAYER_LAYER);
 	}
 
 	public void build() {
