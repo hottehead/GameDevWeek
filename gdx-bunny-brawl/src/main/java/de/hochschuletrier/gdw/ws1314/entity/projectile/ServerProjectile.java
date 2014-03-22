@@ -120,6 +120,7 @@ public class ServerProjectile extends ServerEntity {
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
             if(otherEntity == null) {
+                ServerEntityManager.getInstance().removeEntity(this);
                 return;
             }
             
