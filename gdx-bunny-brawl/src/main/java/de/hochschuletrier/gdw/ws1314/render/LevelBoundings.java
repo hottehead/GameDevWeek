@@ -16,12 +16,16 @@ public class LevelBoundings {
 	}
 	
 	public void boundVector(Vector2 p) {
-		p.x = MathUtils.clamp(p.x, x, x+width - Gdx.graphics.getWidth());
-		p.y = MathUtils.clamp(p.y, y, y+height- Gdx.graphics.getHeight());
+		int gdxWidth = Gdx.graphics.getWidth();
+		int gdxHeight = Gdx.graphics.getHeight();
+		p.x = MathUtils.clamp(p.x, gdxWidth*0.5f, gdxWidth*0.5f+width - gdxWidth);
+		p.y = MathUtils.clamp(p.y, gdxHeight*0.5f, gdxHeight*0.5f+height- gdxHeight);
 	}
 	
 	public void boundVector(Vector3 p) {
-		p.x = MathUtils.clamp(p.x, x, x+width - Gdx.graphics.getWidth());
-		p.y = MathUtils.clamp(p.y, y, y+height- Gdx.graphics.getHeight());
+		int gdxWidth = Gdx.graphics.getWidth();
+		int gdxHeight = Gdx.graphics.getHeight();
+		p.x = MathUtils.clamp(p.x, gdxWidth*0.5f, gdxWidth*0.5f+width - gdxWidth);
+		p.y = MathUtils.clamp(p.y, gdxHeight*0.5f, gdxHeight*0.5f+height- gdxHeight);
 	}
 }

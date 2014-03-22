@@ -9,8 +9,10 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 
 /**
@@ -75,7 +77,13 @@ public class ServerBush extends ServerLevelObject
             setPhysicsBody(body);
 	}
 
-    @Override
+	@Override
+	public void dispose(PhysixManager manager) {
+		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DESTROY);
+		super.dispose(manager);
+	}
+
+	@Override
     public void update(float deltaTime) {
         
     }

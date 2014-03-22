@@ -24,7 +24,11 @@ public class HunterMaterialDef extends MaterialDefinition {
 		newMaterial("hunter"+colorStr+"IdleDown", EntityStates.IDLE, FacingDirection.DOWN, true);
 		newMaterial("hunter"+colorStr+"IdleUp", EntityStates.IDLE, FacingDirection.UP, true);
 		newMaterial("hunter"+colorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.LEFT, true);
+		newMaterial("hunter"+colorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.UP_LEFT, true);
+		newMaterial("hunter"+colorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.DOWN_LEFT, true);
 		newMaterial("hunter"+colorStr+"IdleRight", EntityStates.IDLE, FacingDirection.RIGHT, true);
+		newMaterial("hunter"+colorStr+"IdleRight", EntityStates.IDLE, FacingDirection.UP_RIGHT, true);
+		newMaterial("hunter"+colorStr+"IdleRight", EntityStates.IDLE, FacingDirection.DOWN_RIGHT, true);
 		
 		newMaterial("hunter"+colorStr+"WalkDown", EntityStates.WALKING, FacingDirection.DOWN, true);
 		newMaterial("hunter"+colorStr+"WalkUp", EntityStates.WALKING, FacingDirection.UP, true);

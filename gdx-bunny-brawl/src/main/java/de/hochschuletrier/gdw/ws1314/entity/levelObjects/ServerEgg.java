@@ -96,4 +96,14 @@ public class ServerEgg extends ServerLevelObject
         this.teamColor = TeamColor.BOTH;
         score = false;
     }
+
+	public void setPosition(Vector2 position) {
+		physicsBody.setPosition(position);
+	}
+
+	@Override
+	public void reset() {
+		setVisibility(true);
+		super.reset();
+	}
 }

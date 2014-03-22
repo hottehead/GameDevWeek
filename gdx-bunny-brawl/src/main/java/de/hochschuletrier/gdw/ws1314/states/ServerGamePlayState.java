@@ -42,6 +42,7 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
     private DisconnectClick disconnectClickListener;
     
     private String mapName;
+    private boolean isWinningConditionComplied;
 
 	public ServerGamePlayState() {
 	}
@@ -68,13 +69,20 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 	@Override
 	public void render() {
         DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
-        this.stage.render();
+        if (this.stage != null) {
+        	this.stage.render();
+        }
 	}
 
 	@Override
 	public void update(float delta) {
 		if (game != null) {
 			game.update(delta);
+		}
+		
+		if (isWinningConditionComplied && NetworkManager.getInstance().isServer()) {
+			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
+			NetworkManager.getInstance().stopServer();
 		}
 		
 		fpsCalc.addFrame();
@@ -90,6 +98,8 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
             // dieser Fehler sollte aber im Normalfall nicht auftretten.
         }
         
+		isWinningConditionComplied = false;
+		
         NetworkManager.getInstance().setDisconnectCallback(this);
         
         game = new ServerGame(playerDatas);
@@ -141,11 +151,16 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
 		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
 		
+		logger.info("AllEggs: " + gi.getAllEggs());
+		logger.info("Eggs to win: " + (gi.getAllEggs() / 2));
+		logger.info("BlackEggs: " + blackPoints);
+		logger.info("WhiteEggs: " + whitePoints);
+		
 		// WinningCondition HERE:
 		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
 		{
-			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
-			NetworkManager.getInstance().stopServer();
+			isWinningConditionComplied = true;
+			logger.info("Winning-Condition complied");
 		}
 	}
 }
