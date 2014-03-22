@@ -51,7 +51,9 @@ public class MainMenuState extends GameState {
         stage = new MainMenuStage();
 		stage.init(assetManager);
 
-
+		this.startServerClickListener = new StartServerClick();
+		this.startClientClickListener = new StartClientClick();
+		this.startForeverAloneListener = new StartForeverAloneClick();
 
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.optionListener = new OptionListener();
@@ -63,9 +65,6 @@ public class MainMenuState extends GameState {
 
 		stage.render();
 
-		this.startServerClickListener = new StartServerClick();
-		this.startClientClickListener = new StartClientClick();
-		this.startForeverAloneListener = new StartForeverAloneClick();
 
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
@@ -86,6 +85,11 @@ public class MainMenuState extends GameState {
         }
 
 	    Gdx.input.setInputProcessor(stage);
+		
+	    stage.getStartServerButton().addListener(this.startServerClickListener);
+		stage.getStartClientButton().addListener(this.startClientClickListener);
+		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
+		
 		stage.getStartServerButton().addListener(this.startServerClickListener);
 		stage.getStartClientButton().addListener(this.startClientClickListener);
 		stage.getStartForeverAloneButton().addListener(this.startForeverAloneListener);
@@ -98,6 +102,10 @@ public class MainMenuState extends GameState {
     	if (this.music.isMusicPlaying()) {
     		this.music.setFade('o', 2000);
     	}
+    	
+        stage.getStartServerButton().removeListener(this.startServerClickListener);
+        stage.getStartClientButton().removeListener(this.startClientClickListener);
+        stage.getStartForeverAloneButton().removeListener(this.startForeverAloneListener);
 		
         stage.getStartServerButton().removeListener(this.startServerClickListener);
 		stage.getStartClientButton().removeListener(this.startClientClickListener);
@@ -210,6 +218,8 @@ public class MainMenuState extends GameState {
 		public void clicked(InputEvent event, float x, float y) {
 			GameStates.DUALGAMEPLAY.init(assetManager);
 			GameStates.DUALGAMEPLAY.activate();
+//			System.out.println("changed state");
+//			System.out.println(Main.inputMultiplexer.getProcessors().toString());
 		}
     }
 }

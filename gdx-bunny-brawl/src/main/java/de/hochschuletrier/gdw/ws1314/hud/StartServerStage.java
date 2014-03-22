@@ -48,7 +48,6 @@ public class StartServerStage extends AutoResizeStage {
 			levelList.addLevel(current);
 		}
 		uiTable.add(levelList).padBottom(50).row();
-		
 		Table tmp = new Table(defaultSkin);
 		uiTable.add(tmp);
 		
