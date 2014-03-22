@@ -180,8 +180,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     		speedBuffTimer += deltaTime;
     		if (speedBuffTimer >= speedBuffDuration)
     		{
-    			walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
-    			speedBuffActive = false;
+    			this.deactivateSpeedBuff();
     		}
     	}
     	
@@ -190,8 +189,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     		attackBuffTimer += deltaTime;
     		if (attackBuffTimer >= attackBuffDuration)
     		{
-    			attackBuffFactor = 1.0f;
-    			attackBuffActive = false;
+    			this.deactivateAttackBuff();
     		}
     	}
     }
@@ -580,6 +578,8 @@ public void endContact(Contact contact) {
         currentHealth = playerKit.getBaseHealth();
         currentArmor = playerKit.getBaseArmor();
         setFacingDirection(FacingDirection.DOWN);
+        this.deactivateAttackBuff();
+        this.deactivateSpeedBuff();
         		
         switchToState(idleState);
         
@@ -609,6 +609,20 @@ public void endContact(Contact contact) {
 		switchToState(knockbackState);
 		physicsBody.setLinearDamping(BRAKING);
 		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
+	}
+	
+	private void deactivateSpeedBuff() {
+	    if(speedBuffActive) {
+	        walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
+	        speedBuffActive = false;
+	    }
+	}
+	
+	private void deactivateAttackBuff() {
+	    if(attackBuffActive) {
+	        attackBuffFactor = 1.0f;
+	        attackBuffActive = false;
+	    }
 	}
         
 }
