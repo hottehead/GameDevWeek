@@ -4,7 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.utils.Array;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
@@ -22,7 +24,8 @@ import java.util.List;
  */
 public class ServerBridge extends ServerLevelObject
 {
-	boolean isVisible = false;
+	private boolean isVisible = false;
+	private Fixture fixtureBody;
 	/* FIXME:
 	 * Comment: von Fabio Gimmillaro (Der komische Typ ganz hinten rechts)
 	 * Bridge braucht ID, damit man einer Brücke bestimmte Schalter hinzufügen kann
@@ -117,6 +120,8 @@ public class ServerBridge extends ServerLevelObject
 		body.addContactListener(this);
 		setPhysicsBody(body);
 		
+		Array<Fixture> fixtures = body.getBody().getFixtureList();
+		fixtureBody = fixtures.get(0);
 	}
 	@Override
 	public boolean getVisibility(){
@@ -124,6 +129,14 @@ public class ServerBridge extends ServerLevelObject
 	}
 	public void setVisiblity(boolean b){
 		isVisible = b;
+		
+		if(this.fixtureBody != null) {
+    		if(isVisible) {
+    		   this.fixtureBody.setSensor(true); 
+    		} else if(isVisible) {
+    		    this.fixtureBody.setSensor(false);
+    		}
+		}
 	}
 
     @Override
