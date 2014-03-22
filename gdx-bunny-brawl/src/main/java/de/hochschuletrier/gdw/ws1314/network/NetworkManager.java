@@ -379,9 +379,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
-			if(this.disconnectcallback != null){
-				this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
-			}
+			if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
@@ -564,4 +562,14 @@ public class NetworkManager{
 			broadcastToClients(new GameInfoReplicationDatagram(blackPoints,whitePoints,remainingEgg));
 		}
 	};
+
+	/**
+	 * @return Number of clients currently connected to this server.
+	 */
+	public int clientCount(){
+		if(!isServer()) return 0;
+		return serverConnections.size();
+	}
+	
+	
 }

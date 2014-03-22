@@ -74,7 +74,7 @@ public class ServerCarrot extends ServerLevelObject
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapeCircle(16)
+                .shapeCircle(12)
                 .sensor(true));
 
             body.setGravityScale(0);

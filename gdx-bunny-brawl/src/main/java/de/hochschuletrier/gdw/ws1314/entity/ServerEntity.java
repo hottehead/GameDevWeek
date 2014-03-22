@@ -79,7 +79,7 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
             
             if(entityA.getID() == this.getID()) {
                 return entityB;
-            } else {
+            } else if(entityB.getID() == this.getID()) {
                 return entityA;
             }
             

@@ -71,18 +71,15 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (!isClientInitialized) return;
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		clientGame.render();
+		this.serverGame.getManager().render();
 	}
 
 	@Override
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
-		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		if (this.stateMusic.isMusicPlaying())
-			//this.stateMusic.update();
-		this.stateMusic.logger.info("gp state music fading on update? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on update? >> " + this.stateMusic.getFadingDirection());
-}
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+		}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
@@ -99,10 +96,9 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		isClientInitialized = false;
 		if (this.stateMusic.isMusicPlaying()) 
 			this.stateMusic.setFade('i', 2500);
-
-		this.stateMusic.logger.info("gp state music fading on enter? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on enter? >> " + this.stateMusic.getFadingDirection());
-
+		
+		stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);
 		
 		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		

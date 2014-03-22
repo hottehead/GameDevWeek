@@ -149,7 +149,6 @@ public class ClientGame {
 		DrawUtil.startRenderToScreen();
 		stage.render();
 		DrawUtil.endRenderToScreen();
-
 	}
 
 	public void update(float delta) {
@@ -162,7 +161,6 @@ public class ClientGame {
 					.getEntityById(playerId);
 			if(playerEntity instanceof ClientPlayer) {
 				stage.setDisplayedPlayer((ClientPlayer)playerEntity);
-				
 			}
 			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}

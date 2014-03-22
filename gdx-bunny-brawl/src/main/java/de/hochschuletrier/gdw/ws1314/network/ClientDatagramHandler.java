@@ -52,6 +52,7 @@ public class ClientDatagramHandler implements DatagramHandler{
 		player.setFacingDirection(playerReplicationDatagram.getFacingDirection());
 		player.setTeamColor(playerReplicationDatagram.getTeamColor());
 		player.setCurrentPlayerState(playerReplicationDatagram.getEntityState());
+		player.setPlayerName(playerReplicationDatagram.getPlayerName());
 	}
 
 	@Override
