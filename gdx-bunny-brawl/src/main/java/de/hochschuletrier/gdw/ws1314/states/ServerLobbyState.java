@@ -27,7 +27,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
-        this.disconnectClickListener = new DisconnectClick();
+        this.disconnectClickListener = new DisconnectClick();    	
+    	this.stage = new ServerLobbyStage();
     }
 
     public void render () {
@@ -46,6 +47,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		super.onEnter();
 		Main.inputMultiplexer.addProcessor(stage);
 		
+		stage.init(assetManager);
+		
 		// TODO: Temporär nur zum localen Testen
         if (!NetworkManager.getInstance().isServer())
         {
@@ -59,9 +62,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
     	
     	
     	logger.info("Server-Lobby created.");
-    	
-    	this.stage = new ServerLobbyStage();
-    	this.stage.init(assetManager);
+
     	
     	this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 
