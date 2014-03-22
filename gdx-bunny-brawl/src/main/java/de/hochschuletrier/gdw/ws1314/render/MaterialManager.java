@@ -22,6 +22,7 @@ import de.hochschuletrier.gdw.ws1314.render.materials.EggMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.HunterMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.KnightMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SpinachMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.StrawMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SwitchMaterialDef;
 
 public class MaterialManager {
@@ -53,6 +54,7 @@ public class MaterialManager {
 		this.provideMaterials(EntityType.Clover, new CloverMaterialDef().get());
 		this.provideMaterials(EntityType.Bush, new BushMaterialDef().get());
 		this.provideMaterials(EntityType.ContactMine, new ContactMineMaterialDef().get());
+		this.provideMaterials(EntityType.HayBale, new StrawMaterialDef().get());
 		
 		//bridge parts
 		this.provideMaterials(EntityType.BRIDGE_HORIZONTAL_LEFT, new BridgeHorizontalLeftDef().get());
@@ -61,7 +63,7 @@ public class MaterialManager {
 		this.provideMaterials(EntityType.BRIDGE_VERTICAL_BOTTOM, new BridgeVerticalBottomDef().get());
 		this.provideMaterials(EntityType.BRIDGE_VERTICAL_MIDDLE, new BridgeVerticalMiddleDef().get());
 		this.provideMaterials(EntityType.BRIDGE_VERTICAL_TOP, new BridgeVerticalTopDef().get());
-
+		
 	}
 
 	public void provideMaterials(EntityType entityType,
