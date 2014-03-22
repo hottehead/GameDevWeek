@@ -6,20 +6,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridge;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBridgeSwitch;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientBush;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientCarrot;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientClover;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientContactMine;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientEgg;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ClientSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ClientProjectile;
@@ -85,14 +78,29 @@ public class ClientEntityManager {
             case Projectil: 
             	e = new ClientProjectile();
             	break;
-            //case BRIDGE_HORIZONTAL_LEFT:
+            case BRIDGE_HORIZONTAL_LEFT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalLeft();
+				break;
             case BRIDGE_HORIZONTAL_MIDDLE:
-            //case BRIDGE_HORIZONTAL_RIGHT:
-            //case BRIDGE_VERTICAL_BOTTOM:
-            //case BRIDGE_VERTICAL_MIDDLE:
-            //case BRIDGE_VERTICAL_TOP:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalMiddle();
+				break;
+            case BRIDGE_HORIZONTAL_RIGHT:
+				e = new ClientBridge();
+				((ClientBridge)e).setHorizontalRight();
+				break;
+            case BRIDGE_VERTICAL_BOTTOM:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalBottom();
+				break;
+            case BRIDGE_VERTICAL_MIDDLE:
+				e = new ClientBridge();
+				((ClientBridge)e).setVerticalMiddle();
+				break;
+            case BRIDGE_VERTICAL_TOP:
             	e = new ClientBridge();
-
+				((ClientBridge)e).setVerticalTop();
             	break;
             case BridgeSwitch:
             	e = new ClientBridgeSwitch();
@@ -112,6 +120,9 @@ public class ClientEntityManager {
             case Clover:
             	e = new ClientClover();
             	break;
+			case HayBale:
+				e = new ClientHayBale();
+				break;
 			default:
 				break;
         }

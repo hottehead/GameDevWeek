@@ -7,12 +7,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.PlayerUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
@@ -23,7 +25,7 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 	private static final Logger logger = LoggerFactory.getLogger(ServerLobbyManager.class);
 	
 	private HashMap<Integer, PlayerData> players;
-	private String map = "";
+	private String map = "map01";
 	private ArrayList<IServerLobbyListener> listener;
 	
 	public ServerLobbyManager()
@@ -32,6 +34,8 @@ public class ServerLobbyManager implements PlayerUpdateCallback, PlayerDisconnec
 		this.listener = new ArrayList<>();
 		NetworkManager.getInstance().setPlayerUpdateCallback(this);
 		NetworkManager.getInstance().setPlayerDisconnectCallback(this);
+		
+		//this.map = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 	}
 	
 	public List<PlayerData> getPlayers() {

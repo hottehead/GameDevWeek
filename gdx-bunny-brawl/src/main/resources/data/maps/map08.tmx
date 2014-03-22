@@ -299,6 +299,13 @@
   <object type="solid" x="0" y="96" width="32" height="1504"/>
   <object type="solid" x="32" y="1568" width="1536" height="32"/>
   <object type="solid" x="1568" y="96" width="32" height="1504"/>
+  <object type="solid" x="1409" y="1398" width="64" height="69"/>
+  <object type="solid" x="161" y="217" width="64" height="69"/>
+  <object type="solid" x="511" y="377" width="64" height="69"/>
+  <object type="solid" x="385" y="412" width="64" height="69"/>
+  <object type="solid" x="352" y="1056" width="32" height="32"/>
+  <object type="solid" x="352" y="1056" width="32" height="32"/>
+  <object type="solid" x="1248" y="768" width="32" height="32"/>
  </objectgroup>
  <layer name="Overlayer" width="50" height="50">
   <data encoding="base64" compression="zlib">

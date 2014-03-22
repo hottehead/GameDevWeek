@@ -60,8 +60,9 @@ public class ClientGame {
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 
-	public void init(AssetManagerX assets) {
-		map = assets.getTiledMap("map02");
+	public void init(AssetManagerX assets, String mapName) {
+		map = assets.getTiledMap(mapName);
+
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
 		
 		for (TileSet tileset : map.getTileSets()) {
@@ -86,9 +87,6 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 
-//			System.out.println(l.getName());
-//		}
-
 		stage = new GameplayStage();
 		stage.init(assets);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -106,10 +104,9 @@ public class ClientGame {
 
 		postProcessing = new TextureAdvection("data/shaders/post.vert",
 				"data/shaders/post.frag");
-		System.out.println(postProcessing.getLog());
+		
 		advShader = new TextureAdvection("data/shaders/texAdv.vert",
 				"data/shaders/texAdv.frag");
-		System.out.println(advShader.getLog());
 	}
 
 	float fadeIn = 0.25f;

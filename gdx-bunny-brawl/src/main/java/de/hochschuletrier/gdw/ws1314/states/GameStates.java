@@ -27,7 +27,7 @@ public enum GameStates {
 
     public void fadeActivate (int fadeTime) {
         FadeTransition out = new FadeTransition (Color.BLACK, fadeTime);
-        FadeTransition in = new FadeTransition (Color.BLACK, fadeTime).reverse ();
+        FadeTransition in = new FadeTransition (Color.BLACK, fadeTime).reverse();
         Main.getInstance ().changeState (state, out, in);
     }
 
