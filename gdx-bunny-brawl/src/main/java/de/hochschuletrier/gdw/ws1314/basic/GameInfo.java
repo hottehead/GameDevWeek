@@ -12,31 +12,37 @@ import java.util.Observable;
 /**
  * Created by Jerry on 21.03.14.
  */
-public class GameInfo extends Observable {
+public class GameInfo {
     private static final Logger logger = LoggerFactory.getLogger(GameInfo.class);
 
 	private ArrayList<GameInfoListener> listeners = new ArrayList<>();
 
-    private int TeamPointsWhite = 0;
-	private int TeamPointsBlack = 0;
+    private int teamPointsWhite = 0;
+	private int teamPointsBlack = 0;
 	private int remainigEggs = 0;
 
-	private TeamSpawnZone TeamSpawnZoneWhite;
-	private TeamSpawnZone TeamSpawnZoneBlack;
+	private TeamSpawnZone teamSpawnZoneWhite;
+	private TeamSpawnZone teamSpawnZoneBlack;
 
 
 	public Point getASpawnPoint(TeamColor team)	{
 
 		switch(team){
 			case BLACK:
-				return TeamSpawnZoneBlack.getRandomPointInZone();
+				return teamSpawnZoneBlack.getRandomPointInZone();
 			case WHITE:
-				return TeamSpawnZoneWhite.getRandomPointInZone();
+				return teamSpawnZoneWhite.getRandomPointInZone();
 		}
 
 		return new Point(0,0);
 	}
 
+	public void clear(){
+		teamPointsWhite = 0;
+		teamPointsBlack = 0;
+		remainigEggs = 0;
+	}
+	
 	public void addListner(GameInfoListener listener){
 		listeners.add(listener);
 	}
@@ -47,34 +53,34 @@ public class GameInfo extends Observable {
 
 	private void sendUpdate(){
 		for(GameInfoListener listener : listeners){
-			listener.gameInfoChanged(TeamPointsBlack,TeamPointsWhite,remainigEggs);
+			listener.gameInfoChanged(teamPointsBlack,teamPointsWhite,remainigEggs);
 		}
 	}
 
 	public int getTeamPointsWhite() {
-		return TeamPointsWhite;
+		return teamPointsWhite;
 	}
 
 	public void setTeamPointsWhite(int teamPointsWhite) {
-		TeamPointsWhite = teamPointsWhite;
+		this.teamPointsWhite = teamPointsWhite;
 		sendUpdate();
 	}
 
 	public int getTeamPointsBlack() {
-		return TeamPointsBlack;
+		return teamPointsBlack;
 	}
 
 	public void setTeamPointsBlack(int teamPointsBlack) {
-		TeamPointsBlack = teamPointsBlack;
+		this.teamPointsBlack = teamPointsBlack;
 		sendUpdate();
 	}
 
 	public void setTeamSpawnZoneWhite(TeamSpawnZone teamSpawnZoneWhite) {
-		TeamSpawnZoneWhite = teamSpawnZoneWhite;
+		this.teamSpawnZoneWhite = teamSpawnZoneWhite;
 	}
 
 	public void setTeamSpawnZoneBlack(TeamSpawnZone teamSpawnZoneBlack) {
-		TeamSpawnZoneBlack = teamSpawnZoneBlack;
+		this.teamSpawnZoneBlack = teamSpawnZoneBlack;
 	}
 
 	public int getRemainigEggs() {
@@ -87,6 +93,20 @@ public class GameInfo extends Observable {
 	}
 
 	public int getAllEggs(){
-		return remainigEggs + TeamPointsBlack + TeamPointsWhite;
+		return remainigEggs + teamPointsBlack + teamPointsWhite;
+	}
+	
+	public void scoreBlack(){
+		teamPointsBlack++;
+		remainigEggs--;
+	}
+	
+	public void scoreWhite(){
+		teamPointsWhite++;
+		remainigEggs--;
+	}
+	
+	public void incrementRemaining(){
+		remainigEggs++;
 	}
 }
