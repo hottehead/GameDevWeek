@@ -1,16 +1,16 @@
 package de.hochschuletrier.gdw.ws1314.entity.player;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.IStateListener;
-import de.hochschuletrier.gdw.ws1314.state.State;
 
 /**
  * 
  * @author ElFapo
  *
  */
-public class StatePlayerWaiting extends State
+public class StatePlayerWaiting extends StatePlayer
 {
-	private State 		waitFinishedState;
+	private StatePlayer 		waitFinishedState;
 	
     private float 		waitTime;
     private float		timer;
@@ -25,8 +25,9 @@ public class StatePlayerWaiting extends State
 	public void update(float dt)
 	{
 		timer += dt;
-		if(timer >= waitTime && waitFinishedState != null)
+		if(timer >= waitTime && waitFinishedState != null){
 			getOwner().switchToState(waitFinishedState);
+		}
 	}
 
 	@Override
@@ -45,8 +46,10 @@ public class StatePlayerWaiting extends State
 	{
 		((ServerPlayer) getOwner()).moveEnd();
 	}
-	
-	public void setWaitFinishedState(State state)
+
+	public EntityStates getCurrentState(){return EntityStates.WAITING;}
+
+	public void setWaitFinishedState(StatePlayer state)
 	{
 		waitFinishedState = state;
 	}

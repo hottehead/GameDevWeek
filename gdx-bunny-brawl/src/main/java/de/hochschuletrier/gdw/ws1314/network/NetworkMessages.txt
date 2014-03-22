@@ -19,7 +19,7 @@ FIRST_CUSTOM + 0x10
 MessageType.DELTA
 Map String?
 Player [
-PlayerName Stzring
+PlayerName String
 Class Enum
 Team byte
 Accept boolean
@@ -43,6 +43,18 @@ Team byte
 Accept boolean
 //OK
 
+ClientID Datagram
+Server > Client
+FIRST_CUSTOM + 0x13
+playerid int
+//OK
+
+EnitityID Datagram
+Server > Client
+FIRST_CUSTOM + 0x14
+entityid int
+//OK
+
 PlayerReplicationDatagram
 Server > Client
 FIRST_CUSTOM + 0x20
@@ -55,7 +67,6 @@ Eggs byte
 Buffs byte
 Health int
 //OK
-
 
 LevelObjectReplicationDatagram
 Server > Client
@@ -85,15 +96,31 @@ FIRST_CUSTOM + 0x30
 MessageType.NORMAL
 ID long
 Eventart int
+//ok
 
 DespawnDatagram
 Server > Client
 FIRST_CUSTOM + 0x31
 MessageType.NORMAL
 ID long
+//ok
+
+GameStateDatagram
+Server > Client
+FIRST_CUSTOM + 0x32
+MessageType.NORMAL
+Status Enum
+//need enum
 
 ActionDatagram
 Client > Server
 FIRST_CUSTOM + 0x40
 MessageType.NORMAL
 PlayerEvent int
+//ok
+
+PingDatagram
+Both
+FIRST_CUSTOM + 0x50
+MessageType.NORMAL
+timestamp long

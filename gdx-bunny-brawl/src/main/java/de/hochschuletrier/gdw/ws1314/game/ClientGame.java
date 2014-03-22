@@ -22,6 +22,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
 import de.hochschuletrier.gdw.ws1314.render.EntityRenderer;
 import de.hochschuletrier.gdw.ws1314.render.LevelBoundings;
@@ -35,26 +36,26 @@ import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 // Modfied by El Fapo: updated intention changes
 public class ClientGame {
 	private ClientEntityManager entityManager;
-	private ClientServerConnect netManager;
+	private NetworkManager netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
-	private EntityRenderer entityRenderer;
+	private EntityRenderer entityRenderer; 
 
 	private DoubleBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
-	
+
 	private GameplayStage stage;
 
-	public ClientGame() {
+	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
-		netManager = ClientServerConnect.getInstance();
-
+		netManager = NetworkManager.getInstance();
+		
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
-
+		
 	}
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;
@@ -62,7 +63,7 @@ public class ClientGame {
 	public void init(AssetManagerX assets) {
 		map = assets.getTiledMap("dummy_fin_map2");
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-
+		
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
 			String filename = CurrentResourceLocator.combinePaths(
@@ -71,7 +72,7 @@ public class ClientGame {
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
-
+		
 		initMaterials(assets);
 
 		int width = Gdx.graphics.getWidth();
@@ -81,23 +82,23 @@ public class ClientGame {
 				height * 0.5f, map.getWidth()
 						* map.getTileWidth(), map.getHeight()
 						* map.getTileHeight());
-
+		
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
-		
+
 //			System.out.println(l.getName());
 //		}
-		
+
 		stage = new GameplayStage();
 		stage.init(assets);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
-
+	
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
-
-		
 		entityRenderer = new EntityRenderer(materialManager);
+		
+		
 		entityManager.provideListener(entityRenderer);
 
 		sceneToTexture = new DoubleBufferFBO(Format.RGBA8888,
@@ -112,7 +113,7 @@ public class ClientGame {
 	}
 
 	float fadeIn = 0.25f;
-
+	
 	public void render() {
 		sceneToTexture.begin();
 		DrawUtil.batch.setShader(advShader);
@@ -122,8 +123,8 @@ public class ClientGame {
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
 			} else {
-				mapRenderer.render(0, 0, layer);
-			}
+			mapRenderer.render(0, 0, layer);
+		}
 		}
 		DrawUtil.batch.flush();
 		sceneToTexture.end();
@@ -137,7 +138,7 @@ public class ClientGame {
 		DrawUtil.batch.setShader(null);
 		DrawUtil.batch.flush();
 		DrawUtil.endRenderToScreen();
-
+		
 		sceneToTexture.swap();
 		
 		DrawUtil.startRenderToScreen();
