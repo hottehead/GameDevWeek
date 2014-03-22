@@ -1,8 +1,6 @@
-package de.hochschuletrier.gdw.ws1314.render;
+package de.hochschuletrier.gdw.ws1314.render.materials;
 
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
-import de.hochschuletrier.gdw.ws1314.render.materials.MaterialDefinition;
-import de.hochschuletrier.gdw.ws1314.render.materials.MaterialLayer;
 
 public class SpinachMaterialDef extends MaterialDefinition {
 

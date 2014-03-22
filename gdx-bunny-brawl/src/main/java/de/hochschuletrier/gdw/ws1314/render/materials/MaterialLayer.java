@@ -9,4 +9,6 @@ public class MaterialLayer {
 	public static int PICKUP_LAYER = 0;
 	
 	public static int MINE_LAYER = -1;
+	
+	public static int BRIDGE_LAYER = -10;
 }
