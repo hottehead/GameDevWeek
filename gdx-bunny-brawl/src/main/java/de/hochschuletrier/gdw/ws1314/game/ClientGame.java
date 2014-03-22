@@ -143,7 +143,6 @@ public class ClientGame {
 		DrawUtil.startRenderToScreen();
 		stage.render();
 		DrawUtil.endRenderToScreen();
-
 	}
 
 	public void update(float delta) {
@@ -163,6 +162,7 @@ public class ClientGame {
 		cameraFollowingBehaviour.update(delta);
 		
 		stage.setFPSCounter(delta);
+		stage.step();
 	}
 
 	public TiledMap loadMap(String filename) {

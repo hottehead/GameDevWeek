@@ -23,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.Zone;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 
 import java.io.IOException;
+import java.rmi.server.ServerNotActiveException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.corba.Bridge;
 
 /**
  * Created by Jerry on 18.03.14.
@@ -44,8 +46,8 @@ public class LevelLoader {
 	private static HashMap<String, String> classToPath = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
-    private static HashMap<Integer,ArrayList<Long>> bridgeSwitchIDs = new HashMap<>();
-    private static HashMap<Integer,ArrayList<Long>> bridgeIDs = new HashMap<>();
+    private static HashMap<Integer,ArrayList<ServerBridgeSwitch>> bridgeSwitchIDs = new HashMap<>();
+    private static HashMap<Integer,ArrayList<ServerBridge>> bridgeIDs = new HashMap<>();
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager, GameInfo gameInfo) {
@@ -93,19 +95,18 @@ public class LevelLoader {
 	}
 
     private static void connectBridges(){
-        for(Map.Entry<Integer,ArrayList<Long>> bswitch : bridgeSwitchIDs.entrySet() )
+        for(Map.Entry<Integer,ArrayList<ServerBridgeSwitch>> bswitch : bridgeSwitchIDs.entrySet() )
         {
             if(!bridgeIDs.containsKey(bswitch.getKey())) {
                 logger.warn("Zu Switch{} gibt es keine Bridge.");
                 continue;
             }
 
-            for(Long bswitchID : bswitch.getValue()){
-                ServerBridgeSwitch sbswitch = (ServerBridgeSwitch)entityManager.getEntityById(bswitchID);
-                for(Long bridgeID : bridgeIDs.get(bswitch.getKey()))
+            for(ServerBridgeSwitch sbswitch : bswitch.getValue()){
+                for(ServerBridge bridge : bridgeIDs.get(bswitch.getKey()))
                 {
-                    sbswitch.addTargetID(bridgeID);
-					((ServerBridge)entityManager.getEntityById(bridgeID)).setVisibility(sbswitch.getActivePropertys());
+                    sbswitch.addTargetID(bridge.getID());
+					bridge.setVisibility(sbswitch.getActivePropertys());
                 }
             }
 
@@ -413,16 +414,18 @@ public class LevelLoader {
     }
 
     private static void addBridgeID(String name,ServerBridge enty){
+		logger.info(name);
         Integer id = new Integer(getIDinString(name));
+		logger.info("id: {}",id);
         if(id.intValue() < 0){
             logger.warn("Eine Bridge hat keine ID im Namen");
             return;
         }
 
         if(!bridgeIDs.containsKey(id))
-            bridgeIDs.put(id,new ArrayList<Long>());
+            bridgeIDs.put(id,new ArrayList<ServerBridge>());
 
-        bridgeIDs.get(id).add(enty.getID());
+        bridgeIDs.get(id).add(enty);
 
     }
 
@@ -433,10 +436,10 @@ public class LevelLoader {
             return;
         }
 
-        if(!bridgeIDs.containsKey(id))
-            bridgeIDs.put(id,new ArrayList<Long>());
+        if(!bridgeSwitchIDs.containsKey(id))
+			bridgeSwitchIDs.put(id,new ArrayList<ServerBridgeSwitch>());
 
-        bridgeIDs.get(id).add(enty.getID());
+		bridgeSwitchIDs.get(id).add(enty);
 
     }
 

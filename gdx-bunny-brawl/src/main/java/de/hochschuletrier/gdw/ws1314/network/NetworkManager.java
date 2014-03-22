@@ -454,7 +454,6 @@ public class NetworkManager{
 	}
 
 	private void handleDisconnects(){
-
 		if(isServer()){
 			List<NetConnection> toRemove = new ArrayList<>();
 			for(NetConnection c : serverConnections){
@@ -526,6 +525,9 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
+				}
 				ServerEntityManager.getInstance().getGameInfo().removeListner(gameInfoListener);
 				for(NetConnection nc : serverConnections){
 					nc.shutdown();
@@ -534,10 +536,6 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
-				if(this.disconnectcallback != null){
-					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
-				}
-				//logger.info("[SERVER] stopped");
 			}
 			else{
 				logger.warn("[NETWORK] Can't stop, i'm not a Server.");
