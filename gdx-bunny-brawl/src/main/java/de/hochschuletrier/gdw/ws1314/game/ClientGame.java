@@ -59,15 +59,12 @@ public class ClientGame {
 
 	public ClientGame() { 
 		entityManager = ClientEntityManager.getInstance();
-                scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
-                scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
+		scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
+        scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
 		netManager = NetworkManager.getInstance();
 		
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
-		
-		
-		
 	}
 
 	CameraFollowingBehaviour cameraFollowingBehaviour;

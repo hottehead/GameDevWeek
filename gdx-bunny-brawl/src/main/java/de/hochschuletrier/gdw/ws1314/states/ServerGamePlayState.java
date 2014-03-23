@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener, PlayerDisconnectCallback {
+public class ServerGamePlayState extends GameState implements DisconnectCallback, PlayerDisconnectCallback {
     private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
     
 	private ServerGame game;
@@ -62,6 +62,9 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
     @Override
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		
+		this.stage = new ServerGamePlayStage();
+		this.stage.init(assetManager);
 		
 		this.disconnectClickListener = new DisconnectClick();
 	}
@@ -99,14 +102,9 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
         game = new ServerGame(playerDatas);
 		game.init(assetManager, this.mapName);
 		
-		this.stage = new ServerGamePlayStage();
-		this.stage.init(assetManager);
-		
 		this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 		
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		ServerEntityManager.getInstance().getGameInfo().addListner(this);
 	}
 
 	@Override
@@ -115,11 +113,11 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 		
 		NetworkManager.getInstance().setDisconnectCallback(null);
 		
+		this.stage.init(assetManager);
 		this.stage.getDisconnectButton().removeListener(this.disconnectClickListener);
+		this.stage.clear();
 		
-		ServerEntityManager.getInstance().getGameInfo().removeListner(this);
-		
-		this.stage = null;
+		this.game.dispose();
 		this.game = null;
 	}
 
@@ -138,20 +136,6 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 	public void disconnectCallback(String msg) {
 		logger.info(msg);
 		GameStates.MAINMENU.activate();
-	}
-
-	@Override
-	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
-		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
-		
-		// WinningCondition HERE:
-		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
-		{
-			logger.info("Winning-Condition complied.");
-			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
-			// Der Server wird nicht explizit gestoppt, da alle Clients ihre Verbindung schließen sollen
-			// und dann geschieht das automatisch.
-		}
 	}
 
 	@Override
