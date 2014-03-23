@@ -25,6 +25,7 @@ import de.hochschuletrier.gdw.ws1314.render.materials.KnightMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SpinachMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.StrawMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SwitchMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.TankMaterialDef;
 
 public class MaterialManager {
 	private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
@@ -44,9 +45,11 @@ public class MaterialManager {
 
 		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.WHITE), new KnightMaterialDef(TeamColor.WHITE).get());
 		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.WHITE), new HunterMaterialDef(TeamColor.WHITE).get());
+		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.WHITE), new TankMaterialDef(TeamColor.WHITE).get());
 		
 		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.BLACK), new KnightMaterialDef(TeamColor.BLACK).get());
 		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.BLACK), new HunterMaterialDef(TeamColor.BLACK).get());
+		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.BLACK), new TankMaterialDef(TeamColor.BLACK).get());
 		
 		this.provideMaterials(new RenderType(EntityType.Projectil), new ArrowMaterialDef().get());
 

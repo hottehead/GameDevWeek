@@ -298,10 +298,10 @@
     },
 	"hunterBlackIdleDown": {
         "filename": "data/animations/HunterBlack_IdleDown.png",
-        "frames" : 4,
-        "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.2, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 4,
+        "columns": 3,
         "rows" : 1
     },
 	"hunterBlackIdleRight": {
@@ -362,10 +362,10 @@
     },
 	"hunterBlackAttackDown": {
         "filename": "data/animations/HunterBlack_AttackDown.png",
-        "frames" : 5,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 5,
+        "columns": 6,
         "rows" : 1
     },
 	"hunterBlackAttackRight": {
