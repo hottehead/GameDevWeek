@@ -1,9 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 10.0f;
+	private final float DURATION_TIME_IN_WATER = 50.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 100.0f;
 	
@@ -47,16 +49,18 @@ public class ServerHayBale extends ServerLevelObject
 	private boolean collWaterUpperLeft, collWaterUpperRight, collWaterLowerLeft, collWaterLowerRight;
 	private boolean collAbyssUpperLeft, collAbyssUpperRight, collAbyssLowerLeft, collAbyssLowerRight;
 	
+	private HashMap<Long, ServerPlayer> playersOnHayBale;
+	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
-	
-	private ArrayList<Long> itemsOnHayBale;
-	
+		
 	public ServerHayBale()
 	{
 		super();
 		speed = 0;
 		lifetime = 0;
 		acrossable = false;
+		
+		playersOnHayBale = new HashMap<>();
 	}
 	
 	@Override
@@ -76,6 +80,12 @@ public class ServerHayBale extends ServerLevelObject
 		
 		if(fixture == fixtureMain) {
 		    switch(otherEntity.getEntityType()) {
+		        case Noob:
+		        case Tank:
+		        case Hunter:
+		        case Knight:
+		            this.playersOnHayBale.put(otherEntity.getID(), (ServerPlayer) otherEntity);
+		            break;
 	            case Projectil:
 	                if(!acrossable){
 	                    ServerProjectile projectile = (ServerProjectile) otherEntity;
@@ -155,7 +165,18 @@ public class ServerHayBale extends ServerLevelObject
             return;
         }
 	    
-	    if(fixture == fixCollUpperLeft) {
+        if(fixture == fixtureMain) {
+          switch(otherEntity.getEntityType()) {
+              case Noob:
+              case Knight:
+              case Hunter:
+              case Tank:
+                  this.playersOnHayBale.remove(otherEntity.getID());
+                  break;
+              default:
+                  break;
+          }
+        } else if(fixture == fixCollUpperLeft) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
                     this.collWaterUpperLeft = false;
@@ -199,14 +220,6 @@ public class ServerHayBale extends ServerLevelObject
                     break;
             }
         }
-	}
-	
-	public void registerItemOnHayBale(long id){
-		itemsOnHayBale.add(id);
-	}
-	
-	public void unregisterItemOnHayBale(long id){
-		
 	}
 
 	@Override
@@ -299,6 +312,14 @@ public class ServerHayBale extends ServerLevelObject
         if(acrossable) {
             lifetime += deltaTime;
             if(lifetime > DURATION_TIME_IN_WATER) {
+                Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
+                
+                while(keySetIterator.hasNext()) {
+                    Long key = keySetIterator.next();
+                    ServerPlayer player = this.playersOnHayBale.get(key);
+                    player.setPlayerIsNotOnBridgeAnymore();
+                }
+                
                 ServerEntityManager.getInstance().removeEntity(this);
             }
         } else if(collWaterUpperLeft && collWaterUpperRight && collWaterLowerLeft && collWaterLowerRight) {
@@ -308,6 +329,15 @@ public class ServerHayBale extends ServerLevelObject
             this.setEntityState(EntityStates.WET);
             NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
             speed = 0;
+            
+            Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
+            
+            while(keySetIterator.hasNext()) {
+                Long key = keySetIterator.next();
+                ServerPlayer player = this.playersOnHayBale.get(key);
+                player.setPlayerIsOnBridge();
+            }
+            
         } else if(collAbyssUpperLeft && collAbyssUpperRight && collAbyssLowerLeft && collAbyssLowerRight) {
             ServerEntityManager.getInstance().removeEntity(this);
         }

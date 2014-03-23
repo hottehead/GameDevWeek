@@ -28,7 +28,7 @@ public class MainMenuState extends GameState {
 	private OptionListener optionListener;
 	private ExitListener exitlistener;
 	private PlayServerListener playServerListener;
-	private PlayClientListener playClientListener;
+	private GameBrowserListener gameBrowserListener;
 	
 	//test
 	private StartServerAndPlayListener startServerAndPlayListener;
@@ -50,7 +50,7 @@ public class MainMenuState extends GameState {
 		this.optionListener = new OptionListener();
 		this.exitlistener = new ExitListener();
 		this.playServerListener = new PlayServerListener();
-		this.playClientListener = new PlayClientListener();
+		this.gameBrowserListener = new GameBrowserListener();
         startServerAndPlayListener = new StartServerAndPlayListener();
 	}
 	
@@ -80,7 +80,7 @@ public class MainMenuState extends GameState {
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
-		stage.getPlayClientButton().addListener(this.playClientListener);
+		stage.getGameBrowserButton().addListener(this.gameBrowserListener);
 		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
 	}
 
@@ -90,7 +90,7 @@ public class MainMenuState extends GameState {
     	}
 
     	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
-    	stage.getPlayClientButton().removeListener(this.playClientListener);
+    	stage.getGameBrowserButton().removeListener(this.gameBrowserListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getExitButton().removeListener(this.exitlistener);
@@ -139,24 +139,12 @@ public class MainMenuState extends GameState {
 	}
 	
 	//private listener 
-	private class PlayClientListener extends ClickListener {
+	private class GameBrowserListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
-			logger.info("Change to JoinServerState");
+			logger.info("Change to GameBrowserState");
 			
-//			// TODO: Nur Temporär zum localen Testen
-			if (!NetworkManager.getInstance().isClient())
-			{
-				NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
-
-				if (!NetworkManager.getInstance().isClient()) {
-					logger.warn("Connection could not be established! Server maybe not running.");
-					GameStates.MAINMENU.init(assetManager);
-					GameStates.MAINMENU.activate();
-					return;
-				}
-			}
-			GameStates.CLIENTLOBBY.init(assetManager);
-			GameStates.CLIENTLOBBY.activate();
+			GameStates.CLIENTGAMEBROWSER.init(assetManager);
+			GameStates.CLIENTGAMEBROWSER.activate();
 		}
 	}
 	

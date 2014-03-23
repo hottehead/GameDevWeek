@@ -40,7 +40,7 @@ public class RenderObject implements Comparable<RenderObject> {
 			return GREATER_THAN;
 		}
 		if(o.materialAtlas==null) {
-			return LESS_THAN;
+			return GREATER_THAN;
 		}
 		Material activeMaterialThis = materialAtlas.get(this.getActiveState());
 		Material activeMaterialOther= o.materialAtlas.get(o.getActiveState());
@@ -48,7 +48,7 @@ public class RenderObject implements Comparable<RenderObject> {
 			return GREATER_THAN;
 		}
 		if(activeMaterialOther==null) {
-			return LESS_THAN;
+			return GREATER_THAN;
 		}
 
 		float thisTop = this.entity.getPosition().y - activeMaterialThis.height*0.5f;
