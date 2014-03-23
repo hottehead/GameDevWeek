@@ -159,8 +159,21 @@ public class ServerSwordAttack extends ServerEntity {
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapeBox(amplitude, height * 2.0f, new Vector2(0.0f, height), 0.0f)
+                .shapeBox(amplitude, 0.8f, new Vector2(0.0f, height), 0.0f)
+                .sensor(true));          
+        body.createFixture(new PhysixFixtureDef(manager)
+                .density(0.5f)
+                .friction(0.0f)
+                .restitution(0.0f)
+                .shapeBox(amplitude * 1.7f, 0.8f, new Vector2(0.0f, height - 16.0f), 0.0f)
                 .sensor(true));
+        body.createFixture(new PhysixFixtureDef(manager)
+                .density(0.5f)
+                .friction(0.0f)
+                .restitution(0.0f)
+                .shapeBox(amplitude * 1.2f, 0.8f, new Vector2(0.0f, height - 32.0f), 0.0f)
+                .sensor(true));
+        
         body.setGravityScale(0);
         body.addContactListener(this);
             
