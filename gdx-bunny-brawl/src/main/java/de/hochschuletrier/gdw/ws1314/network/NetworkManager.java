@@ -184,7 +184,7 @@ public class NetworkManager{
 			}
 			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
 			Main.getInstance().setConsoleVisible(true);
-			Main.getInstance().setTitle("[SERVER] "+getMyIp()+" - Bunny Brawl - GameDevWeek WS 2013/14");
+			Main.getInstance().setTitle("[SERVER] " + getMyIp() + ":" + port + " - Bunny Brawl - GameDevWeek WS 2013/14");
 		}
 		catch (IOException e){
 			logger.error("[SERVER] Can't listen for connections.", e);
