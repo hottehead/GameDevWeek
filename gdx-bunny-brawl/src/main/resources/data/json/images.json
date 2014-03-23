@@ -65,6 +65,7 @@
 	"menuButtonHelp": "data/huds/button_hilfe.png",
 	"menuButtonCredits": "data/huds/button_credits.png",
 	"menuButtonPlayServer": "data/huds/button_playServer.png",
-	"menuButtonPlayClient": "data/huds/button_playClient.png"
-    
+	"menuButtonPlayClient": "data/huds/button_playClient.png", 
+	
+	"ladescreen": "data/huds/ladescreen.png"
 }
