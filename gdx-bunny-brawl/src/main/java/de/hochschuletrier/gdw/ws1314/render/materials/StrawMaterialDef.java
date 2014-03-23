@@ -12,6 +12,7 @@ public class StrawMaterialDef extends MaterialDefinition {
 	public void build() {
 		newMaterial("straw", EntityStates.NONE, null, false);
 		newMaterial("straw", EntityStates.WET, null, false);
+		newMaterial("straw", EntityStates.KNOCKBACK, null, false);
 	}
 
 }

@@ -19,12 +19,10 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.ws1314.Main;
-import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import de.hochschuletrier.gdw.ws1314.hud.GameplayStage;
+import de.hochschuletrier.gdw.ws1314.hud.HudStage;
 import de.hochschuletrier.gdw.ws1314.input.InputHandler;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.render.CameraFollowingBehaviour;
@@ -53,7 +51,8 @@ public class ClientGame {
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
 
-	private GameplayStage stage;
+	private HudStage stage;
+	
         private int scoreBlack;
         private int scoreWhite;
 
@@ -99,7 +98,7 @@ public class ClientGame {
 		cameraFollowingBehaviour = new CameraFollowingBehaviour(
 				DrawUtil.getCamera(), levelBounds);
 
-		stage = new GameplayStage();
+		stage = new HudStage();
 		stage.init(assets);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
@@ -168,14 +167,14 @@ public class ClientGame {
 		}
 		cameraFollowingBehaviour.update(delta);
 		
-		stage.setFPSCounter(delta);
-		stage.step();
+//		stage.setFPSCounter(delta);
+//		stage.step();
                 if (scoreBlack < entityManager.getGameInfo().getTeamPointsBlack()) {
-                    stage.advanceScoreOwnTeam();
+//                    stage.advanceScoreOwnTeam();
                     scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
                 }
                 if (scoreWhite < entityManager.getGameInfo().getTeamPointsWhite()) {
-                    stage.advanceScoreEnemeyTeam();
+//                    stage.advanceScoreEnemeyTeam();
                     scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
                 }
 	}

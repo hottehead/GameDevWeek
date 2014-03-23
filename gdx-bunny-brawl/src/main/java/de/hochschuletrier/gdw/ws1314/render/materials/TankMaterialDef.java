@@ -47,6 +47,15 @@ public class TankMaterialDef extends MaterialDefinition {
 		newMaterial("tank"+colorStr+"AttackRight", EntityStates.ATTACK, FacingDirection.RIGHT, true);
 		newMaterial("tank"+colorStr+"AttackRight", EntityStates.ATTACK, FacingDirection.DOWN_RIGHT, true);
 		newMaterial("tank"+colorStr+"AttackRight", EntityStates.ATTACK, FacingDirection.UP_RIGHT, true);
+		
+		newMaterial("tank"+colorStr+"WalkDown", EntityStates.KNOCKBACK, FacingDirection.UP, true);
+		newMaterial("tank"+colorStr+"WalkUp", EntityStates.KNOCKBACK, FacingDirection.DOWN, true);
+		newMaterial("tank"+colorStr+"WalkLeft", EntityStates.KNOCKBACK, FacingDirection.RIGHT, true);
+		newMaterial("tank"+colorStr+"WalkLeft", EntityStates.KNOCKBACK, FacingDirection.DOWN_RIGHT, true);
+		newMaterial("tank"+colorStr+"WalkLeft", EntityStates.KNOCKBACK, FacingDirection.DOWN_RIGHT, true);
+		newMaterial("tank"+colorStr+"WalkRight", EntityStates.KNOCKBACK, FacingDirection.LEFT, true);
+		newMaterial("tank"+colorStr+"WalkRight", EntityStates.KNOCKBACK, FacingDirection.DOWN_LEFT, true);
+		newMaterial("tank"+colorStr+"WalkRight", EntityStates.KNOCKBACK, FacingDirection.UP_LEFT, true);
 	}
 
 }

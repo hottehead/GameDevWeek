@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
-import de.hochschuletrier.gdw.ws1314.Main;
 
 public class OptionStage extends AutoResizeStage {
 	
@@ -22,7 +20,7 @@ public class OptionStage extends AutoResizeStage {
 	private boolean isInited = false;
 	
 	private Slider master, music, sound;
-	private TextButton back;	
+	private TextButton back;
 	
 	public OptionStage() {
 		super();
@@ -77,7 +75,6 @@ public class OptionStage extends AutoResizeStage {
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		this.act(Gdx.graphics.getDeltaTime());
 		
-		DrawUtil.batch.flush();
 		this.draw();
 		Table.drawDebug(this);
 	}

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 
 public class ServerGamePlayStage extends AutoResizeStage {
@@ -49,7 +48,6 @@ public class ServerGamePlayStage extends AutoResizeStage {
 		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		this.act(Gdx.graphics.getDeltaTime());
 		
-		DrawUtil.batch.flush();
 		this.draw();
 //		Table.drawDebug(this);
 	}

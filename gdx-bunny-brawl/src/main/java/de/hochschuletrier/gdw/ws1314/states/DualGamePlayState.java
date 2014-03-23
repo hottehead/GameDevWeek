@@ -151,7 +151,7 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void clientIdCallback(int playerid) {
 		PlayerData p = new PlayerData(playerid, 
 				Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"),
-				EntityType.Tank,
+				EntityType.Hunter,
 				TeamColor.WHITE,
 				true);
 	
