@@ -1,18 +1,16 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Menu state
@@ -82,6 +80,12 @@ public class MainMenuState extends GameState {
 		stage.getPlayServerButton().addListener(this.playServerListener);
 		stage.getGameBrowserButton().addListener(this.gameBrowserListener);
 		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
+
+		if(Main.startAsServer){
+			logger.info("start as server");
+			NetworkManager.getInstance().serverStartCommand(Main.getSaveArgs());
+			Main.startAsServer = false;
+		}
 	}
 
     public void onLeave() {
