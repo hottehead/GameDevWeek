@@ -36,16 +36,15 @@ public class RenderObject implements Comparable<RenderObject> {
 		final int GREATER_THAN = 1;
 		final int EQUAL_TO = 0;
 		final int LESS_THAN = -1;
-		if(materialAtlas==null) {
-			return GREATER_THAN;
+		
+		if(materialAtlas==null && o.materialAtlas==null) {
+			return EQUAL_TO;
 		}
-		if(o.materialAtlas==null) {
-			return GREATER_THAN;
-		}
+
 		Material activeMaterialThis = materialAtlas.get(this.getActiveState());
 		Material activeMaterialOther= o.materialAtlas.get(o.getActiveState());
 		if(activeMaterialThis==null) {
-			return GREATER_THAN;
+			return LESS_THAN;
 		}
 		if(activeMaterialOther==null) {
 			return GREATER_THAN;
