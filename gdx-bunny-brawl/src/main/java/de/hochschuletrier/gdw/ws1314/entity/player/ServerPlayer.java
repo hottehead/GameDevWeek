@@ -370,6 +370,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public void beginContact(Contact contact) {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
+     	 Fixture opposingFixture = this.getOppoosingCollidingFixture(contact);
          
          if(otherEntity == null) {
              return;
@@ -453,6 +454,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+                	 if (!projectile.isDamageFixture(opposingFixture))
+                		 break;
                      if (getID() != projectile.getSourceID()) {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);

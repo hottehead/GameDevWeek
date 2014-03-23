@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
@@ -47,6 +48,9 @@ public class ServerProjectile extends ServerEntity {
     private boolean physicsInitialized;
     
     private static final Logger logger = LoggerFactory.getLogger(ServerProjectile.class);
+    
+    private Fixture fixtureDmg;
+    private Fixture fixtureDespawn;
 
 
     //==================================================
@@ -63,6 +67,8 @@ public class ServerProjectile extends ServerEntity {
             this.damage = 0.0f;
             this.hitCircleRadius = 1.0f;
             this.physicsInitialized = false;
+            this.fixtureDmg = null;
+            this.fixtureDespawn = null;
     }
     
     public void setDamage(float dmg) {
@@ -117,19 +123,23 @@ public class ServerProjectile extends ServerEntity {
 	public void beginContact(Contact contact) {
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
-            if(otherEntity == null) {
-                ServerEntityManager.getInstance().removeEntity(this);
-                return;
+            if (isDespawnFixture(getCollidingFixture(contact))) {
+                if(otherEntity == null) {
+                    ServerEntityManager.getInstance().removeEntity(this);
+                    return;
+                }
+                
+                switch(otherEntity.getEntityType()) {
+                	case BridgeSwitch:
+                	case Bush:
+                	case HayBale:
+                		ServerEntityManager.getInstance().removeEntity(this);
+                        break;
+                    default:
+                        break;
+                }
             }
-            
-            switch(otherEntity.getEntityType()) {
-            	case BridgeSwitch:
-            	case Bush:
-            	case HayBale:
-            		ServerEntityManager.getInstance().removeEntity(this);
-                    break;
-                default:
-                    break;
+            else if (isDamageFixture(getCollidingFixture(contact))) {
             }
 	}
 
@@ -183,15 +193,33 @@ public class ServerProjectile extends ServerEntity {
                     .shapeCircle(hitCircleRadius)
                     .sensor(true));
             
+            body.createFixture(new PhysixFixtureDef(manager)
+                    .density(0.5f)
+                    .friction(0.0f)
+                    .restitution(0.0f)
+                    .shapeCircle(2.0f, new Vector2(0, 16.0f))
+                    .sensor(true));
+            
             body.setGravityScale(0);
             body.addContactListener(this);
 
             setPhysicsBody(body);
+
+            fixtureDmg = body.getBody().getFixtureList().get(0);
+            fixtureDespawn = body.getBody().getFixtureList().get(1);
 
             Vector2 vel = new Vector2(	getFacingDirection().getDirectionVector().x * velocity,
             							getFacingDirection().getDirectionVector().y * velocity);
             physicsBody.setLinearVelocity(vel);
 
             physicsInitialized = true;
-	}	
+	}
+	
+	public boolean isDamageFixture(Fixture fixture) {
+		return fixture == fixtureDmg;
+	}
+	
+	public boolean isDespawnFixture(Fixture fixture) {
+		return fixture == fixtureDespawn;
+	}
 }
