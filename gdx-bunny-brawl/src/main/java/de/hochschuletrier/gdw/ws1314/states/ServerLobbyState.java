@@ -52,8 +52,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		
 		stage.init(assetManager);
 		
-		ServerEntityManager.getInstance().Clear();
-		
         NetworkManager.getInstance().setDisconnectCallback(this);
         
     	serverLobby = new ServerLobbyManager();
