@@ -388,7 +388,7 @@
 	"tankBlackAttackLeft": {
         "filename": "data/animations/tankBlack_attackLeft.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -396,7 +396,7 @@
 	"tankBlackAttackRight": {
         "filename": "data/animations/tankBlack_attackRight.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -404,7 +404,7 @@
 	"tankBlackAttackUp": {
         "filename": "data/animations/tankBlack_attackUp.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -412,7 +412,7 @@
 	"tankBlackAttackDown": {
         "filename": "data/animations/tankBlack_attackDown.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -484,7 +484,7 @@
 	"tankWhiteAttackLeft": {
         "filename": "data/animations/tankWhite_attackLeft.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -492,7 +492,7 @@
 	"tankWhiteAttackRight": {
         "filename": "data/animations/tankWhite_attackRight.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -500,7 +500,7 @@
 	"tankWhiteAttackUp": {
         "filename": "data/animations/tankWhite_attackUp.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
@@ -508,7 +508,7 @@
 	"tankWhiteAttackDown": {
         "filename": "data/animations/tankWhite_attackDown.png",
         "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
