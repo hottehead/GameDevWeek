@@ -32,14 +32,19 @@ public class ServerHayBale extends ServerLevelObject
 {
 	private final float DURATION_TIME_IN_WATER = 10.0f;
 	private final float SCL_VELOCITY = 300.0f;
-	private final float NORMAL_DAMPING = 1.0f;
+	private final float NORMAL_DAMPING = 100.0f;
 	
 	private float speed;
 	private boolean acrossable;
 	private float lifetime;
 	
-	private Fixture fixtureWaterCollCheck;
 	private Fixture fixtureMain;
+	private Fixture fixCollUpperLeft;
+	private Fixture fixCollUpperRight;
+	private Fixture fixCollLowerLeft;
+	private Fixture fixCollLowerRight;
+	
+	private boolean collUpperLeft, collUpperRight, collLowerLeft, collLowerRight;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 	
@@ -92,30 +97,85 @@ public class ServerHayBale extends ServerLevelObject
 	                //this.acrossable = false;
 	                break;
 	        }
-		} else if(fixture == fixtureWaterCollCheck) {
+		} else if(fixture == fixCollUpperLeft) {
 		    switch(otherEntity.getEntityType()) {
 		        case WaterZone:
-                    if(fixture == fixtureWaterCollCheck) {
-                        this.physicsBody.setLinearVelocity(new Vector2());
-                        this.fixtureMain.setSensor(true);
-                        this.acrossable = true;
-						this.setEntityState(EntityStates.WET);
-						NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
-                        speed = 0;
-                    }
+                    this.collUpperLeft = true;
                     break;
 		        default:
-					//this.setEntityState(EntityStates.NONE);
-                    //this.acrossable = false;
                     break;
 		    }
-		}
+		} else if(fixture == fixCollUpperRight) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collUpperRight = true;
+                    break;
+                default:
+                    break;
+            }
+        } else if(fixture == fixCollLowerLeft) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collLowerLeft = true;
+                    break;
+                default:
+                    break;
+            }
+        } else if(fixture == fixCollLowerRight) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collLowerRight = true;
+                    break;
+                default:
+                    break;
+            }
+        }
 		
 	}
 
 	@Override
 	public void endContact(Contact contact)
 	{
+	    ServerEntity otherEntity = this.identifyContactFixtures(contact);
+        Fixture fixture = this.getCollidingFixture(contact);
+        
+        if(otherEntity == null){
+            return;
+        }
+	    
+	    if(fixture == fixCollUpperLeft) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collUpperLeft = false;
+                    break;
+                default:
+                    break;
+            }
+        } else if(fixture == fixCollUpperRight) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collUpperRight = false;
+                    break;
+                default:
+                    break;
+            }
+        } else if(fixture == fixCollLowerLeft) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collLowerLeft = false;
+                    break;
+                default:
+                    break;
+            }
+        } else if(fixture == fixCollLowerRight) {
+            switch(otherEntity.getEntityType()) {
+                case WaterZone:
+                    this.collLowerRight = false;
+                    break;
+                default:
+                    break;
+            }
+        }
 	}
 	
 	public void registerItemOnHayBale(long id){
@@ -140,8 +200,11 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
+	    float posX = properties.getFloat("x");
+	    float posY = properties.getFloat("y");
+	    
         PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
-            .position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
+            .position(new Vector2(posX, posY))
             .fixedRotation(true).create();
 
         
@@ -151,11 +214,44 @@ public class ServerHayBale extends ServerLevelObject
 		    .restitution(0.0f)
 		    .shapeBox(50,50));
     	
+    	//main fixture
     	body.createFixture(new PhysixFixtureDef(manager)
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeCircle(5)
+            .shapeBox(1, 1, new Vector2(-25, -25), 0)
+            .sensor(true));
+    	
+    	//upper left coll check
+    	body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeBox(1, 1, new Vector2(25, -25), 0)
+            .sensor(true));
+    	
+    	//upper right coll check
+    	body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeBox(1, 1, new Vector2(-25, -25), 0)
+            .sensor(true));
+    	
+    	//lower left coll check
+    	body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeBox(1, 1, new Vector2(-25, 25), 0)
+            .sensor(true));
+    	
+    	//lower right coll check
+    	body.createFixture(new PhysixFixtureDef(manager)
+            .density(0.5f)
+            .friction(0.0f)
+            .restitution(0.0f)
+            .shapeBox(1, 1, new Vector2(25, 25), 0)
             .sensor(true));
         
         body.setGravityScale(0);
@@ -165,7 +261,10 @@ public class ServerHayBale extends ServerLevelObject
         
         Array<Fixture> fixtures = body.getBody().getFixtureList();
         fixtureMain = fixtures.get(0);
-        fixtureWaterCollCheck = fixtures.get(1);
+        fixCollUpperLeft = fixtures.get(1);
+        fixCollUpperRight = fixtures.get(2);
+        fixCollLowerLeft = fixtures.get(3);
+        fixCollLowerRight = fixtures.get(4);
 	}
 	
 	public boolean isCrossable() {
@@ -179,6 +278,13 @@ public class ServerHayBale extends ServerLevelObject
             if(lifetime > DURATION_TIME_IN_WATER) {
                 ServerEntityManager.getInstance().removeEntity(this);
             }
+        } else if(collUpperLeft && collUpperRight && collLowerLeft && collLowerRight) {
+            this.physicsBody.setLinearVelocity(new Vector2());
+            this.fixtureMain.setSensor(true);
+            this.acrossable = true;
+            this.setEntityState(EntityStates.WET);
+            NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
+            speed = 0;
         }
     }
 
