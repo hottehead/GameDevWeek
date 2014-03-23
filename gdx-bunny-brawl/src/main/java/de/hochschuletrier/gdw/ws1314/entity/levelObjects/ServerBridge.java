@@ -18,6 +18,7 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
@@ -221,8 +222,8 @@ public class ServerBridge extends ServerLevelObject
 
             while(keySetIterator3.hasNext()){
               Long key = keySetIterator.next();
-              ServerHayBale egg = this.collidingHayBales.get(key);
-              
+              ServerHayBale hayBale = this.collidingHayBales.get(key);
+              ServerEntityManager.getInstance().removeEntity(hayBale);
             }
 		}
 	}
