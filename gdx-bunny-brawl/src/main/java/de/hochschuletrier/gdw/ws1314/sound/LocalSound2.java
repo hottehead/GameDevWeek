@@ -48,6 +48,7 @@ public class LocalSound2 {
 	}
 	
 	private void loop(String soundName, float volume) {
+		this.stopLoop();
 		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
 		this.loopID = this.soundHandle.loop(LocalSound2.SystemVolume * volume);
 	}
@@ -142,6 +143,8 @@ public class LocalSound2 {
 					return "speech-general-yeay_" + random;
 				}
 			case WALK_GRASS:
+			case WALK_WAY:
+			case WALK_BRIDGE:
 				return "walk-general-grass";
 			default:
 				return "speech-tank-nom_1";
@@ -154,13 +157,13 @@ public class LocalSound2 {
 	}
 	
 	public void playSoundByAction(EventType event, ClientEntity entity) {
+		LocalSound2.LocalPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
 		if (event.equals(EventType.IDLE))
 			this.stopLoop();
 		else {
-			LocalSound2.LocalPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
 			String soundAction = this.connectSoundToAction(event, entity);
 			boolean loop;
-		
+		System.out.println("Event getriggert :: " + event);
 			switch(soundAction) {
 				case "walk-general-grass":
 					loop = true;
