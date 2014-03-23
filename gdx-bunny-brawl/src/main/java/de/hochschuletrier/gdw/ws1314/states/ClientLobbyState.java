@@ -54,7 +54,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 
     @Override
     public void render () {
-    	if(!isInitialized) {
+    	if(isInitialized) {
     		this.stage.render();
     	}
     }
@@ -84,7 +84,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	
 	@Override
 	public void onEnter() {
-		if(!isInitialized) {
 	    	super.onEnter();
 	    	
 	    	this.clientLobby = new ClientLobbyManager(Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"));
@@ -157,7 +156,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 				onLeave();
 			}
 			isInitialized = true;
-		}
     }
 
 	@Override
@@ -186,6 +184,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	    
 		this.clientLobby = null;
 		this.stage = null;
+		isInitialized = false;
 	}
 
 	@Override
