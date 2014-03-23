@@ -122,6 +122,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	private int					deadZoneCounter;
     private boolean             isInDeadZone;
     
+    private ArrayList<Long>		struckBySwordIDs;
     
     public ServerPlayer()
     {
@@ -151,6 +152,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	deathfreeze = 0.5f;
     	isInDeadZone = false;
     	pickedUpEggs = new ArrayList<>();
+    	struckBySwordIDs = new ArrayList<Long>();
     }
     
     public void enable() {}
@@ -229,6 +231,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     			this.deactivateAttackBuff();
     		}
     	}
+    	struckBySwordIDs.clear();
     }
 
     public void doAction(PlayerIntention intent) {
@@ -260,9 +263,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             case ATTACK_1:
             	if (!attackAvailable)
             		break;
-        		attackState.setWaitTime(ATTACK_TIME);
+        		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getFirstAttackCooldown();
+            		attackCooldown = playerKit.getFirstAttackDelay();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
@@ -273,9 +276,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             case ATTACK_2:
             	if (!attackAvailable)
             		break;
-        		attackState.setWaitTime(ATTACK_TIME);
+        		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getSecondAttackCooldown();
+            		attackCooldown = playerKit.getSecondAttackDelay();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
@@ -459,9 +462,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 break;
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     if (attack.getSourceID() != getID()) {
+                     if (attack.getSourceID() != getID() && struckBySwordIDs.contains(attack.getSourceID())) {
                          applyDamage(attack.getDamage());
                          applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
+                         struckBySwordIDs.add(attack.getSourceID());
                      }
                 	 break;
                  default:
@@ -664,6 +668,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 		switchToState(knockbackState);
 		physicsBody.setLinearDamping(BRAKING);
 		physicsBody.applyImpulse(direction.getDirectionVector().x * impulse, direction.getDirectionVector().y * impulse);
+		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
+	}
+	
+	protected void applyKnockback(Vector2 direction, float impulse) {
+		knockbackState.setWaitTime(KNOCKBACK_TIME);
+		switchToState(knockbackState);
+		physicsBody.setLinearDamping(BRAKING);
+		physicsBody.applyImpulse(direction.x * impulse, direction.y * impulse);
 		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
 	}
 	

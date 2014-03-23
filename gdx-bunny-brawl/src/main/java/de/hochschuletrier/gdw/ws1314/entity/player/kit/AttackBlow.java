@@ -18,6 +18,8 @@ public class AttackBlow extends AttackType
     public static final float	RANGE = 20.0f;
     public static final float	WIDTH = 32.0f;
     
+    public static final float	ATTACK_TIME = 2.0f;
+    
     public void fire(ServerPlayer player)
     {
     	Vector2 pos = new Vector2(player.getPosition());
@@ -28,6 +30,11 @@ public class AttackBlow extends AttackType
     	attack.setDamage(DAMAGE);
     	attack.setSource(player.getID());
     	attack.setSize(RANGE,  WIDTH);
-    	attack.setDespawnTime(ServerPlayer.ATTACK_TIME);
+    	attack.setDespawnTime(this.ATTACK_TIME);
+    }
+    
+    public float getAttackTime()
+    {
+    	return ATTACK_TIME;
     }
 }
