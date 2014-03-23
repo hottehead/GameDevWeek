@@ -44,6 +44,7 @@ public class StartServerState extends GameState {
     public void onEnter() {
     	stage.init(assetManager);
 	    Main.inputMultiplexer.addProcessor(stage);
+	    Main.getInstance().addScreenListener(stage);
 		stage.getBackButton().addListener(backListener);
 		stage.getStartServerButton().addListener(startServerListener);
 		stage.setSelectedMap(Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, ""));
@@ -56,6 +57,7 @@ public class StartServerState extends GameState {
     	stage.getStartServerButton().removeListener(startServerListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
+		Main.getInstance().removeScreenListener(stage);
 		stage.clear();
     }
 

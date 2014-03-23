@@ -28,7 +28,6 @@ import de.hochschuletrier.gdw.commons.gdx.utils.GdxResourceLocator;
 import de.hochschuletrier.gdw.commons.gdx.utils.KeyUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.ws1314.hud.HudResizer;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.preferences.GamePreferences;
@@ -47,8 +46,8 @@ import java.util.List;
  */
 public class Main extends StateBasedGame {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	public static final int WINDOW_WIDTH = 1024;
-	public static final int WINDOW_HEIGHT = 512;
+	public static final int WINDOW_WIDTH = 1280;
+	public static final int WINDOW_HEIGHT = 720;
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
@@ -63,7 +62,7 @@ public class Main extends StateBasedGame {
 	public static boolean startAsServer = false;
 	public static int port = 0;
 
-	private static String [] saveArgs;
+	private static String[] saveArgs;
 
 	public static Main getInstance() {
 		if (instance == null) {
@@ -97,7 +96,7 @@ public class Main extends StateBasedGame {
 				null);
 	}
 
-	public AssetManagerX getAssetManager(){
+	public AssetManagerX getAssetManager() {
 		return assetManager;
 	}
 
@@ -117,13 +116,13 @@ public class Main extends StateBasedGame {
 	public String s_map = "";
 	public PlayerData[] c_players;
 	public List<PlayerData> s_players = new ArrayList<PlayerData>();
-	
-	//public int playercount = 0;
-	
-	
+
+	// public int playercount = 0;
+
 	@Override
 	public void create() {
-		//s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte) 0, false);
+		// s_players[0] = new PlayerData("supertyp", EntityType.Hunter, (byte)
+		// 0, false);
 		CurrentResourceLocator.set(new GdxResourceLocator(Files.FileType.Internal));
 		DrawUtil.init();
 		loadAssetLists();
@@ -139,68 +138,56 @@ public class Main extends StateBasedGame {
 
 		GameStates.LOADING.init(assetManager);
 		GameStates.LOADING.activate();
-        
+
 		NetworkManager.getInstance().init();
-		
-		console.register(new ConsoleCmd("chState",0,"[DEBUG] Change GameplayState",1){
+
+		console.register(new ConsoleCmd("chState", 0, "[DEBUG] Change GameplayState", 1) {
 			@Override
 			public void showUsage() {
 				showUsage("<GameplayStateName>");
 			}
-			
+
 			@Override
 			public void execute(List<String> args) {
-				if (args.get(1).equals("lobby"))
-				{
-					if (NetworkManager.getInstance().isServer())
-					{
+				if (args.get(1).equals("lobby")) {
+					if (NetworkManager.getInstance().isServer()) {
 						logger.info("Changing State to Server-Lobby...");
 						GameStates.SERVERLOBBY.init(assetManager);
 						GameStates.SERVERLOBBY.activate();
-					}
-					else if (NetworkManager.getInstance().isClient())
-					{
+					} else if (NetworkManager.getInstance().isClient()) {
 						logger.info("Changing State to Client-Lobby...");
 						GameStates.CLIENTLOBBY.init(assetManager);
 						GameStates.CLIENTLOBBY.activate();
-					}
-					else
-					{
+					} else {
 						logger.info("Not yet connected...");
 					}
 				}
-				if (args.get(1).equals("main"))
-				{
-					if (NetworkManager.getInstance().isServer())
-					{
+				if (args.get(1).equals("main")) {
+					if (NetworkManager.getInstance().isServer()) {
 						logger.info("Changing State to Mainmenu...");
 						GameStates.MAINMENU.init(assetManager);
 						GameStates.MAINMENU.activate();
-					}
-					else if (NetworkManager.getInstance().isClient())
-					{
+					} else if (NetworkManager.getInstance().isClient()) {
 						logger.info("Changing State to Mainmenu...");
 						GameStates.MAINMENU.init(assetManager);
 						GameStates.MAINMENU.activate();
-					}
-					else
-					{
+					} else {
 						logger.info("Not yet connected...");
 					}
 				}
 			}
 		});
-		
+
 	}
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
-	    GameStates.SERVERLOBBY.init(assetManager);
-	    GameStates.CLIENTLOBBY.init(assetManager);
-	    GameStates.SERVERGAMEPLAY.init(assetManager);
-	    GameStates.CLIENTGAMEPLAY.init(assetManager);
-	    GameStates.DUALGAMEPLAY.init(assetManager);
-	    GameStates.FINISHEDGAME.init(assetManager);
+		GameStates.SERVERLOBBY.init(assetManager);
+		GameStates.CLIENTLOBBY.init(assetManager);
+		GameStates.SERVERGAMEPLAY.init(assetManager);
+		GameStates.CLIENTGAMEPLAY.init(assetManager);
+		GameStates.DUALGAMEPLAY.init(assetManager);
+		GameStates.FINISHEDGAME.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
@@ -237,8 +224,8 @@ public class Main extends StateBasedGame {
 			consoleView.update(delta);
 		}
 		console.executeCmdQueue();
-        
-    	NetworkManager.getInstance().update();
+
+		NetworkManager.getInstance().update();
 	}
 
 	@Override
@@ -246,27 +233,27 @@ public class Main extends StateBasedGame {
 		Gdx.gl.glViewport(0, 0, width, height);
 		super.resize(width, height);
 		DrawUtil.setViewport(width, height);
-		HudResizer.resize(width, height);
 	}
 
 	@Override
 	public void pause() {
 	}
 
-	@Override	public void resume() {
+	@Override
+	public void resume() {
 	}
 
-	public void setTitle(String title){
+	public void setTitle(String title) {
 		Gdx.graphics.setTitle(title);
 	}
 
-	public void setConsoleVisible(boolean b){
-		if(consoleView.isVisible() != b){
+	public void setConsoleVisible(boolean b) {
+		if (consoleView.isVisible() != b) {
 			consoleView.setVisible(b);
 		}
 	}
 
-	public static String[] getSaveArgs(){
+	public static String[] getSaveArgs() {
 		return saveArgs;
 	}
 
@@ -276,8 +263,8 @@ public class Main extends StateBasedGame {
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
-		for(String s:args){
-			if(s.equalsIgnoreCase("-server")){
+		for (String s : args) {
+			if (s.equalsIgnoreCase("-server")) {
 				startAsServer = true;
 			}
 		}

@@ -101,15 +101,18 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
         
         game = new ServerGame(playerDatas);
 		game.init(assetManager, this.mapName);
-		
+		Main.getInstance().addScreenListener(stage);
+		Main.inputMultiplexer.addProcessor(stage);
 		this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 		
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
 	public void onLeave() {
 		super.onLeave();
+		
+		Main.getInstance().removeScreenListener(stage);
+		Main.inputMultiplexer.removeProcessor(stage);
 		
 		NetworkManager.getInstance().setDisconnectCallback(null);
 		

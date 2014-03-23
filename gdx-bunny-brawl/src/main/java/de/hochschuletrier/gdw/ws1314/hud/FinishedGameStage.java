@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,13 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
-public class FinishedGameStage extends AutoResizeStage {
+public class FinishedGameStage extends Stage implements ScreenListener {
 	
 	private BitmapFont font;
 	private Skin defaultSkin;
@@ -97,8 +99,7 @@ public class FinishedGameStage extends AutoResizeStage {
 	
 	@Override
 	public void resize(int width, int height) {
-		super.resize(width, height);
-		if(this.xScale >0 && this.yScale>0)
-			uiTable.setScale(this.xScale, this.yScale);
+		getViewport().update(width, height, true);
+
 	}
 }

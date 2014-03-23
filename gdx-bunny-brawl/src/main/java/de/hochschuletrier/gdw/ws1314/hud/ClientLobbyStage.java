@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
@@ -18,7 +20,7 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.ChatWindow;
 import de.hochschuletrier.gdw.ws1314.lobby.ClientLobbyManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 
-public class ClientLobbyStage extends AutoResizeStage {
+public class ClientLobbyStage extends Stage implements ScreenListener {
 	
 	private BitmapFont font;
 	private Skin defaultSkin;
@@ -92,9 +94,8 @@ public class ClientLobbyStage extends AutoResizeStage {
 	}
 
 	public void render() {		
-		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		Table.drawDebug(this);
-		this.act(Gdx.graphics.getDeltaTime());
+		this.act();
 		
 		this.whiteTeamList.reset();
 		
@@ -115,10 +116,7 @@ public class ClientLobbyStage extends AutoResizeStage {
 			this.blackTeamList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
 			this.blackTeamList.add(new Label("" + p.isAccept(), defaultSkin));
 		}
-		
-		DrawUtil.batch.flush();
 		this.draw();
-		//Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
@@ -135,5 +133,10 @@ public class ClientLobbyStage extends AutoResizeStage {
 	
 	public TextButton getDisconnectButton() {
 		return this.disonnectButton;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		getViewport().update(width, height, true);
 	}
 }

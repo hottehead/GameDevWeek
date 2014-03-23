@@ -14,91 +14,90 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Menu state
- *
+ * 
  * @author Santo Pfingsten
  */
 public class MainMenuState extends GameState {
-    private LocalMusic music;
-	private int stateChangeDuration=500;
+	private LocalMusic music;
+	private int stateChangeDuration = 500;
 	private MainMenuStage stage;
-	
+
 	private Logger logger;
 	private OptionListener optionListener;
 	private ExitListener exitlistener;
 	private PlayServerListener playServerListener;
 	private GameBrowserListener gameBrowserListener;
 	
-	//test
+	// test
 	private StartServerAndPlayListener startServerAndPlayListener;
 
-    public MainMenuState() {
-    }
+	public MainMenuState() {
+	}
 
-    @Override
-    public void init(AssetManagerX assetManager) {
-        super.init(assetManager);
+	@Override
+	public void init(AssetManagerX assetManager) {
+		super.init(assetManager);
 
 		logger = LoggerFactory.getLogger(MainMenuState.class);
 		this.music = Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU);
-		
-        stage = new MainMenuStage();
-        stage.init(assetManager);
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		stage = new MainMenuStage();
+		stage.init(assetManager);
 
 		this.optionListener = new OptionListener();
 		this.exitlistener = new ExitListener();
 		this.playServerListener = new PlayServerListener();
 		this.gameBrowserListener = new GameBrowserListener();
-        startServerAndPlayListener = new StartServerAndPlayListener();
+		startServerAndPlayListener = new StartServerAndPlayListener();
+
 	}
-	
-    public void render() {
+
+	public void render() {
 		stage.render();
 	}
 
-	float stateTime = 0f; 
 
 	public void update(float delta) {
-		stateTime += delta;
 		music.update();
 		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
-    }
+	}
 
-    public void onEnter() {
-        if (this.music.isMusicPlaying()) {
+	public void onEnter() {
+		if (this.music.isMusicPlaying()) {
 			this.music.setFade('i', 2500);
-        }
-		else{
-        	this.music.play("music-lobby-loop");
-        }
+		} else {
+			this.music.play("music-lobby-loop");
+		}
 
 		stage.init(assetManager);
-	    Main.inputMultiplexer.addProcessor(stage);
-		
+		Main.inputMultiplexer.addProcessor(stage);
+		Main.getInstance().addScreenListener(stage);
+
 		stage.getOptionsButton().addListener(this.optionListener);
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
 		stage.getGameBrowserButton().addListener(this.gameBrowserListener);
 		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
 
-		if(Main.startAsServer){
+		if (Main.startAsServer) {
 			logger.info("start as server");
 			NetworkManager.getInstance().serverStartCommand(Main.getSaveArgs());
 			Main.startAsServer = false;
 		}
 	}
 
-    public void onLeave() {
-    	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2500);
-    	}
+	public void onLeave() {
+		if (this.music.isMusicPlaying()) {
+			this.music.setFade('o', 2500);
+		}
 
-    	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
-    	stage.getGameBrowserButton().removeListener(this.gameBrowserListener);
+		stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
+		stage.getGameBrowserButton().removeListener(this.gameBrowserListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);
 		stage.getExitButton().removeListener(this.exitlistener);
 		Main.inputMultiplexer.removeProcessor(stage);
+		Main.getInstance().addScreenListener(stage);
 		stage.clear();
 	}
 
@@ -106,8 +105,9 @@ public class MainMenuState extends GameState {
 	}
 
 	public void dispose() {
-		if (this.stage != null)
+		if (stage !=null) {
 			stage.dispose();
+		}
 	}
 
 	public boolean keyDown(int keycode) {
@@ -141,17 +141,17 @@ public class MainMenuState extends GameState {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	
-	//private listener 
+
+	// private listener
 	private class GameBrowserListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to GameBrowserState");
-			
+
 			GameStates.CLIENTGAMEBROWSER.init(assetManager);
 			GameStates.CLIENTGAMEBROWSER.activate();
 		}
 	}
-	
+
 	private class PlayServerListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to StartServerState");
@@ -159,7 +159,7 @@ public class MainMenuState extends GameState {
 			GameStates.STARTSERVER.activate();
 		}
 	}
-	
+
 	private class OptionListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to OptionState");
@@ -167,7 +167,7 @@ public class MainMenuState extends GameState {
 			GameStates.OPTIONS.activate();
 		}
 	}
-	
+
 	private class CreditsListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to CreditsState");
@@ -175,19 +175,19 @@ public class MainMenuState extends GameState {
 			GameStates.CREDITS.activate();
 		}
 	}
-	
+
 	private class ExitListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			Gdx.app.exit();
 		}
 	}
-	
-	//test	
+
+	// test
 	private class StartServerAndPlayListener extends ClickListener {
-    	public void clicked(InputEvent event, float x, float y) {
-    		logger.warn("Changing to DualGameplayState - to be removed");
+		public void clicked(InputEvent event, float x, float y) {
+			logger.warn("Changing to DualGameplayState - to be removed");
 			GameStates.DUALGAMEPLAY.init(assetManager);
 			GameStates.DUALGAMEPLAY.activate();
-    	}
-    }
+		}
+	}
 }

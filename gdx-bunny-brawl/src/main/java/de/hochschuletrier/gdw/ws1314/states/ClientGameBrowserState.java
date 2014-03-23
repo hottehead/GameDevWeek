@@ -62,6 +62,7 @@ public class ClientGameBrowserState extends GameState {
 	public void onEnter() {
 		// TODO Auto-generated method stub
 		super.onEnter();
+		Main.getInstance().addScreenListener(clientGameBrowser);
 		Main.getInstance().inputMultiplexer.addProcessor(clientGameBrowser);
 	}
 	
@@ -69,7 +70,8 @@ public class ClientGameBrowserState extends GameState {
 	public void onLeave() {
 		// TODO Auto-generated method stub
 		super.onLeave();
+		Main.getInstance().removeScreenListener(clientGameBrowser);
 		Main.getInstance().inputMultiplexer.removeProcessor(clientGameBrowser);
-
+		clientGameBrowser.clear();
 	}
 }

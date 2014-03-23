@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.resourcelocator.CurrentResourceLocator;
@@ -98,7 +100,6 @@ public class ClientGame {
 
 		stage = new GameplayStage();
 		stage.init(assets);
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
 	private void initMaterials(AssetManagerX assetManager) {
@@ -186,4 +187,7 @@ public class ClientGame {
 		}
 	}
 
+	public ScreenListener getHUD() {
+		return stage;
+	}
 }

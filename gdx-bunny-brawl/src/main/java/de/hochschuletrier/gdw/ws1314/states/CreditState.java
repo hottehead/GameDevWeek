@@ -33,12 +33,14 @@ public class CreditState extends GameState {
     public void onEnter() {
     	stage.init(assetManager);
 	    Main.inputMultiplexer.addProcessor(stage);
+	    Main.getInstance().addScreenListener(stage);
     }
 
     public void onEnterComplete() {
     }
 
     public void onLeave() {
+    	Main.getInstance().removeScreenListener(stage);
     	Main.inputMultiplexer.removeProcessor(stage);
     	stage.clear();
     }

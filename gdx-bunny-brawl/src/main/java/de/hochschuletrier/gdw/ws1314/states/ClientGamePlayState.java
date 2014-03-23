@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
@@ -62,7 +63,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	public void onEnter() {
 		clientGame = new ClientGame();
 		clientGame.init(assetManager, mapName);
-		
+		Main.getInstance().addScreenListener(clientGame.getHUD());
 		stateMusic = new LocalMusic(assetManager);
 		LocalSound2.init(assetManager);
 		
@@ -74,6 +75,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	public void onLeave() {
 		NetworkManager.getInstance().setDisconnectCallback(null);
 		NetworkManager.getInstance().setGameStateCallback(this);
+		Main.getInstance().removeScreenListener(clientGame.getHUD());
 		clientGame = null;
 	}
 

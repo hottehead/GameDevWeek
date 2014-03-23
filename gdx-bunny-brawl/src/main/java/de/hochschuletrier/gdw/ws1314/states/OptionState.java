@@ -34,7 +34,6 @@ public class OptionState extends GameState {
         
         stage = new OptionStage();
         stage.init(assetManager);
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		musicListener = new MusicListener(stage.getMusicSlider());
 		soundListener = new SoundListener(stage.getSoundSlider());
     }
@@ -48,6 +47,7 @@ public class OptionState extends GameState {
 
     public void onEnter() {
     	stage.init(assetManager);
+    	Main.getInstance().addScreenListener(stage);
 	    Main.inputMultiplexer.addProcessor(stage);
 	    stage.getMusicSlider().addListener(musicListener);
 		stage.getBackButton().addListener(backListener);
@@ -57,6 +57,7 @@ public class OptionState extends GameState {
     }
 
     public void onLeave() {
+    	Main.getInstance().removeScreenListener(stage);
     	stage.getMusicSlider().removeListener(musicListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);

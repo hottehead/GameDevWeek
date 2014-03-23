@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -18,9 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
-public class OptionStage extends AutoResizeStage {
+public class OptionStage extends Stage implements ScreenListener {
 	
 	private Skin defaultSkin;
 	private BitmapFont font;
@@ -113,5 +115,10 @@ public class OptionStage extends AutoResizeStage {
 	
 	public ImageButton getBackButton() {
 		return back;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		getViewport().update(width, height, true);
 	}
 }

@@ -1,8 +1,14 @@
 package de.hochschuletrier.gdw.commons.gdx.state;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+
 import de.hochschuletrier.gdw.commons.gdx.state.transition.Transition;
+
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles game states and their transitions
@@ -15,7 +21,7 @@ public abstract class StateBasedGame implements ApplicationListener {
     private Transition entering, leaving;
     private long lastTime = System.currentTimeMillis();
     private final ArrayList<ScreenListener> screenListeners = new ArrayList<ScreenListener>();
-
+    private  Logger logger = LoggerFactory.getLogger(StateBasedGame.class);
     public StateBasedGame() {
         currentState = new GameState();
     }
@@ -45,6 +51,7 @@ public abstract class StateBasedGame implements ApplicationListener {
 
         currentState.onLeave();
         nextState.onEnter();
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
     
     public void addScreenListener(ScreenListener listener) {
@@ -57,6 +64,7 @@ public abstract class StateBasedGame implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
+    	logger.info("Resizing Viewport to "+ width + "  "+ height);
         for(ScreenListener listener: screenListeners) {
             listener.resize(width, height);
         }

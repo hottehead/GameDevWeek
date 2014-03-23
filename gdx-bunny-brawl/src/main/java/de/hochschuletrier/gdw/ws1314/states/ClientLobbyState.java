@@ -90,7 +90,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	    	
 	    	this.stage = new ClientLobbyStage(this.clientLobby);
 		    this.stage.init(assetManager);
-	    	
+	    	Main.getInstance().addScreenListener(stage);
+			Main.inputMultiplexer.addProcessor(stage);
 		    this.clientLobby.sendChanges();
 		    
 		    NetworkManager.getInstance().setGameStateCallback(this);
@@ -149,9 +150,7 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 			Main.getInstance().console.register(this.cpAccept);
 			Main.getInstance().console.register(this.cpTeam);
 			Main.getInstance().console.register(this.cpClass);
-			
-			stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	
+				
 			if(!NetworkManager.getInstance().isClient()){
 				onLeave();
 			}
@@ -167,6 +166,9 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	@Override
 	public void onLeave() {
 		super.onLeave();
+		Main.getInstance().removeScreenListener(stage);
+		Main.inputMultiplexer.removeProcessor(this.stage);
+		stage.dispose();
 		
 		Main.getInstance().console.unregister(this.cpAccept);
 		Main.getInstance().console.unregister(this.cpTeam);
@@ -180,7 +182,6 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 		this.stage.getSwapTeamButton().removeListener(this.swapTeamClick);
 	    this.stage.getDisconnectButton().removeListener(this.disconnectClick);
 		
-	    Main.inputMultiplexer.removeProcessor(this.stage);
 	    
 		this.clientLobby = null;
 		this.stage = null;

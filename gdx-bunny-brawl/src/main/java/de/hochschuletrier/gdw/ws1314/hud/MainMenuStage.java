@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -17,16 +18,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 
-public class MainMenuStage extends AutoResizeStage {
+public class MainMenuStage extends Stage implements ScreenListener {
 	
 	private Skin defaultSkin;
 	private LevelList levelList;
-	private Table uiTable;
+	private Table root;
 	
 	//buttons
 	private ImageButton playServer;
@@ -51,9 +53,8 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		Main.inputMultiplexer.addProcessor(this);
 		
-		uiTable = new Table();
-		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
-		this.addActor(uiTable);
+		root = new Table();
+		root.setFillParent(true); // ganzen platz in Tabelle nutzen
 		
 		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonPlayClient"));
 		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
@@ -81,16 +82,19 @@ public class MainMenuStage extends AutoResizeStage {
 		exit = new ImageButton(style);
 		
 		startServerAndPlay =  new TextButton("Start Forever Alone! ",defaultSkin);
-		uiTable.add(gameBrowser);
-		uiTable.add(playServer);
-
-		uiTable.row();
-
-		uiTable.add(options);
-		uiTable.add(credits);
-		uiTable.add(exit);
+		root.defaults().prefSize(100, 100);
+		root.add(gameBrowser);
+		root.row();
+		root.add(playServer);
+		root.row();
+		root.add(options);
+		root.row();
+		root.add(credits);
+		root.row();
+		root.add(exit);
 		
-		uiTable.debug(Debug.all);
+		this.addActor(root);
+		root.debug(Debug.all);
 	}
 
 	public void render() {		
@@ -111,7 +115,8 @@ public class MainMenuStage extends AutoResizeStage {
 
 	//for testing server-client stuff
 	public void resize(int width, int height) {
-		super.resize(width, height);
+		getViewport().update(width, height, true);
+		
 	}
 	
 	public ImageButton getGameBrowserButton() {

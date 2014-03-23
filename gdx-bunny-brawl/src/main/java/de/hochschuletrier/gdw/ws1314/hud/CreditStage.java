@@ -3,29 +3,24 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 
-public class CreditStage extends AutoResizeStage {
+public class CreditStage extends Stage implements ScreenListener {
 
 	private Skin defaultSkin;
 	private BitmapFont font;
-	private boolean isInited;
 	
-	public CreditStage() {
-		super();
-	}
 	
 	public void init(AssetManagerX assetManager) {		
-		if (isInited)
-		return;
-	else
-		isInited = !isInited;
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
@@ -35,16 +30,13 @@ public class CreditStage extends AutoResizeStage {
 	}
 
 	public void render() {
-		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		this.act(Gdx.graphics.getDeltaTime());
-		
-		DrawUtil.batch.flush();
-		this.draw();
 		Table.drawDebug(this);
+		this.act();
+		this.draw();
 	}
 
-	public void clear() {
-		super.clear();
-		isInited = false;
+	@Override
+	public void resize(int width, int height) {
+		getViewport().update(width, height, true);
 	}
 }

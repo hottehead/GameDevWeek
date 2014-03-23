@@ -69,8 +69,8 @@ public class FinishedGameState extends GameState {
     	if (NetworkManager.getInstance().isClient()) {
     		NetworkManager.getInstance().disconnectFromServer();
     	}
-    	
     	this.stage = new FinishedGameStage();
+    	Main.getInstance().addScreenListener(stage);
     	
     	GameInfo gameInfo = ClientEntityManager.getInstance().getGameInfo();
     	PlayerData playerData = ClientEntityManager.getInstance().getPlayerData();
@@ -96,7 +96,7 @@ public class FinishedGameState extends GameState {
     @Override
     public void onLeave() {
 		Main.inputMultiplexer.removeProcessor(this.stage);
-		
+		Main.getInstance().removeScreenListener(stage);
 		this.stage.getBackButton().removeListener(this.backButtonListener);
 		this.stage.dispose();
 		this.stage = null;

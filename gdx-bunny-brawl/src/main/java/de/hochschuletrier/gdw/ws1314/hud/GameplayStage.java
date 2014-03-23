@@ -4,10 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
@@ -18,7 +20,7 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
 
-public class GameplayStage extends AutoResizeStage {
+public class GameplayStage extends Stage implements ScreenListener {
 	private BitmapFont font;
 	private Skin defaultSkin;
 
@@ -232,7 +234,7 @@ public class GameplayStage extends AutoResizeStage {
 
 	@Override
 	public void resize(int width, int height) {
-		super.resize(width, height);
+		getViewport().update(width, height, true);
 		
 	}
 	

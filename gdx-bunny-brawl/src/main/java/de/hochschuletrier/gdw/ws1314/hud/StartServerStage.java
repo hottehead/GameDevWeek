@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,12 +13,13 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 
-public class StartServerStage extends AutoResizeStage {
+public class StartServerStage extends Stage implements ScreenListener {
 	Skin defaultSkin;
 	BitmapFont font;
 	
@@ -96,6 +98,11 @@ public class StartServerStage extends AutoResizeStage {
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		getViewport().update(width, height, true);
 	}
 
 }

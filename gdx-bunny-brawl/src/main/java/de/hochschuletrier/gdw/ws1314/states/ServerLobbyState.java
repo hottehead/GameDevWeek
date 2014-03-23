@@ -31,7 +31,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
         this.disconnectClickListener = new DisconnectClick();    	
     	this.stage = new ServerLobbyStage();
     	stage.init(assetManager);
-    	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void render () {
@@ -49,7 +48,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	public void onEnter() {
 		super.onEnter();
 		Main.inputMultiplexer.addProcessor(stage);
-		
+		Main.getInstance().addScreenListener(stage);
 		stage.init(assetManager);
 		
         NetworkManager.getInstance().setDisconnectCallback(this);
@@ -62,8 +61,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 
     	
     	this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
-
-    	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		if(!NetworkManager.getInstance().isServer()){
 			onLeave();
@@ -83,7 +80,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		this.stage.getDisconnectButton().removeListener(this.disconnectClickListener);
 		
 		Main.inputMultiplexer.removeProcessor(this.stage);
-		
+		Main.getInstance().removeScreenListener(stage);
 		this.serverLobby = null;
 		stage.clear();
 	}

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,9 +19,8 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
-import de.hochschuletrier.gdw.ws1314.states.ChooseClassState;
 
-public class ClientGameBrowser extends AutoResizeStage {
+public class ClientGameBrowser extends Stage implements ScreenListener {
 	private Logger logger = LoggerFactory.getLogger(ClientGameBrowser.class);
 
 	private TextField serverIP;
@@ -31,10 +31,8 @@ public class ClientGameBrowser extends AutoResizeStage {
 	private Skin defaultSkin;
 	private Table root;
 
-	@Override
 	public void init(AssetManagerX assetManager) {
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
-		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		root = new Table();
 		root.setFillParent(true);
 		root.debug(Debug.all);
@@ -61,7 +59,6 @@ public class ClientGameBrowser extends AutoResizeStage {
 		root.row();
 		root.add(join).colspan(2);
 		this.addActor(root);
-		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public String getIP() {
@@ -76,7 +73,6 @@ public class ClientGameBrowser extends AutoResizeStage {
 		return join;
 	}
 
-	@Override
 	public void render() {
 		Table.drawDebug(this);
 		act();
@@ -85,8 +81,7 @@ public class ClientGameBrowser extends AutoResizeStage {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		super.resize(width, height);
+		getViewport().update(width, height, true);
 	}
 
 }
