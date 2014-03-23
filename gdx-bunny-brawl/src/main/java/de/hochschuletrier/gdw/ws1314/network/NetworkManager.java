@@ -11,6 +11,7 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerLevelObject;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
+import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
@@ -444,6 +445,10 @@ public class NetworkManager{
 			else if(entity instanceof Zone){
 				//Intentionally ignored. 
 				//Nothing more required here, zones need no replication to the client.
+			}
+			else if(entity instanceof ServerSwordAttack){
+				//Intentionally ignored. 
+				//Nothing more required here, sword attacks need no replication to the client.
 			}
 			else{
 				logger.warn("[SERVER] Unknown entity type {} can't be replicated.", entity.getClass().getCanonicalName());
