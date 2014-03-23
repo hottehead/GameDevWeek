@@ -112,14 +112,22 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
-    private Fixture 			fixtureDeathCheck;
+    private Fixture             fixCollUpperLeft;
+    private Fixture             fixCollUpperRight;
+    private Fixture             fixCollLowerLeft;
+    private Fixture             fixCollLowerRight;
     
-    private boolean 			isDead;
+    private boolean isDead;
     private int 				collidingBridgePartsCount;
     private float 				deathfreeze;
 	private ArrayList<Long>		pickedUpEggs;
-	private int					deadZoneCounter;
-    private boolean             isInDeadZone;
+	//private int					deadZoneCounter;
+    //private boolean             isInDeadZone;
+    
+    private boolean isInDeadZoneUpperLeft;
+    private boolean isInDeadZoneUpperRight;
+    private boolean isInDeadZoneLowerLeft;
+    private boolean isInDeadZoneLowerRight;
     
     private ArrayList<Long>		struckBySwordIDs;
     
@@ -146,10 +154,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	isDead = false;
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
-    	isInDeadZone = false;
+    	//isInDeadZone = false;
     	pickedUpEggs = new ArrayList<>();
     	struckBySwordIDs = new ArrayList<Long>();
     }
@@ -162,10 +169,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     @Override
     public void update(float deltaTime) 
     {
-        if(isDead) {
+        if(this.isDead) {
             deathfreeze -= deltaTime;
             if(deathfreeze < 0) {
-                isDead = false;
+                isInDeadZoneLowerLeft = false;
+                isInDeadZoneLowerRight = false;
+                isInDeadZoneUpperLeft = false;
+                isInDeadZoneUpperRight = false;
                 deathfreeze = 0.5f;
                 this.reset();
             }
@@ -179,23 +189,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 			pickedUpEggs.clear();
 			currentEggCount = 0;
             return;
-        }
-        if(this.isInDeadZone) 
-        {
-        	if (!this.isOnBridge)
-        	{
-        		deadZoneCounter++;
-        		
-        		if (deadZoneCounter > 1)
-        		{
-            		this.isDead = true;
-                    this.isOnBridge = false;
-                    this.isInDeadZone = false;
-        		}
-        	}
-        	else
-        	{
-        		deadZoneCounter = 0;
+        } else if(isInDeadZoneLowerLeft && isInDeadZoneLowerRight && isInDeadZoneUpperLeft && isInDeadZoneUpperRight) {
+        	if (!this.isOnBridge) {
+        		this.isDead = true;
+                this.isOnBridge = false;
         	}
         }
         
@@ -473,12 +470,38 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  default:
                 	 break;
         	 }      
-         } else if(fixture == fixtureDeathCheck) {
+         } else if(fixture == fixCollUpperLeft) {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
-                     this.isInDeadZone = true;
-    	             deadZoneCounter++;
+                     this.isInDeadZoneUpperLeft = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollUpperRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneUpperRight = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerLeft) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerLeft = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerRight = true;
                      break;
                  default:
                      break;
@@ -518,17 +541,43 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 default:
                 	break;
              }
-    	 } else if(fixture == fixtureDeathCheck) {
+    	 } else if(fixture == fixCollUpperLeft) {
     	     switch(otherEntity.getEntityType()) {
     	         case AbyssZone:
     	         case WaterZone:
-    	             this.isInDeadZone = false;
-    	             deadZoneCounter--;
+    	             this.isInDeadZoneUpperLeft = false;
     	             break;
     	         default:
     	             break;
     	     }
-    	 }
+    	 } else if(fixture == fixCollUpperRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneUpperRight = false;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerLeft) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerLeft = false;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerRight = false;
+                     break;
+                 default:
+                     break;
+             }
+         }
     }
 
     public void preSolve(Contact contact, Manifold oldManifold) {}
@@ -583,12 +632,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 				.gravityScale(0.0f)
 				.create();
 		
+		//lower body
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f)));
 		
+		//full body
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
@@ -596,11 +647,36 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true));
 		
+		//coll check upper left
 		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 2.0f))
+            .shapeBox(1, 1, new Vector2(-HEIGHT / 4, HEIGHT / 4), 0)
+            .sensor(true));
+		
+		//coll check upper right
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(HEIGHT / 4, HEIGHT / 4), 0)
+            .sensor(true));
+		
+		//coll check lower left
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(-HEIGHT / 4, (float) (HEIGHT * 0.75)), 0)
+            .sensor(true));
+		
+		//coll check lower right
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(HEIGHT / 4, (float) (HEIGHT * 0.75)), 0)
             .sensor(true));
 
 		body.setGravityScale(0);
@@ -611,7 +687,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 		Array<Fixture> fixtures = body.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
-		fixtureDeathCheck = fixtures.get(2);
+		fixCollUpperLeft = fixtures.get(2);
+		fixCollUpperRight = fixtures.get(3);
+		fixCollLowerLeft = fixtures.get(4);
+		fixCollLowerRight = fixtures.get(5);
+		
+		
     	walkingState.setPhysixBody(physicsBody);
 	}
 
@@ -631,7 +712,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         this.deactivateSpeedBuff();
         		
         switchToState(idleState);
-        isInDeadZone = false;
+        isInDeadZoneLowerLeft = false;
+        isInDeadZoneLowerRight = false;
+        isInDeadZoneUpperLeft = false;
+        isInDeadZoneUpperRight = false;
+        isDead = false;
         
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }

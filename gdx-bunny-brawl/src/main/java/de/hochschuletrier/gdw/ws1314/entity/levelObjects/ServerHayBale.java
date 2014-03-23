@@ -1,6 +1,5 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -33,7 +32,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 10.0f;
+	private final float DURATION_TIME_IN_WATER = 50.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 100.0f;
 	
@@ -330,6 +329,15 @@ public class ServerHayBale extends ServerLevelObject
             this.setEntityState(EntityStates.WET);
             NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
             speed = 0;
+            
+            Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
+            
+            while(keySetIterator.hasNext()) {
+                Long key = keySetIterator.next();
+                ServerPlayer player = this.playersOnHayBale.get(key);
+                player.setPlayerIsOnBridge();
+            }
+            
         } else if(collAbyssUpperLeft && collAbyssUpperRight && collAbyssLowerLeft && collAbyssLowerRight) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
