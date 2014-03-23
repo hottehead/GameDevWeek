@@ -63,6 +63,8 @@ public class Main extends StateBasedGame {
 	public static boolean startAsServer = false;
 	public static int port = 0;
 
+	private static String [] saveArgs;
+
 	public static Main getInstance() {
 		if (instance == null) {
 			instance = new Main();
@@ -251,8 +253,7 @@ public class Main extends StateBasedGame {
 	public void pause() {
 	}
 
-	@Override
-	public void resume() {
+	@Override	public void resume() {
 	}
 
 	public void setTitle(String title){
@@ -265,23 +266,22 @@ public class Main extends StateBasedGame {
 		}
 	}
 
+	public static String[] getSaveArgs(){
+		return saveArgs;
+	}
+
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Bunny Brawl - GameDevWeek WS 2013/14";
 		cfg.width = WINDOW_WIDTH;
 		cfg.height = WINDOW_HEIGHT;
 		cfg.useGL30 = false;
-		for(String s:args){ //start as server console argument: -server[:port]
-			if(s.toLowerCase().contains("-server".toLowerCase())){
+		for(String s:args){
+			if(s.equalsIgnoreCase("-server")){
 				startAsServer = true;
-				if(s.toLowerCase().contains(":".toLowerCase())){
-					String [] split = s.split("[:]");
-					if(split.length > 1){
-						port = Integer.parseInt(split[1]);
-					}
-				}
 			}
 		}
+		saveArgs = args;
 		new LwjglApplication(getInstance(), cfg);
 	}
 }

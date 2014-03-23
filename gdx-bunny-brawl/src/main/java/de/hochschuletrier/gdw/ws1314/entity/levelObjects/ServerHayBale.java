@@ -404,6 +404,7 @@ public class ServerHayBale extends ServerLevelObject
         collHayBaleLowerLeft = false;
         collHayBaleLowerRight = false;
         acrossable = false;
+        lifetime = 0;
     }
 
 }
