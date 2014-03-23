@@ -62,8 +62,8 @@ public class StatePlayerWalking extends StatePlayer
 		
 		body.applyImpulse(directionV.x * maxVel, directionV.y * maxVel);
 		
-		Vector2 vel = new Vector2(body.getLinearVelocity().x*speedFactor, body.getLinearVelocity().y*speedFactor);
-		vel.clamp(0, maxVel);
+		Vector2 vel = body.getLinearVelocity();
+		vel.clamp(0, maxVel*speedFactor);
 		
 		body.setLinearVelocity(vel);
 	}
