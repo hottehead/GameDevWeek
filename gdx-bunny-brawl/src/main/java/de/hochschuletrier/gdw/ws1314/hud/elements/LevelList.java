@@ -33,4 +33,8 @@ public class LevelList extends Table {
 	public List<ListElement> getList() {
 		return levelList;
 	}
+	
+	public void setSelectedIndex(int index) {
+		levelList.setSelectedIndex(index);
+	}
 }
