@@ -3,12 +3,14 @@ package de.hochschuletrier.gdw.ws1314.sound;
 import com.badlogic.gdx.audio.*;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 public class LocalSound2 {
 	private Sound soundHandle;
@@ -26,6 +28,7 @@ public class LocalSound2 {
 	
 	public static void setSystemVolume(float systemVolume) {
 		LocalSound2.SystemVolume = systemVolume;
+		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeSound, systemVolume);
 	}
 	
 	public static float getSystemVolume() {

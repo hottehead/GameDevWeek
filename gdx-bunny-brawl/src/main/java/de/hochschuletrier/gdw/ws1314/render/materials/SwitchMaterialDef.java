@@ -10,7 +10,8 @@ public class SwitchMaterialDef extends MaterialDefinition {
 	
 	@Override
 	public void build() {
-		newMaterial("switch", EntityStates.NONE, null, false);
+		newMaterial("switch", EntityStates.OFF, null, false);
+		newMaterial("switch", EntityStates.ON, null, false);
 	}
 
 }

@@ -44,4 +44,11 @@ public class MusicManager {
 				this.musicStreamsList.get(state).stop();
 		}		
 	}
+	
+	public void sendVolumeToStreams(float systemVolume) {
+		for (GameStates state : GameStates.values()) {
+			if (this.musicStreamsList.get(state).isMusicPlaying())
+				this.musicStreamsList.get(state).setVolume(systemVolume);
+		}		
+	}
 }
