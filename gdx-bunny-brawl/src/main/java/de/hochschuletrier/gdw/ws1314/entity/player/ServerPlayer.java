@@ -500,7 +500,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              	case HayBale:
              	   ServerHayBale ball = (ServerHayBale)otherEntity;
                    if(ball.isCrossable()) {
-                  	 logger.info("Haybale not touched");
                        collidingBridgePartsCount--;
                        if(collidingBridgePartsCount <= 0) {
                            this.isOnBridge = false;
@@ -681,8 +680,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	    }
 	}
 	
-	public void setPlayerInDeathZone() {
-	    this.isInDeadZone = true;
+	public void setPlayerIsNotOnBridgeAnymore() {
+	    this.collidingBridgePartsCount--;
+	    if(collidingBridgePartsCount <= 0) {
+            this.isOnBridge = false;
+        }
 	}
         
 }

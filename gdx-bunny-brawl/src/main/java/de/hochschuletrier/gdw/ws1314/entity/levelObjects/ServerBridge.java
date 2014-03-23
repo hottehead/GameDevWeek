@@ -214,7 +214,7 @@ public class ServerBridge extends ServerLevelObject
 		    while(keySetIterator2.hasNext()) {
 		        Long key = keySetIterator2.next();
 		        ServerPlayer player = this.collidingPlayers.get(key);
-		        player.setPlayerInDeathZone();
+		        player.setPlayerIsNotOnBridgeAnymore();
 		    }
 		    
 		    //heuball
