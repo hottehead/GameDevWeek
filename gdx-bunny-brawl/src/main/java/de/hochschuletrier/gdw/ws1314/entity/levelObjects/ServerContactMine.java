@@ -51,7 +51,7 @@ public class ServerContactMine extends ServerLevelObject {
 	public void initialize() {
 		super.initialize();
 		timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN,
-				DURATION_TILL_EXPLOSION_MAX);
+				DURATION_TILL_EXPLOSION_MAX) + DURATION_EXPLOSION;
 		;
 	}
 
@@ -67,7 +67,7 @@ public class ServerContactMine extends ServerLevelObject {
 			case Knight:
 			case Tank:
 			case Noob:
-			case HayBale:
+			//case HayBale:
 				if (!fixture2.isSensor()) {
 					ServerPlayer player = (ServerPlayer) otherEntity;
 					if(!gotDamage){
@@ -126,6 +126,7 @@ public class ServerContactMine extends ServerLevelObject {
 			case Noob:
 			case HayBale:
 				this.isActive = true;
+				this.setEntityState(EntityStates.ATTACK);
 				break;
 			default:
 				break;
@@ -137,34 +138,33 @@ public class ServerContactMine extends ServerLevelObject {
 	public void update(float deltaTime) {
 		CircleShape shape = (CircleShape) this.physicsBody.getBody()
 				.getFixtureList().get(1).getShape();
-		//Vector2 pos = this.physicsBody.getPosition().cpy();
-		this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
-		if(this.getEntityState() == EntityStates.EXPLODING){
-			isActive = false;
-		}
-		else if (!isActive) {
+		if(this.getEntityState() == EntityStates.NONE){
 			originRadius = manager.toBox2D(2.0f);
 			shape.setRadius(originRadius);
 			gotDamage = false;
-			entityState = EntityStates.NONE;
-		}else {
-			this.setEntityState(EntityStates.ATTACK);
+			this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
+		}else if(this.getEntityState() == EntityStates.ATTACK || this.getEntityState() == EntityStates.EXPLODING){
 			timer -= deltaTime;
-//			System.out.println("Time left: " + timer);
-			if (timer <= 0) {
-				isActive = false;
+			System.out.println(this.getEntityState());
+			if(timer <= 1){
 				this.setEntityState(EntityStates.EXPLODING);
-				timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN,
-						DURATION_TILL_EXPLOSION_MAX);
-				if (originRadius <= EXPLOSION_RADIUS) {
-					originRadius += 2f;
-					this.physicsBody.getBody().getFixtureList().get(1)
-							.setSensor(false);
+				
+				if (originRadius <= 1.5) {
+					originRadius += manager.toBox2D(2.0f);
+					this.physicsBody.getBody().getFixtureList().get(1).setSensor(false);
 					shape.setRadius(originRadius);
 				}
+				if(timer <= 0){
+				
+					this.setEntityState(EntityStates.NONE);
+					timer += timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN,
+							DURATION_TILL_EXPLOSION_MAX) + DURATION_EXPLOSION;
+					this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
+				
+				}
+			}
 		}
 	}
-}
 
 	@Override
 	public EntityType getEntityType() {

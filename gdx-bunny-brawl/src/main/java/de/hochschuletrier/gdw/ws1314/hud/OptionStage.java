@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.sound.LocalMusic;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 
@@ -54,7 +53,6 @@ public class OptionStage extends AutoResizeStage {
 		label = new Label("Master", defaultSkin);	
 		tmp.add(label);
 		this.master = new Slider(0, 100, 2, false, defaultSkin);
-		this.master.setValue(LocalMusic.getSystemVolume()*100);
 		tmp.add(master);
 		
 		tmp = new Table();
