@@ -24,7 +24,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 public class ServerContactMine extends ServerLevelObject {
 	private final float DURATION_TILL_EXPLOSION_MAX = 3.0f;
 	private final float DURATION_TILL_EXPLOSION_MIN = 1.0f;
-	private final float DAMAGE = 10.0f;
+	private final float DAMAGE = 80.0f;
 	private PhysixManager manager;
 	private float originRadius = 2.0f;
 	private final float EXPLOSION_RADIUS = 60.0f;
