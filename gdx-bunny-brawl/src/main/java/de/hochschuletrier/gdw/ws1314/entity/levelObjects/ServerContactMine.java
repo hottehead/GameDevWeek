@@ -161,7 +161,6 @@ public class ServerContactMine extends ServerLevelObject {
 				}
 			}
 		}
-		System.out.println(gotDamage);
 	}
 
 	@Override
@@ -172,7 +171,7 @@ public class ServerContactMine extends ServerLevelObject {
 	@Override
 	public void initPhysics(PhysixManager manager) {
 		this.manager = manager;
-		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody,
+		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody,
 				manager)
 				.position(
 						new Vector2(properties.getFloat("x"), properties
