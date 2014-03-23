@@ -91,7 +91,7 @@ public class StartServerStage extends AutoResizeStage {
 		for(int i = 0; i < levelList.getList().getItems().size; i++)
 		{
 			ListElement l = levelList.getList().getItems().get(i);
-			if (l.getText().equals(mapName)) {
+			if (l.getText().toString().equals(mapName)) {
 				levelList.setSelectedIndex(i);
 				return;
 			}
