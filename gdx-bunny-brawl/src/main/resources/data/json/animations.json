@@ -1,5 +1,198 @@
 {
-	"HunterWhiteIdleUp": {
+	"knightWhiteIdleUp": {
+        "filename": "data/animations/knightWhite_idleUp.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteIdleDown": {
+        "filename": "data/animations/knightWhite_idleDown.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteIdleRight": {
+        "filename": "data/animations/knightWhite_idleRight.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteIdleLeft": {
+        "filename": "data/animations/knightWhite_idleLeft.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteWalkUp": {
+        "filename": "data/animations/knightWhite_walkUp.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteWalkDown": {
+        "filename": "data/animations/knightWhite_walkDown.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+    "knightWhiteWalkRight": {
+        "filename": "data/animations/knightWhite_walkRight.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteWalkLeft": {
+        "filename": "data/animations/knightWhite_walkLeft.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightWhiteAttackUp": {
+        "filename": "data/animations/knightWhite_attackUp.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightWhiteAttackDown": {
+        "filename": "data/animations/knightWhite_attackDown.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightWhiteAttackRight": {
+        "filename": "data/animations/knightWhite_attackRight.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightWhiteAttackLeft": {
+        "filename": "data/animations/knightWhite_attackLeft.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightBlackIdleUp": {
+        "filename": "data/animations/knightBlack_idleUp.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackIdleDown": {
+        "filename": "data/animations/knightBlack_idleDown.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackIdleRight": {
+        "filename": "data/animations/knightBlack_idleRight.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackIdleLeft": {
+        "filename": "data/animations/knightBlack_idleLeft.png",
+        "frames" : 3,
+        "frameDuration": [ 2.0, 0.1, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackWalkUp": {
+        "filename": "data/animations/knightBlack_walkUp.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackWalkDown": {
+        "filename": "data/animations/knightBlack_walkDown.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+    "knightBlackWalkRight": {
+        "filename": "data/animations/knightBlack_walkRight.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackWalkLeft": {
+        "filename": "data/animations/knightBlack_walkLeft.png",
+        "frames" : 3,
+        "frameDuration": [ 0.1, 0.1, 0.1] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 3,
+        "rows" : 1
+    },
+	"knightBlackAttackUp": {
+        "filename": "data/animations/knightBlack_attackUp.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightBlackAttackDown": {
+        "filename": "data/animations/knightBlack_attackDown.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightBlackAttackRight": {
+        "filename": "data/animations/knightBlack_attackRight.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	"knightBlackAttackLeft": {
+        "filename": "data/animations/knightBlack_attackLeft.png",
+        "frames" : 5,
+        "frameDuration": [ 0.1, 0.1, 0.1, 0.1, 0.1 ] ,
+        "playType" : "NORMAL",
+        "columns": 5,
+        "rows" : 1
+    },
+	
+	"hunterWhiteIdleUp": {
         "filename": "data/animations/HunterWhite_IdleUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -7,7 +200,7 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteIdleDown": {
+	"hunterWhiteIdleDown": {
         "filename": "data/animations/HunterWhite_IdleDown.png",
         "frames" : 3,
         "frameDuration": [ 2.0, 0.2, 0.2 ] ,
@@ -15,7 +208,7 @@
         "columns": 3,
         "rows" : 1
     },
-	"HunterWhiteIdleRight": {
+	"hunterWhiteIdleRight": {
         "filename": "data/animations/HunterWhite_IdleRight.png",
         "frames" : 2,
         "frameDuration": [ 2.0, 0.5 ] ,
@@ -23,7 +216,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterWhiteIdleLeft": {
+	"hunterWhiteIdleLeft": {
         "filename": "data/animations/HunterWhite_IdleLeft.png",
         "frames" : 2,
         "frameDuration": [ 2.0, 0.5 ] ,
@@ -31,7 +224,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterWhiteWalkUp": {
+	"hunterWhiteWalkUp": {
         "filename": "data/animations/HunterWhite_WalkUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
@@ -39,15 +232,15 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteWalkDown": {
+	"hunterWhiteWalkDown": {
         "filename": "data/animations/HunterWhite_WalkDown.png",
-        "frames" : 4,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "frames" : 2,
+        "frameDuration": [ 0.2, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
-        "columns": 4,
+        "columns": 2,
         "rows" : 1
     },
-    "HunterWhiteWalkRight": {
+    "hunterWhiteWalkRight": {
         "filename": "data/animations/HunterWhite_WalkRight.png",
         "frames" : 2,
         "frameDuration": [ 0.2, 0.2 ] ,
@@ -55,7 +248,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterWhiteWalkLeft": {
+	"hunterWhiteWalkLeft": {
         "filename": "data/animations/HunterWhite_WalkLeft.png",
         "frames" : 2,
         "frameDuration": [ 0.2, 0.2 ] ,
@@ -63,7 +256,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterWhiteAttackUp": {
+	"hunterWhiteAttackUp": {
         "filename": "data/animations/HunterWhite_AttackUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -71,15 +264,15 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteAttackDown": {
+	"hunterWhiteAttackDown": {
         "filename": "data/animations/HunterWhite_AttackDown.png",
-        "frames" : 5,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 5,
+        "columns": 6,
         "rows" : 1
     },
-	"HunterWhiteAttackRight": {
+	"hunterWhiteAttackRight": {
         "filename": "data/animations/HunterWhite_AttackRight.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -87,15 +280,15 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterWhiteAttackLeft": {
+	"hunterWhiteAttackLeft": {
         "filename": "data/animations/HunterWhite_AttackLeft.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 6,
         "rows" : 1
     },
-	"HunterBlackIdleUp": {
+	"hunterBlackIdleUp": {
         "filename": "data/animations/HunterBlack_IdleUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -103,15 +296,15 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterBlackIdleDown": {
+	"hunterBlackIdleDown": {
         "filename": "data/animations/HunterBlack_IdleDown.png",
         "frames" : 3,
-        "frameDuration": [ 2.0, 0.2, 0.2 ] ,
+        "frameDuration": [ 0.2, 0.5, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
         "columns": 3,
         "rows" : 1
     },
-	"HunterBlackIdleRight": {
+	"hunterBlackIdleRight": {
         "filename": "data/animations/HunterBlack_IdleRight.png",
         "frames" : 2,
         "frameDuration": [ 2.0, 0.5 ] ,
@@ -119,7 +312,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterBlackIdleLeft": {
+	"hunterBlackIdleLeft": {
         "filename": "data/animations/HunterBlack_IdleLeft.png",
         "frames" : 2,
         "frameDuration": [ 2.0, 0.5 ] ,
@@ -127,7 +320,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterBlackWalkUp": {
+	"hunterBlackWalkUp": {
         "filename": "data/animations/HunterBlack_WalkUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
@@ -135,7 +328,7 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterBlackWalkDown": {
+	"hunterBlackWalkDown": {
         "filename": "data/animations/HunterBlack_WalkDown.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
@@ -143,7 +336,7 @@
         "columns": 4,
         "rows" : 1
     },
-    	"HunterBlackWalkRight": {
+    "hunterBlackWalkRight": {
         "filename": "data/animations/HunterBlack_WalkRight.png",
         "frames" : 2,
         "frameDuration": [ 0.2, 0.2 ] ,
@@ -151,7 +344,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterBlackWalkLeft": {
+	"hunterBlackWalkLeft": {
         "filename": "data/animations/HunterBlack_WalkLeft.png",
         "frames" : 2,
         "frameDuration": [ 0.2, 0.2] ,
@@ -159,7 +352,7 @@
         "columns": 2,
         "rows" : 1
     },
-	"HunterBlackAttackUp": {
+	"hunterBlackAttackUp": {
         "filename": "data/animations/HunterBlack_AttackUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -167,15 +360,15 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterBlackAttackDown": {
+	"hunterBlackAttackDown": {
         "filename": "data/animations/HunterBlack_AttackDown.png",
-        "frames" : 6,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
+        "frames" : 5,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 6,
+        "columns": 5,
         "rows" : 1
     },
-	"HunterBlackAttackRight": {
+	"hunterBlackAttackRight": {
         "filename": "data/animations/HunterBlack_AttackRight.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
@@ -183,12 +376,258 @@
         "columns": 4,
         "rows" : 1
     },
-	"HunterBlackAttackLeft": {
+	"hunterBlackAttackLeft": {
         "filename": "data/animations/HunterBlack_AttackLeft.png",
         "frames" : 7,
         "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.2, 0.5, 0.2  ] ,
         "playType" : "NORMAL",
         "columns": 7,
         "rows" : 1
-    }
+    },
+	
+	"tankBlackAttackLeft": {
+        "filename": "data/animations/tankBlack_attackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackAttackRight": {
+        "filename": "data/animations/tankBlack_attackRight.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackAttackUp": {
+        "filename": "data/animations/tankBlack_attackUp.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackAttackDown": {
+        "filename": "data/animations/tankBlack_attackDown.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },
+	"tankBlackIdleLeft": {
+        "filename": "data/animations/tankBlack_idleLeft.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackIdleRight": {
+        "filename": "data/animations/tankBlack_idleRight.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackIdleUp": {
+        "filename": "data/animations/tankBlack_idleUp.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackIdleDown": {
+        "filename": "data/animations/tankBlack_idleDown.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.3, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"tankBlackWalkLeft": {
+        "filename": "data/animations/tankBlack_walkLeft.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkRight": {
+        "filename": "data/animations/tankBlack_walkRight.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkUp": {
+        "filename": "data/animations/tankBlack_walkUp.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkDown": {
+        "filename": "data/animations/tankBlack_walkDown.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },	
+	"tankWhiteAttackLeft": {
+        "filename": "data/animations/tankWhite_attackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankWhiteAttackRight": {
+        "filename": "data/animations/tankWhite_attackRight.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankWhiteAttackUp": {
+        "filename": "data/animations/tankWhite_attackUp.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankWhiteAttackDown": {
+        "filename": "data/animations/tankWhite_attackDown.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },
+	"tankWhiteIdleLeft": {
+        "filename": "data/animations/tankWhite_idleLeft.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankWhiteIdleRight": {
+        "filename": "data/animations/tankWhite_idleRight.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankWhiteIdleUp": {
+        "filename": "data/animations/tankWhite_idleUp.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankWhiteIdleDown": {
+        "filename": "data/animations/tankWhite_idleDown.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.3, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
+	"tankWhiteWalkLeft": {
+        "filename": "data/animations/tankWhite_walkLeft.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankWhiteWalkRight": {
+        "filename": "data/animations/tankWhite_walkRight.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankWhiteWalkUp": {
+        "filename": "data/animations/tankWhite_walkUp.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankWhiteWalkDown": {
+        "filename": "data/animations/tankWhite_walkDown.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkUp": {
+        "filename": "data/animations/tankBlack_walkUp.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkDown": {
+        "filename": "data/animations/tankBlack_walkDown.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	
+	"explosion": {
+        "filename": "data/images/explosion_animation.png",
+        "frames" : 6,
+        "frameDuration": [ 0.16, 0.16, 0.16, 0.16, 0.16, 0.16] ,
+        "playType" : "NORMAL",
+        "columns": 6,
+        "rows" : 1
+    },  
+	
+	"mineActive": {
+		"filename": "data/images/mine_ani.png", 
+		"frames": 2, 
+		"frameDuration": [0.3, 0.3],
+		"playType": "LOOP", 
+		"columns": 2, 
+		"rows": 1
+	},
+	
+	"bushDisposeAnimation": {
+		"filename": "data/animations/bush_animation.png",
+		"frames": 8, 
+		"frameDuration": [0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.12, 0.16],
+		"playType": "NORMAL", 
+		"columns": 8, 
+		"rows": 1	
+	}, 
+	
+	"bitchslapScreen": {
+	"filename": "data/animations/bitchslap_sprite.png",
+	"frames": 2, 
+	"frameDuration": [0.5, 0.2],
+	"playType": "LOOP", 
+	"columns": 2, 
+	"rows": 1	
+	
+	}
 }
