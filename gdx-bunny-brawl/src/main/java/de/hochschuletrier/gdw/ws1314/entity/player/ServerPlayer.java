@@ -361,8 +361,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     		droppedEggID = pickedUpEggs.get(0);
 			pickedUpEggs.remove(droppedEggID);
 			ServerEgg egg = (ServerEgg)ServerEntityManager.getInstance().getEntityById(droppedEggID);
+			if(egg != null)	{
 			egg.setVisibility(true);
 			egg.setPosition(getPosition());
+			} else {
+				logger.warn("Strange Egg NullPointer.");
+			}
     	}
     }
     
