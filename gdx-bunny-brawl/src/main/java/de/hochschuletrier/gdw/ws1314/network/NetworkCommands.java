@@ -46,37 +46,16 @@ public class NetworkCommands{
 		};
 		Main.getInstance().console.register(connectCmd);
 
-		ConsoleCmd listenCmd = new ConsoleCmd("listen", 0, "[SERVER] Start listening for client connections. (Become a server.)", 0){
+		ConsoleCmd listenCmd = new ConsoleCmd("server", 0, "[SERVER] Start listening for client connections. (Become a server.)", 0){
 
 			@Override
 			public void showUsage(){
-				showUsage("[interface-ip] [port] [max-connections = 10] uses default if not set (port 1024 - 65535 allowed)");
+				showUsage("[mapName] [port] [max-connections = 10] [interface-ip] uses default if not set (port 1024 - 65535 allowed)");
 			}
 
 			@Override
 			public void execute(List<String> args){
-				try{
-					String ip = NetworkManager.getInstance().getMyIp();
-					if(args.size() > 1){
-						ip = args.get(1);
-					}
-					int port = NetworkManager.getInstance().getDefaultPort();
-					if(args.size() > 2){
-						port = Integer.parseInt(args.get(2));
-					}
-					int maxConnections = 10;
-					if(args.size() > 3){
-						maxConnections = Integer.parseInt(args.get(3));
-					}
-					NetworkManager.getInstance().listen(ip, port, maxConnections);
-
-					logger.info("Changing State to Server-Lobby...");
-					GameStates.SERVERLOBBY.init(Main.getInstance().getAssetManager());
-					GameStates.SERVERLOBBY.activate();
-				}
-				catch (NumberFormatException e){
-					showUsage();
-				}
+				NetworkManager.getInstance().serverStartCommand(args.toArray (new String[args.size()]));
 			}
 		};
 		Main.getInstance().console.register(listenCmd);

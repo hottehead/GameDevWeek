@@ -14,17 +14,14 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
 import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.*;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class NetworkManager{
 	private static final Logger logger = LoggerFactory.getLogger(NetworkManager.class);
@@ -153,7 +150,14 @@ public class NetworkManager{
 		}
 	}
 
-	public void listen(String ip, int port, int maxConnections){
+	/**
+	 * To start a Server
+	 * @param map can be null
+	 * @param port an int between 1024 and 65535
+	 * @param maxConnections slots on the server must > 1
+	 * @param ip a String
+	 */
+	public void server(String map, int port, int maxConnections, String ip){
 		if(isServer()){
 			logger.warn("[SERVER] Ignoring new listen command because we are already a server.");
 			return;
@@ -161,11 +165,22 @@ public class NetworkManager{
 		if(!isPortOk(port)){
 			throw new IllegalArgumentException("[SERVER] Port out of allowed range 1024 - 65535");
 		}
+		if(maxConnections < 1){
+			maxConnections = 2;
+		}
+		if(map != null){
+			Main.getInstance().gamePreferences.putString(PreferenceKeys.mapName, map);
+		}
 		serverConnections = new ArrayList<>();
 		try{
 			serverReception = new NetReception(ip, port, maxConnections, datagramFactory);
 			if(serverReception.isRunning()){
-				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
+				String mapName = "";
+				if(map != null){
+					mapName = " is running with map:" + map;
+				}
+				logger.info("[SERVER] Server for {} players{} and listening at {}:{} - started with ip:{}", maxConnections, mapName, getMyIp(),
+						port, ip);
 			}
 			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
 			Main.getInstance().setConsoleVisible(true);
@@ -176,6 +191,49 @@ public class NetworkManager{
 			serverConnections = null;
 			serverReception = null;
 		}
+		if(Main.getInstance().getCurrentState() != GameStates.SERVERLOBBY.get() && Main.getInstance().getCurrentState() != GameStates.SERVERGAMEPLAY.get()){
+			GameStates.SERVERLOBBY.init(Main.getInstance().getAssetManager());
+			GameStates.SERVERLOBBY.activate();
+		}
+	}
+
+	public void serverStartCommand(String [] args){
+		String ip = NetworkManager.getInstance().getMyIp();//5
+		int maxConnections = 10;//4
+		int port = NetworkManager.getInstance().getDefaultPort();//3
+		String map = "map01";//2
+		try{
+			map = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "");
+		} catch (Exception e){
+			logger.error("json map load faild");
+			map = null;
+		}
+
+		for(String s:args){
+			if(s.toLowerCase().contains("port:") || s.toLowerCase().contains("-port:")){
+				port = Integer.parseInt(split(s));
+			}
+			if(s.toLowerCase().contains("ip:") || s.toLowerCase().contains("-ip:")){
+				ip = split(s);
+			}
+			if(s.toLowerCase().contains("map:") || s.toLowerCase().contains("-map:")){
+				map = split(s);
+			}
+			if(s.toLowerCase().contains("slots:") || s.toLowerCase().contains("-slots:")){
+				maxConnections = Integer.parseInt(split(s));
+			}
+		}
+		server(map, port, maxConnections, ip);
+	}
+
+	private String split(String s){
+		if(s.toLowerCase().contains(":".toLowerCase())){
+			String [] split = s.split("[:]");
+			if(split.length > 1){
+				return split[1];
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -259,6 +317,10 @@ public class NetworkManager{
 			logger.error("[NETWORK] error at reading local host IP, fallback to localhost\n{}", e);
 			return "127.0.0.1";
 		}
+	}
+
+	public int getDefaultPlayerCount(){
+		return 10;
 	}
 
 	public void setDisconnectCallback(DisconnectCallback callback){
@@ -400,7 +462,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
-			if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
+			//if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
