@@ -7,17 +7,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
-import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.network.ClientIdCallback;
-import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.LobbyUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.MatchUpdateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
  * Created by Sonic
@@ -47,6 +43,8 @@ public class ClientLobbyManager implements LobbyUpdateCallback {
 				playerId = playerid;
 			}
 		});
+		
+		
 		
 		NetworkManager.getInstance().setMatchUpdateCallback(new MatchUpdateCallback() {
 			@Override

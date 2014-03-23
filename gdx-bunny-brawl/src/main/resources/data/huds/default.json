@@ -10,6 +10,68 @@
         "black": {"a": 1, "b": 0, "g": 0, "r": 0}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
-    	"default" : {}
+    	"default" : { 
+    		"font": "default-font",
+    		"fontColor" : "white"
+    	}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle" : {
+    	"default": {
+    		"down": "button_playClient", 
+    		"up": "button_playClient", 
+    		"font": "default-font", 
+    		"fontColor": "white"
+    	}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle" : {
+    	"default" : {
+    		"down": "button_playClient", 
+    		"up": "button_playClient"
+    	},
+    	"button_playClient" : {
+    		"down": "button_playClient", 
+    		"up": "button_playClient"
+    	},
+    	"button_playServer" : {
+    		"down" : "button_playServer",
+    		"up" : "button_playServer"
+    	},
+    	"button_credits" : {
+    		"down" : "button_credits",
+    		"up" : "button_credits"
+    	},
+    	"button_hilfe" : {
+    		"down" : "button_hilfe",
+    		"up" : "button_hilfe"
+    	},
+    	"button_join" : {
+    		"down" : "button_join",
+    		"up" : "button_join"
+    	},
+    	"button_optionen" : {
+    		"down" : "button_optionen",
+    		"up" : "button_optionen"
+    	},
+    	"button_quitServer" : {
+    		"down" : "button_quitServer", 
+    		"up" : "button_quitServer"
+    	},
+    	"button_ready" : {
+    		"down" : "button_ready",
+    		"up" : "button_ready",
+    		"checked": "button_readyGrey"
+    	},
+    	"boost_carrot" : {
+    		"down" : "boost_carrot",
+    		"up" : "boost_carrot"
+    	},
+    	"boost_clover" : {
+    		"down" : "boost_clover",
+    		"up" : "boost_clover"
+    	},
+    	"boost_spinach" : {
+    		"down" : "boost_spinach",
+    		"up" : "boost_spinach"
+    	}
     }
 }

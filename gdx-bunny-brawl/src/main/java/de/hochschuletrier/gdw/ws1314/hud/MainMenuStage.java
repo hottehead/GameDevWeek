@@ -3,14 +3,11 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -18,7 +15,6 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
-import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 public class MainMenuStage extends AutoResizeStage {
 	
@@ -77,6 +73,7 @@ public class MainMenuStage extends AutoResizeStage {
 		options = new TextButton("Optionen", defaultSkin);
 		credits = new TextButton("Credits", defaultSkin);
 		exit = new TextButton("Beenden", defaultSkin);
+
 		
 		tmpTable.add(gameBrowser).pad(5).prefSize(50);
 		tmpTable.add(playServer).pad(5).prefSize(50);

@@ -61,7 +61,7 @@ public class ClientLobbyStage extends AutoResizeStage {
 		
 		Table whiteList = new Table();
 		whiteList.padRight(20);
-		whiteList.add(new Label("Team WHITE", defaultSkin)).row();
+		whiteList.add(new Label("Team White", defaultSkin)).row();
 		this.whiteTeamList = new Table();
 		whiteList.add(this.whiteTeamList);
 		
@@ -84,6 +84,7 @@ public class ClientLobbyStage extends AutoResizeStage {
 		uiTable.padRight(100);
 		readyButton = new TextButton("Ready!", defaultSkin);
 		uiTable.add(readyButton).row();
+		
 		
 		//Disconnect
 		disonnectButton = new TextButton("Disconnect", defaultSkin);
