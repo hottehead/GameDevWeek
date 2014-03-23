@@ -24,31 +24,32 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	
 	private DisconnectClick disconnectClickListener;
 	
-    @Override
     public void init (AssetManagerX assetManager) {
         super.init (assetManager);
         
-        this.disconnectClickListener = new DisconnectClick();
+        this.disconnectClickListener = new DisconnectClick();    	
+    	this.stage = new ServerLobbyStage();
+    	stage.init(assetManager);
+    	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    @Override
     public void render () {
     	this.stage.render();
     }
 
-    @Override
     public void update (float delta) {
         // TODO
     }
 
-    @Override
     public void dispose () {
         // TODO
     }
 
-    @Override
 	public void onEnter() {
 		super.onEnter();
+		Main.inputMultiplexer.addProcessor(stage);
+		
+		stage.init(assetManager);
 		
         NetworkManager.getInstance().setDisconnectCallback(this);
         
@@ -57,9 +58,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
     	
     	
     	logger.info("Server-Lobby created.");
-    	
-    	this.stage = new ServerLobbyStage();
-    	this.stage.init(assetManager);
+
     	
     	this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 
@@ -70,12 +69,10 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		}
 	}
 
-	@Override
 	public void onEnterComplete() {
 		super.onEnterComplete();
 	}
 
-	@Override
 	public void onLeave() {
 		super.onLeave();
 		
@@ -89,12 +86,10 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		this.stage = null;
 	}
 
-	@Override
 	public void onLeaveComplete() {
 		super.onLeaveComplete();
 	}
     
-	@Override
 	public void startGame() {
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(this.serverLobby.getPlayers());
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setMapName(this.serverLobby.getMap());
@@ -105,13 +100,11 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	}
 	
 	private class DisconnectClick extends ClickListener {
-		@Override
 		public void clicked(InputEvent event, float x, float y) {
 			NetworkManager.getInstance().stopServer();
 		}
 	}
 
-	@Override
 	public void disconnectCallback(String msg) {
 		logger.info(msg);
 		GameStates.MAINMENU.init(assetManager);

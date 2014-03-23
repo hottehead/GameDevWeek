@@ -8,15 +8,19 @@ import de.hochschuletrier.gdw.commons.gdx.state.transition.Transition;
 import de.hochschuletrier.gdw.ws1314.Main;
 
 public enum GameStates {
-    LOADING (new LoadGameState ()),
-    MAINMENU (new MainMenuState ()),
-    SERVERLOBBY (new ServerLobbyState ()),
-    CLIENTLOBBY (new ClientLobbyState ()),
-    SERVERGAMEPLAY (new ServerGamePlayState()),
-    CLIENTGAMEPLAY (new ClientGamePlayState()),
-    DUALGAMEPLAY (new DualGamePlayState()),
-    FINISHEDGAME (new FinishedGameState());
-    
+
+    LOADING(new LoadGameState()),
+    MAINMENU(new MainMenuState()),
+    STARTSERVER(new StartServerState()), //map changing
+    SERVERLOBBY (new ServerLobbyState()), //waiting for players
+    SERVERGAMEPLAY (new ServerGamePlayState()), //server is running
+    CLIENTGAMEPLAY (new ClientGamePlayState()), //client is playing
+    CLIENTLOBBY (new ClientLobbyState()), //client connects to server lobby
+    CREDITS(new CreditState()),
+    OPTIONS(new OptionState()),
+	DUALGAMEPLAY (new DualGamePlayState()),
+	FINISHEDGAME (new FinishedGameState());
+
     private final GameState state;
 
     GameStates (GameState state) {
