@@ -619,5 +619,15 @@
 		"playType": "NORMAL", 
 		"columns": 8, 
 		"rows": 1	
+	}, 
+	
+	"bitchslapScreen": {
+	"filename": "data/animations/bitchslap_sprite.png",
+	"frames": 2, 
+	"frameDuration": [0.5, 0.2],
+	"playType": "LOOP", 
+	"columns": 2, 
+	"rows": 1	
+	
 	}
 }

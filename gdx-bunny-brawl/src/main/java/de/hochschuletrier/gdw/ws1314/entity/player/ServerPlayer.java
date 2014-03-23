@@ -108,7 +108,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-    
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
@@ -392,23 +391,23 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 	ServerContactMine mine = (ServerContactMine) otherEntity;
+            	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
-                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+            	 ServerEntityManager.getInstance().removeEntity(otherEntity);
 				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Spinach:
-                	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
-				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
+                 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
+                 ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Clover:
-                	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-                	 ServerClover clover = (ServerClover) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(clover);
-				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
+            	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+                 ServerClover clover = (ServerClover) otherEntity;
+                 ServerEntityManager.getInstance().removeEntity(clover);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
@@ -501,7 +500,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              	case HayBale:
              	   ServerHayBale ball = (ServerHayBale)otherEntity;
                    if(ball.isCrossable()) {
-                  	 logger.info("Haybale not touched");
                        collidingBridgePartsCount--;
                        if(collidingBridgePartsCount <= 0) {
                            this.isOnBridge = false;
@@ -682,8 +680,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	    }
 	}
 	
-	public void setPlayerInDeathZone() {
-	    this.isInDeadZone = true;
+	public void setPlayerIsNotOnBridgeAnymore() {
+	    this.collidingBridgePartsCount--;
+	    if(collidingBridgePartsCount <= 0) {
+            this.isOnBridge = false;
+        }
 	}
         
 }
