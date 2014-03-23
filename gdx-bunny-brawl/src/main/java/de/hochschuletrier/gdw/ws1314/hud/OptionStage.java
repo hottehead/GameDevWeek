@@ -4,17 +4,21 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
-import de.hochschuletrier.gdw.ws1314.Main;
 
 public class OptionStage extends AutoResizeStage {
 	
@@ -70,6 +74,12 @@ public class OptionStage extends AutoResizeStage {
 //		this.sound = new Slider(0, 100, 2, false, defaultSkin);
 //		tmp.add(sound);
 		
+//		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));
+//		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+//		style.imageUp = new TextureRegionDrawable(texture);
+//		this.back = new ImageButton(style);
+//		uiTable.add(back).padTop(20);
+		
 		this.back = new TextButton("zurueck", defaultSkin);
 		uiTable.add(back).padTop(20);
 	}
@@ -80,7 +90,7 @@ public class OptionStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-		Table.drawDebug(this);
+//		Table.drawDebug(this);
 	}
 	
 	public void clear() {
