@@ -33,11 +33,11 @@ public class ServerDatagramHandler implements DatagramHandler{
 	public void handle(PlayerUpdateDatagram playerUpdateDatagram, NetConnection connection){
 		// connection.setAttachment(new PlayerData(playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(),
 		// playerUpdateDatagram.isAccept()));
-		int playerid = ((ConnectionAttachment) connection.getAttachment()).getId();
+		int playerid = ((ConnectionAttachment) connection.getAttachment()).getPlayerId();
 		NetworkManager
 				.getInstance()
 				.getPlayerUpdateCallback()
-				.callback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(),
+				.playerUpdateCallback(playerid, playerUpdateDatagram.getPlayerName(), playerUpdateDatagram.getEntityType(), playerUpdateDatagram.getTeam(),
 						playerUpdateDatagram.isAccept());
 	}
 
@@ -80,7 +80,7 @@ public class ServerDatagramHandler implements DatagramHandler{
 	@Override
 	public void handle(MatchUpdateDatagram matchUpdateDatagram, NetConnection connection){
 		// connection.setAttachment(matchUpdateDatagram);
-		NetworkManager.getInstance().getMatchUpdateCallback().callback(matchUpdateDatagram.getMap());
+		NetworkManager.getInstance().getMatchUpdateCallback().matchUpateCallback(matchUpdateDatagram.getMap());
 	}
 
 	@Override
@@ -90,7 +90,8 @@ public class ServerDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(GameStateDatagram gameStateDatagram, NetConnection connection){
-		logger.warn("Server received a GameStateDatagram, which is only intended to be sent to a client, something is wrong here...");
+		if(NetworkManager.getInstance().getGameStateAckCallback() != null) NetworkManager.getInstance().getGameStateAckCallback()
+				.gameStateAckCallback(((ConnectionAttachment) connection.getAttachment()).getPlayerId(), gameStateDatagram.getGameStates());
 	}
 
 	@Override

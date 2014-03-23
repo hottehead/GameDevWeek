@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NetworkManager{
@@ -52,6 +54,10 @@ public class NetworkManager{
 	private float ping = 0;
 
 	private int nextPlayerNumber = 1;
+	
+	protected Deque<DespawnDatagram> pendingDespawns = new LinkedList<>();
+
+	private GameStateAckCallback gameStateAckCallback;
 
 	public float getPing(){
 		return ping;
@@ -161,6 +167,8 @@ public class NetworkManager{
 				logger.info("[SERVER] for {} players is running and listening at {}:{}", maxConnections, getMyIp(), port);
 			}
 			ServerEntityManager.getInstance().getGameInfo().addListner(gameInfoListener);
+			Main.getInstance().setConsoleVisible(true);
+			Main.getInstance().setTitle("[SERVER] Bunny Brawl - GameDevWeek WS 2013/14");
 		}
 		catch (IOException e){
 			logger.error("[SERVER] Can't listen for connections.", e);
@@ -234,6 +242,13 @@ public class NetworkManager{
 	public GameStateCallback getGameStateCallback(){
 		return gameStateCallback;
 	}
+	
+	/**
+	 * Serverseitig: der Client teilt dem Server den angenommenen GameState mit
+	 */
+	public GameStateAckCallback getGameStateAckCallback(){
+		return gameStateAckCallback;
+	}
 
 	public String getMyIp(){
 		try{
@@ -272,6 +287,10 @@ public class NetworkManager{
 	public void setGameStateCallback(GameStateCallback gameStateCallback){
 		this.gameStateCallback = gameStateCallback;
 	}
+	
+	public void setGameStateAckCallback(GameStateAckCallback gameStateAckCallback){
+		this.gameStateAckCallback = gameStateAckCallback;
+	}
 
 	public boolean isServer(){
 		return serverConnections != null && serverReception != null && serverReception.isRunning();
@@ -300,10 +319,15 @@ public class NetworkManager{
 		if(!isServer()) return;
 		broadcastToClients(new GameStateDatagram(gameStates));
 	}
+	
+	public void sendGameStateAck(GameStates gameStates){
+		if(!isClient()) return;
+		clientConnection.send(new GameStateDatagram(gameStates));
+	}
 
 	private void sendClientId(NetConnection con){
 		if(!isServer()) return;
-		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getId()));
+		con.send(new ClientIdDatagram(((ConnectionAttachment) con.getAttachment()).getPlayerId()));
 	}
 
 	public void sendMatchUpdate(String map){
@@ -375,6 +399,7 @@ public class NetworkManager{
 
 	public void disconnectFromServer(){
 		if(isClient()){
+			if(this.disconnectcallback!=null) this.disconnectcallback.disconnectCallback("[CLIENT] Leave Server.");
 			clientConnection.shutdown();
 		}
 	}
@@ -385,6 +410,7 @@ public class NetworkManager{
 	}
 
 	public void update(){
+		handlePendingDespawns();
 		handleNewConnections();
 		handleDisconnects();
 		replicateServerEntities();
@@ -392,6 +418,14 @@ public class NetworkManager{
 		handleDatagramsServer();
 		checkStats();
 		if(isClient()) clientConnection.send(new PingDatagram(System.currentTimeMillis()));
+	}
+
+	private void handlePendingDespawns(){
+		if(!isClient()) return;
+		DespawnDatagram despawn;
+		while((despawn=pendingDespawns.poll())!=null){
+			clientDgramHandler.handle(despawn, clientConnection);
+		}
 	}
 
 	private void replicateServerEntities(){
@@ -419,10 +453,15 @@ public class NetworkManager{
 
 	private void handleNewConnections(){
 		if(isServer()){
-			NetConnection connection = serverReception.getNextNewConnection();
 			if(Main.getInstance().getCurrentState() == GameStates.SERVERGAMEPLAY.get()){
+				NetConnection connection = serverReception.getNextNewConnection();
+				while(connection != null){
+					connection.shutdown();
+					connection = serverReception.getNextNewConnection();
+				}
 				return;
 			}
+			NetConnection connection = serverReception.getNextNewConnection();
 			while(connection != null){
 				connection.setAccepted(true);
 				connection.setAttachment(new ConnectionAttachment(nextPlayerNumber, "Player " + (nextPlayerNumber++)));
@@ -435,7 +474,6 @@ public class NetworkManager{
 	}
 
 	private void handleDisconnects(){
-
 		if(isServer()){
 			List<NetConnection> toRemove = new ArrayList<>();
 			for(NetConnection c : serverConnections){
@@ -449,18 +487,18 @@ public class NetworkManager{
 					serverConnections.remove(rc);
 					logger.info("[SERVER] {} disconnected.", ((ConnectionAttachment) rc.getAttachment()).getPlayername());
 					broadcastToClients(new ChatDeliverDatagram("[SERVER]", ((ConnectionAttachment) rc.getAttachment()).playername + " disconnected."));
-					ids.add(((ConnectionAttachment) rc.getAttachment()).getId());
+					ids.add(((ConnectionAttachment) rc.getAttachment()).getPlayerId());
 				}
 				if(this.playerdisconnectcallback != null){
-					this.playerdisconnectcallback.callback(ids.toArray(new Integer[ids.size()]));
+					this.playerdisconnectcallback.playerDisconnectCallback(ids.toArray(new Integer[ids.size()]));
 				}
 			}
 		}
 		if(clientConnection != null && !clientConnection.isConnected()){
-			clientConnection = null;
 			if(this.disconnectcallback != null){
-				this.disconnectcallback.callback("[SERVER] Disconnected from Server.");
+				this.disconnectcallback.disconnectCallback("[NETWORK] Disconnected from Server.");
 			}
+			clientConnection = null;
 		}
 	}
 
@@ -496,7 +534,7 @@ public class NetworkManager{
 	public void setPlayerEntityId(int playerId, long entityId){
 		for(NetConnection nc : serverConnections){
 			ConnectionAttachment tmp = (ConnectionAttachment) nc.getAttachment();
-			if(tmp.getId() == playerId){
+			if(tmp.getPlayerId() == playerId){
 				tmp.setEntityId(entityId);
 				nc.send(new EntityIDDatagram(entityId));
 				break;
@@ -507,6 +545,9 @@ public class NetworkManager{
 	public void stopServer(){
 		try{
 			if(isServer()){
+				if(this.disconnectcallback != null){
+					this.disconnectcallback.disconnectCallback("[SERVER] Stopped.");
+				}
 				ServerEntityManager.getInstance().getGameInfo().removeListner(gameInfoListener);
 				for(NetConnection nc : serverConnections){
 					nc.shutdown();
@@ -515,10 +556,7 @@ public class NetworkManager{
 				serverConnections = new ArrayList<>();
 				serverReception.shutdown();
 				serverReception = null;
-				if(this.disconnectcallback != null){
-					this.disconnectcallback.callback("[SERVER] Stopped.");
-				}
-				logger.info("[SERVER] stopped");
+				Main.getInstance().setTitle("Bunny Brawl - GameDevWeek WS 2013/14");
 			}
 			else{
 				logger.warn("[NETWORK] Can't stop, i'm not a Server.");
@@ -545,4 +583,14 @@ public class NetworkManager{
 			broadcastToClients(new GameInfoReplicationDatagram(blackPoints,whitePoints,remainingEgg));
 		}
 	};
+
+	/**
+	 * @return Number of clients currently connected to this server.
+	 */
+	public int clientCount(){
+		if(!isServer()) return 0;
+		return serverConnections.size();
+	}
+	
+	
 }

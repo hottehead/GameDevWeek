@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.hud.elements.base;
 
+import com.badlogic.gdx.graphics.Texture;
+
 
 public class BoxOffsetDecorator extends BoxDecorator {
 
@@ -15,6 +17,10 @@ public class BoxOffsetDecorator extends BoxDecorator {
 		super.drawDecoration();
 	}
 
+	@Override
+	public void setTexture(Texture tex) {
+		decoratedBar.setTexture(tex);
+	}
 	
 	
 }

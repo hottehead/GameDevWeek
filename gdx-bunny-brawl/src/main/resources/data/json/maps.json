@@ -10,7 +10,9 @@
 	"map07": "data/maps/map07.tmx", 
 	"map08": "data/maps/map08.tmx",
 	"map09": "data/maps/map09.tmx",
-	
+
+	"map_oneforthemoneytwofortheyolk": "data/maps/oneforthemoneytwofortheyolk.tmx",
 	"map_trololol": "data/maps/trololol.tmx", 
-	"map_thelongestyard": "data/maps/thelongestyard.tmx"
+	"map_thelongestyard": "data/maps/thelongestyard.tmx",
+	"winwin": "data/maps/winwin.tmx"
 }

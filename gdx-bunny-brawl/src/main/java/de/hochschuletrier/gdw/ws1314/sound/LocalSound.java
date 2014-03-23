@@ -1,8 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.sound;
 
 import com.badlogic.gdx.audio.*;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
+import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.*;
 
@@ -19,7 +22,7 @@ public class LocalSound {
 	private long soundID;
 	
 	private static LocalSound localsound;
-	private static float SystemVolume;
+	private static float SystemVolume = 1.0f;
 	private static float maxDistance = 300;
 	
 	/**
@@ -63,7 +66,6 @@ public class LocalSound {
 	public void init(AssetManagerX assetManager) {
 		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();	
 		this.assetManager = assetManager;
-		this.soundHandle = null;
 		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(playerEntityID);
 		this.soundID = 0;		
 	}
@@ -76,7 +78,7 @@ public class LocalSound {
 	 * @param sound to play
 	 * @param remotePlayer Object
 	 */
-	private void remoteSound(String sound, ClientPlayer remotePlayer) {
+	private void remoteSound(String sound, ClientEntity remotePlayer) {
 		double localX, localY, remoteX, remoteY;
 		float volume, distance;
 		
@@ -113,17 +115,56 @@ public class LocalSound {
 	 * @param event
 	 * @return name of dependend sound or null
 	 */
-	private String connectSoundToAction(EventType event) {
+	private String connectSoundToAction(EventType event, ClientEntity entity) { 
 		switch (event) {
 			case HIT_BY_ATTACK_1:
 			case HIT_BY_ATTACK_2:
-				return "speech-general-nom_1";
+				if(entity.getEntityType() == EntityType.Tank) {
+					int random = this.random(1, 6);
+					return "speech-tank-pain_" + random;					
+				}
+				else if (entity.getEntityType() == EntityType.Hunter || entity.getEntityType() == EntityType.Knight) {
+					int random = this.random(1, 6);
+					return "speech-general-pain_" + random;
+				}
 			case ATTACK_1:
 				return "weapons-arrow-shot";
+			case EAT_PICKUP:
+				if(entity.getEntityType() == EntityType.Tank) {
+					int random = this.random(1, 2);
+					return "speech-tank-nom_" + random;					
+				}
+				else if (entity.getEntityType() == EntityType.Hunter || entity.getEntityType() == EntityType.Knight) {
+					int random = this.random(1, 3);
+					return "speech-general-nom_" + random;
+				}
+			case KO:
+			case DIE_PLAYER:
+				if(entity.getEntityType() == EntityType.Tank) {
+					int random = this.random(1, 2);
+					return "speech-tank-ko_" + random;					
+				}
+				else if (entity.getEntityType() == EntityType.Hunter || entity.getEntityType() == EntityType.Knight) {
+					int random = this.random(1, 3);
+					return "speech-general-ko_" + random;
+				}
+			case FALLEN:
+				if(entity.getEntityType() == EntityType.Tank) {
+					int random = this.random(1, 2);
+					return "speech-tank-fall_" + random;					
+				}
+				else if (entity.getEntityType() == EntityType.Hunter || entity.getEntityType() == EntityType.Knight) {
+					int random = this.random(1, 1);
+					return "speech-general-fall_" + random;
+				}
 			default:
-				return null;
+				return "speech-tank-nom_1";
 		}
 		
+	}
+	
+	private int random (int low, int high) {
+		return (int) Math.round(Math.random() * (high - low) + low);
 	}
 	
 	/**
@@ -135,13 +176,16 @@ public class LocalSound {
 	 * @see play
 	 * @see remoteSound
 	 */
-	public void playSoundByAction(EventType event, ClientPlayer player) {
+	public void playSoundByAction(EventType event, ClientEntity player) {
+		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
+		
 		if (player.getID() == this.localPlayer.getID()) {
-			this.play(this.connectSoundToAction(event), LocalSound.getSystemVolume());
+			this.play(this.connectSoundToAction(event, player), LocalSound.getSystemVolume());
 		}
 		else {
-			this.remoteSound(this.connectSoundToAction(event), player);
+			this.remoteSound(this.connectSoundToAction(event, player), player);
 		}
+		System.out.println("EVENT TRIGGERED :: " + event + ", by player " + player.getID());
 	}
 
 	/**

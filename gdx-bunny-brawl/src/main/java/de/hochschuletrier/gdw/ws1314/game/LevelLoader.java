@@ -1,5 +1,17 @@
 package de.hochschuletrier.gdw.ws1314.game;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
@@ -9,10 +21,10 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
+import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.tiled.SafeProperties;
 import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
-import de.hochschuletrier.gdw.commons.tiled.LayerObject.Primitive;
 import de.hochschuletrier.gdw.commons.utils.ClassUtils;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
@@ -20,9 +32,18 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.TeamSpawnZone;
 import de.hochschuletrier.gdw.ws1314.entity.Zone;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridgeSwitch;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBush;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
 
 import java.io.IOException;
+import java.rmi.server.ServerNotActiveException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +51,8 @@ import java.util.regex.Pattern;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.corba.Bridge;
+
 
 /**
  * Created by Jerry on 18.03.14.
@@ -44,8 +67,9 @@ public class LevelLoader {
 	private static HashMap<String, String> classToPath = new HashMap<>();
 	private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
-    private static HashMap<Integer,ArrayList<Long>> bridgeSwitchIDs = new HashMap<>();
-    private static HashMap<Integer,ArrayList<Long>> bridgeIDs = new HashMap<>();
+
+    private static HashMap<Integer,ArrayList<ServerBridgeSwitch>> bridgeSwitchIDs = new HashMap<>();
+    private static HashMap<Integer,ArrayList<ServerBridge>> bridgeIDs = new HashMap<>();
 
 	public static void load(TiledMap map, ServerEntityManager entityManager,
 			PhysixManager physicsManager, GameInfo gameInfo) {
@@ -92,19 +116,19 @@ public class LevelLoader {
         connectBridges();
 	}
 
-    private static void connectBridges(){
-        for(Map.Entry<Integer,ArrayList<Long>> bswitch : bridgeSwitchIDs.entrySet() )
+public static void connectBridges(){
+        for(Map.Entry<Integer,ArrayList<ServerBridgeSwitch>> bswitch : bridgeSwitchIDs.entrySet() )
         {
             if(!bridgeIDs.containsKey(bswitch.getKey())) {
                 logger.warn("Zu Switch{} gibt es keine Bridge.");
                 continue;
             }
 
-            for(Long bswitchID : bswitch.getValue()){
-                ServerBridgeSwitch sbswitch = (ServerBridgeSwitch)entityManager.getEntityById(bswitchID);
-                for(Long bridgeID : bridgeIDs.get(bswitch.getKey()))
+            for(ServerBridgeSwitch sbswitch : bswitch.getValue()){
+                for(ServerBridge bridge : bridgeIDs.get(bswitch.getKey()))
                 {
-                    sbswitch.addTargetID(bridgeID);
+                    sbswitch.addTargetID(bridge.getID());
+					bridge.setVisibility(sbswitch.getActivePropertys());
                 }
             }
 
@@ -112,6 +136,7 @@ public class LevelLoader {
         }
 
     }
+	
 
 	private static void loadObjectLayer(Layer layer) {
 		for (LayerObject object : layer.getObjects()) {
@@ -273,14 +298,6 @@ public class LevelLoader {
 		case "water":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
             zone.setWaterZone();
-			PhysixBody bodyWater = new PhysixBodyDef(BodyType.StaticBody, physicsManager)
-											.position(x, y).create();
-			bodyWater.createFixture(new PhysixFixtureDef(physicsManager)
-											.density(0.5f)
-											.sensor(true)
-											.friction(0.5f)
-											.restitution(0.4f)
-											.shapeBox(width, height));
             break;
         case "hgrass":
             zone = (Zone)entityManager.createEntity(Zone.class,new Vector2(x,y),properties);
@@ -394,6 +411,13 @@ public class LevelLoader {
                 ServerBridgeSwitch bswitch = entityManager.createEntity(ServerBridgeSwitch.class,pos,properties);
                 addSwitchID(name,bswitch);
                 break;
+            case "mine":
+            	ServerContactMine cMine = entityManager.createEntity(ServerContactMine.class, pos, properties);
+				break;
+			case "straw":
+				entityManager.createEntity(ServerHayBale.class, pos, properties);
+				break;
+
 		}
 
 		if (entity != null) {
@@ -412,16 +436,18 @@ public class LevelLoader {
     }
 
     private static void addBridgeID(String name,ServerBridge enty){
+		logger.info(name);
         Integer id = new Integer(getIDinString(name));
+		logger.info("id: {}",id);
         if(id.intValue() < 0){
             logger.warn("Eine Bridge hat keine ID im Namen");
             return;
         }
 
         if(!bridgeIDs.containsKey(id))
-            bridgeIDs.put(id,new ArrayList<Long>());
+            bridgeIDs.put(id,new ArrayList<ServerBridge>());
 
-        bridgeIDs.get(id).add(enty.getID());
+        bridgeIDs.get(id).add(enty);
 
     }
 
@@ -432,10 +458,10 @@ public class LevelLoader {
             return;
         }
 
-        if(!bridgeIDs.containsKey(id))
-            bridgeIDs.put(id,new ArrayList<Long>());
+        if(!bridgeSwitchIDs.containsKey(id))
+			bridgeSwitchIDs.put(id,new ArrayList<ServerBridgeSwitch>());
 
-        bridgeIDs.get(id).add(enty.getID());
+		bridgeSwitchIDs.get(id).add(enty);
 
     }
 
