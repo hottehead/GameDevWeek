@@ -23,10 +23,10 @@ import de.hochschuletrier.gdw.ws1314.states.ChooseClassState;
 public class ClientGameBrowser extends AutoResizeStage {
 	private Logger logger = LoggerFactory.getLogger(ClientGameBrowser.class);
 
-	private	TextField serverIP;
+	private TextField serverIP;
 	private TextField serverPort;
 	private TextField playerName;
-	private Label IpLabel, PortLabel,nameLabel;
+	private Label IpLabel, portLabel, nameLabel;
 	private Button join;
 	private Skin defaultSkin;
 	private Table root;
@@ -39,16 +39,17 @@ public class ClientGameBrowser extends AutoResizeStage {
 		root.setFillParent(true);
 		root.debug(Debug.all);
 		join = new Button(new Label("Verbinden", defaultSkin), defaultSkin, "default");
-		serverIP = new TextField("127.0.0.1", defaultSkin);
+		serverIP = new TextField("143.93.55.", defaultSkin);
 		serverPort = new TextField("54293", defaultSkin);
 		playerName = new TextField("Funny Bunny", defaultSkin);
 		playerName.addListener(new InputListener() {
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
-					Main.getInstance().gamePreferences.putString(PreferenceKeys.playerName, playerName.getText());
+					Main.getInstance().gamePreferences.putString(
+							PreferenceKeys.playerName, playerName.getText());
 					return true;
-				
+
 				}
 				return false;
 			}

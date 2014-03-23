@@ -69,7 +69,7 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		uiTable.row().padTop(20);
 		
-		Table tmpTable = new Table();
+		Table tmpTable = new Table(); 
 		uiTable.add(tmpTable).pad(20);
 		
 		gameBrowser = new TextButton("Spielen als Client", defaultSkin);
