@@ -70,17 +70,17 @@ public class FinishedGameState extends GameState {
     		NetworkManager.getInstance().disconnectFromServer();
     	}
     	
+    	this.stage = new FinishedGameStage();
+    	
     	GameInfo gameInfo = ClientEntityManager.getInstance().getGameInfo();
     	PlayerData playerData = ClientEntityManager.getInstance().getPlayerData();
-    	
-    	this.stage = new FinishedGameStage();
     	
     	if ((gameInfo.getTeamPointsBlack() > gameInfo.getTeamPointsWhite() && playerData.getTeam() == TeamColor.BLACK) ||
     		(gameInfo.getTeamPointsWhite() > gameInfo.getTeamPointsBlack() && playerData.getTeam() == TeamColor.WHITE)) {
     		
-    		this.stage.setFinishStateText("Your Team won!");
+    		this.stage.setFinishStateText("Victory!");
     	} else {
-    		this.stage.setFinishStateText("Your Team lost!");
+    		this.stage.setFinishStateText("Defeat!");
     	}
     	
     	this.stage.setBlackTeamSore(gameInfo.getTeamPointsBlack());
@@ -113,7 +113,6 @@ public class FinishedGameState extends GameState {
     private class BackButtonClick extends ClickListener {
 		@Override
 		public void clicked(InputEvent event, float x, float y) {
-			GameStates.MAINMENU.init(assetManager);
 			GameStates.MAINMENU.activate();
 		}
     }

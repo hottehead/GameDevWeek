@@ -12,6 +12,8 @@ public enum EntityStates {
 	WALKING,
 	WAITING,
 	EXPLODING,
-	WET
+	WET,
+	ON,
+	OFF
 }
 

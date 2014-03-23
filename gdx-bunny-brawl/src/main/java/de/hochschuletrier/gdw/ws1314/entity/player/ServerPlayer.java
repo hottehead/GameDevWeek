@@ -87,8 +87,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private StatePlayer			 currentState;
     
-    private float				 attackCooldown;
-    private float				 attackCooldownTimer;
+    private float				 attackDelay;
+    private float				 attackDelayTimer;
     private boolean				 attackAvailable;
     private boolean do1Attack;
     private boolean do2Attack;
@@ -112,14 +112,22 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
-    private Fixture 			fixtureDeathCheck;
+    private Fixture             fixCollUpperLeft;
+    private Fixture             fixCollUpperRight;
+    private Fixture             fixCollLowerLeft;
+    private Fixture             fixCollLowerRight;
     
-    private boolean 			isDead;
+    private boolean isDead;
     private int 				collidingBridgePartsCount;
     private float 				deathfreeze;
 	private ArrayList<Long>		pickedUpEggs;
-	private int					deadZoneCounter;
-    private boolean             isInDeadZone;
+	//private int					deadZoneCounter;
+    //private boolean             isInDeadZone;
+    
+    private boolean isInDeadZoneUpperLeft;
+    private boolean isInDeadZoneUpperRight;
+    private boolean isInDeadZoneLowerLeft;
+    private boolean isInDeadZoneLowerRight;
     
     private ArrayList<Long>		struckBySwordIDs;
     
@@ -146,10 +154,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	attackBuffActive = false;
     	attackBuffFactor = 1.0f;
     	droppedEggID = -1l;
-    	isDead = false;
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
-    	isInDeadZone = false;
+    	//isInDeadZone = false;
     	pickedUpEggs = new ArrayList<>();
     	struckBySwordIDs = new ArrayList<Long>();
     }
@@ -162,10 +169,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     @Override
     public void update(float deltaTime) 
     {
-        if(isDead) {
+        if(this.isDead) {
             deathfreeze -= deltaTime;
             if(deathfreeze < 0) {
-                isDead = false;
+                isInDeadZoneLowerLeft = false;
+                isInDeadZoneLowerRight = false;
+                isInDeadZoneUpperLeft = false;
+                isInDeadZoneUpperRight = false;
                 deathfreeze = 0.5f;
                 this.reset();
             }
@@ -179,31 +189,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 			pickedUpEggs.clear();
 			currentEggCount = 0;
             return;
-        }
-        if(this.isInDeadZone) 
-        {
-        	if (!this.isOnBridge)
-        	{
-        		deadZoneCounter++;
-        		
-        		if (deadZoneCounter > 1)
-        		{
-            		this.isDead = true;
-                    this.isOnBridge = false;
-                    this.isInDeadZone = false;
-        		}
-        	}
-        	else
-        	{
-        		deadZoneCounter = 0;
+        } else if(isInDeadZoneLowerLeft && isInDeadZoneLowerRight && isInDeadZoneUpperLeft && isInDeadZoneUpperRight) {
+        	if (!this.isOnBridge) {
+        		this.isDead = true;
+                this.isOnBridge = false;
         	}
         }
         
     	currentState.update(deltaTime);
     	
     	if (!attackAvailable) {
-        	attackCooldownTimer += deltaTime;
-        	if (attackCooldownTimer > attackCooldown) {
+        	attackDelayTimer += deltaTime;
+        	if (attackDelayTimer > attackDelay) {
         		attackAvailable = true;
         		
         		if(do1Attack) {
@@ -265,8 +262,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		break;
         		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getFirstAttackDelay();
-            		attackCooldownTimer = 0.0f;
+            		attackDelay = playerKit.getFirstAttackDelay();
+            		attackDelayTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
@@ -278,8 +275,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		break;
         		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getSecondAttackDelay();
-            		attackCooldownTimer = 0.0f;
+            		attackDelay = playerKit.getSecondAttackDelay();
+            		attackDelayTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
@@ -327,8 +324,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         }
         // Not intended movement
         else {
-        	if (currentState.equals(walkingState))
+        	if (currentState.equals(walkingState))	{
         		switchToState(idleState);
+				NetworkManager.getInstance().sendEntityEvent(getID(),EventType.IDLE);
+			}
 
         	attackState.setWaitFinishedState(idleState);
         	knockbackState.setWaitFinishedState(idleState);
@@ -373,6 +372,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public void beginContact(Contact contact) {
     	 ServerEntity otherEntity = this.identifyContactFixtures(contact);
     	 Fixture fixture = this.getCollidingFixture(contact);
+     	 Fixture opposingFixture = this.getOppoosingCollidingFixture(contact);
          
          if(otherEntity == null) {
              return;
@@ -398,7 +398,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
@@ -419,7 +418,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
                  if(ball.isCrossable()) {
-                	 logger.info("Haybale crossed");
                      this.setPlayerIsOnBridge();
                  } else {
                    this.physicsBody.setLinearDamping(1);
@@ -456,6 +454,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         	 switch(otherEntity.getEntityType()) {
                  case Projectil:
                 	 ServerProjectile projectile = (ServerProjectile) otherEntity;
+                	 if (!projectile.isDamageFixture(opposingFixture))
+                		 break;
                      if (getID() != projectile.getSourceID()) {
                      	applyDamage(projectile.getDamage());
                      	applyKnockback(projectile.getFacingDirection(), KNOCKBACK_IMPULSE);
@@ -473,12 +473,38 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  default:
                 	 break;
         	 }      
-         } else if(fixture == fixtureDeathCheck) {
+         } else if(fixture == fixCollUpperLeft) {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
-                     this.isInDeadZone = true;
-    	             deadZoneCounter++;
+                     this.isInDeadZoneUpperLeft = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollUpperRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneUpperRight = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerLeft) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerLeft = true;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerRight = true;
                      break;
                  default:
                      break;
@@ -518,17 +544,43 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 default:
                 	break;
              }
-    	 } else if(fixture == fixtureDeathCheck) {
+    	 } else if(fixture == fixCollUpperLeft) {
     	     switch(otherEntity.getEntityType()) {
     	         case AbyssZone:
     	         case WaterZone:
-    	             this.isInDeadZone = false;
-    	             deadZoneCounter--;
+    	             this.isInDeadZoneUpperLeft = false;
     	             break;
     	         default:
     	             break;
     	     }
-    	 }
+    	 } else if(fixture == fixCollUpperRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneUpperRight = false;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerLeft) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerLeft = false;
+                     break;
+                 default:
+                     break;
+             }
+         } else if(fixture == fixCollLowerRight) {
+             switch(otherEntity.getEntityType()) {
+                 case AbyssZone:
+                 case WaterZone:
+                     this.isInDeadZoneLowerRight = false;
+                     break;
+                 default:
+                     break;
+             }
+         }
     }
 
     public void preSolve(Contact contact, Manifold oldManifold) {}
@@ -583,12 +635,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 				.gravityScale(0.0f)
 				.create();
 		
+		//lower body
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
 				.restitution(RESTITUTION)
 				.shapeCircle(HEIGHT / 2.0f, new Vector2(0, HEIGHT / 2.0f)));
 		
+		//full body
 		body.createFixture(new PhysixFixtureDef(manager)
 				.density(DENSITY)
 				.friction(FRICTION)
@@ -596,11 +650,36 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 				.shapeBox(WIDTH, HEIGHT * 2.0f - HEIGHT / 2.0f + HEIGHT / 4.0f, new Vector2(0.0f, 0.0f), 0.0f)
 				.sensor(true));
 		
+		//coll check upper left
 		body.createFixture(new PhysixFixtureDef(manager)
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 2.0f))
+            .shapeBox(1, 1, new Vector2(-HEIGHT / 4, HEIGHT / 4), 0)
+            .sensor(true));
+		
+		//coll check upper right
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(HEIGHT / 4, HEIGHT / 4), 0)
+            .sensor(true));
+		
+		//coll check lower left
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(-HEIGHT / 4, (float) (HEIGHT * 0.75)), 0)
+            .sensor(true));
+		
+		//coll check lower right
+		body.createFixture(new PhysixFixtureDef(manager)
+            .density(DENSITY)
+            .friction(FRICTION)
+            .restitution(RESTITUTION)
+            .shapeBox(1, 1, new Vector2(HEIGHT / 4, (float) (HEIGHT * 0.75)), 0)
             .sensor(true));
 
 		body.setGravityScale(0);
@@ -611,7 +690,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 		Array<Fixture> fixtures = body.getBody().getFixtureList();
 		fixtureLowerBody = fixtures.get(0);
 		fixtureFullBody = fixtures.get(1);
-		fixtureDeathCheck = fixtures.get(2);
+		fixCollUpperLeft = fixtures.get(2);
+		fixCollUpperRight = fixtures.get(3);
+		fixCollLowerLeft = fixtures.get(4);
+		fixCollLowerRight = fixtures.get(5);
+		
+		
     	walkingState.setPhysixBody(physicsBody);
 	}
 
@@ -631,7 +715,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         this.deactivateSpeedBuff();
         		
         switchToState(idleState);
-        isInDeadZone = false;
+        isInDeadZoneLowerLeft = false;
+        isInDeadZoneLowerRight = false;
+        isInDeadZoneUpperLeft = false;
+        isInDeadZoneUpperRight = false;
+        isDead = false;
         
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }

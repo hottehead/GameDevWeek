@@ -3,14 +3,16 @@ package de.hochschuletrier.gdw.ws1314.hud;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -18,7 +20,6 @@ import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.elements.LevelList;
 import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
-import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 public class MainMenuStage extends AutoResizeStage {
 	
@@ -31,11 +32,11 @@ public class MainMenuStage extends AutoResizeStage {
 	private Table uiTable;
 	
 	//buttons
-	private TextButton playServer;
-	private TextButton gameBrowser;
-	private TextButton options; 
-	private TextButton credits;
-	private TextButton exit;
+	private ImageButton playServer;
+	private ImageButton gameBrowser;
+	private ImageButton options; 
+	private ImageButton credits;
+	private ImageButton exit;
 	
 	//test
 	TextButton startServerAndPlay;
@@ -64,11 +65,30 @@ public class MainMenuStage extends AutoResizeStage {
 		Table tmpTable = new Table(); 
 		uiTable.add(tmpTable).pad(20);
 		
-		gameBrowser = new TextButton("Spielen als Client", defaultSkin,"start_player");
-		playServer = new TextButton("Spielen als Server", defaultSkin,"start_server");
-		options = new TextButton("Optionen", defaultSkin,"options");
-		credits = new TextButton("Credits", defaultSkin,"credits");
-		exit = new TextButton("Beenden", defaultSkin);
+		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonPlayClient"));
+		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		gameBrowser = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonPlayServer"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		playServer = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonOptions"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		options = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonCredits"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		credits = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonExit"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		exit = new ImageButton(style);
 		
 		tmpTable.add(gameBrowser).pad(5).prefSize(50);
 		tmpTable.add(playServer).pad(5).prefSize(50);
@@ -108,11 +128,11 @@ public class MainMenuStage extends AutoResizeStage {
 			uiTable.setScale(this.xScale, this.yScale);
 	}
 	
-	public TextButton getGameBrowserButton() {
+	public ImageButton getGameBrowserButton() {
 		return gameBrowser;
 	}
 	
-	public TextButton getPlayServerButton() {
+	public ImageButton getPlayServerButton() {
 		return playServer;
 	}	
 	
@@ -120,15 +140,15 @@ public class MainMenuStage extends AutoResizeStage {
 		return startServerAndPlay;
 	}
 	
-	public TextButton getOptionsButton() {
+	public ImageButton getOptionsButton() {
 		return options;
 	}
 	
-	public TextButton getCreditsButton() {
+	public ImageButton getCreditsButton() {
 		return options;
 	}
 	
-	public TextButton getExitButton() {
+	public ImageButton getExitButton() {
 		return exit;
 	}
 }

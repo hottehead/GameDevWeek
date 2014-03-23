@@ -83,7 +83,7 @@ public class StartServerState extends GameState {
     				port = NetworkManager.getInstance().getDefaultPort();
     			}
 
-    			NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
+    			NetworkManager.getInstance().server(null, port, NetworkManager.getInstance().getDefaultPlayerCount(), NetworkManager.getInstance().getDefaultServerIp());
 
     			if (!NetworkManager.getInstance().isServer())
     			{
