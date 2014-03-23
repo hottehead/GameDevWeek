@@ -6,9 +6,13 @@
 
 package de.hochschuletrier.gdw.ws1314.entity.projectile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
+
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
@@ -19,6 +23,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
+import de.hochschuletrier.gdw.ws1314.states.DualGamePlayState;
 
 /**
  *
@@ -26,6 +31,9 @@ import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
  */
 // Modified by El Fapo: Added getSourceID
 public class ServerSwordAttack extends ServerEntity {
+    
+    private static final Logger logger = LoggerFactory.getLogger(DualGamePlayState.class);
+
     
     //========================================
     // VARIABLES
@@ -141,7 +149,7 @@ public class ServerSwordAttack extends ServerEntity {
 //        points.add(pointB);
 //        points.add(pointC);
         
-        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
+        PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody, manager)
                 .position(this.originPosition)
                 .fixedRotation(true)
                 .angle(getFacingDirection().getAngle() - (float) Math.PI / 2.0f)
