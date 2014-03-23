@@ -1,10 +1,12 @@
 package de.hochschuletrier.gdw.ws1314.hud;
 
+
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -31,13 +33,18 @@ public class HudStage extends AutoResizeStage {
 		this.addActor(uiTable);
 		
 		uiTable.add( initStatusBar(assetManager) ).align(Align.bottom|Align.left);
+		
+		uiTable.invalidate();
 	}
 
 	private Actor initStatusBar(AssetManagerX assetManager) {
 		Table statusBarTable = new Table(defaultSkin);
 		
 		Image img = new Image(assetManager.getTexture("HudEmblemHunterWhite"));
+		statusBarTable.add(new Label("Class", defaultSkin));
+		statusBarTable.row();
 		statusBarTable.add(img);
+		
 		
 		return statusBarTable;
 	}

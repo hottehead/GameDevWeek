@@ -3,7 +3,7 @@ package de.hochschuletrier.gdw.ws1314.sound;
 import java.util.EnumMap;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.ws1314.states.*;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 public class MusicManager {
 	private static MusicManager Instance;
