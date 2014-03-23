@@ -23,6 +23,8 @@ public class AttackShootArrow extends AttackType
 	
 	public static final float ARROW_HITCIRCLE_RADIUS = 4.0f;
 	
+	public static final float ATTACK_TIME = 1.0f;
+	
     public void fire(ServerPlayer player)  
     {
     	Vector2 playerPos = player.getPosition();
@@ -38,4 +40,8 @@ public class AttackShootArrow extends AttackType
     	projectile.setDamage(DAMAGE);
     }
 
+    public float getAttackTime()
+    {
+    	return ATTACK_TIME;
+    }
 }
