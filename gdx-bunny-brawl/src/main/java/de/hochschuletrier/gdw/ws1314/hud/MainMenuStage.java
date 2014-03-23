@@ -4,13 +4,18 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -32,11 +37,11 @@ public class MainMenuStage extends AutoResizeStage {
 	private Table uiTable;
 	
 	//buttons
-	private TextButton playServer;
-	private TextButton playClient;
-	private TextButton options; 
-	private TextButton credits;
-	private TextButton exit;
+	private ImageButton playServer;
+	private ImageButton playClient;
+	private ImageButton options; 
+	private ImageButton credits;
+	private ImageButton exit;
 	
 	//test
 	TextButton startServerAndPlay;
@@ -86,11 +91,31 @@ public class MainMenuStage extends AutoResizeStage {
 		Table tmpTable = new Table();
 		uiTable.add(tmpTable).pad(20);
 		
-		playClient = new TextButton("Spielen als Client", defaultSkin);
-		playServer = new TextButton("Spielen als Server", defaultSkin);
-		options = new TextButton("Optionen", defaultSkin);
-		credits = new TextButton("Credits", defaultSkin);
-		exit = new TextButton("Beenden", defaultSkin);
+		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonPlayClient"));
+		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		playClient = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonPlayServer"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		playServer = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonOptions"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		options = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonCredits"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		credits = new ImageButton(style);
+		
+		//FIXME: change texture from help to exit
+		texture = new TextureRegion(assetManager.getTexture("menuButtonPlayHelp"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		exit = new ImageButton(style);
 		
 		tmpTable.add(playClient).pad(5).prefSize(50);
 		tmpTable.add(playServer).pad(5).prefSize(50);
@@ -134,11 +159,11 @@ public class MainMenuStage extends AutoResizeStage {
 			uiTable.setScale(this.xScale, this.yScale);
 	}
 	
-	public TextButton getPlayClientButton() {
+	public ImageButton getPlayClientButton() {
 		return playClient;
 	}
 	
-	public TextButton getPlayServerButton() {
+	public ImageButton getPlayServerButton() {
 		return playServer;
 	}	
 	
@@ -146,15 +171,15 @@ public class MainMenuStage extends AutoResizeStage {
 		return startServerAndPlay;
 	}
 	
-	public TextButton getOptionsButton() {
+	public ImageButton getOptionsButton() {
 		return options;
 	}
 	
-	public TextButton getCreditsButton() {
+	public ImageButton getCreditsButton() {
 		return options;
 	}
 	
-	public TextButton getExitButton() {
+	public ImageButton getExitButton() {
 		return exit;
 	}
 }
