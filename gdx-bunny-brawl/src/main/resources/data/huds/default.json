@@ -15,13 +15,6 @@
     "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
         "default": {"down": "default-round-down", "up": "default-round"},
         "toggle": {"down": "default-round-down", "checked": "default-round-down", "up": "default-round"},
-        "start_player": {"down": "button_playClient", "checked": "button_playClient", "up": "button_playClient"},
-        "start_server": {"down": "button_playServer", "checked": "button_playServer", "up": "button_playServer"},
-        "ready": {"down": "button_ready", "checked": "button_ready", "up": "button_ready"},
-        "options": {"down": "button_optionen", "checked": "button_optionen", "up": "button_optionen"},
-        "join": {"down": "button_join", "checked": "button_join", "up": "button_join"},
-        "help": {"down": "button_help", "checked": "button_help", "up": "button_help"},
-        "credits": {"down": "button_credits", "checked": "button_credits", "up": "button_credits"},
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
         "default": {"down": "default-round-down", "up": "default-round", "font": "default-font", "fontColor": "white"},
