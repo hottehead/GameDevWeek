@@ -27,13 +27,12 @@ public class MainMenuStage extends AutoResizeStage {
 	
 	private LevelList levelList;
 	
-	private TextField playerNameField;
 	
 	private Table uiTable;
 	
 	//buttons
 	private TextButton playServer;
-	private TextButton playClient;
+	private TextButton gameBrowser;
 	private TextButton options; 
 	private TextButton credits;
 	private TextButton exit;
@@ -45,16 +44,6 @@ public class MainMenuStage extends AutoResizeStage {
 		super();
 	}
 
-	@Override
-	public boolean keyDown(int keyCode) {
-		if(keyCode == Keys.ENTER) {
-			if(playerNameField.getText()!="") {
-				Main.getInstance().gamePreferences.putString(PreferenceKeys.playerName, playerNameField.getText());
-			}
-			return true;
-		}
-		return super.keyDown(keyCode);
-	}
 
 	AssetManagerX assetManager;
 
@@ -73,26 +62,23 @@ public class MainMenuStage extends AutoResizeStage {
 		uiTable.add(playerNameLabel);
 
 		uiTable.add(playerNameLabel);		
-		playerNameField = new TextField(Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Fluffly Bunny"), defaultSkin);
-		playerNameField.setMaxLength(12);
-		
-		uiTable.add(playerNameField);
+
 		uiTable.row().padTop(20);
 		Label label = new Label("Welcome to the League of Bunny Brawllllll!!!111!!1111", defaultSkin);
 		uiTable.add(label);
 		
 		uiTable.row().padTop(20);
 		
-		Table tmpTable = new Table();
+		Table tmpTable = new Table(); 
 		uiTable.add(tmpTable).pad(20);
 		
-		playClient = new TextButton("Spielen als Client", defaultSkin);
+		gameBrowser = new TextButton("Spielen als Client", defaultSkin);
 		playServer = new TextButton("Spielen als Server", defaultSkin);
 		options = new TextButton("Optionen", defaultSkin);
 		credits = new TextButton("Credits", defaultSkin);
 		exit = new TextButton("Beenden", defaultSkin);
 		
-		tmpTable.add(playClient).pad(5).prefSize(50);
+		tmpTable.add(gameBrowser).pad(5).prefSize(50);
 		tmpTable.add(playServer).pad(5).prefSize(50);
 
 		uiTable.row();		
@@ -134,8 +120,8 @@ public class MainMenuStage extends AutoResizeStage {
 			uiTable.setScale(this.xScale, this.yScale);
 	}
 	
-	public TextButton getPlayClientButton() {
-		return playClient;
+	public TextButton getGameBrowserButton() {
+		return gameBrowser;
 	}
 	
 	public TextButton getPlayServerButton() {

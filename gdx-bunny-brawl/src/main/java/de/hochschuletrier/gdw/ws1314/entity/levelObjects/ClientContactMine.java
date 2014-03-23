@@ -35,7 +35,7 @@ public class ClientContactMine extends ClientLevelObject
 		boolean changing = state != entityState ? true : false;
 		super.setLevelObjectState(state);
 		if( changing && this.getLevelObjectState() == EntityStates.EXPLODING){
-			ClientDieEntity entity =  ClientEntityManager.getInstance().createDyingGhost(EntityType.ContactMine, DURATION_EXPLOSION);
+			ClientDieEntity entity =  ClientEntityManager.getInstance().createDyingGhost(EntityType.ContactMine, 0);
 			entity.enable();
 			entity.setPosition(this.getPosition());
 			entity.setLevelObjectState(EntityStates.EXPLODING);
