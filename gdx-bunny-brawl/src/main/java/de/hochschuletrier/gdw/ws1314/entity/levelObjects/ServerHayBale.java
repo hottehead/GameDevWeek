@@ -1,5 +1,7 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import java.util.ArrayList;
+
 import de.hochschuletrier.gdw.ws1314.entity.*;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
@@ -40,6 +42,8 @@ public class ServerHayBale extends ServerLevelObject
 	private Fixture fixtureMain;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
+	
+	private ArrayList<Long> itemsOnHayBale;
 	
 	public ServerHayBale()
 	{
@@ -85,7 +89,7 @@ public class ServerHayBale extends ServerLevelObject
 	                }
 	                break;
 	            default: 
-	                this.acrossable = false;
+	                //this.acrossable = false;
 	                break;
 	        }
 		} else if(fixture == fixtureWaterCollCheck) {
@@ -101,8 +105,8 @@ public class ServerHayBale extends ServerLevelObject
                     }
                     break;
 		        default:
-					this.setEntityState(EntityStates.NONE);
-                    this.acrossable = false;
+					//this.setEntityState(EntityStates.NONE);
+                    //this.acrossable = false;
                     break;
 		    }
 		}
@@ -112,6 +116,14 @@ public class ServerHayBale extends ServerLevelObject
 	@Override
 	public void endContact(Contact contact)
 	{
+	}
+	
+	public void registerItemOnHayBale(long id){
+		itemsOnHayBale.add(id);
+	}
+	
+	public void unregisterItemOnHayBale(long id){
+		
 	}
 
 	@Override
