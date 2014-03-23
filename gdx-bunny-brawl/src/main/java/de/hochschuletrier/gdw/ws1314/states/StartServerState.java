@@ -12,6 +12,7 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.StartServerStage;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 public class StartServerState extends GameState {
 	
@@ -45,6 +46,7 @@ public class StartServerState extends GameState {
 	    Main.inputMultiplexer.addProcessor(stage);
 		stage.getBackButton().addListener(backListener);
 		stage.getStartServerButton().addListener(startServerListener);
+		stage.setSelectedMap(Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, ""));
     }
 
     public void onEnterComplete() {
@@ -89,7 +91,11 @@ public class StartServerState extends GameState {
     				return;
     			}
     		}
-
+    		
+    		if (!stage.getSelectedLevel().getText().toString().isEmpty()) {
+    			Main.getInstance().gamePreferences.putString(PreferenceKeys.mapName, stage.getSelectedLevel().getText().toString());
+    		}
+    		
     		logger.info("Changing State to Server-Lobby...");
     		GameStates.SERVERLOBBY.init(assetManager);
     		GameStates.SERVERLOBBY.activate();
