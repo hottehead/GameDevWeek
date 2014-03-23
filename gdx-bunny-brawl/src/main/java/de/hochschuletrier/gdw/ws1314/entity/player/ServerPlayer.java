@@ -412,8 +412,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  ServerHayBale ball = (ServerHayBale)otherEntity;
                  if(ball.isCrossable()) {
                 	 logger.info("Haybale crossed");
-                     this.isOnBridge = true;
-                     collidingBridgePartsCount++;
+                     this.setPlayerIsOnBridge();
                  } else {
                    this.physicsBody.setLinearDamping(1);
                        if(ball.getSpeed() > 0){
@@ -433,8 +432,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                      if(!this.isOnBridge) {
                          NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                      }
-                     this.isOnBridge = true;
-                     collidingBridgePartsCount++;
+                     this.setPlayerIsOnBridge();
     				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  }
                  break;
@@ -471,10 +469,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  case AbyssZone:
                  case WaterZone:
                      this.isInDeadZone = true;
-    	             deadZoneCounter = 0;
-//                     if(!isOnBridge) {
-//                         this.isDead = true;
-//                     }
+    	             deadZoneCounter++;
                      break;
                  default:
                      break;
@@ -499,10 +494,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              	case HayBale:
              	   ServerHayBale ball = (ServerHayBale)otherEntity;
                    if(ball.isCrossable()) {
-                       collidingBridgePartsCount--;
-                       if(collidingBridgePartsCount <= 0) {
-                           this.isOnBridge = false;
-                       }
+                       this.setPlayerIsNotOnBridgeAnymore();
                    }
                    break;
                 case Bridge:
@@ -512,13 +504,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 case BRIDGE_VERTICAL_BOTTOM:
                 case BRIDGE_VERTICAL_MIDDLE:
                 case BRIDGE_VERTICAL_TOP:
-                    collidingBridgePartsCount--;
-                    if(collidingBridgePartsCount <= 0) {
-                        this.isOnBridge = false;
-//                        if(this.isInDeadZone) {
-//                            this.isDead = true;
-//                        }
-                    }
+                    this.setPlayerIsNotOnBridgeAnymore();
                     break;
                 default:
                 	break;
@@ -528,7 +514,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	         case AbyssZone:
     	         case WaterZone:
     	             this.isInDeadZone = false;
-    	             deadZoneCounter = 0;
+    	             deadZoneCounter--;
     	             break;
     	         default:
     	             break;
@@ -683,7 +669,13 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	    this.collidingBridgePartsCount--;
 	    if(collidingBridgePartsCount <= 0) {
             this.isOnBridge = false;
+            collidingBridgePartsCount = 0;
         }
+	}
+	
+	public void setPlayerIsOnBridge() {
+	    this.collidingBridgePartsCount++;
+	    this.isOnBridge = true;
 	}
         
 }
