@@ -32,7 +32,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 50.0f;
+	private final float DURATION_TIME_IN_WATER = 30.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 100.0f;
 	
@@ -94,7 +94,7 @@ public class ServerHayBale extends ServerLevelObject
 	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 	                    speed = 1;
-						this.setEntityState(EntityStates.WALKING);
+						this.setEntityState(EntityStates.NONE);
 	                }
 	                break;
 	            case SwordAttack:
@@ -103,7 +103,7 @@ public class ServerHayBale extends ServerLevelObject
 	                    ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
 	                    this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
 	                                                    player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
-						this.setEntityState(EntityStates.WALKING);
+						this.setEntityState(EntityStates.NONE);
 	                }
 	                break;
 	            case Bridge:
@@ -353,6 +353,7 @@ public class ServerHayBale extends ServerLevelObject
         if(acrossable) {
             lifetime += deltaTime;
             if(lifetime > DURATION_TIME_IN_WATER) {
+                this.setEntityState(EntityStates.NONE);
                 Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
                 
                 while(keySetIterator.hasNext()) {
@@ -390,6 +391,20 @@ public class ServerHayBale extends ServerLevelObject
     public void reset() {
         super.reset();
         this.fixtureMain.setSensor(false);
+        collWaterUpperLeft = false;
+        collWaterUpperRight = false;
+        collWaterLowerLeft = false;
+        collWaterLowerRight = false;
+        collAbyssUpperLeft = false;
+        collAbyssUpperRight = false;
+        collAbyssLowerLeft = false;
+        collAbyssLowerRight = false;
+        collHayBaleUpperLeft = false;
+        collHayBaleUpperRight = false;
+        collHayBaleLowerLeft = false;
+        collHayBaleLowerRight = false;
+        acrossable = false;
+        lifetime = 0;
     }
 
 }
