@@ -395,7 +395,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
@@ -416,7 +415,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
                  if(ball.isCrossable()) {
-                	 logger.info("Haybale crossed");
                      this.setPlayerIsOnBridge();
                  } else {
                    this.physicsBody.setLinearDamping(1);
