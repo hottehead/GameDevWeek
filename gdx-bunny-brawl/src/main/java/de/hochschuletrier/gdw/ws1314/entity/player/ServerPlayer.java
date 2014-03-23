@@ -680,5 +680,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	        attackBuffActive = false;
 	    }
 	}
+	
+	public void setPlayerInDeathZone() {
+	    this.isInDeadZone = true;
+	}
         
 }
