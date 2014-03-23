@@ -97,9 +97,11 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	public void startGame() {
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(this.serverLobby.getPlayers());
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setMapName(this.serverLobby.getMap());
-		GameStates.SERVERGAMEPLAY.init(assetManager);
+		
 		GameStates.SERVERGAMEPLAY.activate();
+		
 		logger.info("Sending GameStateChange to Clients");
+		
 		NetworkManager.getInstance().sendGameState(GameStates.CLIENTGAMEPLAY);
 	}
 	
@@ -111,7 +113,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 
 	public void disconnectCallback(String msg) {
 		logger.info(msg);
-		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 }
