@@ -160,7 +160,7 @@
         "rows" : 1
     },
 	"HunterBlackAttackUp": {
-        "filename": "data/animations/HuntertBlack_AttackUp.png",
+        "filename": "data/animations/HunterBlack_AttackUp.png",
         "frames" : 4,
         "frameDuration": [ 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
@@ -170,7 +170,7 @@
 	"HunterBlackAttackDown": {
         "filename": "data/animations/HunterBlack_AttackDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 02 ] ,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2, 0.5, 0.2 ] ,
         "playType" : "NORMAL",
         "columns": 6,
         "rows" : 1
