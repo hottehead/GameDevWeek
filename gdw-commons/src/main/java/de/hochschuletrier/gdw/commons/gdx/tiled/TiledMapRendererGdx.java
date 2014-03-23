@@ -1,12 +1,16 @@
 package de.hochschuletrier.gdw.commons.gdx.tiled;
 
-import de.hochschuletrier.gdw.commons.tiled.ITiledMapRenderer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import de.hochschuletrier.gdw.commons.gdx.tiled.TiledMapRendererGdx.RenderInfo;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.commons.tiled.ITiledMapRenderer;
 import de.hochschuletrier.gdw.commons.tiled.Layer;
 import de.hochschuletrier.gdw.commons.tiled.LayerObject;
 import de.hochschuletrier.gdw.commons.tiled.TileInfo;
@@ -14,16 +18,14 @@ import de.hochschuletrier.gdw.commons.tiled.TileSet;
 import de.hochschuletrier.gdw.commons.tiled.TileSetAnimation;
 import de.hochschuletrier.gdw.commons.tiled.TiledMap;
 import de.hochschuletrier.gdw.commons.utils.Point;
-
-import java.util.ArrayList;
-import java.util.Map;
+import de.hochschuletrier.gdw.commons.utils.Pool;
 
 /**
  * A map renderer which renders the TiledMap with libgdx
  * 
  * @author Santo Pfingsten
  */
-public class TiledMapRendererGdx implements ITiledMapRenderer {
+public class TiledMapRendererGdx extends Pool<RenderInfo> implements ITiledMapRenderer {
 
 	final TiledMap map;
 	final int mapTileWidth;
@@ -32,6 +34,7 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 	final ShapeRenderer shapeRenderer = new ShapeRenderer();
 	boolean drawLines;
     float stateTime = 0;
+    private ArrayList<RenderInfo> renderLineCache;
 
 	public TiledMapRendererGdx(TiledMap map, Map<TileSet, Texture> tilesetImages) {
 		this.map = map;
@@ -41,6 +44,7 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 		for (TileSet tileset : map.getTileSets()) {
 			tileset.setAttachment(tilesetImages.get(tileset));
 		}
+		renderLineCache = new ArrayList<TiledMapRendererGdx.RenderInfo>(map.getWidth());
 	}
     
 	public void setDrawLines(boolean drawLines) {
@@ -99,6 +103,22 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 			}
 		}
 	}
+	
+	class RenderInfo implements Comparable<RenderInfo> {
+		
+		Texture texture;
+		public float posX;
+		public float posY;
+		public int sheetY;
+		public int sheetX;
+		
+		
+		@Override
+		public int compareTo(RenderInfo o) {
+			return (this.texture.getTextureObjectHandle() - o.texture.getTextureObjectHandle())*-1;
+		}
+		
+	}
 
 	/**
 	 * Render a section of this tile layer
@@ -116,6 +136,7 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 	 * @param ty
 	 *            The line of tiles to render
 	 */
+	
 	private void renderTileLayerLine(Layer layer, int x, int y, int sx, int sy,
 			int width, int ty) {
 		if (layer.getBooleanProperty("invisible", false)) {
@@ -167,14 +188,35 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 					float px = x + (tx * mapTileWidth);
 					float py = y + (ty * mapTileHeight) - tileOffsetY;
 
-					DrawUtil.batch.draw(image, px, py,
-                            tileset.getTileWidth(), tileset.getTileHeight(),
-                            (int)(sheetX * tileset.getTileWidth()), ((int)sheetY * tileset.getTileHeight()),
-                            tileset.getTileWidth(), tileset.getTileHeight(),
-                            false, true);
+					
+//					DrawUtil.batch.draw(image, px, py,
+//                            tileset.getTileWidth(), tileset.getTileHeight(),
+//                            (int)(sheetX * tileset.getTileWidth()), ((int)sheetY * tileset.getTileHeight()),
+//                            tileset.getTileWidth(), tileset.getTileHeight(),
+//                            false, true);
+					RenderInfo rI = this.fetch();
+					rI.texture = image;
+					rI.posX = px;
+					rI.posY = py;
+					rI.sheetX = sheetX;
+					rI.sheetY = sheetY;
+					renderLineCache.add(rI);
 				}
 			}
+			
+			Collections.sort(renderLineCache);
+			for(RenderInfo rI : renderLineCache) {
+				DrawUtil.batch.draw(rI.texture, rI.posX, rI.posY,
+	                  tileset.getTileWidth(), tileset.getTileHeight(),
+	                  (int)(rI.sheetX * tileset.getTileWidth()), ((int)rI.sheetY * tileset.getTileHeight()),
+	                  tileset.getTileWidth(), tileset.getTileHeight(),
+	                  false, true);
+				this.providePoolObject(rI);
+			}
+			this.renderLineCache.clear();
 		}
+		
+		
 	}
 
 	/**
@@ -274,6 +316,13 @@ public class TiledMapRendererGdx implements ITiledMapRenderer {
 			if (image != null) {
 				image.dispose();
 			}
+		}
+	}
+
+	@Override
+	protected void onEmptyPool() { //create 10 new renderinfos to avoid cap increase 
+		for(int i=0;i<10;++i) {
+			this.providePoolObject(new RenderInfo());
 		}
 	}
 }

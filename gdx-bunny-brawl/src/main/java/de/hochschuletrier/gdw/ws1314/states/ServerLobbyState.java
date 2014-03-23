@@ -29,6 +29,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
         
         this.disconnectClickListener = new DisconnectClick();    	
     	this.stage = new ServerLobbyStage();
+    	stage.init(assetManager);
+    	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void render () {
@@ -49,12 +51,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		
 		stage.init(assetManager);
 		
-		// TODO: Temporär nur zum localen Testen
-        if (!NetworkManager.getInstance().isServer())
-        {
-        	NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), NetworkManager.getInstance().getDefaultPort(), 10);
-        }
-        
         NetworkManager.getInstance().setDisconnectCallback(this);
         
     	serverLobby = new ServerLobbyManager();
@@ -67,6 +63,10 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
     	this.stage.getDisconnectButton().addListener(this.disconnectClickListener);
 
     	stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		if(!NetworkManager.getInstance().isServer()){
+			onLeave();
+		}
 	}
 
 	public void onEnterComplete() {

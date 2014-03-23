@@ -11,6 +11,12 @@ public class ContactMineMaterialDef extends MaterialDefinition {
 	@Override
 	public void build() {
 		newMaterial("contactMine", EntityStates.NONE, null, false);
+		newMaterial("mineActive", EntityStates.ATTACK, null, true);
+		
+		this.width = 128;
+		this.height= 128;
+		newMaterial("explosion", EntityStates.EXPLODING, null, true);
+
 	}
 
 }

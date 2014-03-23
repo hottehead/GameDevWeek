@@ -11,6 +11,7 @@ import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.MainMenuStage;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 
 /**
@@ -143,17 +144,17 @@ public class MainMenuState extends GameState {
 			logger.info("Change to JoinServerState");
 			
 //			// TODO: Nur Temporär zum localen Testen
-//			if (!NetworkManager.getInstance().isClient())
-//			{
-//			NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
-//
-//			if (!NetworkManager.getInstance().isClient()) {
-//			logger.warn("Connection could not be established! Server maybe not running.");
-//			GameStates.MAINMENU.init(assetManager);
-//			GameStates.MAINMENU.activate();
-//			return;
-//			}
-//			}
+			if (!NetworkManager.getInstance().isClient())
+			{
+				NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
+
+				if (!NetworkManager.getInstance().isClient()) {
+					logger.warn("Connection could not be established! Server maybe not running.");
+					GameStates.MAINMENU.init(assetManager);
+					GameStates.MAINMENU.activate();
+					return;
+				}
+			}
 			GameStates.CLIENTLOBBY.init(assetManager);
 			GameStates.CLIENTLOBBY.activate();
 		}

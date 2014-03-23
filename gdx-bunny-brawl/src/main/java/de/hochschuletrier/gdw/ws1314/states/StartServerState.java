@@ -72,23 +72,23 @@ public class StartServerState extends GameState {
 	
 	private class StartServerListener extends ClickListener {
     	public void clicked(InputEvent event, float x, float y) {
-//    		if (!NetworkManager.getInstance().isServer())
-//    		{
-//    		int port;
-//    		if(Main.port > 0){
-//    		port = Main.port;
-//    		} else {
-//    		port = NetworkManager.getInstance().getDefaultPort();
-//    		}
-//
-//    		NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
-//
-//    		if (!NetworkManager.getInstance().isServer())
-//    		{
-//    		logger.warn("Server could not be created. Another Server allready running or Port is blocked.");
-//    		return;
-//    		}
-//    		}
+    		if (!NetworkManager.getInstance().isServer())
+    		{
+    			int port;
+    			if(Main.port > 0){
+    				port = Main.port;
+    			} else {
+    				port = NetworkManager.getInstance().getDefaultPort();
+    			}
+
+    			NetworkManager.getInstance().listen(NetworkManager.getInstance().getDefaultServerIp(), port, 10);
+
+    			if (!NetworkManager.getInstance().isServer())
+    			{
+    				logger.warn("Server could not be created. Another Server allready running or Port is blocked.");
+    				return;
+    			}
+    		}
 
     		logger.info("Changing State to Server-Lobby...");
     		GameStates.SERVERLOBBY.init(assetManager);

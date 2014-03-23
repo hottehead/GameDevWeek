@@ -7,6 +7,7 @@ import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 import org.slf4j.Logger;
@@ -59,13 +60,19 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	public void onEnter() {
 		clientGame = new ClientGame();
 		clientGame.init(assetManager, mapName);
+		
 		stateMusic = new LocalMusic(assetManager);
 		stateSound = LocalSound.getInstance();
 		stateSound.init(assetManager);
+		
+		NetworkManager.getInstance().setDisconnectCallback(this);
+		NetworkManager.getInstance().setGameStateCallback(this);
 	}
 
 	@Override
 	public void onLeave() {
+		NetworkManager.getInstance().setDisconnectCallback(null);
+		NetworkManager.getInstance().setGameStateCallback(this);
 		clientGame = null;
 	}
 
@@ -77,14 +84,13 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	@Override
 	public void disconnectCallback(String msg) {
 		logger.warn(msg);
-		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 
 	@Override
 	public void gameStateCallback(GameStates gameStates) {
+		logger.info("Server forcing Client to change State to " + gameStates);
 		if (gameStates != GameStates.CLIENTGAMEPLAY) {
-			gameStates.init(assetManager);
 			gameStates.activate();
 		}
 	}

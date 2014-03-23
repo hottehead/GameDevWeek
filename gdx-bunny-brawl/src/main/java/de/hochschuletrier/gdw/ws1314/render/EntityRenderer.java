@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.commons.utils.Pool;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 
@@ -53,10 +54,13 @@ public class EntityRenderer extends Pool<RenderObject> implements
 		}
 	}
 
+	RenderType fetchStore = new RenderType();
+	
 	@Override
 	public void onEntityInsert(ClientEntity entity) {
+		fetchStore.setByEntity(entity);;
 		RenderObject renderObj = this.fetch();
-		renderObj.materialAtlas = materials.fetch(entity.getEntityType());
+		renderObj.materialAtlas = materials.fetch(fetchStore);
 		renderObj.entity = entity;
 		this.renderList.add(renderObj);
 	}

@@ -27,7 +27,7 @@ public class LocalMusic {
 	private int duration;
 	
 	// FIXME (if music's not playing as should)
-	private static float SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeMusic, 0.9f);
+	private static float SystemVolume;
 	/**
 	 * Change the general volume for music
 	 * The volume of all music will be a percentage of this systemVolume
@@ -61,6 +61,7 @@ public class LocalMusic {
 	public LocalMusic(AssetManagerX assetManager) {
 		this.assetManager = assetManager;
 		this.musicHandle = null;
+		 LocalMusic.SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeMusic, 0.9f);
 	}
 	
 	public void setVolume(float volume) {

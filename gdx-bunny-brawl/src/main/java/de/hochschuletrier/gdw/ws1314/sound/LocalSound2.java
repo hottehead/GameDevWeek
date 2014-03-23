@@ -5,85 +5,58 @@ import com.badlogic.gdx.audio.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
-import de.hochschuletrier.gdw.ws1314.entity.player.*;
+import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 
-/**
- * Class for handling sound effects in GameplayState
- * The class is singleton and should be initialized in GameplayState
- * 
- * @author MikO
- */
-public class LocalSound {
-	private AssetManagerX assetManager;
+public class LocalSound2 {
 	private Sound soundHandle;
-	private ClientPlayer localPlayer;
 	private long soundID;
+	private long loopID;
 	
-	private static LocalSound localsound;
+	public static AssetManagerX assetManager;
 	private static float SystemVolume = 1.0f;
-	private static float maxDistance = 300;
+	private static float maxDistance = 300.0f;
+	private static ClientPlayer LocalPlayer;
 	
-	/**
-	 * Change the general volume for sounds
-	 * The volume of all sounds will be a percentage of this systemVolume
-	 * 
-	 * @param systemVolume
-	 */
+	public static void init(AssetManagerX assetManager) {
+		LocalSound2.assetManager = assetManager;
+	}
+	
 	public static void setSystemVolume(float systemVolume) {
-		LocalSound.SystemVolume = systemVolume;
+		LocalSound2.SystemVolume = systemVolume;
 	}
 	
-	/**
-	 * Get the current set general volume for sounds
-	 * 
-	 * @return LocalSound.SystemVolume
-	 */
 	public static float getSystemVolume() {
-		return LocalSound.SystemVolume;
+		return LocalSound2.SystemVolume;
 	}
 	
-	/**
-	 * 
-	 * @return reference of actual instance of singleton
-	 */
-	public static LocalSound getInstance()	{
-		if(localsound == null){
-			localsound = new LocalSound();
-		}
+	public LocalSound2() {
 		
-		return localsound;
 	}
 	
-	private LocalSound() {}
-	
-	/**
-	 * Initializes an instance of LocalSound
-	 * 
-	 * @param assetManager
-	 */
-	public void init(AssetManagerX assetManager) {
-		long playerEntityID = ClientEntityManager.getInstance().getPlayerEntityID();	
-		this.assetManager = assetManager;
-		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(playerEntityID);
-		this.soundID = 0;		
+	private void play(String soundName, float volume) {
+		if (this.soundHandle != null)
+			this.soundHandle.stop(this.loopID);
+		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
+		this.soundID = this.soundHandle.play();
+		soundHandle.setVolume(this.soundID, LocalSound2.SystemVolume * volume);
 	}
 	
-	/**
-	 * Plays a given sound for a remote player
-	 * Calculates the distance between local player and remote player and fits the volume
-	 * to the calculated distance.
-	 * 
-	 * @param sound to play
-	 * @param remotePlayer Object
-	 */
-	private void remoteSound(String sound, ClientEntity remotePlayer) {
+	private void loop(String soundName, float volume) {
+		if (this.soundHandle != null)
+			this.soundHandle.stop(this.loopID);
+		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
+		this.loopID = this.soundHandle.loop(LocalSound2.SystemVolume * volume);
+	}
+	
+	private void remoteSound(String sound, ClientEntity remotePlayer, boolean loop) {
 		double localX, localY, remoteX, remoteY;
 		float volume, distance;
 		
-		localX = this.localPlayer.getPosition().x;
-		localY = this.localPlayer.getPosition().y;
+		localX = LocalSound2.LocalPlayer.getPosition().x;
+		localY = LocalSound2.LocalPlayer.getPosition().y;
 		
 		remoteX = remotePlayer.getPosition().x;
 		remoteY = remotePlayer.getPosition().y;
@@ -92,21 +65,15 @@ public class LocalSound {
 		distance = (float) Math.sqrt( Math.pow( (localX - remoteX), 2 ) + Math.pow( (localY - remoteY), 2 ) );
 		
 		// volume will be [volume]% (percent) of systemVolume
-		volume = (100 - (distance * 100 / LocalSound.maxDistance)) / 100;
+		if (distance <= LocalSound2.maxDistance)
+			volume = (1.0f - (distance * 100.f / LocalSound2.maxDistance) / 100.0f);
+		else
+			volume = 0;
 		
-		this.play(sound, volume);
-	}
-	
-	/**
-	 * plays a sound in dependency to the system volume
-	 * 	
-	 * @param sound
-	 * @param volume
-	 */
-	private void play(String sound, float volume) {
-		this.soundHandle = this.assetManager.getSound(sound);
-		this.soundID = soundHandle.play();
-		soundHandle.setVolume(this.soundID, LocalSound.SystemVolume * volume);
+		if (loop)
+			this.loop(sound, volume);
+		else
+			this.play(sound, volume);
 	}
 	
 	/**
@@ -157,6 +124,19 @@ public class LocalSound {
 					int random = this.random(1, 1);
 					return "speech-general-fall_" + random;
 				}
+			case DESTROY:
+				return "speech-tank-yeay_3";
+			case EGG_PICKUP:
+				if(entity.getEntityType() == EntityType.Tank) {
+					int random = this.random(1, 3);
+					return "speech-tank-yeay_" + random;					
+				}
+				else if (entity.getEntityType() == EntityType.Hunter || entity.getEntityType() == EntityType.Knight) {
+					int random = this.random(1, 3);
+					return "speech-general-yeay_" + random;
+				}
+			case WALK_GRASS:
+				return "walk-general-grass";
 			default:
 				return "speech-tank-nom_1";
 		}
@@ -167,31 +147,34 @@ public class LocalSound {
 		return (int) Math.round(Math.random() * (high - low) + low);
 	}
 	
-	/**
-	 * Differs between the local player or a remote player
-	 * Calls either play for local player or remoteSound for remote player
-	 * 
-	 * @param event
-	 * @param player
-	 * @see play
-	 * @see remoteSound
-	 */
-	public void playSoundByAction(EventType event, ClientEntity player) {
-		this.localPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
+	public void playSoundByAction(EventType event, ClientEntity entity) {
+		LocalSound2.LocalPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
+		String soundAction = this.connectSoundToAction(event, entity);
+		boolean loop;
 		
-		if (player.getID() == this.localPlayer.getID()) {
-			this.play(this.connectSoundToAction(event, player), LocalSound.getSystemVolume());
+		switch(soundAction) {
+			case "walk-general-grass":
+				loop = true;
+				break;
+			default:
+				loop = false;
+				break;
+		}
+		
+		if (entity.getID() == LocalSound2.LocalPlayer.getID()) {
+			if (loop)
+				this.loop(this.connectSoundToAction(event, entity), LocalSound.getSystemVolume());
+			else
+				this.play(this.connectSoundToAction(event, entity), LocalSound.getSystemVolume());
 		}
 		else {
-			this.remoteSound(this.connectSoundToAction(event, player), player);
+			this.remoteSound(this.connectSoundToAction(event, entity), entity, loop);
 		}
-		System.out.println("EVENT TRIGGERED :: " + event + ", by player " + player.getID());
+		System.out.println("EVENT TRIGGERED :: " + event + ", by player " + entity.getID());
 	}
-
-	/**
-	 * Stops the atm playing sound
-	 */
+	
 	public void stop() {
 		this.soundHandle.stop();
 	}
+	
 }

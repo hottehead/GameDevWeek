@@ -2,6 +2,8 @@ package de.hochschuletrier.gdw.ws1314.entity.player;
 
 
 
+import java.util.ArrayList;
+
 import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.state.State;
 
@@ -24,8 +26,10 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
@@ -49,7 +53,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private static final Logger logger = LoggerFactory.getLogger(ServerPlayer.class);
 
 
-	public static final float	BRAKING = 5.0f;
+	public static final float BRAKING = 5.0f;
 	public static final float COLLISION_DAMPING = 10.0f;
 
 	public static final float KNOCKBACK_IMPULSE = 100.0f;
@@ -109,16 +113,18 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private Fixture				fixtureLowerBody;
     private Fixture				fixtureFullBody;
-    private Fixture fixtureDeathCheck;
+    private Fixture 			fixtureDeathCheck;
     
-    private boolean isDead;
-    private int collidingBridgePartsCount;
+    private boolean 			isDead;
+    private int 				collidingBridgePartsCount;
+    private float 				deathfreeze;
+	private ArrayList<Long>		pickedUpEggs;
+    private boolean             isInDeadZone;
     
     
     public ServerPlayer()
     {
     	super();
-    	
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
@@ -128,7 +134,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-
+    	pickedUpEggs = new ArrayList<Long>();
     	desiredDirection = FacingDirection.NONE;
     	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
@@ -141,6 +147,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	droppedEggID = -1l;
     	isDead = false;
     	collidingBridgePartsCount = 0;
+    	deathfreeze = 0.5f;
+    	isInDeadZone = false;
+    	pickedUpEggs = new ArrayList<>();
     }
     
     public void enable() {}
@@ -152,8 +161,25 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public void update(float deltaTime) 
     {
         if(isDead) {
-            isDead = false;
-            this.reset();
+            deathfreeze -= deltaTime;
+            if(deathfreeze < 0) {
+                isDead = false;
+                deathfreeze = 0.5f;
+                this.reset();
+            }
+            this.physicsBody.setLinearVelocity(new Vector2());
+            this.physicsBody.setLinearDamping(2000);
+			for(Long id : pickedUpEggs){
+				ServerEntityManager.getInstance().getEntityById(id).reset();
+			}
+			pickedUpEggs.clear();
+			currentEggCount = 0;
+            return;
+        }
+        if(!this.isOnBridge && this.isInDeadZone) {
+            this.isDead = true;
+            this.isOnBridge = false;
+            this.isInDeadZone = false;
         }
         
     	currentState.update(deltaTime);
@@ -164,9 +190,11 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         		attackAvailable = true;
         		
         		if(do1Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
         		    doFirstAttack();
         		    do1Attack = false;
         		} else if(do2Attack) {
+        		    NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
         		    doSecondAttack();
         		    do2Attack = false;
         		}
@@ -188,8 +216,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	}
     }
 
-    //NOT FINAL! CHANGE AS NEEDED
-    Vector2 dir = new Vector2(0,0);
     public void doAction(PlayerIntention intent) {
         switch (intent){
             case MOVE_UP_ON:
@@ -227,7 +253,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do1Attack = true;
-            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_1);
             	}
                 break;
             case ATTACK_2:
@@ -241,7 +266,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
             		do2Attack = true;
-            		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.ATTACK_2);
             	}
                 break;
             case DROP_EGG:
@@ -296,8 +320,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     protected void moveBegin(FacingDirection dir) {
     	setFacingDirection(desiredDirection);
 
-    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
-		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
+//    	physicsBody.applyImpulse(dir.getDirectionVector().x * playerKit.getMaxVelocity(),
+//		  		 				 dir.getDirectionVector().y * playerKit.getMaxVelocity());
 
     }
     
@@ -315,10 +339,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     public void dropEgg() {
     	if (currentEggCount > 0) {
-    	currentEggCount--;
-    		ServerEgg egg = (ServerEgg) ServerEntityManager.getInstance().createEntity(ServerEgg.class, getPosition().cpy());
-    		droppedEggID = egg.getID();
-			NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_DROP);
+    		currentEggCount--;
+    		droppedEggID = pickedUpEggs.get(0);
+			pickedUpEggs.remove(droppedEggID);
+			ServerEgg egg = (ServerEgg)ServerEntityManager.getInstance().getEntityById(droppedEggID);
+			egg.setVisibility(true);
+			egg.setPosition(getPosition());
     	}
     }
     
@@ -341,15 +367,16 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  break;
              case Ei:			
             	 ServerEgg egg = (ServerEgg) otherEntity;
-            	 if(this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
+            	 if(egg.getVisibility() && this.currentEggCount < this.playerKit.getMaxEggCount() && egg.getID() != droppedEggID)
             	 {
-            		 ServerEntityManager.getInstance().removeEntity(otherEntity);
+					 pickedUpEggs.add(otherEntity.getID());
+					 egg.setVisibility(false);
             	 this.currentEggCount++;
 					 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_PICKUP);
             	 }
             	 break;
              case ContactMine:
-            	 
+            	 	ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
@@ -380,9 +407,21 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  }
                  break;
              case Bridge:
-                 this.isOnBridge = true;
-                 collidingBridgePartsCount++;
-				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+             case BRIDGE_HORIZONTAL_LEFT:
+             case BRIDGE_HORIZONTAL_MIDDLE:
+             case BRIDGE_HORIZONTAL_RIGHT:
+             case BRIDGE_VERTICAL_BOTTOM:
+             case BRIDGE_VERTICAL_MIDDLE:
+             case BRIDGE_VERTICAL_TOP:
+                 ServerBridge b = (ServerBridge)otherEntity;
+                 if(b.getVisibility()) {
+                     if(!this.isOnBridge) {
+                         NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                     }
+                     this.isOnBridge = true;
+                     collidingBridgePartsCount++;
+    				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
+                 }
                  break;
              case GrassZone:
                  NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_GRASS);
@@ -416,9 +455,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              switch(otherEntity.getEntityType()) {
                  case AbyssZone:
                  case WaterZone:
-                     if(!isOnBridge) {
-                         this.isDead = true;
-                     }
+                     this.isInDeadZone = true;
+//                     if(!isOnBridge) {
+//                         this.isDead = true;
+//                     }
                      break;
                  default:
                      break;
@@ -427,39 +467,57 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     }
     
     
-public void endContact(Contact contact) {
-	ServerEntity otherEntity = this.identifyContactFixtures(contact);
-	Fixture fixture = getCollidingFixture(contact);
-     
-     if(otherEntity == null)
-         return;
-     
-     if (fixture == fixtureLowerBody) {
-         switch(otherEntity.getEntityType()) {
-         	case Ei:
-         		if (((ServerEgg)otherEntity).getID() == droppedEggID)
-         			droppedEggID = -1;
-         		break;
-         	case HayBale:
-         	   ServerHayBale ball = (ServerHayBale)otherEntity;
-               if(ball.isCrossable()) {
-                   collidingBridgePartsCount--;
-                   if(collidingBridgePartsCount <= 0) {
-                       this.isOnBridge = false;
+    public void endContact(Contact contact) {
+    	ServerEntity otherEntity = this.identifyContactFixtures(contact);
+    	Fixture fixture = getCollidingFixture(contact);
+         
+         if(otherEntity == null)
+             return;
+         
+         if (fixture == fixtureLowerBody) {
+             switch(otherEntity.getEntityType()) {
+             	case Ei:
+             		if (((ServerEgg)otherEntity).getID() == droppedEggID)
+             			droppedEggID = -1;
+             		break;
+             	case HayBale:
+             	   ServerHayBale ball = (ServerHayBale)otherEntity;
+                   if(ball.isCrossable()) {
+                       collidingBridgePartsCount--;
+                       if(collidingBridgePartsCount <= 0) {
+                           this.isOnBridge = false;
+                       }
                    }
-               }
-               break;
-            case Bridge:
-                collidingBridgePartsCount--;
-                if(collidingBridgePartsCount <= 0) {
-                    this.isOnBridge = false;
-                }
-                break;
-            default:
-            	break;
-         }
-	 }
-}
+                   break;
+                case Bridge:
+                case BRIDGE_HORIZONTAL_LEFT:
+                case BRIDGE_HORIZONTAL_MIDDLE:
+                case BRIDGE_HORIZONTAL_RIGHT:
+                case BRIDGE_VERTICAL_BOTTOM:
+                case BRIDGE_VERTICAL_MIDDLE:
+                case BRIDGE_VERTICAL_TOP:
+                    collidingBridgePartsCount--;
+                    if(collidingBridgePartsCount <= 0) {
+                        this.isOnBridge = false;
+//                        if(this.isInDeadZone) {
+//                            this.isDead = true;
+//                        }
+                    }
+                    break;
+                default:
+                	break;
+             }
+    	 } else if(fixture == fixtureDeathCheck) {
+    	     switch(otherEntity.getEntityType()) {
+    	         case AbyssZone:
+    	         case WaterZone:
+    	             this.isInDeadZone = false;
+    	             break;
+    	         default:
+    	             break;
+    	     }
+    	 }
+    }
 
     public void preSolve(Contact contact, Manifold oldManifold) {}
     public void postSolve(Contact contact, ContactImpulse impulse) {}
@@ -472,7 +530,8 @@ public void endContact(Contact contact) {
     public TeamColor		getTeamColor()			{ return playerData.getTeam(); }
     public EntityType 		getEntityType()			{ return playerKit.getEntityType(); }
     public float			getCurrentAttackMultiplier()	{ return attackBuffFactor; }
-	public EntityStates getCurrentPlayerState() {return currentState.getCurrentState();}
+	public EntityStates 	getCurrentPlayerState() {return currentState.getCurrentState();}
+	public String 			getPlayerName() {return playerData.getPlayername();}
     
     public void setPlayerKit(PlayerKit kit) {
     	playerKit = kit;
@@ -529,7 +588,7 @@ public void endContact(Contact contact) {
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 16.0f))
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 4.0f))
             .sensor(true));
 
 		body.setGravityScale(0);

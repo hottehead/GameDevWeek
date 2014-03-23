@@ -5,8 +5,11 @@ import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
 import de.hochschuletrier.gdw.ws1314.game.ClientGame;
 import de.hochschuletrier.gdw.ws1314.game.ServerGame;
@@ -28,7 +31,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class DualGamePlayState extends GameState implements DisconnectCallback, ClientIdCallback {
+public class DualGamePlayState extends GameState implements DisconnectCallback, ClientIdCallback, GameInfoListener {
 	private static final Logger logger = LoggerFactory.getLogger(DualGamePlayState.class);
 	
 	private boolean isServerInitialized = false;
@@ -42,7 +45,10 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 
     private List<PlayerData> playerDatas = null;
     
+    // mapName wird jetzt in der Settingsdatei hinterlegt!
     private String mapName;
+    
+    private boolean isWinningConditionComplied;
 	
     public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
@@ -71,18 +77,15 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		if (!isClientInitialized) return;
 		DrawUtil.batch.setProjectionMatrix(DrawUtil.getCamera().combined);
 		clientGame.render();
+		this.serverGame.getManager().render();
 	}
 
 	@Override
 	public void update(float delta) {
 		if (isServerInitialized) {
 			serverGame.update(delta);
-		Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
-		if (this.stateMusic.isMusicPlaying())
-			//this.stateMusic.update();
-		this.stateMusic.logger.info("gp state music fading on update? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on update? >> " + this.stateMusic.getFadingDirection());
-}
+			Main.musicManager.getMusicStreamByStateName(GameStates.MAINMENU).update();
+		}
 		
 		if (isClientInitialized) {
 			clientGame.update(delta);
@@ -97,12 +100,12 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void onEnter() {
 		isServerInitialized = false;
 		isClientInitialized = false;
+		isWinningConditionComplied = false;
 		if (this.stateMusic.isMusicPlaying()) 
 			this.stateMusic.setFade('i', 2500);
-
-		this.stateMusic.logger.info("gp state music fading on enter? >> " + this.stateMusic.getFading());
-		this.stateMusic.logger.info("gp state fading direction on enter? >> " + this.stateMusic.getFadingDirection());
-
+		
+		/*stateSound = LocalSound.getInstance();
+		stateSound.init(assetManager);*/
 		
 		this.mapName = Main.getInstance().gamePreferences.getString(PreferenceKeys.mapName, "map01");
 		
@@ -116,9 +119,13 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	@Override
 	public void onLeave() {
 		NetworkManager.getInstance().setClientIdCallback(null);
-		if (this.stateMusic.isMusicPlaying())
+		//if (this.stateMusic.isMusicPlaying())
 			//this.stateMusic.setFade('o', 2500);
 		
+		if (isServerInitialized) {
+			ServerEntityManager.getInstance().getGameInfo().removeListner(this);
+		}
+			
 		clientGame = null;
 		serverGame = null;
 	}
@@ -155,6 +162,8 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
             logger.warn("playerDatas sind Leer. Bitte setPlayerDatas aufrufen.");
         }
 		
+		ServerEntityManager.getInstance().getGameInfo().addListner(this);
+		
 		serverGame = new ServerGame(playerDatas);
 		serverGame.init(assetManager, this.mapName);
 		
@@ -172,5 +181,19 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		stateSound.init(assetManager);
 		
 		isClientInitialized = true;
+	}
+	
+	@Override
+	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
+		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
+		
+		// WinningCondition HERE:
+		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
+		{
+			logger.info("Winning-Condition complied.");
+			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
+			// Der Server wird nicht explizit gestoppt, da alle Clients ihre Verbindung schließen sollen
+			// und dann geschieht das automatisch.
+		}
 	}
 }
