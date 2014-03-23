@@ -72,7 +72,7 @@ public class GameplayStage extends AutoResizeStage {
 		// class icon
 		classIcon = new VisualBox(
 				assetManager.getTexture("HudEmblemKnightWhite"), 20,
-				Gdx.graphics.getHeight() - 80, 165, 180);
+				Gdx.graphics.getHeight() - 80, 54, 54);
 		classIconText = new StaticTextElement(font, "Klasse",
 				this.classIcon.getWidth() * .5f, -14);
 		classIcon = new BoxOffsetDecorator(classIcon, classIconText);
@@ -104,7 +104,7 @@ public class GameplayStage extends AutoResizeStage {
 
 		scoreWhiteIcon = new VisualBox(
 				assetManager.getTexture("HudEmblemWhite"),
-				(Gdx.graphics.getWidth() * .5f) - 50, 40, 140, 154);
+				(Gdx.graphics.getWidth() * .5f) - 50, 40, 54, 54);
 		scoreWhite = new MinMaxValue(0, maxScore, 1);
 		textScore = new DynamicTextElement(font, "0",
 				scoreWhiteIcon.getWidth() * .5f, 50, scoreWhite);

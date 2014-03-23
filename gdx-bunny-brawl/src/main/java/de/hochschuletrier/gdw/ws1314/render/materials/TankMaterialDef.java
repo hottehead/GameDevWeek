@@ -14,7 +14,7 @@ public class TankMaterialDef extends MaterialDefinition {
 			colorStr = "Black";
 			break;
 		default:
-			colorStr = "White";
+			colorStr = "Black"; //FIXME: @Hati farbe wieder ändern.
 			break;
 		}
 	}
