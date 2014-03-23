@@ -21,7 +21,7 @@ public class AttackShootArrow extends AttackType
 	public static final float ARROW_FLIGHT_DISTANCE = 500.0f;
 	public static final float ARROW_DESPAWN_TIME = 1.0f;
 	
-	public static final float ARROW_HITCIRCLE_RADIUS = 8.0f;
+	public static final float ARROW_HITCIRCLE_RADIUS = 4.0f;
 	
     public void fire(ServerPlayer player)  
     {
