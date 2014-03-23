@@ -51,10 +51,13 @@ public class ChatWindow extends Table implements ChatListener {
 			}
 		});
 		messages = new List<ListElement>(skin);
-		messages.getItems().add(new ListElement("ich bin blindtext", skin));
-		messages.getItems().add(new ListElement("du spast", skin));
-		messages.getItems().add(new ListElement("du A", skin));
-		messages.getItems().add(new ListElement("du B", skin));
+		messages.getItems().add(new ListElement("Willkommen im Lobbychat von Bunny Brawl!", skin));
+		messages.getItems().add(new ListElement("__________________________________________________________", skin));
+		messages.getItems().add(new ListElement("", skin));
+		messages.getItems().add(new ListElement("", skin));
+		messages.getItems().add(new ListElement("", skin));
+		messages.getItems().add(new ListElement("", skin));
+		messages.getItems().add(new ListElement("", skin));
 
 		scrollPane = new ScrollPane(messages, skin);
 		scrollPane.setScrollingDisabled(false, false);
