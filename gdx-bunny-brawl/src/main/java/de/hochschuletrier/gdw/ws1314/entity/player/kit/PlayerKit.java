@@ -9,11 +9,11 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
  */
 public enum PlayerKit 
 {
-	//		TYPE				VELO	EGG HEALTH		ARMOR	COOLDOWNS	ATTACKS
-    NOOB(  EntityType.Noob, 	100.0f, 1, 	 10.0f, 	0.0f, 	0.5f, 0.5f, new BasicAttack(), new BasicAttack()),
-    HUNTER(EntityType.Hunter, 	120.0f, 1, 	200.0f, 	0.0f, 	0.76f, 0.5f, new AttackShootArrow(), new BasicAttack()),
-    KNIGHT(EntityType.Knight, 	100.0f, 1, 	300.0f, 	0.0f, 	0.2f, 0.5f, new AttackSwingSword(), new BasicAttack()),
-    TANK(  EntityType.Tank, 	40.0f,  3,  1000.0f,	0.0f,	0.4f, 0.5f, new AttackBlow(), new BasicAttack());
+	//		TYPE				VELO	EGG HEALTH		ARMOR	COOLDOWNS		DELAYS      	ATTACKS
+    NOOB(  EntityType.Noob, 	100.0f, 1, 	 10.0f, 	0.0f, 	0.5f, 0.5f, 	0.18f, 0.5f, 	new BasicAttack(), new BasicAttack()),
+    HUNTER(EntityType.Hunter, 	120.0f, 1, 	200.0f, 	0.0f, 	0.7f, 0.5f, 	0.7f, 0.5f, 	new AttackShootArrow(), new BasicAttack()),
+    KNIGHT(EntityType.Knight, 	100.0f, 1, 	300.0f, 	0.0f, 	0.5f, 0.5f, 	0.18f, 0.5f, 	new AttackSwingSword(), new BasicAttack()),
+    TANK(  EntityType.Tank, 	40.0f,  3,  1000.0f,	0.0f,	0.4f, 0.5f, 	0.18f, 0.5f, 	new AttackBlow(), new BasicAttack());
     
     private final float 	maxVelocity;
     private final int 		maxEggCount;
@@ -23,6 +23,8 @@ public enum PlayerKit
     private final float 	secondAttackCooldown;
     private final AttackType attack1;
     private final AttackType attack2;
+    private final float		firstAttackDelay;
+    private final float		secondAttackDelay;
     private final EntityType entityType;
     
     public final float		accelerationImpulse = 800.0f;
@@ -35,6 +37,8 @@ public enum PlayerKit
     					float 	armor, 
     					float 	firstAttackCooldown, 
     					float 	secondAttackCooldown,
+    					float	firstDelay,
+    					float	secondDelay,
     					AttackType attack1,
     					AttackType attack2)
     {
@@ -48,6 +52,8 @@ public enum PlayerKit
     	
     	this.firstAttackCooldown = firstAttackCooldown;
     	this.secondAttackCooldown = secondAttackCooldown;
+    	this.firstAttackDelay = firstDelay;
+    	this.secondAttackDelay = secondDelay;
     	
     	this.attack1 = attack1;
     	this.attack2 = attack2;
@@ -63,6 +69,8 @@ public enum PlayerKit
     
     public float getFirstAttackCooldown()		{ return firstAttackCooldown; }
     public float getSecondAttackCooldown()		{ return secondAttackCooldown; }
+    public float getFirstAttackDelay()		{ return firstAttackDelay; }
+    public float getSecondAttackDelay()		{ return secondAttackDelay; }
     
     public EntityType getEntityType()			{ return entityType; }
 

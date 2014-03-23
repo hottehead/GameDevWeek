@@ -24,7 +24,7 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 public class ServerContactMine extends ServerLevelObject {
 	private final float DURATION_TILL_EXPLOSION_MAX = 3.0f;
 	private final float DURATION_TILL_EXPLOSION_MIN = 1.0f;
-	private final float DAMAGE = 10.0f;
+	private final float DAMAGE = 80.0f;
 	private PhysixManager manager;
 	private float originRadius = 2.0f;
 	private final float EXPLOSION_RADIUS = 60.0f;
@@ -66,7 +66,6 @@ public class ServerContactMine extends ServerLevelObject {
 			case Knight:
 			case Tank:
 			case Noob:
-			//case HayBale:
 				if (!fixture2.isSensor()) {
 					ServerPlayer player = (ServerPlayer) otherEntity;
 					if(!gotDamage){
@@ -75,7 +74,7 @@ public class ServerContactMine extends ServerLevelObject {
 					}
 					this.physicsBody.getBody().getFixtureList().get(1).getShape().setRadius(originRadius);
 				}
-			
+			case HayBale:
 				break;
 			default:
 					break;
@@ -87,8 +86,8 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				ServerPlayer player = (ServerPlayer) otherEntity;
 				this.isActive = true;
+				this.setEntityState(EntityStates.ATTACK);
 				break;
 			default:
 				break;
@@ -124,8 +123,6 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				this.isActive = true;
-				this.setEntityState(EntityStates.ATTACK);
 				break;
 			default:
 				break;
@@ -137,17 +134,20 @@ public class ServerContactMine extends ServerLevelObject {
 	public void update(float deltaTime) {
 		CircleShape shape = (CircleShape) this.physicsBody.getBody()
 				.getFixtureList().get(1).getShape();
-		if(this.getEntityState() == EntityStates.NONE){
+		if(this.getEntityState() == EntityStates.NONE ){
 			originRadius = manager.toBox2D(2.0f);
 			shape.setRadius(originRadius);
 			gotDamage = false;
 			this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
 		}else if(this.getEntityState() == EntityStates.ATTACK || this.getEntityState() == EntityStates.EXPLODING){
+			if(this.getEntityState() == EntityStates.ATTACK){
+				gotDamage = false;
+				this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
+			}
 			timer -= deltaTime;
 			if(timer <= 1){
 				this.setEntityState(EntityStates.EXPLODING);
-				
-				if (originRadius <= 1.5) {
+				if (originRadius <= 1.5f) {
 					originRadius += manager.toBox2D(2.0f);
 					this.physicsBody.getBody().getFixtureList().get(1).setSensor(false);
 					shape.setRadius(originRadius);
