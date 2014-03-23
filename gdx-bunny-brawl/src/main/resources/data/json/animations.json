@@ -401,6 +401,22 @@
         "columns": 7,
         "rows" : 1
     },	
+	"tankBlackAttackUp": {
+        "filename": "data/animations/tankBlack_attackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackAttackDown": {
+        "filename": "data/animations/tankBlack_attackRight.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },
 	"tankBlackIdleLeft": {
         "filename": "data/animations/tankBlack_idleLeft.png",
         "frames" : 4,
@@ -417,6 +433,22 @@
         "columns": 4,
         "rows" : 1
     },	
+	"tankBlackIdleUp": {
+        "filename": "data/animations/tankBlack_idleLeft.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackIdleDown": {
+        "filename": "data/animations/tankBlack_idleRight.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },
 	"tankBlackWalkLeft": {
         "filename": "data/animations/tankBlack_walkLeft.png",
         "frames" : 6,
@@ -426,6 +458,22 @@
         "rows" : 1
     },
 	"tankBlackWalkRight": {
+        "filename": "data/animations/tankBlack_walkRight.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkUp": {
+        "filename": "data/animations/tankBlack_walkLeft.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkDown": {
         "filename": "data/animations/tankBlack_walkRight.png",
         "frames" : 6,
         "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
