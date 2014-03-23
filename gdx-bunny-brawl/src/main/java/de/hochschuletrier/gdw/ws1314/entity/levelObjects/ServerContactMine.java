@@ -67,7 +67,6 @@ public class ServerContactMine extends ServerLevelObject {
 			case Knight:
 			case Tank:
 			case Noob:
-			//case HayBale:
 				if (!fixture2.isSensor()) {
 					ServerPlayer player = (ServerPlayer) otherEntity;
 					if(!gotDamage){
@@ -76,7 +75,7 @@ public class ServerContactMine extends ServerLevelObject {
 					}
 					this.physicsBody.getBody().getFixtureList().get(1).getShape().setRadius(originRadius);
 				}
-			
+			case HayBale:
 				break;
 			default:
 					break;
@@ -88,8 +87,8 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				ServerPlayer player = (ServerPlayer) otherEntity;
 				this.isActive = true;
+				this.setEntityState(EntityStates.ATTACK);
 				break;
 			default:
 				break;
@@ -125,8 +124,6 @@ public class ServerContactMine extends ServerLevelObject {
 			case Tank:
 			case Noob:
 			case HayBale:
-				this.isActive = true;
-				this.setEntityState(EntityStates.ATTACK);
 				break;
 			default:
 				break;
@@ -138,17 +135,20 @@ public class ServerContactMine extends ServerLevelObject {
 	public void update(float deltaTime) {
 		CircleShape shape = (CircleShape) this.physicsBody.getBody()
 				.getFixtureList().get(1).getShape();
-		if(this.getEntityState() == EntityStates.NONE){
+		if(this.getEntityState() == EntityStates.NONE ){
 			originRadius = manager.toBox2D(2.0f);
 			shape.setRadius(originRadius);
 			gotDamage = false;
 			this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
 		}else if(this.getEntityState() == EntityStates.ATTACK || this.getEntityState() == EntityStates.EXPLODING){
+			if(this.getEntityState() == EntityStates.ATTACK){
+				gotDamage = false;
+				this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
+			}
 			timer -= deltaTime;
 			if(timer <= 1){
 				this.setEntityState(EntityStates.EXPLODING);
-				
-				if (originRadius <= 1.5) {
+				if (originRadius <= 1.5f) {
 					originRadius += manager.toBox2D(2.0f);
 					this.physicsBody.getBody().getFixtureList().get(1).setSensor(false);
 					shape.setRadius(originRadius);
@@ -162,6 +162,7 @@ public class ServerContactMine extends ServerLevelObject {
 				}
 			}
 		}
+		System.out.println(gotDamage);
 	}
 
 	@Override
@@ -172,7 +173,7 @@ public class ServerContactMine extends ServerLevelObject {
 	@Override
 	public void initPhysics(PhysixManager manager) {
 		this.manager = manager;
-		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody,
+		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.DynamicBody,
 				manager)
 				.position(
 						new Vector2(properties.getFloat("x"), properties
