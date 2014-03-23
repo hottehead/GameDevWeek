@@ -60,22 +60,14 @@ public class MainMenuStage extends AutoResizeStage {
 		
 		Label playerNameLabel = new Label("Player name: ", defaultSkin);
 		uiTable.add(playerNameLabel);
-
-		uiTable.add(playerNameLabel);		
-
-		uiTable.row().padTop(20);
-		Label label = new Label("Welcome to the League of Bunny Brawllllll!!!111!!1111", defaultSkin);
-		uiTable.add(label);
-		
-		uiTable.row().padTop(20);
 		
 		Table tmpTable = new Table(); 
 		uiTable.add(tmpTable).pad(20);
 		
-		gameBrowser = new TextButton("Spielen als Client", defaultSkin);
-		playServer = new TextButton("Spielen als Server", defaultSkin);
-		options = new TextButton("Optionen", defaultSkin);
-		credits = new TextButton("Credits", defaultSkin);
+		gameBrowser = new TextButton("Spielen als Client", defaultSkin,"start_player");
+		playServer = new TextButton("Spielen als Server", defaultSkin,"start_server");
+		options = new TextButton("Optionen", defaultSkin,"options");
+		credits = new TextButton("Credits", defaultSkin,"credits");
 		exit = new TextButton("Beenden", defaultSkin);
 		
 		tmpTable.add(gameBrowser).pad(5).prefSize(50);
@@ -88,10 +80,6 @@ public class MainMenuStage extends AutoResizeStage {
 		tmpTable.add(options).pad(5);
 		tmpTable.add(credits).pad(5);
 		tmpTable.add(exit).pad(5);
-		
-		//testing server-client stuff
-		startServerAndPlay = new TextButton("Teststart", defaultSkin);
-		tmpTable.add(startServerAndPlay);
 	}
 
 	public void render() {		
