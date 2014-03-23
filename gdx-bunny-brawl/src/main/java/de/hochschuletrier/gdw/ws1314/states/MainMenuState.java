@@ -141,6 +141,19 @@ public class MainMenuState extends GameState {
 	private class PlayClientListener extends ClickListener {
 		public void clicked(InputEvent event, float x, float y) {
 			logger.info("Change to JoinServerState");
+			
+//			// TODO: Nur Temporär zum localen Testen
+//			if (!NetworkManager.getInstance().isClient())
+//			{
+//			NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
+//
+//			if (!NetworkManager.getInstance().isClient()) {
+//			logger.warn("Connection could not be established! Server maybe not running.");
+//			GameStates.MAINMENU.init(assetManager);
+//			GameStates.MAINMENU.activate();
+//			return;
+//			}
+//			}
 			GameStates.CLIENTLOBBY.init(assetManager);
 			GameStates.CLIENTLOBBY.activate();
 		}
