@@ -214,9 +214,7 @@ public class TiledMapRendererGdx extends Pool<RenderInfo> implements ITiledMapRe
 				this.providePoolObject(rI);
 			}
 			this.renderLineCache.clear();
-		}
-		
-		
+		}		
 	}
 
 	/**

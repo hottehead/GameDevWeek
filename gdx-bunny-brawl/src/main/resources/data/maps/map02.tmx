@@ -119,6 +119,9 @@
   <tileoffset x="1" y="1"/>
   <image source="tiles/mine.png" width="32" height="32"/>
  </tileset>
+ <tileset firstgid="292" name="straw" tilewidth="64" tileheight="64">
+  <image source="tiles/straw.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
  <layer name="Groundlayer (Rand, Wand, Terrain)" width="75" height="50">
   <data encoding="base64" compression="zlib">
    eJztmuFx00AQha8DyWoAUgEECoBAAYkrgEABIVAIUAFQAVABQwVQEqfBN/P86e1J59jDMKMfO7Yj627v7dv31hO9Tyl9WGM2Pub4lOPzGrPxJcfXHN/WmI3vOX7kuMxxtUYY2xw/d1i9yPFyjTCu04rV0qhh9S7HmyPGW7N/6x7HWOPQvSKsxv1vc3Q5+hwbiW4Xg3zu5dXFeO0m2H+zW6vDeoNcG3Z/c/UseQ547dN+nr3sMeB9L3uW8zLfCKtr5KsY9WmKn+alWCqGnTnrddrHU3HSvMt33P16Vr2XtVMsiRfvLe+JSYQVOaO4OOz0fVQ3nvV1+usv5Xu6x4B1Rp9+FWDdJc9LPXutFxwXWdsaVnq/ckg5TRw3uEdxZZ0UryWeTZwUK9ZGOeR6j/hF312KFddyWqU4skasb6RZh0bRKuWP8quGGfmv39FrLbyiXmivk2vcU/mkOR8DL8WJ9WAuPIfWnfXWs1Izalg5P4r44/SsT9P6ls8jXnfx81tZU7VgwL7aA6qDWks9o+K+acTK+TnrpPVyGhBhTX8tn+/luJ/jLO3zwHE10kf1FOdHrq7UvRZeufNRxxUHrRl9x/kRtaR8fpDjYY5zc25ygvXj+uqR9Cqnc/TEFl7xLE7LmY/jvJtj+VryV6w4h7B25NGQpvhGHsiZwXl768xQ46zjVjQrOX45L1KsqHXKC5cbuUb8XN/XMG6ZGchTdzbHEXK5aNCSeLTD6nHDPWOcoRY1b3RawH4+dGZw6zuf5d5l/8KVU8Z5qvcl60wdVC1o1StylT5Ez9P9iW/B6nmOp0eOZ2m/ZyPfUf1WTPvg7y16pVhxH84qzptUJ6nXbk6MtH+D/akL1De3nuMRc3ce1aJX9GH6hpvveH2TpnMA/YYepzyOMO3N2vRU9qPzJe0L1nopVi16PBdFr9XbnAY7z3DziNalYNXqBXNx1oDVKfSYtecMopxyvsU5WLE6Ra5LsXqSTqO/nIWoda7/Il87pW9cNGBF/VMdqM2BbgamXlHPOJ9w9qAeq6ZwbcVdNdblrmuR060+yHpybop6Rf/u9JczGddxZyaGkQ+6uS/yKc2bvd+i7Yo7+4I9wzmGfu1mBuJNf+OM5LAjryJ/Jlask5slWnil3qqY87cMOcD+VKyO7VVjOI+lb0RzCfWQM+Shv3HYgz32YY/od0/lVfStKB/iwd8ybn5ZitX4/4Jt2u8j5Qy1UvdhH4zR4qnFM1t97cLgwd5wnqRYsYeWYFWuscejuVh7k9x2XkS+R55JL4x6vzfrKibUb3qry28pr8o18smdkzM4vTnqXc4kDit+lznoGjyv03I3F2jO5MEhWLkZgf5O76K/kWPkqvM1xSrCmvxk7cj3Dtf1XupwK1bsY3KW53E+VMuH8yZ7kByNZpho9iDW7EvysnVmKNdUj7iu0ylqZZ/iukbncbOY6z/uWfNip63EnK+Xaf9/3XNY0X+dB2q++pm6ofk7beF8cY51Xd+Rb6yF8s29uhzLq8NjDivNib3k5hjniV2anpN9WL5T5osLnIP95vZTbNnbyiv2vqvvIVix3+gb9D/yjHwfuX11pNimKb/Ya8SX59FadZKfeyYnwqrMo/RoziDcizxSDlED7ho6M1PT6SvKPdZZzxY9C1rDqlynPmo/kkcOw0grT4UXuaVzD3PVM0W914qVaoHDIfIl7TvidJfnPN+aPDkL1LhOLyjva/Wcw6rUjLqotaCmUrMdr8szQa6POZPwzK72midnXO1D59OKXe1Z7DmsSh531WCtlXvGjL3A+ZIzx02a8qvkuU1TLdrgfq2nek1NI5Zgdew4Bva1s7Wuv1RD/wVW/2usWB2GVdGANeLnLkesfuX4vcai+AMqbIQp
@@ -213,6 +216,11 @@
   <object gid="291" x="224" y="1056"/>
   <object gid="291" x="192" y="992"/>
   <object gid="291" x="1440" y="1248"/>
+  <object gid="292" x="1504" y="1152">
+   <properties>
+    <property name="TYPE" value="hay"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Zonenebene" width="75" height="50">
   <object x="0" y="0" width="2400" height="96"/>

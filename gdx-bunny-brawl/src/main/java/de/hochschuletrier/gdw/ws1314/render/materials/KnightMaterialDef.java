@@ -25,7 +25,11 @@ public class KnightMaterialDef extends MaterialDefinition {
 		newMaterial("knight"+teamColorStr+"IdleDown", EntityStates.IDLE, FacingDirection.DOWN, true);
 		newMaterial("knight"+teamColorStr+"IdleUp", EntityStates.IDLE, FacingDirection.UP, true);
 		newMaterial("knight"+teamColorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.LEFT, true);
+		newMaterial("knight"+teamColorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.UP_LEFT, true);
+		newMaterial("knight"+teamColorStr+"IdleLeft", EntityStates.IDLE, FacingDirection.DOWN_LEFT, true);
 		newMaterial("knight"+teamColorStr+"IdleRight", EntityStates.IDLE, FacingDirection.RIGHT, true);
+		newMaterial("knight"+teamColorStr+"IdleRight", EntityStates.IDLE, FacingDirection.UP_RIGHT, true);
+		newMaterial("knight"+teamColorStr+"IdleRight", EntityStates.IDLE, FacingDirection.DOWN_RIGHT, true);
 		
 		newMaterial("knight"+teamColorStr+"WalkDown", EntityStates.WALKING, FacingDirection.DOWN, true);
 		newMaterial("knight"+teamColorStr+"WalkUp", EntityStates.WALKING, FacingDirection.UP, true);

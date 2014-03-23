@@ -126,8 +126,7 @@ public class ServerProjectile extends ServerEntity {
             	case BridgeSwitch:
             	case Bush:
             	case HayBale:
-            			ServerEntityManager.getInstance().removeEntity(this);
-            			
+            		ServerEntityManager.getInstance().removeEntity(this);
                     break;
                 default:
                     break;

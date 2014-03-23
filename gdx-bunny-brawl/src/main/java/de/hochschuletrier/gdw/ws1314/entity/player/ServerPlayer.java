@@ -119,6 +119,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private int 				collidingBridgePartsCount;
     private float 				deathfreeze;
 	private ArrayList<Long>		pickedUpEggs;
+	private int					deadZoneCounter;
     private boolean             isInDeadZone;
     
     
@@ -168,18 +169,32 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 this.reset();
             }
             this.physicsBody.setLinearVelocity(new Vector2());
-            this.physicsBody.setLinearDamping(2000);
+            this.physicsBody.setLinearDamping(/* over*/9000 );
 			for(Long id : pickedUpEggs){
-				ServerEntityManager.getInstance().getEntityById(id).reset();
+				ServerEntity entity = ServerEntityManager.getInstance().getEntityById(id);
+				if (entity!=null) entity.reset();//FIXME: Richtige Lösung? hier trat zuvor eine NullPointerException auf, wenn man ins Wasser fällt.
 			}
 			pickedUpEggs.clear();
 			currentEggCount = 0;
             return;
         }
-        if(!this.isOnBridge && this.isInDeadZone) {
-            this.isDead = true;
-            this.isOnBridge = false;
-            this.isInDeadZone = false;
+        if(this.isInDeadZone) 
+        {
+        	if (!this.isOnBridge)
+        	{
+        		deadZoneCounter++;
+        		
+        		if (deadZoneCounter > 1)
+        		{
+            		this.isDead = true;
+                    this.isOnBridge = false;
+                    this.isInDeadZone = false;
+        		}
+        	}
+        	else
+        	{
+        		deadZoneCounter = 0;
+        	}
         }
         
     	currentState.update(deltaTime);
@@ -397,6 +412,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
                  if(ball.isCrossable()) {
+                	 logger.info("Haybale crossed");
                      this.isOnBridge = true;
                      collidingBridgePartsCount++;
                  } else {
@@ -456,6 +472,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  case AbyssZone:
                  case WaterZone:
                      this.isInDeadZone = true;
+    	             deadZoneCounter = 0;
 //                     if(!isOnBridge) {
 //                         this.isDead = true;
 //                     }
@@ -483,6 +500,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              	case HayBale:
              	   ServerHayBale ball = (ServerHayBale)otherEntity;
                    if(ball.isCrossable()) {
+                  	 logger.info("Haybale not touched");
                        collidingBridgePartsCount--;
                        if(collidingBridgePartsCount <= 0) {
                            this.isOnBridge = false;
@@ -512,6 +530,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	         case AbyssZone:
     	         case WaterZone:
     	             this.isInDeadZone = false;
+    	             deadZoneCounter = 0;
     	             break;
     	         default:
     	             break;
@@ -588,7 +607,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             .density(DENSITY)
             .friction(FRICTION)
             .restitution(RESTITUTION)
-            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 4.0f))
+            .shapeCircle(HEIGHT / 16.0f, new Vector2(0, HEIGHT / 2.0f))
             .sensor(true));
 
 		body.setGravityScale(0);
@@ -619,6 +638,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         this.deactivateSpeedBuff();
         		
         switchToState(idleState);
+        isInDeadZone = false;
         
         this.physicsBody.setPosition(properties.getFloat("x"), properties.getFloat("y"));
     }
@@ -659,6 +679,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	        attackBuffFactor = 1.0f;
 	        attackBuffActive = false;
 	    }
+	}
+	
+	public void setPlayerInDeathZone() {
+	    this.isInDeadZone = true;
 	}
         
 }
