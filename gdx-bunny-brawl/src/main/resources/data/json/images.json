@@ -70,5 +70,5 @@
 	"menuButtonPlayServer": "data/huds/button_playServer.png",
 	"menuButtonPlayClient": "data/huds/button_playClient.png", 
 	
-	"ladescreen": "data/huds/ladescreen.png"
+	"ladescreen": "data/images/ladescreen.png"
 }
