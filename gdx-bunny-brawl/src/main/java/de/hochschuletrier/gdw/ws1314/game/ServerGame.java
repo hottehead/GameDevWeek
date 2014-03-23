@@ -19,17 +19,19 @@ import de.hochschuletrier.gdw.commons.tiled.tmx.TmxImage;
 import de.hochschuletrier.gdw.commons.utils.Point;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
+import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 
 /**
  * 
  * @author Santo Pfingsten
  */
-public class ServerGame {
+public class ServerGame implements GameInfoListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServerGame.class);
 
@@ -53,7 +55,6 @@ public class ServerGame {
 		netManager = NetworkManager.getInstance();
 		this.playerDatas = playerDatas;
 		//loadSolids();
-
     }
 
 
@@ -61,7 +62,7 @@ public class ServerGame {
 		gameInfo = entityManager.getGameInfo();
         Main.getInstance().console.register(gravity_f);
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-
+		
 		TiledMap map = assets.getTiledMap(mapName);
 
 		LevelLoader.load(map, entityManager, manager, gameInfo);
@@ -71,7 +72,7 @@ public class ServerGame {
 					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
-
+		
         for(PlayerData playerData : playerDatas ){
 
             Point startpoint = gameInfo.getASpawnPoint(playerData.getTeam());
@@ -88,19 +89,18 @@ public class ServerGame {
                     break;
                 case Hunter:
                     sp.setPlayerKit(PlayerKit.HUNTER);
+                    logger.info("Hunter erstellt !!!");
                     break;
                 case Tank:
                 	sp.setPlayerKit(PlayerKit.TANK);
                     break;
             }
 
-        
             sp.setPlayerData(playerData);
             netManager.setPlayerEntityId(playerData.getPlayerId(),sp.getID());
-
         }
-
-
+        
+        gameInfo.addListner(this);
 	}
 
 	public void render() {
@@ -136,8 +136,21 @@ public class ServerGame {
 		}
 	};
 	
-	public GameInfo getGameInfo()
+	@Override
+	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
+		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
+		
+		// WinningCondition HERE:
+		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
+		{
+			logger.info("Winning-Condition complied.");
+			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
+		}
+	}
+	
+	public void dispose()
 	{
-		return  this.gameInfo;
+		entityManager.Clear();
+		Main.getInstance().console.unregister(gravity_f);
 	}
 }

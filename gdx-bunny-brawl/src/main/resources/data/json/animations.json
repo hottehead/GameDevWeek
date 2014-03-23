@@ -403,18 +403,18 @@
     },	
 	"tankBlackAttackUp": {
         "filename": "data/animations/tankBlack_attackUp.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 4,
         "rows" : 1
     },	
 	"tankBlackAttackDown": {
         "filename": "data/animations/tankBlack_attackDown.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.2, 0.2, 0.3, 0.3 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 6,
         "rows" : 1
     },
 	"tankBlackIdleLeft": {
@@ -444,7 +444,7 @@
 	"tankBlackIdleDown": {
         "filename": "data/animations/tankBlack_idleDown.png",
         "frames" : 4,
-        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "frameDuration": [ 2.0, 0.2, 0.3, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
         "columns": 4,
         "rows" : 1
@@ -499,18 +499,18 @@
     },	
 	"tankWhiteAttackUp": {
         "filename": "data/animations/tankWhite_attackUp.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 4,
         "rows" : 1
     },	
 	"tankWhiteAttackDown": {
         "filename": "data/animations/tankWhite_attackDown.png",
-        "frames" : 7,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2  ] ,
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.2, 0.2, 0.3, 0.3 ] ,
         "playType" : "NORMAL",
-        "columns": 7,
+        "columns": 6,
         "rows" : 1
     },
 	"tankWhiteIdleLeft": {
@@ -540,7 +540,7 @@
 	"tankWhiteIdleDown": {
         "filename": "data/animations/tankWhite_idleDown.png",
         "frames" : 4,
-        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "frameDuration": [ 2.0, 0.2, 0.3, 0.2 ] ,
         "playType" : "LOOP_PINGPONG",
         "columns": 4,
         "rows" : 1
@@ -563,36 +563,38 @@
     },
 	"tankWhiteWalkUp": {
         "filename": "data/animations/tankWhite_walkUp.png",
-        "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
-        "playType" : "LOOP",
-        "columns": 6,
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
         "rows" : 1
     },
 	"tankWhiteWalkDown": {
         "filename": "data/animations/tankWhite_walkDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "frameDuration": [ 0.1, 0.3, 0.2, 0.1, 0.3, 0.2 ] ,
         "playType" : "LOOP",
         "columns": 6,
         "rows" : 1
     },
 	"tankBlackWalkUp": {
         "filename": "data/animations/tankBlack_walkUp.png",
-        "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
-        "playType" : "LOOP",
-        "columns": 6,
+        "frames" : 4,
+        "frameDuration": [ 0.2, 0.2, 0.2, 0.2 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
         "rows" : 1
     },
 	"tankBlackWalkDown": {
         "filename": "data/animations/tankBlack_walkDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "frameDuration": [ 0.1, 0.3, 0.2, 0.1, 0.3, 0.2 ] ,
         "playType" : "LOOP",
         "columns": 6,
         "rows" : 1
     },
+	
+	
 	
 	"explosion": {
         "filename": "data/images/explosion_animation.png",

@@ -4,16 +4,21 @@ import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
-import de.hochschuletrier.gdw.ws1314.Main;
 
 public class OptionStage extends AutoResizeStage {
 	
@@ -22,7 +27,7 @@ public class OptionStage extends AutoResizeStage {
 	private boolean isInited = false;
 	
 	private Slider master, music, sound;
-	private TextButton back;	
+	private ImageButton back;	
 	
 	public OptionStage() {
 		super();
@@ -42,19 +47,19 @@ public class OptionStage extends AutoResizeStage {
 		font = assetManager.getFont("verdana", 24);
 		
 
-		Label title = new Label("Optionen", defaultSkin);
+		Image title = new Image(assetManager.getTexture("menuButtonOptions"));
 		uiTable.add(title).pad(50).row();
 		
 		Label label = new Label("Sound-Optionen", defaultSkin);
 		uiTable.add(label).row();
 		
 		Table tmp = new Table();
-		uiTable.add(tmp).row();
-		label = new Label("Master", defaultSkin);	
-		tmp.add(label);
-		this.master = new Slider(0, 100, 2, false, defaultSkin);
-		tmp.add(master);
-		
+//		uiTable.add(tmp).row();
+//		label = new Label("Master-Sound", defaultSkin);	
+//		tmp.add(label);
+//		this.master = new Slider(0, 100, 2, false, defaultSkin);
+//		tmp.add(master);
+//		
 		tmp = new Table();
 		uiTable.add(tmp).row();
 		label = new Label("Musik", defaultSkin);
@@ -69,8 +74,14 @@ public class OptionStage extends AutoResizeStage {
 		this.sound = new Slider(0, 100, 2, false, defaultSkin);
 		tmp.add(sound);
 		
-		this.back = new TextButton("zurueck", defaultSkin);
+		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));
+		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		this.back = new ImageButton(style);
 		uiTable.add(back).padTop(20);
+		
+//		this.back = new TextButton("zurueck", defaultSkin);
+//		uiTable.add(back).padTop(20);
 	}
 
 	public void render() {
@@ -79,7 +90,7 @@ public class OptionStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-		Table.drawDebug(this);
+//		Table.drawDebug(this);
 	}
 	
 	public void clear() {
@@ -88,10 +99,10 @@ public class OptionStage extends AutoResizeStage {
 	}
 	
 	//getter for sound slider
-	public Slider getMasterSlider() {
-		return master;
-	}
-	
+//	public Slider getMasterSlider() {
+//		return master;
+//	}
+//	
 	public Slider getSoundSlider() {
 		return sound;
 	}
@@ -100,7 +111,7 @@ public class OptionStage extends AutoResizeStage {
 		return music;
 	}
 	
-	public TextButton getBackButton() {
+	public ImageButton getBackButton() {
 		return back;
 	}
 }

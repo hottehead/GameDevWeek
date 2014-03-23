@@ -37,6 +37,8 @@ public class LocalMusic {
 	public static void setSystemVolume(float systemVolume) {
 		LocalMusic.SystemVolume = systemVolume;
 		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeMusic, systemVolume);
+		System.out.println("Set Music Volume to" + systemVolume);
+		Main.musicManager.sendVolumeToStreams(systemVolume);
 	}
 	
 	/**

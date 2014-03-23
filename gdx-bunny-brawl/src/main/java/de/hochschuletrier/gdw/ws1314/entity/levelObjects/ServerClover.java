@@ -18,7 +18,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 public class ServerClover extends ServerLevelObject
 {
 	public static final float CLOVER_HEALTHBUFF_FACTOR = 0.2f;
-	public static final float CLOVER_HEALTHBUFF_DURATION = 2.f;
+	public static final float CLOVER_HEALTHBUFF_DURATION = 10.f;
 	
 	public ServerClover()
 	{

@@ -11,10 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.commons.gdx.sound.LocalMusic;
+import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.hud.OptionStage;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
 
 public class OptionState extends GameState {
 	
@@ -22,7 +23,8 @@ public class OptionState extends GameState {
 	private OptionStage stage;
 	
 	private BackListener backListener;
-	private MasterListener masterListener;
+	private MusicListener musicListener;
+	private SoundListener soundListener;
 	
 	public void init(AssetManagerX assetManager) {
         super.init(assetManager);
@@ -33,7 +35,8 @@ public class OptionState extends GameState {
         stage = new OptionStage();
         stage.init(assetManager);
 		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		masterListener = new MasterListener(stage.getMasterSlider());
+		musicListener = new MusicListener(stage.getMusicSlider());
+		soundListener = new SoundListener(stage.getSoundSlider());
     }
 
     public void render() {
@@ -46,7 +49,7 @@ public class OptionState extends GameState {
     public void onEnter() {
     	stage.init(assetManager);
 	    Main.inputMultiplexer.addProcessor(stage);
-	    stage.getMasterSlider().addListener(masterListener);
+	    stage.getMusicSlider().addListener(musicListener);
 		stage.getBackButton().addListener(backListener);
     }
 
@@ -54,7 +57,7 @@ public class OptionState extends GameState {
     }
 
     public void onLeave() {
-    	stage.getMasterSlider().removeListener(masterListener);
+    	stage.getMusicSlider().removeListener(musicListener);
     	stage.getBackButton().removeListener(backListener);
 		Main.inputMultiplexer.removeProcessor(stage);
 		stage.clear();
@@ -73,13 +76,23 @@ public class OptionState extends GameState {
     	}
     }
     
-    private class MasterListener extends DragListener {
+    private class MusicListener extends DragListener {
     	private Slider slider;
-    	public MasterListener(Slider slider) {
+    	public MusicListener(Slider slider) {
     		this.slider = slider;
     	}
     	public void dragStop (InputEvent event, float x, float y, int pointer) {
     		LocalMusic.setSystemVolume(slider.getValue()*0.01f);
+    	}
+    }
+    
+    private class SoundListener extends DragListener {
+    	private Slider slider;
+    	public SoundListener(Slider slider) {
+    		this.slider = slider;
+    	}
+    	public void dragStop (InputEvent event, float x, float y, int pointer) {
+    		LocalSound2.setSystemVolume(slider.getValue()*0.01f);
     	}
     }
 }
