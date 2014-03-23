@@ -24,7 +24,6 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
 import de.hochschuletrier.gdw.ws1314.entity.player.kit.PlayerKit;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
-import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 
 /**
  * 
@@ -91,6 +90,7 @@ public class ServerGame {
                     sp.setPlayerKit(PlayerKit.HUNTER);
                     break;
                 case Tank:
+                	sp.setPlayerKit(PlayerKit.TANK);
                     break;
             }
 

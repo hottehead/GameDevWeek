@@ -35,8 +35,8 @@ public class GameplayStage extends AutoResizeStage {
 
 	private VisualBox attackIcon, layEggIcon;
 	
-	private VisualBox scoreTeamIcon, scoreEnemyIcon;
-	private MinMaxValue scoreTeam, scoreEnemy;
+	private VisualBox scoreWhiteIcon, scoreBlackIcon;
+	private MinMaxValue scoreWhite, scoreBlack;
 	private final int maxScore = 100;
 
 	ClientPlayer visualDataEntity;
@@ -72,18 +72,18 @@ public class GameplayStage extends AutoResizeStage {
 		// class icon
 		classIcon = new VisualBox(
 				assetManager.getTexture("HudEmblemKnightWhite"), 20,
-				Gdx.graphics.getHeight() - 80, 60, 60);
+				Gdx.graphics.getHeight() - 80, 54, 54);
 		classIconText = new StaticTextElement(font, "Klasse",
 				this.classIcon.getWidth() * .5f, -14);
 		classIcon = new BoxOffsetDecorator(classIcon, classIconText);
 
 		// buffs
 		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 250,
-				Gdx.graphics.getHeight() - 80, 20, 20);
+				Gdx.graphics.getHeight() - 80, 52, 52);
 		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 280,
-				Gdx.graphics.getHeight() - 80, 20, 20);
+				Gdx.graphics.getHeight() - 80, 52, 52);
 		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 310,
-				Gdx.graphics.getHeight() - 80, 20, 20);
+				Gdx.graphics.getHeight() - 80, 52, 52);
 
 		// action icons
 		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"),
@@ -102,30 +102,30 @@ public class GameplayStage extends AutoResizeStage {
 		// score icons
 		DynamicTextElement textScore;
 
-		scoreTeamIcon = new VisualBox(
-				assetManager.getTexture("debugScoreTeam"),
-				(Gdx.graphics.getWidth() * .5f) - 50, 40, 60, 60);
-		scoreTeam = new MinMaxValue(0, maxScore, 1);
+		scoreWhiteIcon = new VisualBox(
+				assetManager.getTexture("HudEmblemWhite"),
+				(Gdx.graphics.getWidth() * .5f) - 50, 40, 54, 54);
+		scoreWhite = new MinMaxValue(0, maxScore, 1);
 		textScore = new DynamicTextElement(font, "0",
-				scoreTeamIcon.getWidth() * .5f, 50, scoreTeam);
+				scoreWhiteIcon.getWidth() * .5f, 50, scoreWhite);
 		textScore.setDecimalPLace(0);
-		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon, textScore);
+		scoreWhiteIcon = new BoxOffsetDecorator(this.scoreWhiteIcon, textScore);
 		classIconText = new StaticTextElement(font, "Team 1",
-				this.scoreTeamIcon.getWidth() * .5f, -14);
-		scoreTeamIcon = new BoxOffsetDecorator(this.scoreTeamIcon,
+				this.scoreWhiteIcon.getWidth() * .5f, -14);
+		scoreWhiteIcon = new BoxOffsetDecorator(this.scoreWhiteIcon,
 				classIconText);
 
-		scoreEnemyIcon = new VisualBox(
+		scoreBlackIcon = new VisualBox(
 				assetManager.getTexture("debugScoreEnemy"),
-				(Gdx.graphics.getWidth() * .5f) + 50, 40, 60, 60);
-		scoreEnemy = new MinMaxValue(0, maxScore, 1);
+				(Gdx.graphics.getWidth() * .5f) + 50, 40, 136, 151);
+		scoreBlack = new MinMaxValue(0, maxScore, 1);
 		textScore = new DynamicTextElement(font, "0",
-				scoreEnemyIcon.getWidth() * .5f, 50, scoreEnemy);
+				scoreBlackIcon.getWidth() * .5f, 50, scoreBlack);
 		textScore.setDecimalPLace(0);
-		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon, textScore);
+		scoreBlackIcon = new BoxOffsetDecorator(this.scoreBlackIcon, textScore);
 		classIconText = new StaticTextElement(font, "Team 2",
-				this.scoreEnemyIcon.getWidth() * .5f, -14);
-		scoreEnemyIcon = new BoxOffsetDecorator(this.scoreEnemyIcon,
+				this.scoreBlackIcon.getWidth() * .5f, -14);
+		scoreBlackIcon = new BoxOffsetDecorator(this.scoreBlackIcon,
 				classIconText);
 	}
 
@@ -141,8 +141,8 @@ public class GameplayStage extends AutoResizeStage {
 		buff3.draw();
 		attackIcon.draw();
 		layEggIcon.draw();
-		scoreEnemyIcon.draw();
-		scoreTeamIcon.draw();
+		scoreBlackIcon.draw();
+		scoreWhiteIcon.draw();
 
 		DrawUtil.batch.flush();
 		this.draw();
@@ -170,11 +170,11 @@ public class GameplayStage extends AutoResizeStage {
 	}
 
 	public void advanceScoreOwnTeam() {
-		scoreTeam.stepValue();
+		scoreWhite.stepValue();
 	}
 
 	public void advanceScoreEnemeyTeam() {
-		scoreEnemy.stepValue();
+		scoreBlack.stepValue();
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -230,4 +230,10 @@ public class GameplayStage extends AutoResizeStage {
 		}
 	}
 
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		
+	}
+	
 }

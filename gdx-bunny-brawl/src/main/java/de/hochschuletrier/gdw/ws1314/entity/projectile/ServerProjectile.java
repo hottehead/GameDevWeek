@@ -118,7 +118,7 @@ public class ServerProjectile extends ServerEntity {
             ServerEntity otherEntity = this.identifyContactFixtures(contact);
             
             if(otherEntity == null) {
-                //ServerEntityManager.getInstance().removeEntity(this);
+                ServerEntityManager.getInstance().removeEntity(this);
                 return;
             }
             
@@ -126,11 +126,8 @@ public class ServerProjectile extends ServerEntity {
             	case BridgeSwitch:
             	case Bush:
             	case HayBale:
-            			ServerEntityManager.getInstance().removeEntity(this);
-            			
+            		ServerEntityManager.getInstance().removeEntity(this);
                     break;
-            	case WaterZone:
-            	    break;
                 default:
                     break;
             }
