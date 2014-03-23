@@ -57,7 +57,7 @@ public class LocalSound2 {
 		
 		localX = LocalSound2.LocalPlayer.getPosition().x;
 		localY = LocalSound2.LocalPlayer.getPosition().y;
-		
+			
 		remoteX = remotePlayer.getPosition().x;
 		remoteY = remotePlayer.getPosition().y;
 		
