@@ -20,7 +20,7 @@ import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 public class ServerCarrot extends ServerLevelObject
 {
 	public static final float CARROT_SPEEDBUFF_FACTOR = 1.5f;
-	public static final float CARROT_SPEEDBUFF_DURATION = 2.0f;
+	public static final float CARROT_SPEEDBUFF_DURATION = 10.0f;
 	
 	public ServerCarrot()
 	{

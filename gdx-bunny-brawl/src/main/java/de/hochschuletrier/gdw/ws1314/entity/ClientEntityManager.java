@@ -80,7 +80,7 @@ public class ClientEntityManager {
                 e = createPlayer(PlayerKit.NOOB);
                 break;
             case Hunter:
-                e = createPlayer(PlayerKit.HUNTER);
+            	e = createPlayer(PlayerKit.HUNTER);
                 break;
             case Tank:
                 e = createPlayer(PlayerKit.TANK);
@@ -272,6 +272,7 @@ public class ClientEntityManager {
     	this.entityListMap.clear();
     	this.insertionQueue.clear();
     	gameInfo.clear();
+    	myPlayerData = null;
     }
     
     public void provideListener(ClientEntityManagerListener l) {

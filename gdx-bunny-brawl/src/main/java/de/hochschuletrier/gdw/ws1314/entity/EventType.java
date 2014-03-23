@@ -4,6 +4,7 @@ package de.hochschuletrier.gdw.ws1314.entity;
  * Created by Jerry on 20.03.14.
  */
 public enum EventType {
+	IDLE,
     WALK_GRASS,
 	WALK_BRIDGE,
 	WALK_WAY,
