@@ -11,32 +11,30 @@ import org.slf4j.LoggerFactory;
 
 public class ServerAnnouncer extends Thread{
 	private static final Logger logger = LoggerFactory.getLogger(ServerAnnouncer.class);
-	private static int ANNOUNCER_PORT=54294;
+	public static int ANNOUNCER_PORT=54294;
 	private volatile boolean shutdown = false;
 	private short port;
+	private volatile boolean busy=false;
 	private volatile byte clients;
 	private DatagramSocket socket;
 	
-	public ServerAnnouncer(short port){
+	public ServerAnnouncer(short port) throws SocketException{
 		setDaemon(true);
 		this.port=port;
+		socket = new DatagramSocket(new InetSocketAddress(ANNOUNCER_PORT));
 		start();
 	}
 
 	@Override
 	public void run(){
 		try{
-			socket = new DatagramSocket(new InetSocketAddress(ANNOUNCER_PORT));
 			while(!shutdown){
-				DatagramPacket request = new DatagramPacket(new byte[3], 3);
+				DatagramPacket request = new DatagramPacket(new byte[4], 4);
 				socket.receive(request);
-				byte[] data = new byte[]{(byte) (port>>>8),(byte) (port&0xFF),clients};
+				byte[] data = new byte[]{(byte) (port>>>8),(byte) (port&0xFF),clients,(byte) (busy?1:0)};
 				DatagramPacket response = new DatagramPacket(data, data.length, request.getSocketAddress());
 				socket.send(response);
 			}
-		}
-		catch (SocketException e){
-			logger.error("Server-Announcer: SocketException",e);
 		}
 		catch (IOException e){
 			logger.error("Server-Announcer: IOException",e);
@@ -49,6 +47,15 @@ public class ServerAnnouncer extends Thread{
 
 	public void setClients(byte clients){
 		this.clients = clients;
+	}
+
+	
+	public boolean isBusy(){
+		return busy;
+	}
+
+	public void setBusy(boolean busy){
+		this.busy = busy;
 	}
 
 	public void shutdown(){
