@@ -70,6 +70,7 @@
 	"menuButtonPlayServer": "data/huds/button_playServer.png",
 	"menuButtonPlayClient": "data/huds/button_playClient.png", 
 	"menuButtonExit": "data/huds/button_beenden.png",
+	"menuButtonBack": "data/huds/button_zurueck.png",
 	
 	"ladescreen": "data/huds/ladescreen.png"
 }
