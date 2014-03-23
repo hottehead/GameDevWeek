@@ -27,7 +27,7 @@ public class OptionStage extends AutoResizeStage {
 	private boolean isInited = false;
 	
 	private Slider master, music, sound;
-	private TextButton back;	
+	private ImageButton back;	
 	
 	public OptionStage() {
 		super();
@@ -74,14 +74,14 @@ public class OptionStage extends AutoResizeStage {
 //		this.sound = new Slider(0, 100, 2, false, defaultSkin);
 //		tmp.add(sound);
 		
-//		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));
-//		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
-//		style.imageUp = new TextureRegionDrawable(texture);
-//		this.back = new ImageButton(style);
-//		uiTable.add(back).padTop(20);
-		
-		this.back = new TextButton("zurueck", defaultSkin);
+		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));
+		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		this.back = new ImageButton(style);
 		uiTable.add(back).padTop(20);
+		
+//		this.back = new TextButton("zurueck", defaultSkin);
+//		uiTable.add(back).padTop(20);
 	}
 
 	public void render() {
@@ -111,7 +111,7 @@ public class OptionStage extends AutoResizeStage {
 //		return music;
 //	}
 	
-	public TextButton getBackButton() {
+	public ImageButton getBackButton() {
 		return back;
 	}
 }
