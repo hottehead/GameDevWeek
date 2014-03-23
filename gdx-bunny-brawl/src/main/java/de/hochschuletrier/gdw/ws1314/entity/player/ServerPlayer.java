@@ -170,7 +170,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearVelocity(new Vector2());
             this.physicsBody.setLinearDamping(2000);
 			for(Long id : pickedUpEggs){
-				ServerEntityManager.getInstance().getEntityById(id).reset();
+				ServerEntity entity = ServerEntityManager.getInstance().getEntityById(id);
+				if (entity!=null) entity.reset();//FIXME: Richtige Lösung? hier trat zuvor eine NullPointerException auf, wenn man ins Wasser fällt.
 			}
 			pickedUpEggs.clear();
 			currentEggCount = 0;
