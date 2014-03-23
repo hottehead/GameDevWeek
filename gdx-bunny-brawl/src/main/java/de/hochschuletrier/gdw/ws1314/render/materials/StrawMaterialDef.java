@@ -11,6 +11,7 @@ public class StrawMaterialDef extends MaterialDefinition {
 	@Override
 	public void build() {
 		newMaterial("straw", EntityStates.NONE, null, false);
+		newMaterial("straw", EntityStates.WET, null, false);
 	}
 
 }
