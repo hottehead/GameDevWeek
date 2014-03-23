@@ -33,7 +33,7 @@ public class MainMenuStage extends AutoResizeStage {
 	
 	//buttons
 	private TextButton playServer;
-	private TextButton playClient;
+	private TextButton gameBrowser;
 	private TextButton options; 
 	private TextButton credits;
 	private TextButton exit;
@@ -86,13 +86,13 @@ public class MainMenuStage extends AutoResizeStage {
 		Table tmpTable = new Table();
 		uiTable.add(tmpTable).pad(20);
 		
-		playClient = new TextButton("Spielen als Client", defaultSkin);
+		gameBrowser = new TextButton("Spielen als Client", defaultSkin);
 		playServer = new TextButton("Spielen als Server", defaultSkin);
 		options = new TextButton("Optionen", defaultSkin);
 		credits = new TextButton("Credits", defaultSkin);
 		exit = new TextButton("Beenden", defaultSkin);
 		
-		tmpTable.add(playClient).pad(5).prefSize(50);
+		tmpTable.add(gameBrowser).pad(5).prefSize(50);
 		tmpTable.add(playServer).pad(5).prefSize(50);
 
 		uiTable.row();		
@@ -134,8 +134,8 @@ public class MainMenuStage extends AutoResizeStage {
 			uiTable.setScale(this.xScale, this.yScale);
 	}
 	
-	public TextButton getPlayClientButton() {
-		return playClient;
+	public TextButton getGameBrowserButton() {
+		return gameBrowser;
 	}
 	
 	public TextButton getPlayServerButton() {
