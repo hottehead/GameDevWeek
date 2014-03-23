@@ -32,7 +32,7 @@ import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerSwordAttack;
 // Added Carrot Constants by ElFapo
 public class ServerHayBale extends ServerLevelObject
 {
-	private final float DURATION_TIME_IN_WATER = 50.0f;
+	private final float DURATION_TIME_IN_WATER = 30.0f;
 	private final float SCL_VELOCITY = 300.0f;
 	private final float NORMAL_DAMPING = 100.0f;
 	
@@ -48,8 +48,10 @@ public class ServerHayBale extends ServerLevelObject
 	
 	private boolean collWaterUpperLeft, collWaterUpperRight, collWaterLowerLeft, collWaterLowerRight;
 	private boolean collAbyssUpperLeft, collAbyssUpperRight, collAbyssLowerLeft, collAbyssLowerRight;
+	private boolean collHayBaleUpperLeft, collHayBaleUpperRight, collHayBaleLowerLeft, collHayBaleLowerRight;
 	
 	private HashMap<Long, ServerPlayer> playersOnHayBale;
+	private int isOnBridge;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 		
@@ -92,7 +94,7 @@ public class ServerHayBale extends ServerLevelObject
 	                    this.physicsBody.applyImpulse(projectile.getFacingDirection().getDirectionVector().x*SCL_VELOCITY,
 	                                                  projectile.getFacingDirection().getDirectionVector().y*SCL_VELOCITY);
 	                    speed = 1;
-						this.setEntityState(EntityStates.WALKING);
+						this.setEntityState(EntityStates.NONE);
 	                }
 	                break;
 	            case SwordAttack:
@@ -101,8 +103,17 @@ public class ServerHayBale extends ServerLevelObject
 	                    ServerPlayer player = (ServerPlayer) ServerEntityManager.getInstance().getEntityById(sword.getSourceID());
 	                    this.physicsBody.applyImpulse(  player.getFacingDirection().getDirectionVector().x*SCL_VELOCITY + sword.getDamage(),
 	                                                    player.getFacingDirection().getDirectionVector().y*SCL_VELOCITY + sword.getDamage());
-						this.setEntityState(EntityStates.WALKING);
+						this.setEntityState(EntityStates.NONE);
 	                }
+	                break;
+	            case Bridge:
+	            case BRIDGE_HORIZONTAL_LEFT:
+	            case BRIDGE_HORIZONTAL_MIDDLE:
+	            case BRIDGE_HORIZONTAL_RIGHT:
+	            case BRIDGE_VERTICAL_BOTTOM:
+	            case BRIDGE_VERTICAL_MIDDLE:
+	            case BRIDGE_VERTICAL_TOP:
+	                this.isOnBridge++;
 	                break;
 	            default: 
 	                //this.acrossable = false;
@@ -116,6 +127,9 @@ public class ServerHayBale extends ServerLevelObject
 		        case AbyssZone:
 		            this.collAbyssUpperLeft = true;
 		            break;
+		        case HayBale:
+		            this.collHayBaleUpperLeft = true;
+		            break;
 		        default:
                     break;
 		    }
@@ -126,6 +140,9 @@ public class ServerHayBale extends ServerLevelObject
                     break;
                 case AbyssZone:
                     this.collAbyssUpperRight = true;
+                    break;
+                case HayBale:
+                    this.collHayBaleUpperRight = true;
                     break;
                 default:
                     break;
@@ -138,6 +155,9 @@ public class ServerHayBale extends ServerLevelObject
                 case AbyssZone:
                     this.collAbyssLowerLeft = true;
                     break;
+                case HayBale:
+                    this.collHayBaleLowerLeft = true;
+                    break;
                 default:
                     break;
             }
@@ -148,6 +168,10 @@ public class ServerHayBale extends ServerLevelObject
                     break;
                 case AbyssZone:
                     this.collAbyssLowerRight = true;
+                    break;
+                case HayBale:
+                    this.collHayBaleLowerRight = true;
+                    break;
                 default:
                     break;
             }
@@ -173,6 +197,18 @@ public class ServerHayBale extends ServerLevelObject
               case Tank:
                   this.playersOnHayBale.remove(otherEntity.getID());
                   break;
+              case Bridge:
+              case BRIDGE_HORIZONTAL_LEFT:
+              case BRIDGE_HORIZONTAL_MIDDLE:
+              case BRIDGE_HORIZONTAL_RIGHT:
+              case BRIDGE_VERTICAL_BOTTOM:
+              case BRIDGE_VERTICAL_MIDDLE:
+              case BRIDGE_VERTICAL_TOP:
+                  this.isOnBridge--;
+                  if(this.isOnBridge < 0) {
+                      this.isOnBridge = 0;
+                  }
+                  break;
               default:
                   break;
           }
@@ -183,6 +219,9 @@ public class ServerHayBale extends ServerLevelObject
                     break;
                 case AbyssZone:
                     this.collAbyssUpperLeft = false;
+                    break;
+                case HayBale:
+                    this.collHayBaleUpperLeft = false;
                     break;
                 default:
                     break;
@@ -195,6 +234,9 @@ public class ServerHayBale extends ServerLevelObject
                 case AbyssZone:
                     this.collAbyssUpperRight = false;
                     break;
+                case HayBale:
+                    this.collHayBaleUpperRight = false;
+                    break;
                 default:
                     break;
             }
@@ -206,6 +248,9 @@ public class ServerHayBale extends ServerLevelObject
                 case AbyssZone:
                     this.collAbyssLowerLeft = false;
                     break;
+                case HayBale:
+                    this.collHayBaleLowerLeft = false;
+                    break;
                 default:
                     break;
             }
@@ -216,6 +261,10 @@ public class ServerHayBale extends ServerLevelObject
                     break;
                 case AbyssZone:
                     this.collAbyssLowerRight = false;
+                    break;
+                case HayBale:
+                    this.collHayBaleLowerRight = false;
+                    break;
                 default:
                     break;
             }
@@ -243,27 +292,19 @@ public class ServerHayBale extends ServerLevelObject
             .position(new Vector2(posX, posY))
             .fixedRotation(true).create();
 
-        
+        //main fixture
     	body.createFixture(new PhysixFixtureDef(manager)
 		    .density(0.5f)
 		    .friction(0.0f)
 		    .restitution(0.0f)
 		    .shapeBox(50,50));
     	
-    	//main fixture
-    	body.createFixture(new PhysixFixtureDef(manager)
-            .density(0.5f)
-            .friction(0.0f)
-            .restitution(0.0f)
-            .shapeBox(1, 1, new Vector2(-25, -25), 0)
-            .sensor(true));
-    	
     	//upper left coll check
     	body.createFixture(new PhysixFixtureDef(manager)
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeBox(1, 1, new Vector2(25, -25), 0)
+            .shapeBox(1, 1, new Vector2(-23, -23), 0)
             .sensor(true));
     	
     	//upper right coll check
@@ -271,7 +312,7 @@ public class ServerHayBale extends ServerLevelObject
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeBox(1, 1, new Vector2(-25, -25), 0)
+            .shapeBox(1, 1, new Vector2(23, -23), 0)
             .sensor(true));
     	
     	//lower left coll check
@@ -279,7 +320,7 @@ public class ServerHayBale extends ServerLevelObject
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeBox(1, 1, new Vector2(-25, 25), 0)
+            .shapeBox(1, 1, new Vector2(-23, 23), 0)
             .sensor(true));
     	
     	//lower right coll check
@@ -287,7 +328,7 @@ public class ServerHayBale extends ServerLevelObject
             .density(0.5f)
             .friction(0.0f)
             .restitution(0.0f)
-            .shapeBox(1, 1, new Vector2(25, 25), 0)
+            .shapeBox(1, 1, new Vector2(23, 23), 0)
             .sensor(true));
         
         body.setGravityScale(0);
@@ -312,6 +353,7 @@ public class ServerHayBale extends ServerLevelObject
         if(acrossable) {
             lifetime += deltaTime;
             if(lifetime > DURATION_TIME_IN_WATER) {
+                this.setEntityState(EntityStates.NONE);
                 Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
                 
                 while(keySetIterator.hasNext()) {
@@ -320,27 +362,48 @@ public class ServerHayBale extends ServerLevelObject
                     player.setPlayerIsNotOnBridgeAnymore();
                 }
                 
-                ServerEntityManager.getInstance().removeEntity(this);
+                this.reset();
             }
         } else if(collWaterUpperLeft && collWaterUpperRight && collWaterLowerLeft && collWaterLowerRight) {
-            this.physicsBody.setLinearVelocity(new Vector2());
-            this.fixtureMain.setSensor(true);
-            this.acrossable = true;
-            this.setEntityState(EntityStates.WET);
-            NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
-            speed = 0;
-            
-            Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
-            
-            while(keySetIterator.hasNext()) {
-                Long key = keySetIterator.next();
-                ServerPlayer player = this.playersOnHayBale.get(key);
-                player.setPlayerIsOnBridge();
+            if(!collHayBaleLowerLeft && !collHayBaleLowerRight && !collHayBaleUpperLeft && !collHayBaleUpperRight) {
+                this.physicsBody.setLinearVelocity(new Vector2());
+                this.fixtureMain.setSensor(true);
+                this.acrossable = true;
+                this.setEntityState(EntityStates.WET);
+                NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
+                speed = 0;
+                
+                Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
+                
+                while(keySetIterator.hasNext()) {
+                    Long key = keySetIterator.next();
+                    ServerPlayer player = this.playersOnHayBale.get(key);
+                    player.setPlayerIsOnBridge();
+                    }
             }
-            
         } else if(collAbyssUpperLeft && collAbyssUpperRight && collAbyssLowerLeft && collAbyssLowerRight) {
-            ServerEntityManager.getInstance().removeEntity(this);
+            if(this.isOnBridge == 0) {
+                this.reset();
+            }
         }
+    }
+    
+    public void reset() {
+        super.reset();
+        this.fixtureMain.setSensor(false);
+        collWaterUpperLeft = false;
+        collWaterUpperRight = false;
+        collWaterLowerLeft = false;
+        collWaterLowerRight = false;
+        collAbyssUpperLeft = false;
+        collAbyssUpperRight = false;
+        collAbyssLowerLeft = false;
+        collAbyssLowerRight = false;
+        collHayBaleUpperLeft = false;
+        collHayBaleUpperRight = false;
+        collHayBaleLowerLeft = false;
+        collHayBaleLowerRight = false;
+        acrossable = false;
     }
 
 }
