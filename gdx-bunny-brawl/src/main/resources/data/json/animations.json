@@ -466,6 +466,22 @@
         "rows" : 1
     },
 	"tankBlackWalkUp": {
+        "filename": "data/animations/tankBlack_walkLeft.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkDown": {
+        "filename": "data/animations/tankBlack_walkRight.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkUp": {
         "filename": "data/animations/tankBlack_walkUp.png",
         "frames" : 6,
         "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
