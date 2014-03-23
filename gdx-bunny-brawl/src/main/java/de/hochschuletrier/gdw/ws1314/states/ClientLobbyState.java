@@ -1,8 +1,14 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
@@ -15,10 +21,6 @@ import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class ClientLobbyState extends GameState implements GameStateCallback, DisconnectCallback {
 
@@ -38,6 +40,8 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	private ConsoleCmd cpAccept;
 	private ConsoleCmd cpTeam;
 	private ConsoleCmd cpClass;
+
+	private boolean isInitialized;
 	
     @Override
     public void init (AssetManagerX assetManager) {
@@ -50,7 +54,9 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 
     @Override
     public void render () {
-    	this.stage.render();
+    	if(!isInitialized) {
+    		this.stage.render();
+    	}
     }
 
     @Override
@@ -78,76 +84,79 @@ public class ClientLobbyState extends GameState implements GameStateCallback, Di
 	
 	@Override
 	public void onEnter() {
-    	super.onEnter();
-    	
-    	this.clientLobby = new ClientLobbyManager(Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"));
-    	
-    	this.stage = new ClientLobbyStage(this.clientLobby);
-	    this.stage.init(assetManager);
-    	
-	    this.clientLobby.sendChanges();
-	    
-	    NetworkManager.getInstance().setGameStateCallback(this);
-	    NetworkManager.getInstance().setDisconnectCallback(this);
-	    
-	    logger.info("Client-Lobby entered.");
-	    
-	    // ButtonEvents
-	    this.stage.getReadyButton().addListener(this.acceptClick);
-	    this.stage.getSwapTeamButton().addListener(this.swapTeamClick);
-	    this.stage.getDisconnectButton().addListener(this.disconnectClick);
-	    
-		this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
-			@Override
-			public void execute(List<String> args) {
-				clientLobby.toggleReadyState();
-			}
-		};
-		
-		this.cpTeam = new ConsoleCmd("cpTeam",0,"[DEBUG]",0) {
-			@Override
-			public void execute(List<String> args) {
-				clientLobby.swapTeam();
-			}
-		};
-		
-		this.cpClass = new ConsoleCmd("cpClass",0,"[DEBUG]",1) {
-			
-			@Override
-			public void showUsage() {
-				super.showUsage("<ClassName> => [hunter, knight, tank]");
-			}
-	
-			@Override
-			public void execute(List<String> args) {
-				EntityType t;
-				switch(args.get(1))
-				{
-				case "hunter":
-					t = EntityType.Hunter;
-					break;
-				case "knight":
-					t = EntityType.Knight;
-					break;
-				case "tank":
-					t = EntityType.Tank;
-					break;
-				default:
-					t = EntityType.Hunter;
+		if(!isInitialized) {
+	    	super.onEnter();
+	    	
+	    	this.clientLobby = new ClientLobbyManager(Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"));
+	    	
+	    	this.stage = new ClientLobbyStage(this.clientLobby);
+		    this.stage.init(assetManager);
+	    	
+		    this.clientLobby.sendChanges();
+		    
+		    NetworkManager.getInstance().setGameStateCallback(this);
+		    NetworkManager.getInstance().setDisconnectCallback(this);
+		    
+		    logger.info("Client-Lobby entered.");
+		    
+		    // ButtonEvents
+		    this.stage.getReadyButton().addListener(this.acceptClick);
+		    this.stage.getSwapTeamButton().addListener(this.swapTeamClick);
+		    this.stage.getDisconnectButton().addListener(this.disconnectClick);
+		    
+			this.cpAccept = new ConsoleCmd("cpAccept",0,"[DEBUG]",0) {
+				@Override
+				public void execute(List<String> args) {
+					clientLobby.toggleReadyState();
 				}
+			};
+			
+			this.cpTeam = new ConsoleCmd("cpTeam",0,"[DEBUG]",0) {
+				@Override
+				public void execute(List<String> args) {
+					clientLobby.swapTeam();
+				}
+			};
+			
+			this.cpClass = new ConsoleCmd("cpClass",0,"[DEBUG]",1) {
 				
-				clientLobby.changeEntityType(t);
+				@Override
+				public void showUsage() {
+					super.showUsage("<ClassName> => [hunter, knight, tank]");
+				}
+		
+				@Override
+				public void execute(List<String> args) {
+					EntityType t;
+					switch(args.get(1))
+					{
+					case "hunter":
+						t = EntityType.Hunter;
+						break;
+					case "knight":
+						t = EntityType.Knight;
+						break;
+					case "tank":
+						t = EntityType.Tank;
+						break;
+					default:
+						t = EntityType.Hunter;
+					}
+					
+					clientLobby.changeEntityType(t);
+				}
+			};
+			
+			Main.getInstance().console.register(this.cpAccept);
+			Main.getInstance().console.register(this.cpTeam);
+			Main.getInstance().console.register(this.cpClass);
+			
+			stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	
+			if(!NetworkManager.getInstance().isClient()){
+				onLeave();
 			}
-		};
-		
-		Main.getInstance().console.register(this.cpAccept);
-		Main.getInstance().console.register(this.cpTeam);
-		Main.getInstance().console.register(this.cpClass);
-		
-		stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		if(!NetworkManager.getInstance().isClient()){
-			onLeave();
+			isInitialized = true;
 		}
     }
 
