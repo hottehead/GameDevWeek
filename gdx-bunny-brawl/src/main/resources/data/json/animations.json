@@ -385,23 +385,73 @@
         "rows" : 1
     },
 	
+	"tankBlackAttackLeft": {
+        "filename": "data/animations/tankBlack_attackLeft.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackAttackRight": {
+        "filename": "data/animations/tankBlack_attackRight.png",
+        "frames" : 7,
+        "frameDuration": [ 0.2, 0.1, 0.01, 0.01, 0.1, 0.2, 0.2  ] ,
+        "playType" : "NORMAL",
+        "columns": 7,
+        "rows" : 1
+    },	
+	"tankBlackIdleLeft": {
+        "filename": "data/animations/tankBlack_idleLeft.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackIdleRight": {
+        "filename": "data/animations/tankBlack_idleRight.png",
+        "frames" : 4,
+        "frameDuration": [ 2.0, 0.2, 0.2, 0.5 ] ,
+        "playType" : "LOOP_PINGPONG",
+        "columns": 4,
+        "rows" : 1
+    },	
+	"tankBlackWalkLeft": {
+        "filename": "data/animations/tankBlack_walkLeft.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	"tankBlackWalkRight": {
+        "filename": "data/animations/tankBlack_walkRight.png",
+        "frames" : 6,
+        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "playType" : "LOOP",
+        "columns": 6,
+        "rows" : 1
+    },
+	
 	"explosion": {
         "filename": "data/images/explosion_animation.png",
         "frames" : 6,
-        "frameDuration": [ 0.01, 0.01, 0.01, 0.01, 0.01, 0.01] ,
+        "frameDuration": [ 0.16, 0.16, 0.16, 0.16, 0.16, 0.16] ,
         "playType" : "NORMAL",
         "columns": 6,
         "rows" : 1
-    }, 
+    },  
 	
 	"mineActive": {
 		"filename": "data/images/mine_ani.png", 
 		"frames": 2, 
-		"frameDuration": [0.5, 0.5],
-		"playType": "NORMAL", 
+		"frameDuration": [0.3, 0.3],
+		"playType": "LOOP", 
 		"columns": 2, 
 		"rows": 1
 	},
+	
 	"bushDisposeAnimation": {
 		"filename": "data/animations/bush_animation.png",
 		"frames": 8, 

@@ -29,6 +29,7 @@ import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerBridge;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
@@ -124,7 +125,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     public ServerPlayer()
     {
     	super();
-    	
     	setPlayerKit(PlayerKit.HUNTER);
     	currentEggCount = 0;
     	
@@ -134,7 +134,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	walkingState = new StatePlayerWalking(this);
     	currentState = idleState;
 
-
+    	pickedUpEggs = new ArrayList<Long>();
     	desiredDirection = FacingDirection.NONE;
     	setFacingDirection(FacingDirection.DOWN);
     	speedBuffTimer = 0.0f;
@@ -149,6 +149,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	collidingBridgePartsCount = 0;
     	deathfreeze = 0.5f;
     	isInDeadZone = false;
+    	pickedUpEggs = new ArrayList<>();
     }
     
     public void enable() {}
@@ -169,7 +170,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearVelocity(new Vector2());
             this.physicsBody.setLinearDamping(2000);
 			for(Long id : pickedUpEggs){
-				ServerEntityManager.getInstance().getEntityById(id).reset();
+				ServerEntity entity = ServerEntityManager.getInstance().getEntityById(id);
+				if (entity!=null) entity.reset();//FIXME: Richtige Lösung? hier trat zuvor eine NullPointerException auf, wenn man ins Wasser fällt.
 			}
 			pickedUpEggs.clear();
 			currentEggCount = 0;
@@ -375,7 +377,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 
+            	 	ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);

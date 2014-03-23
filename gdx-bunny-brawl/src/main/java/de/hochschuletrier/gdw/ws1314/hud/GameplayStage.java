@@ -25,6 +25,8 @@ public class GameplayStage extends AutoResizeStage {
 	private MinMaxValue fpsValue;
 	private DynamicTextElement fpsCounter;
 
+	private int maxHealth = 100;
+	
 	private HealthBar healthBar;
 	private VisualBox classIcon;
 	StaticTextElement classIconText;
@@ -32,7 +34,7 @@ public class GameplayStage extends AutoResizeStage {
 	private VisualBox buff1, buff2, buff3;
 
 	private VisualBox attackIcon, layEggIcon;
-
+	
 	private VisualBox scoreWhiteIcon, scoreBlackIcon;
 	private MinMaxValue scoreWhite, scoreBlack;
 	private final int maxScore = 100;
@@ -177,6 +179,10 @@ public class GameplayStage extends AutoResizeStage {
 
 	@SuppressWarnings("incomplete-switch")
 	public void setDisplayedPlayer(ClientPlayer playerEntity) {
+
+		visualDataEntity = playerEntity;
+//		healthBar.get().setMaxValue(visualDataEntity.get) //TODO: set MaxHealth
+
 		if (this.visualDataEntity != playerEntity) {
 			visualDataEntity = playerEntity;
 			switch (playerEntity.getTeamColor()) {

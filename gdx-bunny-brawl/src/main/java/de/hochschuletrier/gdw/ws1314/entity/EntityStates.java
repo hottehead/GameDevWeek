@@ -11,6 +11,7 @@ public enum EntityStates {
 	KNOCKBACK,
 	WALKING,
 	WAITING,
+	EXPLODING,
 	WET
 }
 

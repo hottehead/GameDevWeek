@@ -1,12 +1,15 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
 import de.hochschuletrier.gdw.commons.utils.FpsCalculator;
+import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfo;
 import de.hochschuletrier.gdw.ws1314.basic.GameInfoListener;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
@@ -14,6 +17,7 @@ import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 import de.hochschuletrier.gdw.ws1314.hud.ServerGamePlayStage;
 import de.hochschuletrier.gdw.ws1314.network.DisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
+import de.hochschuletrier.gdw.ws1314.network.PlayerDisconnectCallback;
 import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +29,7 @@ import java.util.List;
  * 
  * @author Santo Pfingsten
  */
-public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener {
+public class ServerGamePlayState extends GameState implements DisconnectCallback, GameInfoListener, PlayerDisconnectCallback {
     private static final Logger logger = LoggerFactory.getLogger(ServerGamePlayState.class);
     
 	private ServerGame game;
@@ -38,7 +42,6 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
     private DisconnectClick disconnectClickListener;
     
     private String mapName;
-    private boolean isWinningConditionComplied;
 
 	public ServerGamePlayState() {
 	}
@@ -53,6 +56,7 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 
 	public void setPlayerDatas(List<PlayerData> playerDatas) {
         this.playerDatas = playerDatas;
+        logger.info("Players-Count: " + this.playerDatas.size());
     }
 
     @Override
@@ -76,11 +80,6 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 			game.update(delta);
 		}
 		
-		if (isWinningConditionComplied && NetworkManager.getInstance().isServer()) {
-			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
-			NetworkManager.getInstance().stopServer();
-		}
-		
 		fpsCalc.addFrame();
 	}
 
@@ -94,9 +93,8 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
             // dieser Fehler sollte aber im Normalfall nicht auftretten.
         }
         
-		isWinningConditionComplied = false;
-		
         NetworkManager.getInstance().setDisconnectCallback(this);
+        NetworkManager.getInstance().setPlayerDisconnectCallback(this);
         
         game = new ServerGame(playerDatas);
 		game.init(assetManager, this.mapName);
@@ -139,7 +137,6 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 	@Override
 	public void disconnectCallback(String msg) {
 		logger.info(msg);
-		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 
@@ -147,16 +144,20 @@ public class ServerGamePlayState extends GameState implements DisconnectCallback
 	public void gameInfoChanged(int blackPoints, int whitePoints, int remainingEgg) {
 		GameInfo gi = ServerEntityManager.getInstance().getGameInfo();
 		
-		logger.info("AllEggs: " + gi.getAllEggs());
-		logger.info("Eggs to win: " + (gi.getAllEggs() / 2));
-		logger.info("BlackEggs: " + blackPoints);
-		logger.info("WhiteEggs: " + whitePoints);
-		
 		// WinningCondition HERE:
 		if (blackPoints > (gi.getAllEggs() / 2) || whitePoints > (gi.getAllEggs() / 2))
 		{
-			isWinningConditionComplied = true;
-			logger.info("Winning-Condition complied");
+			logger.info("Winning-Condition complied.");
+			NetworkManager.getInstance().sendGameState(GameStates.FINISHEDGAME);
+			// Der Server wird nicht explizit gestoppt, da alle Clients ihre Verbindung schließen sollen
+			// und dann geschieht das automatisch.
+		}
+	}
+
+	@Override
+	public void playerDisconnectCallback(Integer[] playerid) {
+		if (NetworkManager.getInstance().clientCount() == 0) {
+			GameStates.SERVERLOBBY.activate();
 		}
 	}
 }

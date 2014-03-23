@@ -28,7 +28,6 @@ public class ServerLobbyStage extends AutoResizeStage {
 	public void init(AssetManagerX assetManager) {
 		//init generic stuff
 		initSkin(assetManager);
-		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output
@@ -51,7 +50,7 @@ public class ServerLobbyStage extends AutoResizeStage {
 		
 		DrawUtil.batch.flush();
 		this.draw();
-//		Table.drawDebug(this);
+		Table.drawDebug(this);
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {

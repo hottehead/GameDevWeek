@@ -66,7 +66,9 @@ public class FinishedGameState extends GameState {
 
     @Override
     public void onEnter() {
-    	NetworkManager.getInstance().disconnectFromServer();
+    	if (NetworkManager.getInstance().isClient()) {
+    		NetworkManager.getInstance().disconnectFromServer();
+    	}
     	
     	GameInfo gameInfo = ClientEntityManager.getInstance().getGameInfo();
     	PlayerData playerData = ClientEntityManager.getInstance().getPlayerData();

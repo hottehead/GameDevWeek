@@ -49,7 +49,7 @@ public abstract class ClientLevelObject extends ClientEntity
 	public void setLevelObjectState(EntityStates state){
 		if(entityState != state)
 			enterNewState();
-
+		
 			entityState = state;
 	}
 	

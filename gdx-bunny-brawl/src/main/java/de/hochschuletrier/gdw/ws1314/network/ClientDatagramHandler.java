@@ -157,7 +157,9 @@ public class ClientDatagramHandler implements DatagramHandler{
 
 	@Override
 	public void handle(GameStateDatagram gameStateDatagram, NetConnection connection){
-		NetworkManager.getInstance().getGameStateCallback().gameStateCallback(gameStateDatagram.getGameStates());
+		if (NetworkManager.getInstance().getGameStateCallback() != null) {
+			NetworkManager.getInstance().getGameStateCallback().gameStateCallback(gameStateDatagram.getGameStates());
+		}
 	}
 
 	@Override

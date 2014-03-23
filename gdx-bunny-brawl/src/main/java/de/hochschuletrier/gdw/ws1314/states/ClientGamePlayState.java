@@ -66,11 +66,13 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		stateSound.init(assetManager);
 		
 		NetworkManager.getInstance().setDisconnectCallback(this);
+		NetworkManager.getInstance().setGameStateCallback(this);
 	}
 
 	@Override
 	public void onLeave() {
 		NetworkManager.getInstance().setDisconnectCallback(null);
+		NetworkManager.getInstance().setGameStateCallback(this);
 		clientGame = null;
 	}
 
@@ -82,14 +84,13 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	@Override
 	public void disconnectCallback(String msg) {
 		logger.warn(msg);
-		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 
 	@Override
 	public void gameStateCallback(GameStates gameStates) {
+		logger.info("Server forcing Client to change State to " + gameStates);
 		if (gameStates != GameStates.CLIENTGAMEPLAY) {
-			gameStates.init(assetManager);
 			gameStates.activate();
 		}
 	}

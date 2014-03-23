@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.*;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ClientEntityManager;
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
@@ -12,10 +13,11 @@ import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
 public class LocalSound2 {
 	private Sound soundHandle;
 	private long soundID;
+	private long loopID;
 	
 	public static AssetManagerX assetManager;
 	private static float SystemVolume = 1.0f;
-	private static float maxDistance = 300;
+	private static float maxDistance = 300.0f;
 	private static ClientPlayer LocalPlayer;
 	
 	public static void init(AssetManagerX assetManager) {
@@ -35,12 +37,21 @@ public class LocalSound2 {
 	}
 	
 	private void play(String soundName, float volume) {
+		if (this.soundHandle != null)
+			this.soundHandle.stop(this.loopID);
 		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
-		this.soundID = soundHandle.play();
+		this.soundID = this.soundHandle.play();
 		soundHandle.setVolume(this.soundID, LocalSound2.SystemVolume * volume);
 	}
 	
-	private void remoteSound(String sound, ClientEntity remotePlayer) {
+	private void loop(String soundName, float volume) {
+		if (this.soundHandle != null)
+			this.soundHandle.stop(this.loopID);
+		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
+		this.loopID = this.soundHandle.loop(LocalSound2.SystemVolume * volume);
+	}
+	
+	private void remoteSound(String sound, ClientEntity remotePlayer, boolean loop) {
 		double localX, localY, remoteX, remoteY;
 		float volume, distance;
 		
@@ -54,9 +65,15 @@ public class LocalSound2 {
 		distance = (float) Math.sqrt( Math.pow( (localX - remoteX), 2 ) + Math.pow( (localY - remoteY), 2 ) );
 		
 		// volume will be [volume]% (percent) of systemVolume
-		volume = (100 - (distance * 100 / LocalSound2.maxDistance)) / 100;
+		if (distance <= LocalSound2.maxDistance)
+			volume = (1.0f - (distance * 100.f / LocalSound2.maxDistance) / 100.0f);
+		else
+			volume = 0;
 		
-		this.play(sound, volume);
+		if (loop)
+			this.loop(sound, volume);
+		else
+			this.play(sound, volume);
 	}
 	
 	/**
@@ -118,6 +135,8 @@ public class LocalSound2 {
 					int random = this.random(1, 3);
 					return "speech-general-yeay_" + random;
 				}
+			case WALK_GRASS:
+				return "walk-general-grass";
 			default:
 				return "speech-tank-nom_1";
 		}
@@ -130,12 +149,26 @@ public class LocalSound2 {
 	
 	public void playSoundByAction(EventType event, ClientEntity entity) {
 		LocalSound2.LocalPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
+		String soundAction = this.connectSoundToAction(event, entity);
+		boolean loop;
+		
+		switch(soundAction) {
+			case "walk-general-grass":
+				loop = true;
+				break;
+			default:
+				loop = false;
+				break;
+		}
 		
 		if (entity.getID() == LocalSound2.LocalPlayer.getID()) {
-			this.play(this.connectSoundToAction(event, entity), LocalSound.getSystemVolume());
+			if (loop)
+				this.loop(this.connectSoundToAction(event, entity), LocalSound.getSystemVolume());
+			else
+				this.play(this.connectSoundToAction(event, entity), LocalSound.getSystemVolume());
 		}
 		else {
-			this.remoteSound(this.connectSoundToAction(event, entity), entity);
+			this.remoteSound(this.connectSoundToAction(event, entity), entity, loop);
 		}
 		System.out.println("EVENT TRIGGERED :: " + event + ", by player " + entity.getID());
 	}
