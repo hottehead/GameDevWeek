@@ -46,6 +46,11 @@ public class StartServerStage extends AutoResizeStage {
 		for (String current : levels) {
 			levelList.addLevel(current);
 		}
+		
+		if (levelList.getList().getItems().size > 0) {
+			levelList.setSelectedIndex(0);
+		}
+		
 		uiTable.add(levelList).padBottom(50).row();
 		Table tmp = new Table(defaultSkin);
 		uiTable.add(tmp);
@@ -78,6 +83,19 @@ public class StartServerStage extends AutoResizeStage {
 
 	public ListElement getSelectedLevel() {
 		return levelList.getSelected();
+	}
+	
+	public void setSelectedMap(String mapName) {
+		if (mapName == null || mapName.isEmpty()) return;
+		
+		for(int i = 0; i < levelList.getList().getItems().size; i++)
+		{
+			ListElement l = levelList.getList().getItems().get(i);
+			if (l.getText().toString().equals(mapName)) {
+				levelList.setSelectedIndex(i);
+				return;
+			}
+		}
 	}
 
 }

@@ -1,5 +1,11 @@
 package de.hochschuletrier.gdw.ws1314.states;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
@@ -20,11 +26,6 @@ import de.hochschuletrier.gdw.ws1314.network.datagrams.PlayerData;
 import de.hochschuletrier.gdw.ws1314.preferences.PreferenceKeys;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Menu state
@@ -146,9 +147,13 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 		NetworkManager.getInstance().connect("localhost", NetworkManager.getInstance().getDefaultPort());
 	}
 
-	@Override
+	@Override 
 	public void clientIdCallback(int playerid) {
-		PlayerData p = new PlayerData(playerid, Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"), EntityType.Hunter, TeamColor.WHITE, true);
+		PlayerData p = new PlayerData(playerid, 
+				Main.getInstance().gamePreferences.getString(PreferenceKeys.playerName, "Player"),
+				EntityType.Tank,
+				TeamColor.WHITE,
+				true);
 	
 		ClientEntityManager.getInstance().setPlayerData(p);
 		this.playerDatas.add(p);

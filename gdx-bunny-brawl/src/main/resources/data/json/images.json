@@ -56,6 +56,9 @@
 	"HudBoostCarrot": "data/huds/boost_carrot.png", 
 	"HudBoostSpinach": "data/huds/boost_spinach.png", 
 	"HudBoostClover": "data/huds/boost_clover.png",
+	
+	"HudEggDrop": "data/huds/hud_eggDrop.png",
+	"HudAttack": "data/huds/hud_attack.png",
 
 	"menuButtonReady": "data/huds/button_ready.png",
 	"menuButtonReadyGrey": "data/huds/button_readyGrey.png",
@@ -65,6 +68,7 @@
 	"menuButtonHelp": "data/huds/button_hilfe.png",
 	"menuButtonCredits": "data/huds/button_credits.png",
 	"menuButtonPlayServer": "data/huds/button_playServer.png",
-	"menuButtonPlayClient": "data/huds/button_playClient.png"
-    
+	"menuButtonPlayClient": "data/huds/button_playClient.png", 
+	
+	"ladescreen": "data/huds/ladescreen.png"
 }

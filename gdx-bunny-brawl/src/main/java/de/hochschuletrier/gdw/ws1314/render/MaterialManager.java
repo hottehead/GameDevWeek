@@ -25,6 +25,7 @@ import de.hochschuletrier.gdw.ws1314.render.materials.KnightMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SpinachMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.StrawMaterialDef;
 import de.hochschuletrier.gdw.ws1314.render.materials.SwitchMaterialDef;
+import de.hochschuletrier.gdw.ws1314.render.materials.TankMaterialDef;
 
 public class MaterialManager {
 	private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
@@ -44,9 +45,11 @@ public class MaterialManager {
 
 		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.WHITE), new KnightMaterialDef(TeamColor.WHITE).get());
 		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.WHITE), new HunterMaterialDef(TeamColor.WHITE).get());
+		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.WHITE), new TankMaterialDef(TeamColor.WHITE).get());
 		
 		this.provideMaterials(new RenderType(EntityType.Knight, TeamColor.BLACK), new KnightMaterialDef(TeamColor.BLACK).get());
 		this.provideMaterials(new RenderType(EntityType.Hunter, TeamColor.BLACK), new HunterMaterialDef(TeamColor.BLACK).get());
+		this.provideMaterials(new RenderType(EntityType.Tank, TeamColor.BLACK), new TankMaterialDef(TeamColor.BLACK).get());
 		
 		this.provideMaterials(new RenderType(EntityType.Projectil), new ArrowMaterialDef().get());
 
@@ -74,6 +77,7 @@ public class MaterialManager {
 			MaterialInfo... materialInfos) {
 		for (MaterialInfo materialInfo : materialInfos) {
 			Material material = null;
+			boolean isInconsistent = false;
 			if ((renderType.entityType != EntityType.None) && map.containsKey(renderType)
 					&& map.get(renderType).containsKey(materialInfo.stateUsed)) {
 				// Overwriting existing Material
@@ -81,14 +85,18 @@ public class MaterialManager {
 				material.putInfo(assetManager, materialInfo);
 			} else {
 				material = new Material(assetManager, materialInfo);
+				
 				if((material.isAnimation && material.animation==null) || (!material.isAnimation && material.texture==null)) {
 					logger.error("Material name inconsistency! "+materialInfo.textureName+" of "+renderType.toString());
+					isInconsistent = true;
 				}
 				if (map.get(renderType) == null) {
 					map.put(renderType, new HashMap<RenderState, Material>());
 				}
 			}
-			map.get(renderType).put(materialInfo.stateUsed, material);
+			if(!isInconsistent) {
+				map.get(renderType).put(materialInfo.stateUsed, material);
+			}
 		}
 	}
 

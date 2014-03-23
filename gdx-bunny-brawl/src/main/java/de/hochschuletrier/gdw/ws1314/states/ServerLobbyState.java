@@ -3,6 +3,7 @@ package de.hochschuletrier.gdw.ws1314.states;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.GameState;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
 import de.hochschuletrier.gdw.ws1314.hud.ServerLobbyStage;
 import de.hochschuletrier.gdw.ws1314.lobby.IServerLobbyListener;
 import de.hochschuletrier.gdw.ws1314.lobby.ServerLobbyManager;
@@ -51,6 +52,8 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		
 		stage.init(assetManager);
 		
+		ServerEntityManager.getInstance().Clear();
+		
         NetworkManager.getInstance().setDisconnectCallback(this);
         
     	serverLobby = new ServerLobbyManager();
@@ -67,6 +70,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		if(!NetworkManager.getInstance().isServer()){
 			onLeave();
 		}
+		
 	}
 
 	public void onEnterComplete() {
@@ -83,7 +87,7 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 		Main.inputMultiplexer.removeProcessor(this.stage);
 		
 		this.serverLobby = null;
-		this.stage = null;
+		stage.clear();
 	}
 
 	public void onLeaveComplete() {
@@ -93,9 +97,11 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 	public void startGame() {
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setPlayerDatas(this.serverLobby.getPlayers());
 		((ServerGamePlayState) GameStates.SERVERGAMEPLAY.get()).setMapName(this.serverLobby.getMap());
-		GameStates.SERVERGAMEPLAY.init(assetManager);
+		
 		GameStates.SERVERGAMEPLAY.activate();
+		
 		logger.info("Sending GameStateChange to Clients");
+		
 		NetworkManager.getInstance().sendGameState(GameStates.CLIENTGAMEPLAY);
 	}
 	
@@ -107,7 +113,6 @@ public class ServerLobbyState extends GameState implements IServerLobbyListener,
 
 	public void disconnectCallback(String msg) {
 		logger.info(msg);
-		GameStates.MAINMENU.init(assetManager);
 		GameStates.MAINMENU.activate();
 	}
 }
