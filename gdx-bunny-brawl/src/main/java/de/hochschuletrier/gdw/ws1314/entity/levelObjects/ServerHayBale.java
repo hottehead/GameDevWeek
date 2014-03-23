@@ -44,7 +44,8 @@ public class ServerHayBale extends ServerLevelObject
 	private Fixture fixCollLowerLeft;
 	private Fixture fixCollLowerRight;
 	
-	private boolean collUpperLeft, collUpperRight, collLowerLeft, collLowerRight;
+	private boolean collWaterUpperLeft, collWaterUpperRight, collWaterLowerLeft, collWaterLowerRight;
+	private boolean collAbyssUpperLeft, collAbyssUpperRight, collAbyssLowerLeft, collAbyssLowerRight;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerHayBale.class);
 	
@@ -100,15 +101,21 @@ public class ServerHayBale extends ServerLevelObject
 		} else if(fixture == fixCollUpperLeft) {
 		    switch(otherEntity.getEntityType()) {
 		        case WaterZone:
-                    this.collUpperLeft = true;
+                    this.collWaterUpperLeft = true;
                     break;
+		        case AbyssZone:
+		            this.collAbyssUpperLeft = true;
+		            break;
 		        default:
                     break;
 		    }
 		} else if(fixture == fixCollUpperRight) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collUpperRight = true;
+                    this.collWaterUpperRight = true;
+                    break;
+                case AbyssZone:
+                    this.collAbyssUpperRight = true;
                     break;
                 default:
                     break;
@@ -116,7 +123,10 @@ public class ServerHayBale extends ServerLevelObject
         } else if(fixture == fixCollLowerLeft) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collLowerLeft = true;
+                    this.collWaterLowerLeft = true;
+                    break;
+                case AbyssZone:
+                    this.collAbyssLowerLeft = true;
                     break;
                 default:
                     break;
@@ -124,8 +134,10 @@ public class ServerHayBale extends ServerLevelObject
         } else if(fixture == fixCollLowerRight) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collLowerRight = true;
+                    this.collWaterLowerRight = true;
                     break;
+                case AbyssZone:
+                    this.collAbyssLowerRight = true;
                 default:
                     break;
             }
@@ -146,7 +158,10 @@ public class ServerHayBale extends ServerLevelObject
 	    if(fixture == fixCollUpperLeft) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collUpperLeft = false;
+                    this.collWaterUpperLeft = false;
+                    break;
+                case AbyssZone:
+                    this.collAbyssUpperLeft = false;
                     break;
                 default:
                     break;
@@ -154,7 +169,10 @@ public class ServerHayBale extends ServerLevelObject
         } else if(fixture == fixCollUpperRight) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collUpperRight = false;
+                    this.collWaterUpperRight = false;
+                    break;
+                case AbyssZone:
+                    this.collAbyssUpperRight = false;
                     break;
                 default:
                     break;
@@ -162,7 +180,10 @@ public class ServerHayBale extends ServerLevelObject
         } else if(fixture == fixCollLowerLeft) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collLowerLeft = false;
+                    this.collWaterLowerLeft = false;
+                    break;
+                case AbyssZone:
+                    this.collAbyssLowerLeft = false;
                     break;
                 default:
                     break;
@@ -170,8 +191,10 @@ public class ServerHayBale extends ServerLevelObject
         } else if(fixture == fixCollLowerRight) {
             switch(otherEntity.getEntityType()) {
                 case WaterZone:
-                    this.collLowerRight = false;
+                    this.collWaterLowerRight = false;
                     break;
+                case AbyssZone:
+                    this.collAbyssLowerRight = false;
                 default:
                     break;
             }
@@ -278,13 +301,15 @@ public class ServerHayBale extends ServerLevelObject
             if(lifetime > DURATION_TIME_IN_WATER) {
                 ServerEntityManager.getInstance().removeEntity(this);
             }
-        } else if(collUpperLeft && collUpperRight && collLowerLeft && collLowerRight) {
+        } else if(collWaterUpperLeft && collWaterUpperRight && collWaterLowerLeft && collWaterLowerRight) {
             this.physicsBody.setLinearVelocity(new Vector2());
             this.fixtureMain.setSensor(true);
             this.acrossable = true;
             this.setEntityState(EntityStates.WET);
             NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
             speed = 0;
+        } else if(collAbyssUpperLeft && collAbyssUpperRight && collAbyssLowerLeft && collAbyssLowerRight) {
+            ServerEntityManager.getInstance().removeEntity(this);
         }
     }
 
