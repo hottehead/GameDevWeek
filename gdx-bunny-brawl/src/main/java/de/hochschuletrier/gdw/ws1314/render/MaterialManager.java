@@ -77,6 +77,7 @@ public class MaterialManager {
 			MaterialInfo... materialInfos) {
 		for (MaterialInfo materialInfo : materialInfos) {
 			Material material = null;
+			boolean isInconsistent = false;
 			if ((renderType.entityType != EntityType.None) && map.containsKey(renderType)
 					&& map.get(renderType).containsKey(materialInfo.stateUsed)) {
 				// Overwriting existing Material
@@ -84,14 +85,18 @@ public class MaterialManager {
 				material.putInfo(assetManager, materialInfo);
 			} else {
 				material = new Material(assetManager, materialInfo);
+				
 				if((material.isAnimation && material.animation==null) || (!material.isAnimation && material.texture==null)) {
 					logger.error("Material name inconsistency! "+materialInfo.textureName+" of "+renderType.toString());
+					isInconsistent = true;
 				}
 				if (map.get(renderType) == null) {
 					map.put(renderType, new HashMap<RenderState, Material>());
 				}
 			}
-			map.get(renderType).put(materialInfo.stateUsed, material);
+			if(!isInconsistent) {
+				map.get(renderType).put(materialInfo.stateUsed, material);
+			}
 		}
 	}
 
