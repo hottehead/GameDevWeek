@@ -24,7 +24,7 @@ public class EntityRenderer extends Pool<RenderObject> implements
 	}
 
 	public void draw() {
-		Collections.sort(renderList);
+		//Collections.sort(renderList);
 
 		for (RenderObject obj : this.renderList) {
 			if (obj.isVisible()) {
