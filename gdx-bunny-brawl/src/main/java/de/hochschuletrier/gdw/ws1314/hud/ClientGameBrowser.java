@@ -23,12 +23,11 @@ import de.hochschuletrier.gdw.ws1314.states.ChooseClassState;
 public class ClientGameBrowser extends AutoResizeStage {
 	private Logger logger = LoggerFactory.getLogger(ClientGameBrowser.class);
 
-	TextField serverIP;
-	TextField serverPort;
-	TextField playerName;
-	Label nameLabel;
-	Label IpLabel, PortLabel;
-	Button join;
+	private	TextField serverIP;
+	private TextField serverPort;
+	private TextField playerName;
+	private Label IpLabel, PortLabel,nameLabel;
+	private Button join;
 	private Skin defaultSkin;
 	private Table root;
 
