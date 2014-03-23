@@ -1,5 +1,6 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
+import de.hochschuletrier.gdw.ws1314.entity.EntityStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,15 +38,20 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	
 	public void pushSwitch()
 	{
+		entityState = (entityState == EntityStates.OFF ? EntityStates.ON : EntityStates.OFF) ;
 	    for(long id : targetIDs) {
 	        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(id);
 	        bridge.setVisibility(!bridge.getVisibility());
 	    }
 	}
 
+
+
 	public void initialize()
 	{
 		super.initialize();
+
+		entityState = (properties.getBoolean("active",true)? EntityStates.ON : EntityStates.OFF) ;
 	}
 
     public void addTargetID(Long id){
