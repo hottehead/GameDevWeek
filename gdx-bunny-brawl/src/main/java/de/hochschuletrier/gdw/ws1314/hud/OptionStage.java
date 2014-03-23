@@ -54,25 +54,25 @@ public class OptionStage extends AutoResizeStage {
 		uiTable.add(label).row();
 		
 		Table tmp = new Table();
-		uiTable.add(tmp).row();
-		label = new Label("Master-Sound", defaultSkin);	
-		tmp.add(label);
-		this.master = new Slider(0, 100, 2, false, defaultSkin);
-		tmp.add(master);
-		
-//		tmp = new Table();
 //		uiTable.add(tmp).row();
-//		label = new Label("Musik", defaultSkin);
+//		label = new Label("Master-Sound", defaultSkin);	
 //		tmp.add(label);
-//		this.music = new Slider(0, 100, 2, false, defaultSkin);
-//		tmp.add(music);
+//		this.master = new Slider(0, 100, 2, false, defaultSkin);
+//		tmp.add(master);
 //		
-//		tmp = new Table();
-//		uiTable.add(tmp).row();
-//		label = new Label("Sound", defaultSkin);
-//		tmp.add(label);
-//		this.sound = new Slider(0, 100, 2, false, defaultSkin);
-//		tmp.add(sound);
+		tmp = new Table();
+		uiTable.add(tmp).row();
+		label = new Label("Musik", defaultSkin);
+		tmp.add(label);
+		this.music = new Slider(0, 100, 2, false, defaultSkin);
+		tmp.add(music);
+		
+		tmp = new Table();
+		uiTable.add(tmp).row();
+		label = new Label("Sound", defaultSkin);
+		tmp.add(label);
+		this.sound = new Slider(0, 100, 2, false, defaultSkin);
+		tmp.add(sound);
 		
 		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));
 		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
@@ -99,17 +99,17 @@ public class OptionStage extends AutoResizeStage {
 	}
 	
 	//getter for sound slider
-	public Slider getMasterSlider() {
-		return master;
-	}
-	
-//	public Slider getSoundSlider() {
-//		return sound;
+//	public Slider getMasterSlider() {
+//		return master;
 //	}
 //	
-//	public Slider getMusicSlider() {
-//		return music;
-//	}
+	public Slider getSoundSlider() {
+		return sound;
+	}
+	
+	public Slider getMusicSlider() {
+		return music;
+	}
 	
 	public ImageButton getBackButton() {
 		return back;

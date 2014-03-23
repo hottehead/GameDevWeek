@@ -324,8 +324,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
         }
         // Not intended movement
         else {
-        	if (currentState.equals(walkingState))
+        	if (currentState.equals(walkingState))	{
         		switchToState(idleState);
+				NetworkManager.getInstance().sendEntityEvent(getID(),EventType.IDLE);
+			}
 
         	attackState.setWaitFinishedState(idleState);
         	knockbackState.setWaitFinishedState(idleState);
