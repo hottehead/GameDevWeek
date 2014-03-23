@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import de.hochschuletrier.gdw.commons.jackson.JacksonReader;
@@ -63,6 +64,24 @@ public class AssetManagerX extends AssetManager {
 			}
 		}
 		return null;
+	}
+
+	public <T> Array<T> getByType(Class<T> type) {
+		HashMap<String, String> map = assetMaps.get(type);
+		Array<T> assets = new Array<T>();
+		for (String s : map.values()) {
+			assets.add(super.get(s, type));
+		}
+		return assets;
+	}
+
+	public <T> Array<String> getAssetNamesByType(Class<T> type) {
+		HashMap<String, String> map = assetMaps.get(type);
+		Array<String> names = new Array<String>();
+		for (String s : map.keySet()) {
+			names.add(s);
+		}
+		return names;
 	}
 
 	public AnimationExtended getAnimation(String name) {

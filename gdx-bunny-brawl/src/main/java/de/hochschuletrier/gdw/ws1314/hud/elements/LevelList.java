@@ -7,18 +7,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class LevelList extends Table {
 
-	private List<LevelListElement> levelList;
+	private List<ListElement> levelList;
 	private Skin defaultSkin;
 	
 	public LevelList(Skin skin) {
 		this.defaultSkin = skin;
-		levelList = new List<LevelListElement>(defaultSkin);
+		levelList = new List<ListElement>(defaultSkin);
 		ScrollPane sp = new ScrollPane(levelList, defaultSkin);
 		this.add(sp);
 	}
 	
 	public void addLevel(String levelName) {
-		LevelListElement button = new LevelListElement(levelName, defaultSkin);
+		ListElement button = new ListElement(levelName, defaultSkin);
 		levelList.getItems().add(button);
 	}
 	
@@ -26,11 +26,11 @@ public class LevelList extends Table {
 		levelList.getItems().removeIndex(index);
 	}
 	
-	public LevelListElement getSelected() {
+	public ListElement getSelected() {
 		return levelList.getSelected();
 	}
 	
-	public List<LevelListElement> getList() {
+	public List<ListElement> getList() {
 		return levelList;
 	}
 }

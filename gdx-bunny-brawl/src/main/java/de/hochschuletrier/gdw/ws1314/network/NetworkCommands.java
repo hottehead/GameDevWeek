@@ -4,6 +4,7 @@ import de.hochschuletrier.gdw.commons.devcon.CCmdFlags;
 import de.hochschuletrier.gdw.commons.devcon.ConsoleCmd;
 import de.hochschuletrier.gdw.commons.utils.StringUtils;
 import de.hochschuletrier.gdw.ws1314.Main;
+import de.hochschuletrier.gdw.ws1314.states.GameStates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,10 @@ public class NetworkCommands{
 						port = Integer.parseInt(args.get(2));
 					}
 					NetworkManager.getInstance().connect(ip, port);
+
+					logger.info("Changing State to Server-Lobby...");
+					GameStates.CLIENTLOBBY.init(Main.getInstance().getAssetManager());
+					GameStates.CLIENTLOBBY.activate();
 				}
 				catch (NumberFormatException e){
 					showUsage();
@@ -64,6 +69,10 @@ public class NetworkCommands{
 						maxConnections = Integer.parseInt(args.get(3));
 					}
 					NetworkManager.getInstance().listen(ip, port, maxConnections);
+
+					logger.info("Changing State to Server-Lobby...");
+					GameStates.SERVERLOBBY.init(Main.getInstance().getAssetManager());
+					GameStates.SERVERLOBBY.activate();
 				}
 				catch (NumberFormatException e){
 					showUsage();

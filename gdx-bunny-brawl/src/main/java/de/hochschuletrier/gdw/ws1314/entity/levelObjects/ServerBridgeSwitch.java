@@ -1,7 +1,5 @@
 package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 
-import de.hochschuletrier.gdw.ws1314.entity.EventType;
-import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +16,6 @@ import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
-import de.hochschuletrier.gdw.ws1314.entity.player.ServerPlayer;
-import de.hochschuletrier.gdw.ws1314.entity.projectile.ServerProjectile;
-import de.hochschuletrier.gdw.ws1314.game.ServerGame;
 
 import java.util.ArrayList;
 
@@ -57,10 +52,13 @@ public class ServerBridgeSwitch extends ServerLevelObject
         targetIDs.add(id);
     }
 
+	public boolean getActivePropertys()	{
+		return properties.getBoolean("active",true);
+	}
+
 	@Override
 	public void setVisibility(boolean b) {
 		super.setVisibility(b);
-		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.SWITCH);
 	}
 
 	@Override
@@ -71,10 +69,7 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	        switch(otherEntity.getEntityType()) {
 	            case SwordAttack:
 	            case Projectil:
-                    for(Long targetID : targetIDs) {
-                        ServerBridge bridge = (ServerBridge) ServerEntityManager.getInstance().getEntityById(targetID);
-                        bridge.setVisibility(!bridge.getVisibility());
-                    }
+					pushSwitch();
 	                break;
 	            default:
 	                break;
@@ -106,7 +101,6 @@ public class ServerBridgeSwitch extends ServerLevelObject
 	@Override
 	public void initPhysics(PhysixManager manager)
 	{
-		// TODO Auto-generated method stub
 		PhysixBody body = new PhysixBodyDef(BodyDef.BodyType.KinematicBody, manager)
 									.position(new Vector2(properties.getFloat("x"),properties.getFloat("y")))
 									.fixedRotation(false).create();
@@ -123,7 +117,6 @@ public class ServerBridgeSwitch extends ServerLevelObject
 
     @Override
     public void update(float deltaTime) {
-        // TODO Auto-generated method stub
         
     }
 }

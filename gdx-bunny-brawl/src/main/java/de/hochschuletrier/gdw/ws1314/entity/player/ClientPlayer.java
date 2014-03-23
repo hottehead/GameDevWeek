@@ -32,6 +32,7 @@ public class ClientPlayer extends ClientEntity
     private PlayerData		playerData;
     private TeamColor		teamColor;
 	private EntityStates playerState;
+	private String 			playerName;
     
     public int 				getEggCount() 		{ return eggCount; }
     public float 			getCurrentHealth() 	{ return currentHealth; }
@@ -49,7 +50,7 @@ public class ClientPlayer extends ClientEntity
     public void setCurrentArmor(float currentArmor) 				{ this.currentArmor = currentArmor; }
     public void setFacingDirection(FacingDirection facingDirection) { this.facingDirection = facingDirection; }
     public void setPlayerKit(PlayerKit playerKit) 					{ this.playerKit = playerKit; }
-    public void setPlayerInfo(PlayerData playerData)				{ this.playerData = playerData; }
+    public void setPlayerName(String name) { this.playerName = name; }
     public void setTeamColor(TeamColor teamColor)					{ this.teamColor = teamColor; }
 	public void setCurrentPlayerState(EntityStates state){
 		if(playerState != state)
@@ -60,9 +61,9 @@ public class ClientPlayer extends ClientEntity
 
     @Override
     public void doEvent(EventType event) {
-    	if (Main.getInstance().getCurrentState().equals(GameStates.DUALGAMEPLAY))
-    		LocalSound.getInstance().playSoundByAction(event, this);
-
+    	//aaaaaif (Main.getInstance().getCurrentState().equals(GameStates.DUALGAMEPLAY))
+    		//LocalSound.getInstance().playSoundByAction(event, this);
+    	this.getEntitySound().playSoundByAction(event, this);
 
 
 		/*if(event == EventType.WALK_LEFT){

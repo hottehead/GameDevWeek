@@ -3,16 +3,16 @@ package de.hochschuletrier.gdw.ws1314.entity.levelObjects;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBody;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixBodyDef;
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixFixtureDef;
 
 import de.hochschuletrier.gdw.commons.gdx.physix.PhysixManager;
 import de.hochschuletrier.gdw.ws1314.entity.EntityType;
+import de.hochschuletrier.gdw.ws1314.entity.EventType;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntity;
 import de.hochschuletrier.gdw.ws1314.entity.ServerEntityManager;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 
 
 /**
@@ -70,16 +70,21 @@ public class ServerBush extends ServerLevelObject
                 .density(0.5f)
                 .friction(0.0f)
                 .restitution(0.0f)
-                .shapeCircle(16));
+                .shapeCircle(20));
 
             body.setGravityScale(0);
             body.addContactListener(this);
             setPhysicsBody(body);
 	}
 
-    @Override
+	@Override
+	public void dispose(PhysixManager manager) {
+		NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DESTROY);
+		super.dispose(manager);
+	}
+
+	@Override
     public void update(float deltaTime) {
-        // TODO Auto-generated method stub
         
     }
 }
