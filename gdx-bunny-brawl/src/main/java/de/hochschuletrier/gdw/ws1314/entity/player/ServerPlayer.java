@@ -87,8 +87,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     
     private StatePlayer			 currentState;
     
-    private float				 attackCooldown;
-    private float				 attackCooldownTimer;
+    private float				 attackDelay;
+    private float				 attackDelayTimer;
     private boolean				 attackAvailable;
     private boolean do1Attack;
     private boolean do2Attack;
@@ -202,8 +202,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	currentState.update(deltaTime);
     	
     	if (!attackAvailable) {
-        	attackCooldownTimer += deltaTime;
-        	if (attackCooldownTimer > attackCooldown) {
+        	attackDelayTimer += deltaTime;
+        	if (attackDelayTimer > attackDelay) {
         		attackAvailable = true;
         		
         		if(do1Attack) {
@@ -265,8 +265,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		break;
         		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getFirstAttackDelay();
-            		attackCooldownTimer = 0.0f;
+            		attackDelay = playerKit.getFirstAttackDelay();
+            		attackDelayTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
@@ -278,8 +278,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             		break;
         		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getSecondAttackDelay();
-            		attackCooldownTimer = 0.0f;
+            		attackDelay = playerKit.getSecondAttackDelay();
+            		attackDelayTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
             		switchToState(attackState);
