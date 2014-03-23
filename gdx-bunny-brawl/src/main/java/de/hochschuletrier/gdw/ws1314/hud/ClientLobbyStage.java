@@ -39,7 +39,7 @@ public class ClientLobbyStage extends AutoResizeStage {
 	public void init(AssetManagerX assetManager) {
 		
 		//init generic stuff
-		initSkin(assetManager);
+		initSkin(assetManager); 
 		Main.inputMultiplexer.addProcessor(this);
 		Table uiTable = new Table();
 		uiTable.debug(Debug.all);
