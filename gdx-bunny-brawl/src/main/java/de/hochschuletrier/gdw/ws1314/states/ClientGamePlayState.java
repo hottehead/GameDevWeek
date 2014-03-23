@@ -10,6 +10,8 @@ import de.hochschuletrier.gdw.ws1314.network.GameStateCallback;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,8 +64,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		clientGame.init(assetManager, mapName);
 		
 		stateMusic = new LocalMusic(assetManager);
-		stateSound = LocalSound.getInstance();
-		stateSound.init(assetManager);
+		LocalSound2.init(assetManager);
 		
 		NetworkManager.getInstance().setDisconnectCallback(this);
 		NetworkManager.getInstance().setGameStateCallback(this);
