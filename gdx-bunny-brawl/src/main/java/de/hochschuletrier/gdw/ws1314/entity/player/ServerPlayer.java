@@ -108,7 +108,6 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     private float				speedBuffDuration;
     private boolean				speedBuffActive;
     
-    
     private long				droppedEggID;
     
     private Fixture				fixtureLowerBody;
@@ -122,6 +121,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	private int					deadZoneCounter;
     private boolean             isInDeadZone;
     
+    private ArrayList<Long>		struckBySwordIDs;
     
     public ServerPlayer()
     {
@@ -151,6 +151,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	deathfreeze = 0.5f;
     	isInDeadZone = false;
     	pickedUpEggs = new ArrayList<>();
+    	struckBySwordIDs = new ArrayList<Long>();
     }
     
     public void enable() {}
@@ -172,7 +173,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearDamping(/* over*/9000 );
 			for(Long id : pickedUpEggs){
 				ServerEntity entity = ServerEntityManager.getInstance().getEntityById(id);
-				if (entity!=null) entity.reset();//FIXME: Richtige Lösung? hier trat zuvor eine NullPointerException auf, wenn man ins Wasser fällt.
+				if (entity!=null) entity.reset();
+				else logger.warn("Versucht Ei zurück zu setzten das nicht exsistiert");
 			}
 			pickedUpEggs.clear();
 			currentEggCount = 0;
@@ -229,6 +231,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     			this.deactivateAttackBuff();
     		}
     	}
+    	struckBySwordIDs.clear();
     }
 
     public void doAction(PlayerIntention intent) {
@@ -260,9 +263,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             case ATTACK_1:
             	if (!attackAvailable)
             		break;
-        		attackState.setWaitTime(ATTACK_TIME);
+        		attackState.setWaitTime(playerKit.getFirstAttackCooldown());
             	if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getFirstAttackCooldown();
+            		attackCooldown = playerKit.getFirstAttackDelay();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
@@ -273,9 +276,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             case ATTACK_2:
             	if (!attackAvailable)
             		break;
-        		attackState.setWaitTime(ATTACK_TIME);
+        		attackState.setWaitTime(playerKit.getSecondAttackCooldown());
         		if (currentState.equals(idleState) || currentState.equals(walkingState)) {
-            		attackCooldown = playerKit.getSecondAttackCooldown();
+            		attackCooldown = playerKit.getSecondAttackDelay();
             		attackCooldownTimer = 0.0f;
             		attackAvailable = false;
             		attackState.setWaitFinishedState(currentState);
@@ -358,8 +361,12 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     		droppedEggID = pickedUpEggs.get(0);
 			pickedUpEggs.remove(droppedEggID);
 			ServerEgg egg = (ServerEgg)ServerEntityManager.getInstance().getEntityById(droppedEggID);
+			if(egg != null)	{
 			egg.setVisibility(true);
 			egg.setPosition(getPosition());
+			} else {
+				logger.warn("Strange Egg NullPointer.");
+			}
     	}
     }
     
@@ -391,30 +398,29 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             	 }
             	 break;
              case ContactMine:
-            	 	ServerContactMine mine = (ServerContactMine) otherEntity;
+            	 ServerContactMine mine = (ServerContactMine) otherEntity;
             	 break;
              case Carrot:
             	 applySpeedBuff(ServerCarrot.CARROT_SPEEDBUFF_FACTOR - EGG_CARRY_SPEED_PENALTY * currentEggCount, ServerCarrot.CARROT_SPEEDBUFF_DURATION);
-                	 ServerEntityManager.getInstance().removeEntity(otherEntity);
+            	 ServerEntityManager.getInstance().removeEntity(otherEntity);
 				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Spinach:
-                	 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
-                     ServerEntityManager.getInstance().removeEntity(otherEntity);
-				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
+                 applyAttackBuff(ServerSpinach.SPINACH_ATTACKBUFF_FACTOR, ServerSpinach.SPINACH_ATTACKBUFF_DURATION);
+                 ServerEntityManager.getInstance().removeEntity(otherEntity);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case Clover:
-                	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
-                	 ServerClover clover = (ServerClover) otherEntity;
-                	 ServerEntityManager.getInstance().removeEntity(clover);
-				 	NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
+            	 applyHealth(ServerClover.CLOVER_HEALTHBUFF_FACTOR);
+                 ServerClover clover = (ServerClover) otherEntity;
+                 ServerEntityManager.getInstance().removeEntity(clover);
+				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EAT_PICKUP);
             	 break;
              case HayBale:
                  ServerHayBale ball = (ServerHayBale)otherEntity;
                  if(ball.isCrossable()) {
                 	 logger.info("Haybale crossed");
-                     this.isOnBridge = true;
-                     collidingBridgePartsCount++;
+                     this.setPlayerIsOnBridge();
                  } else {
                    this.physicsBody.setLinearDamping(1);
                        if(ball.getSpeed() > 0){
@@ -434,8 +440,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                      if(!this.isOnBridge) {
                          NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                      }
-                     this.isOnBridge = true;
-                     collidingBridgePartsCount++;
+                     this.setPlayerIsOnBridge();
     				 NetworkManager.getInstance().sendEntityEvent(getID(), EventType.WALK_BRIDGE);
                  }
                  break;
@@ -459,9 +464,10 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 	 break;
                  case SwordAttack:
                      ServerSwordAttack attack = (ServerSwordAttack) otherEntity;
-                     if (attack.getSourceID() != getID()) {
+                     if (attack.getSourceID() != getID() && struckBySwordIDs.contains(attack.getSourceID())) {
                          applyDamage(attack.getDamage());
                          applyKnockback(attack.getFacingDirection(), KNOCKBACK_IMPULSE);
+                         struckBySwordIDs.add(attack.getSourceID());
                      }
                 	 break;
                  default:
@@ -472,10 +478,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                  case AbyssZone:
                  case WaterZone:
                      this.isInDeadZone = true;
-    	             deadZoneCounter = 0;
-//                     if(!isOnBridge) {
-//                         this.isDead = true;
-//                     }
+    	             deadZoneCounter++;
                      break;
                  default:
                      break;
@@ -500,11 +503,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
              	case HayBale:
              	   ServerHayBale ball = (ServerHayBale)otherEntity;
                    if(ball.isCrossable()) {
-                  	 logger.info("Haybale not touched");
-                       collidingBridgePartsCount--;
-                       if(collidingBridgePartsCount <= 0) {
-                           this.isOnBridge = false;
-                       }
+                       this.setPlayerIsNotOnBridgeAnymore();
                    }
                    break;
                 case Bridge:
@@ -514,13 +513,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
                 case BRIDGE_VERTICAL_BOTTOM:
                 case BRIDGE_VERTICAL_MIDDLE:
                 case BRIDGE_VERTICAL_TOP:
-                    collidingBridgePartsCount--;
-                    if(collidingBridgePartsCount <= 0) {
-                        this.isOnBridge = false;
-//                        if(this.isInDeadZone) {
-//                            this.isDead = true;
-//                        }
-                    }
+                    this.setPlayerIsNotOnBridgeAnymore();
                     break;
                 default:
                 	break;
@@ -530,7 +523,7 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
     	         case AbyssZone:
     	         case WaterZone:
     	             this.isInDeadZone = false;
-    	             deadZoneCounter = 0;
+    	             deadZoneCounter--;
     	             break;
     	         default:
     	             break;
@@ -667,6 +660,14 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
 	}
 	
+	protected void applyKnockback(Vector2 direction, float impulse) {
+		knockbackState.setWaitTime(KNOCKBACK_TIME);
+		switchToState(knockbackState);
+		physicsBody.setLinearDamping(BRAKING);
+		physicsBody.applyImpulse(direction.x * impulse, direction.y * impulse);
+		NetworkManager.getInstance().sendEntityEvent(getID(),EventType.KNOCKBACK);
+	}
+	
 	private void deactivateSpeedBuff() {
 	    if(speedBuffActive) {
 	        walkingState.setSpeedFactor(1.0f - EGG_CARRY_SPEED_PENALTY * currentEggCount);
@@ -681,8 +682,17 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 	    }
 	}
 	
-	public void setPlayerInDeathZone() {
-	    this.isInDeadZone = true;
+	public void setPlayerIsNotOnBridgeAnymore() {
+	    this.collidingBridgePartsCount--;
+	    if(collidingBridgePartsCount <= 0) {
+            this.isOnBridge = false;
+            collidingBridgePartsCount = 0;
+        }
+	}
+	
+	public void setPlayerIsOnBridge() {
+	    this.collidingBridgePartsCount++;
+	    this.isOnBridge = true;
 	}
         
 }

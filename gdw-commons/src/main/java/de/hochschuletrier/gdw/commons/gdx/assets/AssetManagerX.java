@@ -44,7 +44,6 @@ public class AssetManagerX extends AssetManager {
 
 	public AssetManagerX() {
 		this(new InternalFileHandleResolver());
-
 	}
 
 	public AssetManagerX(FileHandleResolver resolver) {
