@@ -329,6 +329,15 @@ public class ServerHayBale extends ServerLevelObject
             this.setEntityState(EntityStates.WET);
             NetworkManager.getInstance().sendEntityEvent(getID(), EventType.DRWONING);
             speed = 0;
+            
+            Iterator<Long> keySetIterator = this.playersOnHayBale.keySet().iterator();
+            
+            while(keySetIterator.hasNext()) {
+                Long key = keySetIterator.next();
+                ServerPlayer player = this.playersOnHayBale.get(key);
+                player.setPlayerIsOnBridge();
+            }
+            
         } else if(collAbyssUpperLeft && collAbyssUpperRight && collAbyssLowerLeft && collAbyssLowerRight) {
             ServerEntityManager.getInstance().removeEntity(this);
         }
