@@ -45,6 +45,20 @@ public class ServerProjectile extends ServerEntity {
     private float			damage;
     private float			hitCircleRadius;
     
+    private static final float	despawnFixtureOffset = 16.0f;
+    private static final FacingDirection despawnFixtureOffsetDirections[] = {
+    	FacingDirection.NONE,
+    	FacingDirection.UP,
+    	FacingDirection.RIGHT,
+    	FacingDirection.DOWN,
+    	FacingDirection.LEFT,
+    	
+    	FacingDirection.UP_RIGHT,
+    	FacingDirection.DOWN_RIGHT,
+    	FacingDirection.UP_LEFT,
+    	FacingDirection.DOWN_LEFT,
+    };
+    
     private boolean physicsInitialized;
     
     private static final Logger logger = LoggerFactory.getLogger(ServerProjectile.class);
@@ -128,18 +142,19 @@ public class ServerProjectile extends ServerEntity {
                     ServerEntityManager.getInstance().removeEntity(this);
                     return;
                 }
-                
-                switch(otherEntity.getEntityType()) {
-                	case BridgeSwitch:
-                	case Bush:
-                	case HayBale:
-                		ServerEntityManager.getInstance().removeEntity(this);
-                        break;
-                    default:
-                        break;
-                }
             }
-            else if (isDamageFixture(getCollidingFixture(contact))) {
+            
+            if (otherEntity == null) {
+            	return;
+            }
+            switch(otherEntity.getEntityType()) {
+            	case BridgeSwitch:
+            	case Bush:
+            	case HayBale:
+            		ServerEntityManager.getInstance().removeEntity(this);
+                    break;
+                default:
+                    break;
             }
 	}
 
@@ -197,7 +212,8 @@ public class ServerProjectile extends ServerEntity {
                     .density(0.5f)
                     .friction(0.0f)
                     .restitution(0.0f)
-                    .shapeCircle(2.0f, new Vector2(0, 16.0f))
+                    .shapeCircle(2.0f, new Vector2(despawnFixtureOffsetDirections[getFacingDirection().getIndex()].getDirectionVector().x * despawnFixtureOffset,
+                    							   despawnFixtureOffsetDirections[getFacingDirection().getIndex()].getDirectionVector().y * despawnFixtureOffset))
                     .sensor(true));
             
             body.setGravityScale(0);
