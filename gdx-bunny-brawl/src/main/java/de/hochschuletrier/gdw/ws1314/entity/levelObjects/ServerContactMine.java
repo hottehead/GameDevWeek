@@ -145,7 +145,6 @@ public class ServerContactMine extends ServerLevelObject {
 			this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
 		}else if(this.getEntityState() == EntityStates.ATTACK || this.getEntityState() == EntityStates.EXPLODING){
 			timer -= deltaTime;
-			System.out.println(this.getEntityState());
 			if(timer <= 1){
 				this.setEntityState(EntityStates.EXPLODING);
 				
@@ -160,7 +159,6 @@ public class ServerContactMine extends ServerLevelObject {
 					timer += timer = MathUtils.random(DURATION_TILL_EXPLOSION_MIN,
 							DURATION_TILL_EXPLOSION_MAX) + DURATION_EXPLOSION;
 					this.physicsBody.getBody().getFixtureList().get(1).setSensor(true);
-				
 				}
 			}
 		}
