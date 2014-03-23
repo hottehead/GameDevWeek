@@ -572,7 +572,7 @@
 	"tankWhiteWalkDown": {
         "filename": "data/animations/tankWhite_walkDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "frameDuration": [ 0.1, 0.3, 0.2, 0.1, 0.3, 0.2 ] ,
         "playType" : "LOOP",
         "columns": 6,
         "rows" : 1
@@ -588,7 +588,7 @@
 	"tankBlackWalkDown": {
         "filename": "data/animations/tankBlack_walkDown.png",
         "frames" : 6,
-        "frameDuration": [ 0.2, 0.1, 0.1, 0.2, 0.2, 0.4 ] ,
+        "frameDuration": [ 0.1, 0.3, 0.2, 0.1, 0.3, 0.2 ] ,
         "playType" : "LOOP",
         "columns": 6,
         "rows" : 1
