@@ -171,7 +171,8 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
             this.physicsBody.setLinearDamping(/* over*/9000 );
 			for(Long id : pickedUpEggs){
 				ServerEntity entity = ServerEntityManager.getInstance().getEntityById(id);
-				if (entity!=null) entity.reset();//FIXME: Richtige Lösung? hier trat zuvor eine NullPointerException auf, wenn man ins Wasser fällt.
+				if (entity!=null) entity.reset();
+				else logger.warn("Versucht Ei zurück zu setzten das nicht exsistiert");
 			}
 			pickedUpEggs.clear();
 			currentEggCount = 0;
