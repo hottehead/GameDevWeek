@@ -1,0 +1,61 @@
+{
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "default-font": {"file": "data/fonts/default.fnt"},
+        "garfield_52": {"file": "data/fonts/garfield.fnt"},
+        "candara_25": {"file": "data/fonts/candara25.fnt"}
+    },
+    "com.badlogic.gdx.graphics.Color": {
+        "green": {"a": 1, "b": 0, "g": 1, "r": 0},
+        "white": {"a": 1, "b": 1, "g": 1, "r": 1},
+        "red": {"a": 1, "b": 0, "g": 0, "r": 1},
+        "yellow": {"a": 1, "b": 0, "g": 0.85, "r": 1},
+        "black": {"a": 1, "b": 0, "g": 0, "r": 0}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+    	"ready": {"down": "button_readyGrey", "up": "button_ready"},
+    	"quit": {"down": "button_beenden", "up": "button_beenden"},
+    	"credits": {"down": "button_credits", "up": "button_credits"},
+    	"help": {"down": "button_hilfe", "up": "button_hilfe"},
+    	"join": {"down": "button_join", "up": "button_join"},
+    	"levelselect": {"down": "button_levelauswahl", "up": "button_levelauswahl"},
+    	"options": {"down": "button_optionen", "up": "button_optionen"},
+    	"playClient": {"down": "button_playClient", "up": "button_playClient"},
+    	"playServer": {"down": "button_playServer", "up": "button_playServer"},
+    	"quitServer": {"down": "button_quitServer", "up": "button_quitServer"},
+    	"startServer": {"down": "button_startServer", "up": "button_startServer"},
+    	"connect": {"down": "button_verbinden", "up": "button_verbinden"},
+    	"back": {"down": "button_zurueck", "up": "button_zurueck"},
+    	"attack": {"down": "hud_attack", "up": "hud_attack"},
+    	"eggDrop": {"down": "hud_eggDrop", "up": "hud_eggDrop"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+       "default": {"font": "candara_25", "fontColor": "yellow"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+      "default": {"selection": "white", "background": "white", 
+      					"font": "candara_25", "fontColor": "yellow",
+      					"cursor": "white"}
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle": {
+    },
+    "com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle": {
+    }
+}

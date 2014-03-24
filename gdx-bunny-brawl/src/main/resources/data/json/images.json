@@ -75,5 +75,5 @@
 	"menuButtonConnect": "data/huds/button_verbinden.png",
 	"menuButtonStartServer": "data/huds/button_startServer.png",
 	
-	"ladescreen": "data/huds/ladescreen.png"
+	"ladescreen": "data/images/ladescreen.png"
 }

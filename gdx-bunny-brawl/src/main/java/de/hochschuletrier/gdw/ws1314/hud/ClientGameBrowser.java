@@ -27,16 +27,16 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	private TextField serverPort;
 	private TextField playerName;
 	private Label IpLabel, portLabel, nameLabel;
-	private Button join;
+	private Button connect;
 	private Skin defaultSkin;
 	private Table root;
 
 	public void init(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
+		this.defaultSkin = assetManager.getSkin("bunnyBrawl");
 		root = new Table();
 		root.setFillParent(true);
 		root.debug(Debug.all);
-		join = new Button(new Label("Verbinden", defaultSkin), defaultSkin, "default");
+		connect = new Button(defaultSkin,"connect");
 		serverIP = new TextField("143.93.55.", defaultSkin);
 		serverPort = new TextField("54293", defaultSkin);
 		playerName = new TextField("Funny Bunny", defaultSkin);
@@ -47,7 +47,6 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 					Main.getInstance().gamePreferences.putString(
 							PreferenceKeys.playerName, playerName.getText());
 					return true;
-
 				}
 				return false;
 			}
@@ -57,7 +56,7 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 		root.add(serverIP);
 		root.add(serverPort);
 		root.row();
-		root.add(join).colspan(2);
+		root.add(connect).colspan(2);
 		this.addActor(root);
 	}
 
@@ -70,7 +69,7 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	}
 
 	public Button getJoin() {
-		return join;
+		return connect;
 	}
 
 	public void render() {

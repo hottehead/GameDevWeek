@@ -94,6 +94,9 @@ public class Main extends StateBasedGame {
 
 		assetManager.loadAssetList("data/json/fonts_truetype.json", TrueTypeFont.class,
 				null);
+
+		assetManager.loadAssetList("data/json/skins.json", Skin.class,
+				null);
 	}
 
 	public AssetManagerX getAssetManager() {

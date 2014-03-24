@@ -77,7 +77,6 @@ public class MainMenuState extends GameState {
 		stage.getExitButton().addListener(this.exitlistener);
 		stage.getPlayServerButton().addListener(this.playServerListener);
 		stage.getGameBrowserButton().addListener(this.gameBrowserListener);
-		stage.getStartServerAndPlayButton().addListener(startServerAndPlayListener);
 
 		if (Main.startAsServer) {
 			logger.info("start as server");
@@ -91,7 +90,6 @@ public class MainMenuState extends GameState {
 			this.music.setFade('o', 2500);
 		}
 
-		stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
 		stage.getGameBrowserButton().removeListener(this.gameBrowserListener);
 		stage.getPlayServerButton().removeListener(this.playServerListener);
 		stage.getOptionsButton().removeListener(this.optionListener);

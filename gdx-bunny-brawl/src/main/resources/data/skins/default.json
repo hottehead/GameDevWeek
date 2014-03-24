@@ -45,7 +45,7 @@
         "default": {"font": "default-font", "fontColor": "white"}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
-        "default": {"selection": "selection", "background": "textfield", "font": "default-font", "fontColor": "white", "cursor": "cursor"}
+        "default": {"selection": "dialogDim", "background": "dialogDim", "font": "default-font", "fontColor": "white", "cursor": "cursor"}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
         "default": {"checkboxOn": "check-on", "checkboxOff": "check-off", "font": "default-font", "fontColor": "white"}

@@ -40,87 +40,28 @@ public class ClientLobbyStage extends Stage implements ScreenListener {
 
 	public void init(AssetManagerX assetManager) {
 		
-		//init generic stuff
-		initSkin(assetManager); 
-		Main.inputMultiplexer.addProcessor(this);
-		Table uiTable = new Table();
-		uiTable.debug(Debug.all);
-		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
-		uiTable.debug(Debug.all); //debug output
-		this.addActor(uiTable);
+		this.defaultSkin = assetManager.getSkin("default");
+
+		Table root = new Table();
+		root.setFillParent(true); // ganzen platz in Tabelle nutzen
+		root.debug(Debug.all); //debug output
+		this.addActor(root);
 		font = assetManager.getFont("verdana", 24);
+		/* Zeile 1*/
+		root.row();
 		
-		//info
-		Label label = new Label("===>   Client Lobby   <===", defaultSkin);
-		uiTable.add(label);
-		uiTable.row().pad(20).bottom();
-		
-		//Player-Liste
-		Table playerList = new Table();
-		playerList.setFillParent(false);
-		playerList.debug(Debug.all);
-		playerList.top();
-		
-		Table whiteList = new Table();
-		whiteList.padRight(20);
-		whiteList.add(new Label("Team WHITE", defaultSkin)).row();
-		this.whiteTeamList = new Table();
-		whiteList.add(this.whiteTeamList);
-		
-		Table blackList = new Table();
-		blackList.top();
-		blackList.add(new Label("Team Black", defaultSkin)).row();
-		this.blackTeamList = new Table();
-		blackList.add(this.blackTeamList);
-		
-		playerList.add(whiteList);
-		playerList.add(blackList);
-		
-		uiTable.add(playerList);
-		
-		uiTable.row().pad(20);
-		
-		//PlayerSettings change
-		swapTeamButton = new TextButton("Swap Team", defaultSkin);
-		uiTable.add(swapTeamButton);
-		uiTable.padRight(100);
-		readyButton = new TextButton("Ready!", defaultSkin);
-		uiTable.add(readyButton).row();
-		
-		//Disconnect
-		disonnectButton = new TextButton("Disconnect", defaultSkin);
-		uiTable.add(disonnectButton);
-		uiTable.add(new ChatWindow(defaultSkin));
+		/* Zeile 2*/
+		root.row();
+		/* Zeile 3*/
+		root.row();
+		/* Zeile 4*/
+		root.row();
 	}
 
 	public void render() {		
 		Table.drawDebug(this);
 		this.act();
-		
-		this.whiteTeamList.reset();
-		
-		for (PlayerData p : this.clientManager.getTeamPlayers(TeamColor.WHITE))
-		{
-			this.whiteTeamList.row();
-			this.whiteTeamList.add(new Label(p.getPlayername(), defaultSkin)).padRight(20);
-			this.whiteTeamList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
-			this.whiteTeamList.add(new Label("" + p.isAccept(), defaultSkin));
-		}
-		
-		this.blackTeamList.reset();
-		
-		for (PlayerData p : this.clientManager.getTeamPlayers(TeamColor.BLACK))
-		{
-			this.blackTeamList.row();
-			this.blackTeamList.add(new Label(p.getPlayername(), defaultSkin)).padRight(20);
-			this.blackTeamList.add(new Label(p.getType().toString(), defaultSkin)).padRight(20);
-			this.blackTeamList.add(new Label("" + p.isAccept(), defaultSkin));
-		}
 		this.draw();
-	}
-	
-	private void initSkin(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 	
 	public TextButton getReadyButton() {
