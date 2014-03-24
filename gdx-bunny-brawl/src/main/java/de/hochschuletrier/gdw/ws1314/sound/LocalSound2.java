@@ -21,7 +21,7 @@ public class LocalSound2 {
 	
 	public static AssetManagerX assetManager;
 	private static float SystemVolume;
-	private static float maxDistance = 300.0f;
+	private static float maxDistance = 480.0f;
 	private static ClientPlayer LocalPlayer;
 	
 	public static void init(AssetManagerX assetManager) {

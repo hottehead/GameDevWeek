@@ -82,12 +82,12 @@ public class LocalMusic {
 			if (this.fadingDirection == 'i') {
 				volume += step;
 				volume = volume >= LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
-				this.fading = volume == LocalMusic.SystemVolume ? false : true;
+				//this.fading = volume == LocalMusic.SystemVolume ? false : true;
 			}
 			else if (this.fadingDirection == 'o') {
 				volume -= step;
 				volume = volume < delta * (1000.0f / this.duration) ? 0.0f : volume;
-				this.fading = volume == 0.0f ? false : true;
+				//this.fading = volume == 0.0f ? false : true;
 			}
 		
 		this.musicHandle.setVolume(volume);
