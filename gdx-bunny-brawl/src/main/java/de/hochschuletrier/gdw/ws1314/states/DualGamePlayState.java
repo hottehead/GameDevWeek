@@ -68,9 +68,9 @@ public class DualGamePlayState extends GameState implements DisconnectCallback, 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
 		this.stateMusic = Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY);
-		this.stateMusic.play("music-gameplay-loop");
+		/*this.stateMusic.play("music-gameplay-loop");
 		this.stateMusic.setVolume(0.5f);
-		this.stateMusic.logger.info("gp state music fading on init? >> " + this.stateMusic.getFading());
+		this.stateMusic.logger.info("gp state music fading on init? >> " + this.stateMusic.getFading());*/
 	}
 
 	public void render() {

@@ -51,6 +51,7 @@ public class OptionState extends GameState {
 	    Main.inputMultiplexer.addProcessor(stage);
 	    stage.getMusicSlider().addListener(musicListener);
 		stage.getBackButton().addListener(backListener);
+		stage.getSoundSlider().addListener(soundListener);
     }
 
     public void onEnterComplete() {
@@ -59,7 +60,8 @@ public class OptionState extends GameState {
     public void onLeave() {
     	stage.getMusicSlider().removeListener(musicListener);
     	stage.getBackButton().removeListener(backListener);
-		Main.inputMultiplexer.removeProcessor(stage);
+    	stage.getSoundSlider().removeListener(soundListener);
+    	Main.inputMultiplexer.removeProcessor(stage);
 		stage.clear();
     }
 

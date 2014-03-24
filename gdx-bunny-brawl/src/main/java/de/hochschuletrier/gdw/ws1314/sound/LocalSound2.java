@@ -20,12 +20,13 @@ public class LocalSound2 {
 	private long loopID;
 	
 	public static AssetManagerX assetManager;
-	private static float SystemVolume = 1.0f;
+	private static float SystemVolume;
 	private static float maxDistance = 300.0f;
 	private static ClientPlayer LocalPlayer;
 	
 	public static void init(AssetManagerX assetManager) {
 		LocalSound2.assetManager = assetManager;
+		LocalSound2.SystemVolume = Main.getInstance().gamePreferences.getFloat(PreferenceKeys.volumeSound, 0.9f);
 	}
 	
 	public static void setSystemVolume(float systemVolume) {
@@ -42,15 +43,19 @@ public class LocalSound2 {
 	}
 	
 	private void play(String soundName, float volume) {
-		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
-		this.soundID = this.soundHandle.play();
-		soundHandle.setVolume(this.soundID, LocalSound2.SystemVolume * volume);
+		if (soundName != "") {
+			this.soundHandle = LocalSound2.assetManager.getSound(soundName);
+			this.soundID = this.soundHandle.play();
+			soundHandle.setVolume(this.soundID, LocalSound2.SystemVolume * volume);
+		}
 	}
 	
 	private void loop(String soundName, float volume) {
-		this.stopLoop();
-		this.soundHandle = LocalSound2.assetManager.getSound(soundName);
-		this.loopID = this.soundHandle.loop(LocalSound2.SystemVolume * volume);
+		if (soundName != "") {
+			//this.stopLoop();
+			this.soundHandle = LocalSound2.assetManager.getSound(soundName);
+			this.loopID = this.soundHandle.loop(LocalSound2.SystemVolume * volume);
+		}
 	}
 	
 	private void stopLoop() {
@@ -91,6 +96,9 @@ public class LocalSound2 {
 	 */
 	private String connectSoundToAction(EventType event, ClientEntity entity) { 
 		switch (event) {
+			case IDLE:
+				this.stopLoop();
+				return "";
 			case HIT_BY_ATTACK_1:
 			case HIT_BY_ATTACK_2:
 				if(entity.getEntityType() == EntityType.Tank) {
@@ -158,9 +166,6 @@ public class LocalSound2 {
 	
 	public void playSoundByAction(EventType event, ClientEntity entity) {
 		LocalSound2.LocalPlayer = (ClientPlayer) ClientEntityManager.getInstance().getEntityById(ClientEntityManager.getInstance().getPlayerEntityID());
-		if (event.equals(EventType.IDLE))
-			this.stopLoop();
-		else {
 			String soundAction = this.connectSoundToAction(event, entity);
 			boolean loop;
 		System.out.println("Event getriggert :: " + event);
@@ -183,7 +188,6 @@ public class LocalSound2 {
 				this.remoteSound(this.connectSoundToAction(event, entity), entity, loop);
 			}
 		}
-	}
 	
 	public void stop() {
 		this.soundHandle.stop();

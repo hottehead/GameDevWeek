@@ -61,7 +61,7 @@ public class MainMenuState extends GameState {
 	public void update(float delta) {
 		stateTime += delta;
 		music.update();
-		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
+		//Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
     }
 
     public void onEnter() {
