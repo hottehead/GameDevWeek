@@ -31,5 +31,7 @@
 	"speech-tank-yeay_2"	:	"data/sounds/TankYeay2.ogg",
 	"speech-tank-yeay_3"	:	"data/sounds/TankYeay3.ogg",
 	"weapons-arrow-shot"	:	"data/sounds/Arrow.ogg",
-	"walk-general-grass"	:	"data/sounds/WalkGrass.ogg"
+	"weapons-bush-destroy"	:	"data/sounds/Bush.ogg",
+	"walk-general-grass"	:	"data/sounds/WalkGrass.ogg",
+	"walk-general-bridge"	:	"data/sounds/WalkBridge.ogg"
 }

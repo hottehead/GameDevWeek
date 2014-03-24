@@ -43,7 +43,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
-		stateMusic = MusicManager.getInstance().getMusicStreamByStateName(GameStates.CLIENTGAMEPLAY);
+		this.stateMusic = MusicManager.getInstance().getMusicStreamByStateName(GameStates.CLIENTGAMEPLAY);
 	}
 
 	public void render() {
@@ -57,6 +57,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		fpsCalc.addFrame();
 		
 		MusicManager.getInstance().getMusicStreamByStateName(GameStates.MAINMENU).update();
+		this.stateMusic.update();
 		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
 	}
@@ -65,15 +66,13 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 	public void onEnter() {
 		clientGame = new ClientGame();
 		clientGame.init(assetManager, mapName);
-		
-		MusicManager.getInstance().getMusicStreamByStateName(GameStates.MAINMENU).setFade('o', 2500);
-		
+				
 		if (this.stateMusic.isMusicPlaying())
-			this.stateMusic.setFade('i', 2500);
+			this.stateMusic.setFade('i', 5000);
 		else {
 			this.stateMusic.play("music-gameplay-loop");
 			this.stateMusic.setVolume(0.0f);
-			this.stateMusic.setFade('i', 2500);
+			this.stateMusic.setFade('i', 5000);
 		}
 		
 		LocalSound2.init(assetManager);
@@ -87,6 +86,9 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		NetworkManager.getInstance().setDisconnectCallback(null);
 		NetworkManager.getInstance().setGameStateCallback(this);
 		clientGame = null;
+		
+		if (this.stateMusic.isMusicPlaying())
+			this.stateMusic.setFade('o', 5000);
 	}
 
 	@Override

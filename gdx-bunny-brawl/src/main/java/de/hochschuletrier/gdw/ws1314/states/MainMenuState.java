@@ -66,7 +66,7 @@ public class MainMenuState extends GameState {
 
     public void onEnter() {
         if (this.music.isMusicPlaying()) {
-			this.music.setFade('i', 2500);
+			this.music.setFade('i', 5000);
         }
 		else{
         	this.music.play("music-lobby-loop");
@@ -90,7 +90,7 @@ public class MainMenuState extends GameState {
 
     public void onLeave() {
     	if (this.music.isMusicPlaying()) {
-    		this.music.setFade('o', 2500);
+    		this.music.setFade('o', 5000);
     	}
 
     	stage.getStartServerAndPlayButton().removeListener(startServerAndPlayListener);
