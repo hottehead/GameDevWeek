@@ -105,6 +105,21 @@ public abstract class ServerEntity extends PhysixEntity implements ContactListen
         return null;
     }
     
+    protected Fixture getOppoosingCollidingFixture(Contact contact) {
+    	Fixture fixtureA = contact.getFixtureA();
+    	Fixture fixtureB = contact.getFixtureB();
+    	PhysixBody bodyA = (PhysixBody)fixtureA.getBody().getUserData();
+        PhysixBody bodyB = (PhysixBody)fixtureB.getBody().getUserData();
+        ServerEntity entityA = (ServerEntity)bodyA.getOwner();
+        ServerEntity entityB = (ServerEntity)bodyB.getOwner();
+        
+        if (entityA != null && entityA.getID() != this.getID())
+        	return fixtureA;
+        if (entityB != null && entityB.getID() != this.getID())
+        	return fixtureB;
+        return null;
+    }
+    
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
     }

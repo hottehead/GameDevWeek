@@ -10,24 +10,26 @@ import com.badlogic.gdx.math.Vector2;
 
 public enum FacingDirection 
 {
-	NONE(0.0f, 0.0f),
+	NONE(0.0f, 0.0f, 0),
 	
-	LEFT(-1.0f, 0.0f),
-	DOWN(0.0f, 1.0f),
-	RIGHT(1.0f, 0.0f),
-	UP(0.0f, -1.0f),
+	LEFT(-1.0f, 0.0f, 1),
+	DOWN(0.0f, 1.0f, 2),
+	RIGHT(1.0f, 0.0f, 3),
+	UP(0.0f, -1.0f, 4),
 	
-	DOWN_LEFT(1.0f / -(float)Math.sqrt(2.0f), 1.0f / (float)Math.sqrt(2.0f)),
-	DOWN_RIGHT(1.0f / (float)Math.sqrt(2.0f), 1.0f / (float)Math.sqrt(2.0f)),
-	UP_LEFT(1.0f / -(float)Math.sqrt(2.0f), 1.0f / -(float)Math.sqrt(2.0f)),
-	UP_RIGHT(1.0f / (float)Math.sqrt(2.0f), 1.0f / -(float)Math.sqrt(2.0f));
+	DOWN_LEFT(1.0f / -(float)Math.sqrt(2.0f), 1.0f / (float)Math.sqrt(2.0f), 5),
+	DOWN_RIGHT(1.0f / (float)Math.sqrt(2.0f), 1.0f / (float)Math.sqrt(2.0f), 6),
+	UP_LEFT(1.0f / -(float)Math.sqrt(2.0f), 1.0f / -(float)Math.sqrt(2.0f), 7),
+	UP_RIGHT(1.0f / (float)Math.sqrt(2.0f), 1.0f / -(float)Math.sqrt(2.0f), 8);
 	
-	private final Vector2 direction;
-	private final float	  angle;
+	private final Vector2 	direction;
+	private final float	  	angle;
+	private final int	 	index;
 	
-	private FacingDirection(float x, float y)
+	private FacingDirection(float x, float y, int i)
 	{
 		direction = new Vector2(x, y);
+		index = i;
 		angle = direction.x == 0.0f && 
 				direction.y == 0.0f ? 0 //180deg
 						: direction.getAngleRad();
@@ -41,5 +43,10 @@ public enum FacingDirection
 	public float getAngle()
 	{
 		return angle;
+	}
+	
+	public int getIndex()
+	{
+		return index;
 	}
 }

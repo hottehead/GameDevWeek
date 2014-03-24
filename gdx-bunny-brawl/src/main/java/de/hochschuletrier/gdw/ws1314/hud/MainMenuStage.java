@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
@@ -23,12 +24,8 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.ListElement;
 
 public class MainMenuStage extends AutoResizeStage {
 	
-	private BitmapFont font;
 	private Skin defaultSkin;
-	
 	private LevelList levelList;
-	
-	
 	private Table uiTable;
 	
 	//buttons
@@ -50,28 +47,13 @@ public class MainMenuStage extends AutoResizeStage {
 
 	public void init(AssetManagerX assetManager) {
 		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
-		uiTable = new Table();
 		this.assetManager = assetManager;
 		
 		Main.inputMultiplexer.addProcessor(this);
 		
+		uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
-		uiTable.debug(Debug.all); //debug output
 		this.addActor(uiTable);
-		
-		Label playerNameLabel = new Label("Player name: ", defaultSkin);
-		uiTable.add(playerNameLabel);
-
-		uiTable.add(playerNameLabel);		
-
-		uiTable.row().padTop(20);
-		Label label = new Label("Welcome to the League of Bunny Brawllllll!!!111!!1111", defaultSkin);
-		uiTable.add(label);
-		
-		uiTable.row().padTop(20);
-		
-		Table tmpTable = new Table(); 
-		uiTable.add(tmpTable).pad(20);
 		
 		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonPlayClient"));
 		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
@@ -98,29 +80,23 @@ public class MainMenuStage extends AutoResizeStage {
 		style.imageUp = new TextureRegionDrawable(texture);
 		exit = new ImageButton(style);
 		
-		tmpTable.add(gameBrowser).pad(5).prefSize(50);
-		tmpTable.add(playServer).pad(5).prefSize(50);
+		startServerAndPlay =  new TextButton("Start Forever Alone! ",defaultSkin);
+		uiTable.add(gameBrowser);
+		uiTable.add(playServer);
 
-		uiTable.row();		
-		tmpTable = new Table();
-		uiTable.add(tmpTable).pad(20);
+		uiTable.row();
+
+		uiTable.add(options);
+		uiTable.add(credits);
+		uiTable.add(exit);
 		
-		tmpTable.add(options).pad(5);
-		tmpTable.add(credits).pad(5);
-		tmpTable.add(exit).pad(5);
-		
-		//testing server-client stuff
-		startServerAndPlay = new TextButton("Teststart", defaultSkin);
-		tmpTable.add(startServerAndPlay);
+		uiTable.debug(Debug.all);
 	}
 
 	public void render() {		
-		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		this.act(Gdx.graphics.getDeltaTime());
-		
-		DrawUtil.batch.flush();
+		Table.drawDebug(this);
+		this.act();
 		this.draw();
-		//Table.drawDebug(this);
 	}
 
 	public void addLevel(String levelName) {
@@ -136,8 +112,6 @@ public class MainMenuStage extends AutoResizeStage {
 	//for testing server-client stuff
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		if(this.xScale >0 && this.yScale>0)
-			uiTable.setScale(this.xScale, this.yScale);
 	}
 	
 	public ImageButton getGameBrowserButton() {
