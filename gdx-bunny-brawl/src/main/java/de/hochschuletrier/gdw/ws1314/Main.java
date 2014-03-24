@@ -185,12 +185,12 @@ public class Main extends StateBasedGame {
 
 	public void onLoadComplete() {
 		GameStates.MAINMENU.init(assetManager);
-		GameStates.SERVERLOBBY.init(assetManager);
-		GameStates.CLIENTLOBBY.init(assetManager);
-		GameStates.SERVERGAMEPLAY.init(assetManager);
-		GameStates.CLIENTGAMEPLAY.init(assetManager);
-		GameStates.DUALGAMEPLAY.init(assetManager);
-		GameStates.FINISHEDGAME.init(assetManager);
+//		GameStates.SERVERLOBBY.init(assetManager);
+//		GameStates.CLIENTLOBBY.init(assetManager);
+//		GameStates.SERVERGAMEPLAY.init(assetManager);
+//		GameStates.CLIENTGAMEPLAY.init(assetManager);
+//		GameStates.DUALGAMEPLAY.init(assetManager);
+//		GameStates.FINISHEDGAME.init(assetManager);
 		GameStates.MAINMENU.activate(new SplitVerticalTransition(500).reverse(), null);
 	}
 
