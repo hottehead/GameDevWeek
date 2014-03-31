@@ -95,6 +95,7 @@ public class ServerEgg extends ServerLevelObject
     public void stopScoreProcess() {
         this.teamColor = TeamColor.BOTH;
         score = false;
+        time = 0;
     }
 
 	public void setPosition(Vector2 position) {
