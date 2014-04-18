@@ -75,7 +75,7 @@ public class FinishedGameStage extends Stage implements ScreenListener {
 	}
 	
 	private void initSkin(AssetManagerX assetManager) {
-		this.defaultSkin = assetManager.getSkin("default");
+		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 	}
 	
 	public TextButton getBackButton() {

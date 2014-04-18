@@ -149,10 +149,6 @@ public class AssetManagerX extends AssetManager {
 		return getByName(name, ParticleEffect.class);
 	}
 
-	public Skin getSkin(String name) {
-		return getByName(name, Skin.class);
-	}
-	
 	private BitmapFont generateFont(String name, int size) {
 		TrueTypeFont ttf = getByName(name, TrueTypeFont.class);
 		FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(ttf.handle);

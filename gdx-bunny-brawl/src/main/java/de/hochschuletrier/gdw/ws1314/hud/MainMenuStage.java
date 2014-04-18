@@ -31,11 +31,14 @@ public class MainMenuStage extends Stage implements ScreenListener {
 	private Table root;
 	
 	//buttons
-	private Button playServer;
-	private Button gameBrowser;
-	private Button options; 
-	private Button credits;
-	private Button exit;
+	private ImageButton playServer;
+	private ImageButton gameBrowser;
+	private ImageButton options; 
+	private ImageButton credits;
+	private ImageButton exit;
+	
+	//test
+	TextButton startServerAndPlay;
 	
 	public MainMenuStage() {
 		super();
@@ -43,24 +46,43 @@ public class MainMenuStage extends Stage implements ScreenListener {
 
 
 	AssetManagerX assetManager;
-	private Skin bunnySkin;
 
 	public void init(AssetManagerX assetManager) {
-		this.defaultSkin = assetManager.getSkin("default");
-		this.bunnySkin = assetManager.getSkin("bunnyBrawl");
-
+		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
 		this.assetManager = assetManager;
-				
+		
+		Main.inputMultiplexer.addProcessor(this);
+		
 		root = new Table();
 		root.setFillParent(true); // ganzen platz in Tabelle nutzen
 		
-		gameBrowser = new Button(bunnySkin, "join");
-		playServer = new Button(bunnySkin, "startServer");
-		options =new Button(bunnySkin, "options");
-		credits =new Button(bunnySkin, "credits");
-		exit =new Button(bunnySkin, "quit");
+		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonPlayClient"));
+		ImageButtonStyle style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		gameBrowser = new ImageButton(style);
 		
-		root.defaults();
+		texture = new TextureRegion(assetManager.getTexture("menuButtonPlayServer"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		playServer = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonOptions"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		options = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonCredits"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		credits = new ImageButton(style);
+		
+		texture = new TextureRegion(assetManager.getTexture("menuButtonExit"));
+		style = new ImageButtonStyle(defaultSkin.get(ButtonStyle.class));
+		style.imageUp = new TextureRegionDrawable(texture);
+		exit = new ImageButton(style);
+		
+		startServerAndPlay =  new TextButton("Start Forever Alone! ",defaultSkin);
+		root.defaults().prefSize(100, 100);
 		root.add(gameBrowser);
 		root.row();
 		root.add(playServer);
@@ -97,23 +119,27 @@ public class MainMenuStage extends Stage implements ScreenListener {
 		
 	}
 	
-	public Button getGameBrowserButton() {
+	public ImageButton getGameBrowserButton() {
 		return gameBrowser;
 	}
 	
-	public Button getPlayServerButton() {
+	public ImageButton getPlayServerButton() {
 		return playServer;
+	}	
+	
+	public TextButton getStartServerAndPlayButton() {
+		return startServerAndPlay;
 	}
 	
-	public Button getOptionsButton() {
+	public ImageButton getOptionsButton() {
 		return options;
 	}
 	
-	public Button getCreditsButton() {
+	public ImageButton getCreditsButton() {
 		return options;
 	}
 	
-	public Button getExitButton() {
+	public ImageButton getExitButton() {
 		return exit;
 	}
 }
