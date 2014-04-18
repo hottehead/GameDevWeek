@@ -48,7 +48,7 @@ public class MainMenuStage extends Stage implements ScreenListener {
 	AssetManagerX assetManager;
 
 	public void init(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
+		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
 		this.assetManager = assetManager;
 		
 		Main.inputMultiplexer.addProcessor(this);

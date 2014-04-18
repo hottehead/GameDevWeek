@@ -21,7 +21,7 @@ public class CreditStage extends Stage implements ScreenListener {
 	
 	
 	public void init(AssetManagerX assetManager) {		
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
+		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
 		Table uiTable = new Table();
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		uiTable.debug(Debug.all); //debug output

@@ -32,7 +32,7 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	private Table root;
 
 	public void init(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
+		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
 		root = new Table();
 		root.setFillParent(true);
 		root.debug(Debug.all);

@@ -1,0 +1,206 @@
+
+bunnyBrawl.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button_levelauswahl
+  rotate: false
+  xy: 1, 901
+  size: 655, 119
+  orig: 655, 119
+  offset: 0, 0
+  index: -1
+button_playClient
+  rotate: false
+  xy: 1, 780
+  size: 655, 119
+  orig: 655, 119
+  offset: 0, 0
+  index: -1
+button_playServer
+  rotate: false
+  xy: 1, 659
+  size: 655, 119
+  orig: 655, 119
+  offset: 0, 0
+  index: -1
+button_startServer
+  rotate: false
+  xy: 1, 538
+  size: 655, 119
+  orig: 655, 119
+  offset: 0, 0
+  index: -1
+button_verbinden
+  rotate: false
+  xy: 1, 417
+  size: 655, 119
+  orig: 655, 119
+  offset: 0, 0
+  index: -1
+hud_attack
+  rotate: false
+  xy: 658, 761
+  size: 288, 259
+  orig: 288, 259
+  offset: 0, 0
+  index: -1
+hud_eggDrop
+  rotate: false
+  xy: 1, 156
+  size: 288, 259
+  orig: 288, 259
+  offset: 0, 0
+  index: -1
+button_beenden
+  rotate: false
+  xy: 291, 300
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_credits
+  rotate: false
+  xy: 291, 183
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_hilfe
+  rotate: false
+  xy: 658, 644
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_join
+  rotate: false
+  xy: 658, 527
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_optionen
+  rotate: false
+  xy: 658, 410
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_quitServer
+  rotate: false
+  xy: 628, 293
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_ready
+  rotate: false
+  xy: 628, 176
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+button_readyGrey
+  rotate: false
+  xy: 1, 39
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+wappenHunterBlack
+  rotate: false
+  xy: 338, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+button_zurueck
+  rotate: false
+  xy: 505, 59
+  size: 335, 115
+  orig: 335, 115
+  offset: 0, 0
+  index: -1
+shield_black
+  rotate: false
+  xy: 842, 23
+  size: 136, 151
+  orig: 136, 151
+  offset: 0, 0
+  index: -1
+boost_carrot
+  rotate: false
+  xy: 948, 968
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+boost_clover
+  rotate: false
+  xy: 505, 5
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+boost_spinach
+  rotate: false
+  xy: 948, 914
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+white
+  rotate: false
+  xy: 628, 414
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+
+bunnyBrawl2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+wappenHunterWhite
+  rotate: false
+  xy: 1, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+wappenKnightBlack
+  rotate: false
+  xy: 168, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+wappenKnightWhite
+  rotate: false
+  xy: 335, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+wappenTankBlack
+  rotate: false
+  xy: 502, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+wappenTankWhite
+  rotate: false
+  xy: 669, 1
+  size: 165, 180
+  orig: 165, 180
+  offset: 0, 0
+  index: -1
+shield_white
+  rotate: false
+  xy: 836, 27
+  size: 140, 154
+  orig: 140, 154
+  offset: 0, 0
+  index: -1

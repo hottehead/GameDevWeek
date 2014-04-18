@@ -57,7 +57,7 @@ public class ServerGamePlayStage extends Stage implements ScreenListener {
 	}
 
 	private void initSkin(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/huds/default.json"));
+		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
 	}
 
 	public TextButton getDisconnectButton() {
