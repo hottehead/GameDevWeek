@@ -26,20 +26,21 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	private TextField serverIP;
 	private TextField serverPort;
 	private TextField playerName;
-	private Label IpLabel, portLabel, nameLabel;
-	private Button join;
-	private Skin defaultSkin;
+	private Button connect;
+	private Skin skin;
 	private Table root;
 
 	public void init(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
+		this.skin = assetManager.getSkin("bunnyBrawl");
+		Skin defaultSkin = assetManager.getSkin("default");
+
 		root = new Table();
 		root.setFillParent(true);
 		root.debug(Debug.all);
-		join = new Button(new Label("Verbinden", defaultSkin), defaultSkin, "default");
-		serverIP = new TextField("143.93.55.", defaultSkin);
+		connect = new Button(skin,"connect");
+		serverIP = new TextField("127.0.0.1", defaultSkin);
 		serverPort = new TextField("54293", defaultSkin);
-		playerName = new TextField("Funny Bunny", defaultSkin);
+		playerName = new TextField("NAME", defaultSkin);
 		playerName.addListener(new InputListener() {
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
@@ -47,17 +48,19 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 					Main.getInstance().gamePreferences.putString(
 							PreferenceKeys.playerName, playerName.getText());
 					return true;
-
 				}
 				return false;
 			}
 		});
-		root.add(playerName);
+		root.add(new Label("Name:", defaultSkin)).colspan(2);
+		root.add(playerName).fill().colspan(2);
 		root.row();
-		root.add(serverIP);
-		root.add(serverPort);
+		root.add(new Label("Server IP", defaultSkin));
+		root.add(serverIP).fill();
+		root.add(new Label("Server Port", defaultSkin));
+		root.add(serverPort).fill();
 		root.row();
-		root.add(join).colspan(2);
+		root.add(connect).colspan(4);
 		this.addActor(root);
 	}
 
@@ -70,7 +73,7 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	}
 
 	public Button getJoin() {
-		return join;
+		return connect;
 	}
 
 	public void render() {

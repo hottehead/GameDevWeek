@@ -11,8 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.hochschuletrier.gdw.ws1314.network.ChatListener;
 import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
@@ -24,6 +26,7 @@ public class ChatWindow extends Table implements ChatListener {
 	private List<ListElement> messages;
 	private Skin skin;
 	private Logger logger = LoggerFactory.getLogger(ChatWindow.class);
+
 	public ChatWindow(Skin skin) {
 		setSkin(skin);
 		this.skin = skin;
@@ -36,27 +39,12 @@ public class ChatWindow extends Table implements ChatListener {
 				if (keycode == Keys.ENTER) {
 					sendMessage();
 				}
-				if (keycode == Keys.P) {
-					float maxY = scrollPane.getMaxY();
-					float maxX = scrollPane.getMaxX();
-					scrollPane.setScrollY(scrollPane.getScrollY());
-
-					System.out.println("Percent Y: " + scrollPane.getScrollPercentY()
-							+ " ScrollY" + scrollPane.getScrollY() + " MaxY: "
-							+ scrollPane.getMaxY());
-					scrollPane.updateVisualScroll();
-
-				}
 				return true;
 			}
 		});
 		messages = new List<ListElement>(skin);
-		messages.getItems().add(new ListElement("Willkommen im Lobbychat von Bunny Brawl!", skin));
-		messages.getItems().add(new ListElement("", skin));
-		messages.getItems().add(new ListElement("", skin));
-		messages.getItems().add(new ListElement("", skin));
-		messages.getItems().add(new ListElement("", skin));
-		messages.getItems().add(new ListElement("", skin));
+		messages.getItems().add(
+				new ListElement("Willkommen im Lobbychat von Bunny Brawl!", skin));
 
 		scrollPane = new ScrollPane(messages, skin);
 		scrollPane.setScrollingDisabled(false, false);
@@ -65,13 +53,24 @@ public class ChatWindow extends Table implements ChatListener {
 		scrollPane.setFlickScroll(true);
 		scrollPane.setScrollbarsOnTop(false);
 		scrollPane.setFadeScrollBars(false);
-		this.add(scrollPane);
+		this.add(scrollPane).colspan(2).fill().expand();
 		this.row();
-		this.add(textField);
+		this.add(textField).expand(true, false).fill(true, false);
+		TextButton send = new TextButton("Send", skin);
+		send.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				sendMessage();
+			}
+		});
+		this.add(send);
 	}
 
 	public void sendMessage() {
 		String message = textField.getText();
+		if(message.equals("")) {
+			return;
+		}
 		logger.info("Sending Message: " + message);
 		NetworkManager.getInstance().sendChat(message);
 		textField.setText("");
@@ -80,7 +79,7 @@ public class ChatWindow extends Table implements ChatListener {
 	@Override
 	public void chatMessage(String sender, String text) {
 		logger.info("Putting Message: " + text);
-		messages.getItems().add(new ListElement(text, skin));
+		messages.getItems().add(new ListElement(sender + ": " + text, skin));
 		messages.invalidateHierarchy();
 		scrollPane.scrollTo(0, scrollPane.getScrollBarHeight(), 0, 0);
 

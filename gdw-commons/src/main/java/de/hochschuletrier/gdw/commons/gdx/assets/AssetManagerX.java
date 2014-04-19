@@ -64,7 +64,10 @@ public class AssetManagerX extends AssetManager {
 		}
 		return null;
 	}
-
+	public Skin getSkin(String name) {
+		return getByName(name, Skin.class);
+	}
+	
 	public <T> Array<T> getByType(Class<T> type) {
 		HashMap<String, String> map = assetMaps.get(type);
 		Array<T> assets = new Array<T>();

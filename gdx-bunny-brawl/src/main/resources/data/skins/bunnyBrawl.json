@@ -9,9 +9,16 @@
         "white": {"a": 1, "b": 1, "g": 1, "r": 1},
         "red": {"a": 1, "b": 0, "g": 0, "r": 1},
         "yellow": {"a": 1, "b": 0, "g": 0.85, "r": 1},
+        "light_gray": {"a": 0.3, "b": 0.3, "g": 0.3, "r": 0.65},
         "black": {"a": 1, "b": 0, "g": 0, "r": 0}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+     "wappenHunterWhite_gray":{"name": "wappenHunterWhite", "color": "light_gray"},
+     "wappenTankWhite_gray":{"name": "wappenTankWhite", "color": "light_gray"},
+     "wappenKnightWhite_gray":{"name": "wappenKnightWhite", "color": "light_gray"},
+     "wappenHunterBlack_gray":{"name": "wappenHunterBlack", "color": "light_gray"},
+     "wappenTankBlack_gray":{"name": "wappenTankBlack", "color": "light_gray"},
+     "wappenKnightBlack_gray":{"name": "wappenKnightBlack", "color": "light_gray"}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
     	"ready": {"down": "button_readyGrey", "up": "button_ready"},
@@ -28,7 +35,13 @@
     	"connect": {"down": "button_verbinden", "up": "button_verbinden"},
     	"back": {"down": "button_zurueck", "up": "button_zurueck"},
     	"attack": {"down": "hud_attack", "up": "hud_attack"},
-    	"eggDrop": {"down": "hud_eggDrop", "up": "hud_eggDrop"}
+    	"eggDrop": {"down": "hud_eggDrop", "up": "hud_eggDrop"},
+    	"whiteHunter": {"down": "wappenHunterWhite_gray", "up": "wappenHunterWhite_gray", "checked":"wappenHunterWhite"},
+    	"blackHunter": {"down": "wappenHunterBlack_gray", "up": "wappenHunterBlack_gray", "checked":"wappenHunterBlack"},
+    	"whiteKnight": {"down": "wappenKnightWhite_gray", "up": "wappenKnightWhite_gray", "checked":"wappenKnightWhite"},
+    	"blackKnight": {"down": "wappenKnightBlack_gray", "up": "wappenKnightBlack_gray", "checked":"wappenKnightBlack"},
+    	"whiteTank": {"down": "wappenTankWhite_gray", "up": "wappenTankWhite_gray", "checked":"wappenTankWhite"},
+    	"blackTank": {"down": "wappenTankBlack_gray", "up": "wappenTankBlack_gray", "checked":"wappenTankBlack"},
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
     },
@@ -43,7 +56,7 @@
     "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
-       "default": {"font": "candara_25", "fontColor": "yellow"}
+       "default": {"font": "default-font", "fontColor": "yellow"}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
       "default": {"selection": "white", "background": "white", 
