@@ -1,69 +1,74 @@
 package de.hochschuletrier.gdw.ws1314.hud.elements;
 
-import com.badlogic.gdx.graphics.Texture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxBackgroundDecoration;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxFrontDecorator;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.NinePatchSettings;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBar;
-import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
 
-public class HealthBar {
+public class HealthBar extends Widget {
+	Logger logger = LoggerFactory.getLogger(HealthBar.class);
+    private NinePatchDrawable loadingBarBackground;
+    BitmapFont font;
+    private NinePatchDrawable loadingBar;
+    private float max , current, progress;
+    public HealthBar(AssetManagerX assets) {
+        font = assets.getSkin("bunnyBrawl").getFont("candara_25");
+    	TextureAtlas skinAtlas = assets.get("data/skins/default.atlas"	,TextureAtlas.class	);
+        NinePatch loadingBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
+        NinePatch loadingBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
+        loadingBar = new NinePatchDrawable(loadingBarPatch);
+        loadingBarBackground = new NinePatchDrawable(loadingBarBackgroundPatch);
+    }
+    
+    public HealthBar(AssetManagerX assets, float max) {
+    	this.max = this.current = max;
+    }
 
-	VisualBox visualRepresentation;
-	MinMaxValue logicRepresentation;
-	DynamicTextElement textElement;
-	
-	private int maxHealthValue;
-	
-	public HealthBar(int maxHealthValue) {
-		logicRepresentation = new MinMaxValue(0, maxHealthValue, -5);
-		logicRepresentation.setValue(maxHealthValue);
-		this.maxHealthValue = maxHealthValue;
-	}
-	
-	public void initVisual(AssetManagerX assetManager, float positionX, float positionY,
-			float width, float height) {
-		Texture barTex = assetManager.getTexture("debugBar");
-		Texture backBarTex = assetManager.getTexture("debugTooltip");
-		Texture frontBarTex = assetManager.getTexture("debugBarDecorNine");
-		BitmapFont hudFont = assetManager.getFont("verdana", 24);
-		
-		VisualBar healthBarVisual = new VisualBar(barTex, positionX, positionY, width, height,
-				logicRepresentation);
-
-		BoxBackgroundDecoration backgroundHealth = new BoxBackgroundDecoration(
-				healthBarVisual, backBarTex);
-		// BarFrontDecorator frontBar = new BarFrontDecorator(test,
-		// frontBarTex);
-		
-		textElement = new DynamicTextElement(hudFont, "HP: ",
-						backgroundHealth.getWidth() * 0.5f,
-						backgroundHealth.getHeight() + 2, logicRepresentation);
-		visualRepresentation = new BoxOffsetDecorator(backgroundHealth, textElement);
-		visualRepresentation = new BoxFrontDecorator(visualRepresentation, frontBarTex,
-				new NinePatchSettings(1, 2, 2, 1));
-	}
-	
-	public MinMaxValue get() {
-		return logicRepresentation;
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+    	super.draw(batch, parentAlpha);
+        loadingBarBackground.draw(batch, getX(), getY(), getPrefWidth() * getScaleX(), getPrefHeight() * getScaleY());
+        loadingBar.draw(batch, getX(), getY(), progress * getPrefWidth() * getScaleX(), getPrefHeight() * getScaleY());
+        font.draw(batch, current + " / "+ max , getX() , getY() +  font.getLineHeight());
+    }
+    
+    @Override
+    public float getPrefWidth() {
+    	return getParent().getWidth();
+    }
+    
+    @Override
+    public float getPrefHeight() {
+    	return 60;
+    }
+    
+	public float getMax() {
+		return max;
 	}
 
-	public void draw() {
-		visualRepresentation.draw();
-	}
-	
-	public void setDecimalSpace(int n) {
-		textElement.setDecimalPLace(n);
-	}
-	
-	public void reset() {
-		logicRepresentation.setValue(maxHealthValue);
+	public void setMax(float max) {
+		this.max = max;
+		this.progress = current/max;
+
 	}
 
+	public float getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(float current) {
+		this.current = current;
+		this.progress = current/max;
+	}
+    
+    
 }

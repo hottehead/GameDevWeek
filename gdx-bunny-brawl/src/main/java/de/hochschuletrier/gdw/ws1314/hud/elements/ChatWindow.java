@@ -44,7 +44,7 @@ public class ChatWindow extends Table implements ChatListener {
 		});
 		messages = new List<ListElement>(skin);
 		messages.getItems().add(
-				new ListElement("Willkommen im Lobbychat von Bunny Brawl!", skin));
+				new ListElement("Willkommen im Chat von Bunny Brawl!", skin));
 
 		scrollPane = new ScrollPane(messages, skin);
 		scrollPane.setScrollingDisabled(false, false);

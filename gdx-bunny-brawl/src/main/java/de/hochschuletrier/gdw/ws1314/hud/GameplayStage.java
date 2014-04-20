@@ -1,241 +1,194 @@
 package de.hochschuletrier.gdw.ws1314.hud;
 
 import org.lwjgl.opengl.GL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.commons.gdx.utils.BodyEditorLoader.RigidBodyModel;
 import de.hochschuletrier.gdw.ws1314.Main;
 import de.hochschuletrier.gdw.ws1314.entity.player.ClientPlayer;
+import de.hochschuletrier.gdw.ws1314.game.ClientGame;
+import de.hochschuletrier.gdw.ws1314.hud.elements.ChatWindow;
 import de.hochschuletrier.gdw.ws1314.hud.elements.HealthBar;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.BoxOffsetDecorator;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
+import de.hochschuletrier.gdw.ws1314.states.ClientGamePlayState;
 
 public class GameplayStage extends Stage implements ScreenListener {
-	private BitmapFont font;
-	private Skin defaultSkin;
-
-	private MinMaxValue fpsValue;
-	private DynamicTextElement fpsCounter;
-
-	private int maxHealth = 100;
-	
-	private HealthBar healthBar;
-	private VisualBox classIcon;
-	StaticTextElement classIconText;
-
-	private VisualBox buff1, buff2, buff3;
-
-	private VisualBox attackIcon, layEggIcon;
-	
-	private VisualBox scoreWhiteIcon, scoreBlackIcon;
-	private MinMaxValue scoreWhite, scoreBlack;
-	private final int maxScore = 100;
-
 	ClientPlayer visualDataEntity;
-
 	AssetManagerX assetManager;
+	Skin hudSkin;
+	ClientGame game;
+	Logger logger = LoggerFactory.getLogger(GameplayStage.class);
 
 	public GameplayStage() {
 		super();
 		visualDataEntity = null;
 	}
 
-	public void init(AssetManagerX assetManager) {
+	Table uiTable;
+	Label pointsWhite, pointsBlack;
+	HorizontalGroup teams;
+	Image buffSpinach, buffClover, buffCarrot, avatar;
+	Button dropEgg, attack;
+	HealthBar healthbar;
+
+	public void init(AssetManagerX assetManager, ClientGame game) {
 		// init generic stuff
+		this.game = game;
 		this.assetManager = assetManager;
-		initSkin(assetManager);
+		hudSkin = assetManager.getSkin("bunnyBrawl");
 		Main.inputMultiplexer.addProcessor(this);
-		Table uiTable = new Table();
+		uiTable = new Table();
+		uiTable.debug(Debug.all);
 		uiTable.setFillParent(true); // ganzen platz in Tabelle nutzen
 		this.addActor(uiTable);
-		font = assetManager.getFont("verdana", 24);
-
-		// FPS counter
-		fpsValue = new MinMaxValue(0, 1000, -1);
-		fpsCounter = new DynamicTextElement(font, "0", 50, 5, fpsValue);
-		fpsCounter.setDecimalPLace(3);
-
-		// healthbar
-		healthBar = new HealthBar(100);
-		healthBar.initVisual(assetManager, 80, Gdx.graphics.getHeight() - 60,
-				250, 40);
-		healthBar.setDecimalSpace(2);
-
-		// class icon
-		classIcon = new VisualBox(
-				assetManager.getTexture("HudEmblemKnightWhite"), 20,
-				Gdx.graphics.getHeight() - 80, 54, 54);
-		classIconText = new StaticTextElement(font, "Klasse",
-				this.classIcon.getWidth() * .5f, -14);
-		classIcon = new BoxOffsetDecorator(classIcon, classIconText);
-
+		// teamanzeige mit punktestand
+		teams = new HorizontalGroup();
+		pointsWhite = new Label("0", hudSkin, "garfield");
+		pointsBlack = new Label("0", hudSkin, "garfield");
+		teams.addActor(pointsWhite);
+		teams.addActor(new Image(hudSkin, "shield_white"));
+		teams.addActor(new Image(hudSkin, "shield_black"));
+		teams.addActor(pointsBlack);
+		uiTable.add(teams).colspan(3).expand().top();
+		uiTable.row();
+		// Reihe 2
+		// PlayerInfo (avatar, buffs, healtbar)
+		Table playerInfo = new Table();
+		avatar = new Image(hudSkin, "wappenHunterBlack");
+		playerInfo.add(avatar);
 		// buffs
-		buff1 = new VisualBox(assetManager.getTexture("debugBuff"), 250,
-				Gdx.graphics.getHeight() - 80, 52, 52);
-		buff2 = new VisualBox(assetManager.getTexture("debugBuff"), 280,
-				Gdx.graphics.getHeight() - 80, 52, 52);
-		buff3 = new VisualBox(assetManager.getTexture("debugBuff"), 310,
-				Gdx.graphics.getHeight() - 80, 52, 52);
+		Table stats = new Table();
+		HorizontalGroup buffs = new HorizontalGroup();
+		stats.debug(Debug.all);
+		stats.defaults().top().right();
+		buffCarrot = new Image(hudSkin, "boost_carrot");
+		buffSpinach = new Image(hudSkin, "boost_spinach");
+		buffClover = new Image(hudSkin, "boost_clover");
+//		buffCarrot.addAction(Actions.alpha(0));
+//		buffSpinach.addAction(Actions.alpha(0));
+//		buffClover.addAction(Actions.alpha(0));
+		buffCarrot.setVisible(false);
+		buffSpinach.setVisible(false);
+		buffClover.setVisible(false);
+		buffs.addActor(buffCarrot);
+		buffs.addActor(buffSpinach);
+		buffs.addActor(buffClover);
+		stats.add(buffs);
+		stats.row();
+		// healthbar
+		healthbar = new HealthBar(assetManager);
+		stats.add(healthbar).bottom();
+		playerInfo.add(stats).fill();
+		uiTable.add(playerInfo).bottom().left().fill();
+		// Aktionen
+		dropEgg = new Button(hudSkin, "eggDrop");
+		dropEgg.setScale(0.5f);
+		attack = new Button(hudSkin, "attack");
+		attack.setScale(0.5f);
+		Table actions = new Table();
+		actions.add(dropEgg);
+		actions.add(attack);
 
-		// action icons
-		attackIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"),
-				(Gdx.graphics.getWidth() * .5f) - 50,
-				Gdx.graphics.getHeight() - 80, 60, 60);
-		classIconText = new StaticTextElement(font, "Attacke",
-				attackIcon.getWidth() * .5f, -14);
-		attackIcon = new BoxOffsetDecorator(this.attackIcon, classIconText);
-		layEggIcon = new VisualBox(assetManager.getTexture("debugAttackIcon"),
-				(Gdx.graphics.getWidth() * .5f) + 50,
-				Gdx.graphics.getHeight() - 80, 60, 60);
-		classIconText = new StaticTextElement(font, "Ei ablegen",
-				layEggIcon.getWidth() * .5f, -14);
-		layEggIcon = new BoxOffsetDecorator(this.layEggIcon, classIconText);
-
-		// score icons
-		DynamicTextElement textScore;
-
-		scoreWhiteIcon = new VisualBox(
-				assetManager.getTexture("HudEmblemWhite"),
-				(Gdx.graphics.getWidth() * .5f) - 50, 40, 54, 54);
-		scoreWhite = new MinMaxValue(0, maxScore, 1);
-		textScore = new DynamicTextElement(font, "0",
-				scoreWhiteIcon.getWidth() * .5f, 50, scoreWhite);
-		textScore.setDecimalPLace(0);
-		scoreWhiteIcon = new BoxOffsetDecorator(this.scoreWhiteIcon, textScore);
-		classIconText = new StaticTextElement(font, "Team 1",
-				this.scoreWhiteIcon.getWidth() * .5f, -14);
-		scoreWhiteIcon = new BoxOffsetDecorator(this.scoreWhiteIcon,
-				classIconText);
-
-		scoreBlackIcon = new VisualBox(
-				assetManager.getTexture("debugScoreEnemy"),
-				(Gdx.graphics.getWidth() * .5f) + 50, 40, 136, 151);
-		scoreBlack = new MinMaxValue(0, maxScore, 1);
-		textScore = new DynamicTextElement(font, "0",
-				scoreBlackIcon.getWidth() * .5f, 50, scoreBlack);
-		textScore.setDecimalPLace(0);
-		scoreBlackIcon = new BoxOffsetDecorator(this.scoreBlackIcon, textScore);
-		classIconText = new StaticTextElement(font, "Team 2",
-				this.scoreBlackIcon.getWidth() * .5f, -14);
-		scoreBlackIcon = new BoxOffsetDecorator(this.scoreBlackIcon,
-				classIconText);
+		uiTable.add(actions);
+		// Chat
+		uiTable.add(new ChatWindow(assetManager.getSkin("default"))).fill();
 	}
 
 	public void render() {
-		Gdx.gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+//		Table.drawDebug(this);
 		this.act(Gdx.graphics.getDeltaTime());
+		pointsBlack.setText(String.valueOf(game.getGameInfo().getTeamPointsBlack()));
+		pointsWhite.setText(String.valueOf(game.getGameInfo().getTeamPointsWhite()));
 
-		fpsCounter.draw();
-		healthBar.draw();
-		classIcon.draw();
-		buff1.draw();
-		buff2.draw();
-		buff3.draw();
-		attackIcon.draw();
-		layEggIcon.draw();
-		scoreBlackIcon.draw();
-		scoreWhiteIcon.draw();
-
-		DrawUtil.batch.flush();
-		this.draw();
-		Table.drawDebug(this);
-	}
-
-	private void initSkin(AssetManagerX assetManager) {
-		this.defaultSkin = new Skin(Gdx.files.internal("data/skins/default.json"));
-
-	}
-
-	// for testing the healthbar
-	// can be deleted after connecting the ui with the gamelogic
-	public void step() {
-		if (visualDataEntity != null) {
-			this.healthBar.get().setMaxValue(
-					visualDataEntity.getPlayerKit().getBaseHealth());
-			this.healthBar.get().setValue(visualDataEntity.getCurrentHealth());
-
-		}
-	}
-
-	public void setFPSCounter(float delta) {
-		fpsValue.setValue(1 / delta);
-	}
-
-	public void advanceScoreOwnTeam() {
-		scoreWhite.stepValue();
-	}
-
-	public void advanceScoreEnemeyTeam() {
-		scoreBlack.stepValue();
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	public void setDisplayedPlayer(ClientPlayer playerEntity) {
-
-		visualDataEntity = playerEntity;
-//		healthBar.get().setMaxValue(visualDataEntity.get) //TODO: set MaxHealth
-
-		if (this.visualDataEntity != playerEntity) {
-			visualDataEntity = playerEntity;
-			switch (playerEntity.getTeamColor()) {
+		// Stats
+		if (game.getPlayer() != null) {
+			// Avatar
+			switch (game.getPlayer().getTeamColor()) {
 			case WHITE:
-				switch (playerEntity.getEntityType()) {
+				switch (game.getPlayer().getEntityType()) {
 				case Knight:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemKnightWhite"));
+					avatar.setDrawable(hudSkin, "wappenKnightWhite");
 					break;
 				case Tank:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemTankWhite"));
+					avatar.setDrawable(hudSkin, "wappenTankWhite");
 					break;
 				case Hunter:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterWhite"));
+					avatar.setDrawable(hudSkin, "wappenHunterWhite");
 					break;
 				default:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterBlack"));
 					break;
 				}
 				break;
 			case BLACK:
-				switch (playerEntity.getEntityType()) {
+				switch (game.getPlayer().getEntityType()) {
 				case Knight:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemKnightBlack"));
+					avatar.setDrawable(hudSkin, "wappenKnightBlack");
 					break;
 				case Tank:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemTankBlack"));
+					avatar.setDrawable(hudSkin, "wappenTankBlack");
 					break;
 				case Hunter:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterBlack"));
+					avatar.setDrawable(hudSkin, "wappenHunterBlack");
 					break;
 				default:
-					this.classIcon.setTexture(assetManager
-							.getTexture("HudEmblemHunterBlack"));
 					break;
 				}
 				break;
 			}
+
+			// Stats
+			healthbar.setMax(game.getPlayer().getPlayerKit().getBaseHealth());
+			healthbar.setCurrent(game.getPlayer().getCurrentHealth());
+			if (game.getPlayer().isBuffCarrotActive()) {
+//				buffCarrot.addAction(Actions.fadeIn(1.3f, Interpolation.linear));
+				buffCarrot.setVisible(true);
+			} else {
+//				buffCarrot.addAction(Actions.fadeOut(1f, Interpolation.linear));
+				buffCarrot.setVisible(false);
+
+			}
+			if (game.getPlayer().isBuffSpinachActive()) {
+//				buffSpinach.addAction(Actions.fadeIn(1.3f, Interpolation.linear));
+				buffSpinach.setVisible(true);
+			} else {
+//				buffSpinach.addAction(Actions.fadeOut(1f, Interpolation.linear));
+				buffSpinach.setVisible(false);
+			}
+			if (game.getPlayer().DidBuffCloverAppear()) {
+				logger.info("buff clover appeared");
+//				buffClover.addAction(Actions.sequence(Actions.alpha(0), Actions.show(),
+//						Actions.fadeIn(0.3f, Interpolation.linear),
+//						Actions.fadeOut(1f, Interpolation.linear), Actions.hide(),
+//						Actions.alpha(1)));
+				// buffClover.setVisible(true);
+			}
 		}
+		this.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		getViewport().update(width, height, true);
-		
 	}
-	
 }

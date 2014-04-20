@@ -60,14 +60,15 @@ public class ClientLobbyStage extends Stage implements ScreenListener {
 		uiTable.debug(Debug.all); // debug output
 		uiTable.defaults().expand();
 		this.addActor(uiTable);
+//		uiTable.setBackground(bunny.getDrawable("white"));
 		//Map
-		uiTable.add(new Label("Map: " + clientManager.getMap(), defaultSkin)).colspan(3)
+		uiTable.add(new Label("Next Map: " + clientManager.getMap(), bunny, "garfield")).colspan(2)
 				.center();
 		//Countdwn
-		uiTable.add(new Label("UHR", defaultSkin));
+		uiTable.add(new Label("COUNTDOWN", bunny, "garfield"));
 		uiTable.row();
 		//Header
-		uiTable.add(new Label("Choose your Character", bunny)).colspan(3);
+		uiTable.add(new Label("Choose your Character", bunny,"garfield")).colspan(3);
 		uiTable.row();
 		// Bunnie Wappen
 		bunnies = new HorizontalGroup();
@@ -127,7 +128,7 @@ public class ClientLobbyStage extends Stage implements ScreenListener {
 		// Connected PLayers Panl
 		playerPanel = new Table();
 		playerPanel.debug(Debug.all);
-		playerPanel.add(new Label("Player", bunny));
+		playerPanel.add(new Label("Player", bunny,"garfield"));
 		playerPanel.row();
 		playerList = new List<ListElement>(defaultSkin);
 		playerPanel.add(playerList).fill().expand();
@@ -143,7 +144,7 @@ public class ClientLobbyStage extends Stage implements ScreenListener {
 	}
 
 	public void render() {
-		Table.drawDebug(this);
+//		Table.drawDebug(this);
 		this.act();
 		playerList.getItems().clear();
 		for (PlayerData p : clientManager.getTeamPlayers(TeamColor.WHITE)) {

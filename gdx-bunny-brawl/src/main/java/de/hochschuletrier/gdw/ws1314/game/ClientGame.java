@@ -42,29 +42,29 @@ import de.hochschuletrier.gdw.ws1314.shaders.TextureAdvection;
 // Modfied by El Fapo: updated intention changes
 public class ClientGame {
 	private static final Logger logger = LoggerFactory.getLogger(ClientGame.class);
-	
+
 	private ClientEntityManager entityManager;
 	private NetworkManager netManager;
 	private int Inputmask;
 	private TiledMap map;
 	private TiledMapRendererGdx mapRenderer;
 	private InputHandler inputHandler;
-	private EntityRenderer entityRenderer; 
+	private EntityRenderer entityRenderer;
 
 	private FrameBufferFBO sceneToTexture;
 	private TextureAdvection postProcessing;
 	private TextureAdvection advShader;
 
+	private ClientPlayer player;
+	private GameInfo gameInfo;
+	
 	private GameplayStage stage;
-        private int scoreBlack;
-        private int scoreWhite;
 
-	public ClientGame() { 
+
+	public ClientGame() {
 		entityManager = ClientEntityManager.getInstance();
-		scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
-        scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
 		netManager = NetworkManager.getInstance();
-		
+
 		inputHandler = new InputHandler();
 		Main.inputMultiplexer.addProcessor(inputHandler);
 	}
@@ -72,45 +72,51 @@ public class ClientGame {
 	CameraFollowingBehaviour cameraFollowingBehaviour;
 
 	public void init(AssetManagerX assets, String mapName) {
+		//Map 
 		map = assets.getTiledMap(mapName);
-
 		HashMap<TileSet, Texture> tilesetImages = new HashMap<TileSet, Texture>();
-		
 		for (TileSet tileset : map.getTileSets()) {
 			TmxImage img = tileset.getImage();
-			String filename = CurrentResourceLocator.combinePaths(
-					tileset.getFilename(), img.getSource());
+			String filename = CurrentResourceLocator.combinePaths(tileset.getFilename(),
+					img.getSource());
 			tilesetImages.put(tileset, new Texture(filename));
 		}
 		mapRenderer = new TiledMapRendererGdx(map, tilesetImages);
 		mapRenderer.setDrawLines(false);
-		
+		//Materials
 		initMaterials(assets);
-
+		//LevelBounds
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
-		LevelBoundings levelBounds = new LevelBoundings(
-				width * 0.5f,
-				height * 0.5f, map.getWidth()
-						* map.getTileWidth(), map.getHeight()
+		LevelBoundings levelBounds = new LevelBoundings(width * 0.5f, height * 0.5f,
+				map.getWidth() * map.getTileWidth(), map.getHeight()
 						* map.getTileHeight());
-		
-		cameraFollowingBehaviour = new CameraFollowingBehaviour(
-				DrawUtil.getCamera(), levelBounds);
-
+		//Camera
+		cameraFollowingBehaviour = new CameraFollowingBehaviour(DrawUtil.getCamera(),
+				levelBounds);
+		//GameInfo und LocalPlayer
+		gameInfo = entityManager.getGameInfo();
+		long playerId = entityManager.getPlayerEntityID();
+		if (playerId != -1) {
+			ClientEntity playerEntity = entityManager.getEntityById(playerId);
+			if (playerEntity instanceof ClientPlayer) {
+				player = (ClientPlayer) playerEntity;
+			}
+			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
+		}
+		//HUD
 		stage = new GameplayStage();
-		stage.init(assets);
+		stage.init(assets,this);
 	}
-	
+
 	private void initMaterials(AssetManagerX assetManager) {
 		MaterialManager materialManager = new MaterialManager(assetManager);
 		entityRenderer = new EntityRenderer(materialManager);
-		
-		
+
 		entityManager.provideListener(entityRenderer);
 
-		sceneToTexture = new FrameBufferFBO(Format.RGBA8888,
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		sceneToTexture = new FrameBufferFBO(Format.RGBA8888, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), false);
 		Main.getInstance().addScreenListener(sceneToTexture);
 
 		postProcessing = new TextureAdvection("data/shaders/post.vert",
@@ -121,8 +127,6 @@ public class ClientGame {
 		logger.error(advShader.getLog());
 	}
 
-	float fadeIn = 0.25f;
-	
 	public void render() {
 		sceneToTexture.begin();
 		DrawUtil.batch.setShader(advShader);
@@ -131,8 +135,8 @@ public class ClientGame {
 					&& layer.getBooleanProperty("renderEntities", false)) {
 				entityRenderer.draw();
 			} else {
-			mapRenderer.render(0, 0, layer);
-		}
+				mapRenderer.render(0, 0, layer);
+			}
 		}
 		DrawUtil.batch.flush();
 		sceneToTexture.end();
@@ -144,15 +148,14 @@ public class ClientGame {
 		DrawUtil.batch.setShader(null);
 		DrawUtil.batch.flush();
 		DrawUtil.endRenderToScreen();
-		
+
 		DrawUtil.startRenderToScreen();
 		stage.render();
 		DrawUtil.endRenderToScreen();
 	}
 
 	public void update(float delta) {
-        mapRenderer.update(delta);
-		// fadeIn = Math.min(fadeIn + delta/100.0f, 1);
+		mapRenderer.update(delta);
 		entityManager.update(delta);
 
 		long playerId = entityManager.getPlayerEntityID();
@@ -160,34 +163,23 @@ public class ClientGame {
 			ClientEntity playerEntity = entityManager
 					.getEntityById(playerId);
 			if(playerEntity instanceof ClientPlayer) {
-				stage.setDisplayedPlayer((ClientPlayer)playerEntity);
+				player = (ClientPlayer) playerEntity;
 			}
 			cameraFollowingBehaviour.setFollowingEntity(playerEntity);
 		}
 		cameraFollowingBehaviour.update(delta);
-		
-		stage.setFPSCounter(delta);
-		stage.step();
-                if (scoreBlack < entityManager.getGameInfo().getTeamPointsBlack()) {
-                    stage.advanceScoreOwnTeam();
-                    scoreBlack = entityManager.getGameInfo().getTeamPointsBlack();
-                }
-                if (scoreWhite < entityManager.getGameInfo().getTeamPointsWhite()) {
-                    stage.advanceScoreEnemeyTeam();
-                    scoreWhite = entityManager.getGameInfo().getTeamPointsWhite();
-                }
-	}
-
-	public TiledMap loadMap(String filename) {
-		try {
-			return new TiledMap(filename, LayerObject.PolyMode.ABSOLUTE);
-		} catch (Exception ex) {
-			throw new IllegalArgumentException(
-					"Map konnte nicht geladen werden: " + filename);
-		}
 	}
 
 	public ScreenListener getHUD() {
 		return stage;
 	}
+
+	public ClientPlayer getPlayer() {
+		return player;
+	}
+
+	public GameInfo getGameInfo() {
+		return gameInfo;
+	}
+	
 }

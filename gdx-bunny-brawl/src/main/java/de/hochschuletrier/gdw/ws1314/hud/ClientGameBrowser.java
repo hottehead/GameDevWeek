@@ -77,7 +77,7 @@ public class ClientGameBrowser extends Stage implements ScreenListener {
 	}
 
 	public void render() {
-		Table.drawDebug(this);
+//		Table.drawDebug(this);
 		act();
 		draw();
 	}

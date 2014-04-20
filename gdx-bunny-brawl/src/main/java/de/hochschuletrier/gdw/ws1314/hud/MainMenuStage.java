@@ -76,7 +76,7 @@ public class MainMenuStage extends Stage implements ScreenListener {
 	}
 
 	public void render() {		
-		Table.drawDebug(this);
+//		Table.drawDebug(this);
 		this.act();
 		this.draw();
 	}
@@ -94,7 +94,6 @@ public class MainMenuStage extends Stage implements ScreenListener {
 	//for testing server-client stuff
 	public void resize(int width, int height) {
 		getViewport().update(width, height, true);
-		
 	}
 	
 	public Button getGameBrowserButton() {

@@ -46,8 +46,8 @@ import java.util.List;
  */
 public class Main extends StateBasedGame {
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	public static final int WINDOW_WIDTH = 1280;
-	public static final int WINDOW_HEIGHT = 720;
+	public static final int WINDOW_WIDTH = 1920;
+	public static final int WINDOW_HEIGHT = 1080;
 
 	private final AssetManagerX assetManager = new AssetManagerX();
 	private static Main instance;
@@ -262,8 +262,9 @@ public class Main extends StateBasedGame {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Bunny Brawl - GameDevWeek WS 2013/14";
-		cfg.width = WINDOW_WIDTH;
-		cfg.height = WINDOW_HEIGHT;
+		cfg.width = cfg.getDesktopDisplayMode().width;
+		cfg.height = cfg.getDesktopDisplayMode().height;
+		cfg.fullscreen =true;
 		cfg.useGL30 = false;
 		for (String s : args) {
 			if (s.equalsIgnoreCase("-server")) {

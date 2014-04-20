@@ -1,6 +1,6 @@
 {
     "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-        "default-font": {"file": "data/fonts/default.fnt"},
+        "default-font": {"file": "default.fnt"},
         "garfield_52": {"file": "data/fonts/garfield.fnt"},
         "candara_25": {"file": "data/fonts/candara25.fnt"}
     },
@@ -56,7 +56,13 @@
     "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
-       "default": {"font": "default-font", "fontColor": "yellow"}
+       "default": {"font": "default-font", "fontColor": "yellow"},
+       "candara": {"font": "candara_25", "fontColor": "yellow"},
+       "garfield": {"font": "garfield_52", "fontColor": "yellow"},
+       "garfield_black": {"font": "garfield_52", "fontColor": "black"},
+       "garfield_white": {"font": "garfield_52", "fontColor": "white"},
+       "whiteTeam" : { "font" : "garfield_52", "fontColor": "black", "background":"shield_white"},
+       "blackTeam" : { "font" : "garfield_52", "fontColor": "white", "background":"shield_black"}
     },
     "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
       "default": {"selection": "white", "background": "white", 
