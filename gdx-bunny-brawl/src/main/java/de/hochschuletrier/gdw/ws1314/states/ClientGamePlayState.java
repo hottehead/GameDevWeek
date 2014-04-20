@@ -12,6 +12,7 @@ import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound;
 import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
+import de.hochschuletrier.gdw.ws1314.sound.MusicManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 
 	public void init(AssetManagerX assetManager) {
 		super.init(assetManager);
+		this.stateMusic = MusicManager.getInstance().getMusicStreamByStateName(GameStates.CLIENTGAMEPLAY);
 	}
 
 	public void render() {
@@ -55,6 +57,8 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		clientGame.update(delta);
 		fpsCalc.addFrame();
 		
+		MusicManager.getInstance().getMusicStreamByStateName(GameStates.MAINMENU).update();
+		this.stateMusic.update();
 		//TODO: @Eppi connect ui to gamelogic
 		//debug healthbar till connected to gamelogic
 	}
@@ -64,7 +68,14 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		clientGame = new ClientGame();
 		clientGame.init(assetManager, mapName);
 		Main.getInstance().addScreenListener(clientGame.getHUD());
-		stateMusic = new LocalMusic(assetManager);
+		if (this.stateMusic.isMusicPlaying())
+			this.stateMusic.setFade('i', 5000);
+		else {
+			this.stateMusic.play("music-gameplay-loop");
+			this.stateMusic.setVolume(0.0f);
+			this.stateMusic.setFade('i', 5000);
+		}
+		
 		LocalSound2.init(assetManager);
 		
 		NetworkManager.getInstance().setDisconnectCallback(this);
@@ -77,6 +88,9 @@ public class ClientGamePlayState extends GameState implements DisconnectCallback
 		NetworkManager.getInstance().setGameStateCallback(this);
 		Main.getInstance().removeScreenListener(clientGame.getHUD());
 		clientGame = null;
+		
+		if (this.stateMusic.isMusicPlaying())
+			this.stateMusic.setFade('o', 5000);
 	}
 
 	@Override

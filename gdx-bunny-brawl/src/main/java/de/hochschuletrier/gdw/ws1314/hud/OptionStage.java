@@ -21,6 +21,8 @@ import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
 import de.hochschuletrier.gdw.commons.gdx.state.ScreenListener;
 import de.hochschuletrier.gdw.commons.gdx.utils.DrawUtil;
+import de.hochschuletrier.gdw.ws1314.sound.LocalMusic;
+import de.hochschuletrier.gdw.ws1314.sound.LocalSound2;
 
 public class OptionStage extends Stage implements ScreenListener {
 	
@@ -67,6 +69,7 @@ public class OptionStage extends Stage implements ScreenListener {
 		label = new Label("Musik", defaultSkin);
 		tmp.add(label);
 		this.music = new Slider(0, 100, 2, false, defaultSkin);
+		this.music.setValue(LocalMusic.getSystemVolume() * 100);
 		tmp.add(music);
 		
 		tmp = new Table();
@@ -74,6 +77,7 @@ public class OptionStage extends Stage implements ScreenListener {
 		label = new Label("Sound", defaultSkin);
 		tmp.add(label);
 		this.sound = new Slider(0, 100, 2, false, defaultSkin);
+		this.sound.setValue(LocalSound2.getSystemVolume() * 100);
 		tmp.add(sound);
 		
 		TextureRegion texture = new TextureRegion(assetManager.getTexture("menuButtonBack"));

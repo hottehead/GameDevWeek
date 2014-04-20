@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.esotericsoftware.tablelayout.BaseTableLayout.Debug;
 
 import de.hochschuletrier.gdw.commons.gdx.assets.AssetManagerX;
@@ -31,6 +33,8 @@ import de.hochschuletrier.gdw.ws1314.hud.elements.base.DynamicTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.MinMaxValue;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.StaticTextElement;
 import de.hochschuletrier.gdw.ws1314.hud.elements.base.VisualBox;
+import de.hochschuletrier.gdw.ws1314.input.PlayerIntention;
+import de.hochschuletrier.gdw.ws1314.network.NetworkManager;
 import de.hochschuletrier.gdw.ws1314.states.ClientGamePlayState;
 
 public class GameplayStage extends Stage implements ScreenListener {
@@ -113,6 +117,23 @@ public class GameplayStage extends Stage implements ScreenListener {
 		uiTable.add(actions);
 		// Chat
 		uiTable.add(new ChatWindow(assetManager.getSkin("default"))).fill();
+		
+		//Listener
+		attack.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				logger.info("attack clicked");
+				NetworkManager.getInstance().sendAction(PlayerIntention.ATTACK_1);
+			}
+		});
+		dropEgg.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				logger.info("drop egg clicked");
+
+				NetworkManager.getInstance().sendAction(PlayerIntention.DROP_EGG);
+			}
+		});
 	}
 
 	public void render() {

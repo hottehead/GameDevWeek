@@ -400,8 +400,9 @@ public class ServerPlayer extends ServerEntity implements IStateListener {
 					pickedUpEggs.add(otherEntity.getID());
 					egg.setVisibility(false);
 					this.currentEggCount++;
-					NetworkManager.getInstance().sendEntityEvent(getID(),
-							EventType.EGG_PICKUP);
+                  			egg.stopScoreProcess();
+					NetworkManager.getInstance().sendEntityEvent(getID(), EventType.EGG_PICKUP);
+
 				}
 				break;
 			case ContactMine:

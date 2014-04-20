@@ -37,7 +37,6 @@ public class LocalMusic {
 	public static void setSystemVolume(float systemVolume) {
 		LocalMusic.SystemVolume = systemVolume;
 		Main.getInstance().gamePreferences.putFloat(PreferenceKeys.volumeMusic, systemVolume);
-		System.out.println("Set Music Volume to" + systemVolume);
 		Main.musicManager.sendVolumeToStreams(systemVolume);
 	}
 	
@@ -67,7 +66,7 @@ public class LocalMusic {
 	}
 	
 	public void setVolume(float volume) {
-		this.musicHandle.setVolume(volume * LocalMusic.SystemVolume);
+		this.musicHandle.setVolume(volume);
 	}
 	
 	public char getFadingDirection() { return this.fadingDirection; }
@@ -80,9 +79,10 @@ public class LocalMusic {
 		
 		if (this.fading && this.musicHandle != null) {
 			float volume = this.musicHandle.getVolume();
-			
 			if (this.fadingDirection == 'i') {
 				volume += step;
+				volume = volume >= LocalMusic.SystemVolume ? LocalMusic.SystemVolume : volume;
+				this.fading = volume == LocalMusic.SystemVolume ? false : true;
 			}
 			else if (this.fadingDirection == 'o') {
 				volume -= step;

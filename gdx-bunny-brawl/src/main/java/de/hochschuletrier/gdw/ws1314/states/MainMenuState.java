@@ -59,12 +59,12 @@ public class MainMenuState extends GameState {
 
 	public void update(float delta) {
 		music.update();
-		Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
+		//Main.musicManager.getMusicStreamByStateName(GameStates.DUALGAMEPLAY).update();
 	}
 
 	public void onEnter() {
 		if (this.music.isMusicPlaying()) {
-			this.music.setFade('i', 2500);
+			this.music.setFade('i', 5000);
 		} else {
 			this.music.play("music-lobby-loop");
 		}
@@ -88,7 +88,7 @@ public class MainMenuState extends GameState {
 
 	public void onLeave() {
 		if (this.music.isMusicPlaying()) {
-			this.music.setFade('o', 2500);
+    		this.music.setFade('o', 5000);
 		}
 
 		stage.getPlayServerButton().removeListener(startServerAndPlayListener);
