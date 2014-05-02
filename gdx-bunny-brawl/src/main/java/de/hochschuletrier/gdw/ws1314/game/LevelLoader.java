@@ -39,19 +39,8 @@ import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerCarrot;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerClover;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerContactMine;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerEgg;
+import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerHayBale;
 import de.hochschuletrier.gdw.ws1314.entity.levelObjects.ServerSpinach;
-import de.hochschuletrier.gdw.ws1314.entity.levelObjects.*;
-
-import java.io.IOException;
-import java.rmi.server.ServerNotActiveException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import de.hochschuletrier.gdw.ws1314.entity.player.TeamColor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.corba.Bridge;
 
 
 /**
